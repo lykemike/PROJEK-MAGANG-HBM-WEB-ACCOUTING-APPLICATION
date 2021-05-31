@@ -1,0 +1,200 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Menu Table
+model Menu {
+  id         Int          @id @default(autoincrement())
+  menu_name  String
+  RoleAccess RoleAccess[]
+}
+
+// Role Table
+model Role {
+  id         Int          @id @default(autoincrement())
+  roleType   String       @db.VarChar(50)
+  roleDesc   String       @db.VarChar(255)
+  User       User[]
+  RoleAccess RoleAccess[]
+}
+
+// User Table
+model User {
+  id        Int     @id @default(autoincrement())
+  firstName String  @db.VarChar(20)
+  lastName  String  @db.VarChar(20)
+  email     String  @unique
+  password  String  @db.VarChar(20)
+  role      Role    @relation(fields: [roleId], references: [id])
+  roleId    Int
+  loggedIn  Boolean @default(false)
+}
+
+// Role Permission Table
+model RoleAccess {
+  id     Int  @id @default(autoincrement())
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+  menu   Menu @relation(fields: [menuId], references: [id])
+  menuId Int
+}
+
+// Kategori Akun Table
+model Kategori {
+  id   Int    @id @default(autoincrement())
+  name String
+  Akun Akun[]
+}
+
+// Tipe Akun Table
+model TipeAkun {
+  id   Int    @id @default(autoincrement())
+  name String
+  Akun Akun[]
+}
+
+// Akun table
+model Akun {
+  id            Int      @id @default(autoincrement())
+  kode_akun     String
+  tipe_akun     TipeAkun @relation(fields: [tipeId], references: [id])
+  tipeId        Int
+  nama_akun     String
+  kategori_akun Kategori @relation(fields: [kategoriId], references: [id])
+  kategoriId    Int
+  // Saldo           Saldo[]
+  Pajak1        Pajak[]  @relation("akunPenjual")
+  Pajak2        Pajak[]  @relation("akunPembeli")
+  
+  Kontak1       Kontak[] @relation("akunPiutang")
+  Kontak2       Kontak[] @relation("akunHutang")
+
+  Produk1       Produk[] @relation("akunPembelian")
+  Produk2       Produk[] @relation("akunPenjualan")
+}
+
+// Saldo Table
+// model Saldo{
+//   id              Int     @default(autoincrement()) @id
+//   debit           Int
+//   kredit          Int
+//   akun            Akun    @relation(fields: [akunId], references: [id])
+//   akunId          Int
+// }
+
+// Kategori Kontak
+model KategoriKontak {
+  id   Int    @id @default(autoincrement())
+  nama String
+}
+
+// Kategori Produk
+model KategoriProduk {
+  id     Int      @id @default(autoincrement())
+  nama   String
+  jumlah Int
+  Produk Produk[]
+}
+
+// Kontak Table
+model Kontak {
+  id Int @id @default(autoincrement())
+  nama_panggilan String
+  gelar             String
+  nama              String
+  nomor_hp          String
+  tipe_identitas    String
+  nomor_identitas   String
+  email             String
+  info_lain         String
+  nama_perusahaan   String
+  nomor_telepon     String
+  nomor_fax         String
+  nomor_npwp        String
+  alamat_pembayaran String
+  alamat_pengiriman String
+  nama_bank          String
+  kantor_cabang_bank String
+  pemegang_akun_bank String
+  nomor_rekening     String
+  piutang            Akun @relation("akunPiutang", fields: [akun_piutang], references: [id])
+  akun_piutang       Int
+  hutang             Akun @relation("akunHutang", fields: [akun_hutang], references: [id])
+  akun_hutang        Int
+  syarat_pembayaran_utama String
+  Penjualan               Penjualan[]
+}
+
+// Produk table
+model Produk {
+  id                Int     @default(autoincrement()) @id 
+  nama              String
+  image             String
+  kode_sku          String
+  kategori_akun     KategoriProduk @relation(fields: [kategoriId], references: [id])
+  kategoriId        Int
+  
+  unit              Int
+  deskripsi         String
+  
+  harga_beli_satuan Int
+  pembelian         Akun @relation("akunPembelian", fields: [akun_pembelian], references: [id])
+  akun_pembelian    Int
+  pajak_beli        String
+
+  harga_jual_satuan Int
+  penjualan         Akun @relation("akunPenjualan", fields:[akun_penjualan], references: [id])
+  akun_penjualan    Int
+  pajak_jual        String
+
+  Penjualan         Penjualan[]
+}
+
+// Pajak Table
+model Pajak {
+  id              Int         @id @default(autoincrement())
+  nama            String
+  presentasaAktif Int
+  kategori1       Akun        @relation("akunPenjual", fields: [akunPenjual], references: [id])
+  akunPenjual     Int
+  kategori2       Akun        @relation("akunPembeli", fields: [akunPembeli], references: [id])
+  akunPembeli     Int
+  penjualan       Penjualan[]
+}
+
+model Penjualan {
+  id               Int      @id @default(autoincrement())
+  id_kontak        Kontak   @relation(fields:[kontakID], references: [id])
+  kontakID         Int
+  namapelanggan    String
+  email            String
+  alamatpenagihan  String
+  tgltransaksi     String
+  tgljatuhtempo    String 
+  syaratpembayaran String
+  no_ref_penagihan Int
+  tag              String
+  id_produk        Produk   @relation(fields:[produkID], references: [id])
+  produkID         Int
+  nama_produk      String
+  desk_produk      String
+  kuantitas        Int
+  satuan           String
+  harga_satuan     Int
+  diskon           Int
+  id_pajak         Pajak    @relation(fields:[pajakID], references: [id])
+  pajakID          Int
+  pajak            Int
+  uangmuka          Int
+  sisa_tagihan     Int
+  pesan            String
+  fileattachment   String
+  }
