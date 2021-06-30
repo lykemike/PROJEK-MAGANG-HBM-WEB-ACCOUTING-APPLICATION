@@ -8,13 +8,13 @@ import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutli
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import Link from 'next/link';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 
 import { Formik, Form as Forms } from 'formik';
 import * as Yup from 'yup';
-import Axios from 'axios'
+import Axios from 'axios';
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export default function BuatKontakBaru({ data, data2 }) {
@@ -35,53 +35,52 @@ export default function BuatKontakBaru({ data, data2 }) {
 		namaBank: Yup.string().min(3).required('*required'),
 		kantorCabangBank: Yup.string().min(3).required('*required'),
 		pemegangAkunBank: Yup.string().min(3).required('*required'),
-		nomorRekening: Yup.number().min(8).required('*required'),
+		nomorRekening: Yup.number().min(8).required('*required')
 	});
 
 	//Kontak API
-	const getkontak = 'http://localhost:3000/api/kontak/getKontak';
-	const updatekontak = 'http://localhost:3000/api/kontak/updateKontak';
+	const getkontak = 'http://localhost:3000/api/kontak/getkontak';
+	const updatekontak = 'http://localhost:3000/api/kontak/updatekontak';
 
 	//Take Parameter [ID]
 	const router = useRouter();
-	const { id } = router.query
+	const { id } = router.query;
 
 	// Get Existing Role data based on [id]
-	const formikref = useRef(null)
+	const formikref = useRef(null);
 	const getdata = async () => {
 		Axios.post(getkontak, {
-
 			id: id
-
-		}).then(function (response) {
-			formikref.current.setFieldValue('namaPanggilan', response.data.data.nama_panggilan)
-			formikref.current.setFieldValue('nama', response.data.data.nama)
-			formikref.current.setFieldValue('nomorHp', response.data.data.nomor_hp)
-			formikref.current.setFieldValue('nomorIdentitas', response.data.data.nomor_identitas)
-			formikref.current.setFieldValue('email', response.data.data.email)
-			formikref.current.setFieldValue('infoLain', response.data.data.info_lain)
-			formikref.current.setFieldValue('namaPerusahaan', response.data.data.nama_perusahaan)
-			formikref.current.setFieldValue('nomorTelepon', response.data.data.nomor_telepon)
-			formikref.current.setFieldValue('nomorFax', response.data.data.nomor_fax)
-			formikref.current.setFieldValue('nomorNpwp', response.data.data.nomor_npwp)
-			formikref.current.setFieldValue('alamatPembayaran', response.data.data.alamat_pembayaran)
-			formikref.current.setFieldValue('alamatPengiriman', response.data.data.alamat_pengiriman)
-			formikref.current.setFieldValue('namaBank', response.data.data.nama_bank)
-			formikref.current.setFieldValue('kantorCabangBank', response.data.data.kantor_cabang_bank)
-			formikref.current.setFieldValue('pemegangAkunBank', response.data.data.pemegang_akun_bank)
-			formikref.current.setFieldValue('nomorRekening', response.data.data.nomor_rekening)
-		}).
-			catch(function (error) {
-				console.log(error)
+		})
+			.then(function (response) {
+				formikref.current.setFieldValue('namaPanggilan', response.data.data.nama_panggilan);
+				formikref.current.setFieldValue('nama', response.data.data.nama);
+				formikref.current.setFieldValue('nomorHp', response.data.data.nomor_hp);
+				formikref.current.setFieldValue('nomorIdentitas', response.data.data.nomor_identitas);
+				formikref.current.setFieldValue('email', response.data.data.email);
+				formikref.current.setFieldValue('infoLain', response.data.data.info_lain);
+				formikref.current.setFieldValue('namaPerusahaan', response.data.data.nama_perusahaan);
+				formikref.current.setFieldValue('nomorTelepon', response.data.data.nomor_telepon);
+				formikref.current.setFieldValue('nomorFax', response.data.data.nomor_fax);
+				formikref.current.setFieldValue('nomorNpwp', response.data.data.nomor_npwp);
+				formikref.current.setFieldValue('alamatPembayaran', response.data.data.alamat_pembayaran);
+				formikref.current.setFieldValue('alamatPengiriman', response.data.data.alamat_pengiriman);
+				formikref.current.setFieldValue('namaBank', response.data.data.nama_bank);
+				formikref.current.setFieldValue('kantorCabangBank', response.data.data.kantor_cabang_bank);
+				formikref.current.setFieldValue('pemegangAkunBank', response.data.data.pemegang_akun_bank);
+				formikref.current.setFieldValue('nomorRekening', response.data.data.nomor_rekening);
 			})
+			.catch(function (error) {
+				console.log(error);
+			});
 	};
 	useEffect(() => {
-		getdata()
-	}, [])
+		getdata();
+	}, []);
 
 	// Batal Button Function
 	function cancelButton() {
-		router.push('')
+		router.push('');
 	}
 
 	return (
@@ -109,23 +108,20 @@ export default function BuatKontakBaru({ data, data2 }) {
 					nomorRekening: '',
 					akunPiutang: '',
 					akunHutang: '',
-					syaratPembayaranUtama: '',
+					syaratPembayaranUtama: ''
 				}}
 				validationSchema={KontakSchema}
 				onSubmit={async (values) => {
-					let data = { ...values, id }
-					Axios.post(updatekontak, data).
-						then(function (response) {
-							console.log(response)
-							router.push('../kontak/tabel-kontak')
-
-						}).
-						catch(function (error) {
-							console.log(error)
-
+					let data = { ...values, id };
+					Axios.post(updatekontak, data)
+						.then(function (response) {
+							console.log(response);
+							router.push('../kontak/tabel-kontak');
 						})
-				}}
-			>
+						.catch(function (error) {
+							console.log(error);
+						});
+				}}>
 				{(props) => (
 					<Forms noValidate>
 						<div>
@@ -147,11 +143,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.namaPanggilan} type="text" name="namaPanggilan" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.namaPanggilan && props.touched.namaPanggilan ?
-													<div class="text-red-500 text-sm">
-														{props.errors.namaPanggilan}
-													</div>
-													: null}
+												{props.errors.namaPanggilan && props.touched.namaPanggilan ? <div class="text-red-500 text-sm">{props.errors.namaPanggilan}</div> : null}
 											</Col>
 										</Row>
 
@@ -162,13 +154,21 @@ export default function BuatKontakBaru({ data, data2 }) {
 											<Col sm="10" class="ml-8">
 												<Row>
 													<FormCheck />
-													<p class="ml-2 mr-4" value="1">Pelanggan</p>
+													<p class="ml-2 mr-4" value="1">
+														Pelanggan
+													</p>
 													<FormCheck />
-													<p class="ml-2 mr-4" value="2">Supplier</p>
+													<p class="ml-2 mr-4" value="2">
+														Supplier
+													</p>
 													<FormCheck />
-													<p class="ml-2 mr-4" value="3">Karyawan</p>
+													<p class="ml-2 mr-4" value="3">
+														Karyawan
+													</p>
 													<FormCheck />
-													<p class="ml-2 mr-4" value="4">Lainnya</p>
+													<p class="ml-2 mr-4" value="4">
+														Lainnya
+													</p>
 												</Row>
 											</Col>
 										</Row>
@@ -195,11 +195,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 													</Col>
 													<Col>
 														<Form.Control placeholder={props.values.nama} type="text" name="nama" onChange={props.handleChange} onBLur={props.handleBlur} />
-														{props.errors.nama && props.touched.nama ?
-															<div class="text-red-500 text-sm">
-																{props.errors.nama}
-															</div>
-															: null}
+														{props.errors.nama && props.touched.nama ? <div class="text-red-500 text-sm">{props.errors.nama}</div> : null}
 													</Col>
 												</Row>
 											</Col>
@@ -211,11 +207,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.nomorHp} type="text" name="nomorHp" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.nomorHp && props.touched.nomorHp ?
-													<div class="text-red-500 text-sm">
-														{props.errors.nomorHp}
-													</div>
-													: null}
+												{props.errors.nomorHp && props.touched.nomorHp ? <div class="text-red-500 text-sm">{props.errors.nomorHp}</div> : null}
 											</Col>
 										</Row>
 
@@ -223,7 +215,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											<Col sm="2">
 												<Form.Label>Identitas</Form.Label>
 											</Col>
-											<Col >
+											<Col>
 												<Row>
 													<Col sm="2">
 														<Form.Control as="select" defaultValue="Choose..." name="tipeIdentitas" onChange={props.handleChange} onBLur={props.handleBlur}>
@@ -235,12 +227,14 @@ export default function BuatKontakBaru({ data, data2 }) {
 														</Form.Control>
 													</Col>
 													<Col>
-														<Form.Control placeholder={props.values.nomorIdentitas} type="text" name="nomorIdentitas" onChange={props.handleChange} onBLur={props.handleBlur} />
-														{props.errors.nomorIdentitas && props.touched.nomorIdentitas ?
-															<div class="text-red-500 text-sm">
-																{props.errors.nomorIdentitas}
-															</div>
-															: null}
+														<Form.Control
+															placeholder={props.values.nomorIdentitas}
+															type="text"
+															name="nomorIdentitas"
+															onChange={props.handleChange}
+															onBLur={props.handleBlur}
+														/>
+														{props.errors.nomorIdentitas && props.touched.nomorIdentitas ? <div class="text-red-500 text-sm">{props.errors.nomorIdentitas}</div> : null}
 													</Col>
 												</Row>
 											</Col>
@@ -252,11 +246,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder="Email" type={props.values.email} name="email" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.email && props.touched.email ?
-													<div class="text-red-500 text-sm">
-														{props.errors.email}
-													</div>
-													: null}
+												{props.errors.email && props.touched.email ? <div class="text-red-500 text-sm">{props.errors.email}</div> : null}
 											</Col>
 										</Row>
 
@@ -266,11 +256,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.infoLain} type="text" name="infoLain" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.infoLain && props.touched.infoLain ?
-													<div class="text-red-500 text-sm">
-														{props.errors.infoLain}
-													</div>
-													: null}
+												{props.errors.infoLain && props.touched.infoLain ? <div class="text-red-500 text-sm">{props.errors.infoLain}</div> : null}
 											</Col>
 										</Row>
 
@@ -280,11 +266,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.namaPerusahaan} type="text" name="namaPerusahaan" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.namaPerusahaan && props.touched.namaPerusahaan ?
-													<div class="text-red-500 text-sm">
-														{props.errors.namaPerusahaan}
-													</div>
-													: null}
+												{props.errors.namaPerusahaan && props.touched.namaPerusahaan ? <div class="text-red-500 text-sm">{props.errors.namaPerusahaan}</div> : null}
 											</Col>
 										</Row>
 
@@ -294,11 +276,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.nomorTelepon} type="text" name="nomorTelepon" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.nomorTelepon && props.touched.nomorTelepon ?
-													<div class="text-red-500 text-sm">
-														{props.errors.nomorTelepon}
-													</div>
-													: null}
+												{props.errors.nomorTelepon && props.touched.nomorTelepon ? <div class="text-red-500 text-sm">{props.errors.nomorTelepon}</div> : null}
 											</Col>
 										</Row>
 
@@ -308,11 +286,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder="Fax" type={props.values.nomorFax} name="nomorFax" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.nomorFax && props.touched.nomorFax ?
-													<div class="text-red-500 text-sm">
-														{props.errors.nomorFax}
-													</div>
-													: null}
+												{props.errors.nomorFax && props.touched.nomorFax ? <div class="text-red-500 text-sm">{props.errors.nomorFax}</div> : null}
 											</Col>
 										</Row>
 
@@ -322,11 +296,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder="NPWP" type={props.values.nomorNpwp} name="nomorNpwp" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.nomorNpwp && props.touched.nomorNpwp ?
-													<div class="text-red-500 text-sm">
-														{props.errors.npwp}
-													</div>
-													: null}
+												{props.errors.nomorNpwp && props.touched.nomorNpwp ? <div class="text-red-500 text-sm">{props.errors.npwp}</div> : null}
 											</Col>
 										</Row>
 
@@ -336,11 +306,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.alamatPembayaran} type="text" name="alamatPembayaran" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.alamatPembayaran && props.touched.alamatPembayaran ?
-													<div class="text-red-500 text-sm">
-														{props.errors.alamatPembayaran}
-													</div>
-													: null}
+												{props.errors.alamatPembayaran && props.touched.alamatPembayaran ? <div class="text-red-500 text-sm">{props.errors.alamatPembayaran}</div> : null}
 											</Col>
 										</Row>
 
@@ -350,11 +316,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.alamatPengiriman} type="text" name="alamatPengiriman" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.alamatPengiriman && props.touched.alamatPengiriman ?
-													<div class="text-red-500 text-sm">
-														{props.errors.alamatPengiriman}
-													</div>
-													: null}
+												{props.errors.alamatPengiriman && props.touched.alamatPengiriman ? <div class="text-red-500 text-sm">{props.errors.alamatPengiriman}</div> : null}
 											</Col>
 										</Row>
 
@@ -382,11 +344,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.namaBank} type="text" name="namaBank" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.namaBank && props.touched.namaBank ?
-													<div class="text-red-500 text-sm">
-														{props.errors.namaBank}
-													</div>
-													: null}
+												{props.errors.namaBank && props.touched.namaBank ? <div class="text-red-500 text-sm">{props.errors.namaBank}</div> : null}
 											</Col>
 										</Row>
 
@@ -396,11 +354,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.kantorCabangBank} type="text" name="kantorCabangBank" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.kantorCabangBank && props.touched.kantorCabangBank ?
-													<div class="text-red-500 text-sm">
-														{props.errors.kantorCabangBank}
-													</div>
-													: null}
+												{props.errors.kantorCabangBank && props.touched.kantorCabangBank ? <div class="text-red-500 text-sm">{props.errors.kantorCabangBank}</div> : null}
 											</Col>
 										</Row>
 
@@ -410,11 +364,7 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.pemegangAkunBank} type="text" name="pemegangAkunBank" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.pemegangAkunBank && props.touched.pemegangAkunBank ?
-													<div class="text-red-500 text-sm">
-														{props.errors.pemegangAkunBank}
-													</div>
-													: null}
+												{props.errors.pemegangAkunBank && props.touched.pemegangAkunBank ? <div class="text-red-500 text-sm">{props.errors.pemegangAkunBank}</div> : null}
 											</Col>
 										</Row>
 
@@ -424,16 +374,13 @@ export default function BuatKontakBaru({ data, data2 }) {
 											</Col>
 											<Col sm="10">
 												<Form.Control placeholder={props.values.nomorRekening} type="text" name="nomorRekening" onChange={props.handleChange} onBLur={props.handleBlur} />
-												{props.errors.nomorRekening && props.touched.nomorRekening ?
-													<div class="text-red-500 text-sm">
-														{props.errors.nomorRekening}
-													</div>
-													: null}
+												{props.errors.nomorRekening && props.touched.nomorRekening ? <div class="text-red-500 text-sm">{props.errors.nomorRekening}</div> : null}
 											</Col>
 											<Col sm="12">
 												<Button className="mb-2 mt-4" variant="outline-primary" block>
-													<AddIcon fontSize="small" />Tambah Bank Lain
-									</Button>
+													<AddIcon fontSize="small" />
+													Tambah Bank Lain
+												</Button>
 											</Col>
 										</Row>
 
@@ -448,9 +395,11 @@ export default function BuatKontakBaru({ data, data2 }) {
 												<Form.Label>Akun Piutang</Form.Label>
 											</Col>
 											<Col sm="10">
-												<Form.Control as="select" defaultValue="Choose..." name="akunPiutang" onChange={props.handleChange} onBLur={props.handleBlur} >
+												<Form.Control as="select" defaultValue="Choose..." name="akunPiutang" onChange={props.handleChange} onBLur={props.handleBlur}>
 													{data.map((akunPiutang) => (
-														<option key={akunPiutang.id} value={akunPiutang.id}>{akunPiutang.nama_akun}</option>
+														<option key={akunPiutang.id} value={akunPiutang.id}>
+															{akunPiutang.nama_akun}
+														</option>
 													))}
 												</Form.Control>
 											</Col>
@@ -463,7 +412,9 @@ export default function BuatKontakBaru({ data, data2 }) {
 											<Col sm="10">
 												<Form.Control as="select" defaultValue="Choose..." name="akunHutang" onChange={props.handleChange} onBLur={props.handleBlur}>
 													{data2.map((akunHutang) => (
-														<option key={akunHutang.id} value={akunHutang.id}>{akunHutang.nama_akun}</option>
+														<option key={akunHutang.id} value={akunHutang.id}>
+															{akunHutang.nama_akun}
+														</option>
 													))}
 												</Form.Control>
 											</Col>
@@ -487,9 +438,13 @@ export default function BuatKontakBaru({ data, data2 }) {
 
 										<Row>
 											<Col className="d-flex justify-content-end mt-10">
-												<Button variant="danger mr-2" onClick={cancelButton}>Batal</Button>
+												<Button variant="danger mr-2" onClick={cancelButton}>
+													Batal
+												</Button>
 												<Link href="/kontak/informasi-kontak">
-													<Button variant="success" type="submit" onClick={props.handleSubmit}>Simpan</Button>
+													<Button variant="success" type="submit" onClick={props.handleSubmit}>
+														Simpan
+													</Button>
 												</Link>
 											</Col>
 										</Row>
@@ -506,15 +461,13 @@ export default function BuatKontakBaru({ data, data2 }) {
 
 export async function getServerSideProps() {
 	const getAkunPiutang = await prisma.akun.findMany({
-		where:
-		{
+		where: {
 			kategoriId: 1
 		}
 	});
 
 	const getAkunHutang = await prisma.akun.findMany({
-		where:
-		{
+		where: {
 			kategoriId: 8
 		}
 	});
@@ -524,5 +477,5 @@ export async function getServerSideProps() {
 			data: getAkunPiutang,
 			data2: getAkunHutang
 		}
-	}
+	};
 }

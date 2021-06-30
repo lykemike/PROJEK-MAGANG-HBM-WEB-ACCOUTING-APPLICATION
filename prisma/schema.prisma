@@ -131,6 +131,7 @@ model Kontak {
   akun_hutang        Int
   syarat_pembayaran_utama String
   Penjualan               Penjualan[]
+  Pembelian               Pembelian[]
 }
 
 // Produk table
@@ -155,7 +156,8 @@ model Produk {
   akun_penjualan    Int
   pajak_jual        String
 
-  Penjualan         Penjualan[]
+  Penjualandetail         Penjualandetail[]
+  Pembeliandetail       Pembeliandetail[]
 }
 
 // Pajak Table
@@ -167,7 +169,8 @@ model Pajak {
   akunPenjual     Int
   kategori2       Akun        @relation("akunPembeli", fields: [akunPembeli], references: [id])
   akunPembeli     Int
-  penjualan       Penjualan[]
+  penjualandetail       Penjualandetail[]
+  Pembeliandetail       Pembeliandetail[]
 }
 
 model Penjualan {
@@ -181,7 +184,23 @@ model Penjualan {
   tgljatuhtempo    String 
   syaratpembayaran String
   no_ref_penagihan Int
+  notransaksi      Int @unique
   tag              String
+  uangmuka         Int
+  sisa_tagihan     Int
+  pesan            String
+  memo             String
+  fileattachment   String
+  diskontambahan   String
+  pemotongan       String
+  total            Int
+  Penjualandetail   Penjualandetail[]
+  }
+
+  model Penjualandetail{
+  id               Int      @id @default(autoincrement())
+  id_penjualan     Penjualan@relation(fields: [penjualanID], references:[notransaksi])
+  penjualanID      Int       
   id_produk        Produk   @relation(fields:[produkID], references: [id])
   produkID         Int
   nama_produk      String
@@ -190,11 +209,55 @@ model Penjualan {
   satuan           String
   harga_satuan     Int
   diskon           Int
+  diskonperbaris   Int
+  pajakperbaris    Int
   id_pajak         Pajak    @relation(fields:[pajakID], references: [id])
   pajakID          Int
   pajak            Int
-  uangmuka          Int
+  jumlah           Int
+  
+  }
+
+  model Pembelian {
+  id               Int      @id @default(autoincrement())
+  id_kontak        Kontak   @relation(fields:[kontakID], references: [id])
+  kontakID         Int
+  namasupplier     String
+  email            String
+  alamatsupplier   String
+  tgltransaksi     String
+  tgljatuhtempo    String 
+  syaratpembayaran String
+  no_ref_supplier  Int
+  notransaksi      Int @unique
+  tag              String
+  uangmuka         Int
   sisa_tagihan     Int
   pesan            String
+  memo             String
   fileattachment   String
+  diskontambahan   String
+  pemotongan       String
+  total            Int
+  Pembeliandetail   Pembeliandetail[]
+  }
+
+  model Pembeliandetail{
+  id               Int      @id @default(autoincrement())
+  id_pembelian     Pembelian@relation(fields: [pembelianID], references:[notransaksi])
+  pembelianID      Int       
+  id_produk        Produk   @relation(fields:[produkID], references: [id])
+  produkID         Int
+  nama_produk      String
+  desk_produk      String
+  kuantitas        Int
+  satuan           String
+  harga_satuan     Int
+  diskon           Int
+  diskonperbaris   Int
+  pajakperbaris    Int
+  id_pajak         Pajak    @relation(fields:[pajakID], references: [id])
+  pajakID          Int
+  pajak            Int
+  jumlah           Int
   }

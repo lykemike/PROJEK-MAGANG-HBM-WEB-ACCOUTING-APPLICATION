@@ -151,7 +151,25 @@ CREATE TABLE `Penjualan` (
     `tgljatuhtempo` VARCHAR(191) NOT NULL,
     `syaratpembayaran` VARCHAR(191) NOT NULL,
     `no_ref_penagihan` INTEGER NOT NULL,
+    `notransaksi` INTEGER NOT NULL,
     `tag` VARCHAR(191) NOT NULL,
+    `uangmuka` INTEGER NOT NULL,
+    `sisa_tagihan` INTEGER NOT NULL,
+    `pesan` VARCHAR(191) NOT NULL,
+    `memo` VARCHAR(191) NOT NULL,
+    `fileattachment` VARCHAR(191) NOT NULL,
+    `diskontambahan` VARCHAR(191) NOT NULL,
+    `pemotongan` VARCHAR(191) NOT NULL,
+    `total` INTEGER NOT NULL,
+UNIQUE INDEX `Penjualan.notransaksi_unique`(`notransaksi`),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Penjualandetail` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `penjualanID` INTEGER NOT NULL,
     `produkID` INTEGER NOT NULL,
     `nama_produk` VARCHAR(191) NOT NULL,
     `desk_produk` VARCHAR(191) NOT NULL,
@@ -159,12 +177,57 @@ CREATE TABLE `Penjualan` (
     `satuan` VARCHAR(191) NOT NULL,
     `harga_satuan` INTEGER NOT NULL,
     `diskon` INTEGER NOT NULL,
+    `diskonperbaris` INTEGER NOT NULL,
+    `pajakperbaris` INTEGER NOT NULL,
     `pajakID` INTEGER NOT NULL,
     `pajak` INTEGER NOT NULL,
+    `jumlah` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Pembelian` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `kontakID` INTEGER NOT NULL,
+    `namasupplier` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `alamatsupplier` VARCHAR(191) NOT NULL,
+    `tgltransaksi` VARCHAR(191) NOT NULL,
+    `tgljatuhtempo` VARCHAR(191) NOT NULL,
+    `syaratpembayaran` VARCHAR(191) NOT NULL,
+    `no_ref_supplier` INTEGER NOT NULL,
+    `notransaksi` INTEGER NOT NULL,
+    `tag` VARCHAR(191) NOT NULL,
     `uangmuka` INTEGER NOT NULL,
     `sisa_tagihan` INTEGER NOT NULL,
     `pesan` VARCHAR(191) NOT NULL,
+    `memo` VARCHAR(191) NOT NULL,
     `fileattachment` VARCHAR(191) NOT NULL,
+    `diskontambahan` VARCHAR(191) NOT NULL,
+    `pemotongan` VARCHAR(191) NOT NULL,
+    `total` INTEGER NOT NULL,
+UNIQUE INDEX `Pembelian.notransaksi_unique`(`notransaksi`),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Pembeliandetail` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `pembelianID` INTEGER NOT NULL,
+    `produkID` INTEGER NOT NULL,
+    `nama_produk` VARCHAR(191) NOT NULL,
+    `desk_produk` VARCHAR(191) NOT NULL,
+    `kuantitas` INTEGER NOT NULL,
+    `satuan` VARCHAR(191) NOT NULL,
+    `harga_satuan` INTEGER NOT NULL,
+    `diskon` INTEGER NOT NULL,
+    `diskonperbaris` VARCHAR(191) NOT NULL,
+    `pajakperbaris` VARCHAR(191) NOT NULL,
+    `pajakID` INTEGER NOT NULL,
+    `pajak` INTEGER NOT NULL,
+    `jumlah` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -209,7 +272,22 @@ ALTER TABLE `Pajak` ADD FOREIGN KEY (`akunPembeli`) REFERENCES `Akun`(`id`) ON D
 ALTER TABLE `Penjualan` ADD FOREIGN KEY (`kontakID`) REFERENCES `Kontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Penjualan` ADD FOREIGN KEY (`produkID`) REFERENCES `Produk`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Penjualandetail` ADD FOREIGN KEY (`penjualanID`) REFERENCES `Penjualan`(`notransaksi`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Penjualan` ADD FOREIGN KEY (`pajakID`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Penjualandetail` ADD FOREIGN KEY (`produkID`) REFERENCES `Produk`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Penjualandetail` ADD FOREIGN KEY (`pajakID`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pembelian` ADD FOREIGN KEY (`kontakID`) REFERENCES `Kontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pembeliandetail` ADD FOREIGN KEY (`pembelianID`) REFERENCES `Pembelian`(`notransaksi`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pembeliandetail` ADD FOREIGN KEY (`produkID`) REFERENCES `Produk`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pembeliandetail` ADD FOREIGN KEY (`pajakID`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
