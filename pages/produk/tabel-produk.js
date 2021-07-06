@@ -136,7 +136,7 @@ export default function tabelProduk({ data }) {
 												<div className="text-sm text-gray-900">30</div>
 											</td>
 											<td className="px-2 py-2 whitespace-nowrap">
-												<div className="text-sm text-gray-900">{produk.unit / 5}</div>
+												<div className="text-sm text-gray-900">{produk.unit}</div>
 											</td>
 											<td className="px-2 py-2 whitespace-nowrap">
 												<div className="text-sm text-gray-900">-</div>
@@ -145,7 +145,7 @@ export default function tabelProduk({ data }) {
 												<div className="text-sm text-gray-900">-</div>
 											</td>
 											<td className="px-2 py-2 whitespace-nowrap">
-												<div className="text-sm text-gray-900">Rp. {produk.harga_beli_satuan * 5000}</div>
+												<div className="text-sm text-gray-900">Rp. {produk.harga_beli_satuan}</div>
 											</td>
 											<td className="px-2 py-2 whitespace-nowrap">
 												<div className="text-sm text-gray-900">

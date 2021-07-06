@@ -2,8 +2,16 @@ import React from 'react';
 import Layout from '../../components/Layout';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import Link from 'next/link';
+import { useRouter } from 'next/router'
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 export default function Expense () {
+
+	 // Redirect Function and Take URL Parameter [id]
+    const router = useRouter();
+    const { id } = router.query
+		
 	return (
 		<Layout>
 			<div>
@@ -165,4 +173,27 @@ export default function Expense () {
 			</div>
 		</Layout>
 	);
+}
+
+export async function getServerSideProps() {
+    // Get biaya from API
+    const biayas = await prisma.headerBiaya.findMany({
+        orderBy:
+            [
+                {
+                    id: 'asc'
+                }
+            ],
+        include: {
+            detail_biaya: true,
+						akun: true,
+						kontak: true,
+        }
+    });
+
+    return {
+        props: {
+            data: biayas,
+        }
+    }
 }
