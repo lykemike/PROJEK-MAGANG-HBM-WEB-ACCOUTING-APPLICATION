@@ -102,7 +102,11 @@ export default function penjualan({ data }) {
 											<Form.Check type="checkbox" />
 										</td>
 										<td class="px-2 py-2 whitespace-nowrap font-large">
-											<div class="text-lg text-gray-900">{i.tgltransaksi}</div>
+											<div class="text-lg text-gray-900">
+											<Link key={i.id} href={`/jual/view/${i.id}`}>
+												{i.tgltransaksi}
+											</Link>
+											</div>
 										</td>
 										<td class="px-8 py-2 whitespace-nowrap font-large">
 											<Link href="jual/sales-invoice">

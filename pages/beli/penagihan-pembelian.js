@@ -565,7 +565,7 @@ export default function penagihanpembelian({ data, data2, data3 }) {
 								<button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none">Batal</button>
 							</Link>
 
-							<Link href="/beli/purchase-invoice">
+							<Link href="/beli/pembelian">
 								<button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
 									Buat Pembelian
 								</button>

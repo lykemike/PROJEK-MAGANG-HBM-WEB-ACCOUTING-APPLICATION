@@ -592,9 +592,11 @@ export default function penagihanpenjualan({ data, data2, data3 }) {
 									Batal
 								</button>
 							</Link>
+							<Link href="/jual/penjualan">
 							<button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
 								Buat Penjualan
 							</button>
+							</Link>
 						</div>
 					</Forms>
 				)}
