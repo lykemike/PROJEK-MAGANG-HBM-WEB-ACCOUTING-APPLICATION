@@ -5,7 +5,7 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import Axios from "axios";
 import { useRouter } from "next/router";
-import { Formik, Form as Forms } from "formik";
+import { Formik, Form as Forms, Field } from "formik";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -39,9 +39,12 @@ export default function User({ data }) {
           email: "",
           password: "",
           role_id: "",
+          toggle : false,
+          checked: [],
         }}
         validationSchema={UserSchema}
         onSubmit={async (values) => {
+          alert(JSON.stringify(values, null, 2));
           Axios.post(createUser, values)
             .then(function (response) {
               console.log(response);
@@ -118,6 +121,117 @@ export default function User({ data }) {
                     </Col>
                   </Row>
 
+                  <Row>
+                           <Col sm='2'>
+                              <Form.Label>Access Menu</Form.Label>
+                            </Col>
+
+                            <Col sm='2' className="ml-3">
+                              <div role="group" aria-labelledby="checkbox-group">
+                                <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="1" />
+                                      Dashboard                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="2" />
+                                      Jurnal                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="3" />
+                                      User                              
+                                    </label>
+                                 </Row>    
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="4" />
+                                      Role                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="5" />
+                                      Daftar Akun                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="6" />
+                                      Kontak                              
+                                    </label>
+                                 </Row>  
+                                 
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="7" />
+                                      Laporan                              
+                                    </label>
+                                 </Row>                
+                              </div>
+                         </Col>
+
+                         <Col sm='4'>
+                         <div role="group" aria-labelledby="checkbox-group">
+                                <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="8" />
+                                      Pajak                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="9" />
+                                      Produk                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="10" />
+                                      Kas & Bank                              
+                                    </label>
+                                 </Row>    
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="11" />
+                                      Penjualan                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="12" />
+                                      Pembelian                              
+                                    </label>
+                                 </Row>
+
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="13" />
+                                      Biaya                              
+                                    </label>
+                                 </Row>   
+                                 
+                                 <Row>
+                                    <label>
+                                      <Field type="checkbox" name="checked" value="14" />
+                                      Pengaturan                              
+                                    </label>
+                                 </Row>               
+                              </div>
+
+                         </Col>
+                  </Row>
+                  
                   <Row>
                     <Col sm='2' />
                     <Col sm='4' className='d-flex justify-content-end mt-10'>

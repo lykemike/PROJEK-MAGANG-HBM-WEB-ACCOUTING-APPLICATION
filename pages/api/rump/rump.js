@@ -9,6 +9,10 @@ export default async (req, res) => {
           roleType: "Admin",
           roleDesc: "Administrator",
         },
+        {
+          roleType: "User",
+          roleDesc: "User biasa",
+        },
       ],
       skipDuplicates: true,
     });
@@ -21,6 +25,13 @@ export default async (req, res) => {
           email: "admin@hbm.co.id",
           password: "admin1234",
           roleId: 1,
+        },
+        {
+          firstName: "User",
+          lastName: "User2",
+          email: "user@gmail.com",
+          password: "user1234",
+          roleId: 2,
         },
       ],
       skipDuplicates: true,
@@ -143,6 +154,22 @@ export default async (req, res) => {
         {
           role_id: 1,
           menu_id: 14,
+          value: true,
+        },
+
+        {
+          role_id: 2,
+          menu_id: 1,
+          value: true,
+        },
+        {
+          role_id: 2,
+          menu_id: 2,
+          value: true,
+        },
+        {
+          role_id: 2,
+          menu_id: 3,
           value: true,
         },
       ],

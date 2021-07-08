@@ -7,25 +7,24 @@ export default async (req, res) => {
   try {
     const findUser = await prisma.user.findFirst({
       where: {
-        email: req.body.loginEmail,
-        password: req.body.loginPassword,
+        loggedIn : true
       },
     });
 
-    if (findUser.email && findUser.password) {
+    if (findUser.loggedIn) {
       await prisma.user.update({
         where: {
-          email: findUser.email,
+          loggedIn: true,
         },
-        data: { loggedIn: true },
+        data: { loggedIn: false },
       });
     } else {
       throw new Error("data not found");
     }
 
-    res.status(200).json({ message: "LOGIN SUCCESS!", data: findUser });
+    res.status(200).json({ message: "LOGOUT SUCCESS!", data: findUser });
   } catch (error) {
-    res.status(400).json({ data: "LOGIN FAILED", error });
+    res.status(400).json({ data: "LOGOUT FAILED", error });
     console.log(error);
   }
 };

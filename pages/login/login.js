@@ -27,6 +27,9 @@ export default function login() {
                     then(function (response) {
                         if (response.data.data !== null) {
                             alert("credentials benar")
+                           
+                            // console.log(response.data)
+                            localStorage.setItem('user_login', JSON.stringify(response.data.data));
                             router.push('dashboard')
 
                         } else {
