@@ -9,7 +9,7 @@ export default async (req, res) => {
       where: {
         email: req.body.loginEmail,
         password: req.body.loginPassword,
-      }, 
+      },
       include: {
         role: {
           include: {
