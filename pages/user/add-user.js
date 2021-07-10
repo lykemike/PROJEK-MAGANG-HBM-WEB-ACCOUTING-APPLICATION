@@ -5,7 +5,7 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import Axios from "axios";
 import { useRouter } from "next/router";
-import { Formik, Form as Forms } from "formik";
+import { Formik, Form as Forms, Field } from "formik";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -62,8 +62,15 @@ export default function User({ data }) {
                       <Form.Label>First Name</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control placeholder='First Name' name='first_name' onChange={props.handleChange} onBLur={props.handleBlur} />
-                      {props.errors.first_name && props.touched.first_name ? <div class='text-red-500 text-sm'>{props.errors.first_name}</div> : null}
+                      <Form.Control
+                        placeholder='First Name'
+                        name='first_name'
+                        onChange={props.handleChange}
+                        onBLur={props.handleBlur}
+                      />
+                      {props.errors.first_name && props.touched.first_name ? (
+                        <div class='text-red-500 text-sm'>{props.errors.first_name}</div>
+                      ) : null}
                     </Col>
                   </Row>
 
@@ -72,8 +79,15 @@ export default function User({ data }) {
                       <Form.Label>Last Name</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control placeholder='Last Name' name='last_name' onChange={props.handleChange} onBLur={props.handleBlur} />
-                      {props.errors.last_name && props.touched.last_name ? <div class='text-red-500 text-sm'>{props.errors.last_name}</div> : null}
+                      <Form.Control
+                        placeholder='Last Name'
+                        name='last_name'
+                        onChange={props.handleChange}
+                        onBLur={props.handleBlur}
+                      />
+                      {props.errors.last_name && props.touched.last_name ? (
+                        <div class='text-red-500 text-sm'>{props.errors.last_name}</div>
+                      ) : null}
                     </Col>
                   </Row>
 
@@ -82,8 +96,15 @@ export default function User({ data }) {
                       <Form.Label>Email</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control placeholder='Email' name='email' onChange={props.handleChange} onBLur={props.handleBlur} />
-                      {props.errors.email && props.touched.email ? <div class='text-red-500 text-sm'>{props.errors.email}</div> : null}
+                      <Form.Control
+                        placeholder='Email'
+                        name='email'
+                        onChange={props.handleChange}
+                        onBLur={props.handleBlur}
+                      />
+                      {props.errors.email && props.touched.email ? (
+                        <div class='text-red-500 text-sm'>{props.errors.email}</div>
+                      ) : null}
                     </Col>
                   </Row>
 
@@ -92,8 +113,16 @@ export default function User({ data }) {
                       <Form.Label>Password</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control type='password' placeholder='Password' name='password' onChange={props.handleChange} onBLur={props.handleBlur} />
-                      {props.errors.password && props.touched.password ? <div class='text-red-500 text-sm'>{props.errors.password}</div> : null}
+                      <Form.Control
+                        type='password'
+                        placeholder='Password'
+                        name='password'
+                        onChange={props.handleChange}
+                        onBLur={props.handleBlur}
+                      />
+                      {props.errors.password && props.touched.password ? (
+                        <div class='text-red-500 text-sm'>{props.errors.password}</div>
+                      ) : null}
                     </Col>
                   </Row>
 
@@ -104,7 +133,11 @@ export default function User({ data }) {
                     <Col sm='4'>
                       <Row>
                         <Col>
-                          <Form.Control as='select' name='role_id' onChange={props.handleChange} onBLur={props.handleBlur}>
+                          <Form.Control
+                            as='select'
+                            name='role_id'
+                            onChange={props.handleChange}
+                            onBLur={props.handleBlur}>
                             {/* loop over roles and show them */}
                             <option>pilih</option>
                             {data.map((role) => (

@@ -45,7 +45,7 @@ model RolePrivellege {
   role_id Int
   menu  Menu @relation(fields: [menu_id], references: [id])
   menu_id Int
-  value Boolean
+  value Boolean @default(false)
 }
 
 // Kategori Akun Table
