@@ -3,16 +3,6 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
-    // const createRole = await prisma.role.createMany({
-    // 	data: [
-    // 		{
-    // 			roleType: req.body.role_type,
-    // 			roleDesc: req.body.role_desc
-    // 		}
-    // 	],
-    // 	skipDuplicates: true
-    // });
-
     const frontend_data = {
       roleType: req.body.role_type,
       roleDesc: req.body.role_desc,

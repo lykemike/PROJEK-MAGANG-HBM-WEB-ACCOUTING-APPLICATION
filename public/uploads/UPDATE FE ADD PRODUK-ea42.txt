@@ -44,7 +44,7 @@ export default function addProduk({ data, data2, data3 }) {
     <Layout>
       <Formik
         initialValues={{
-          file_upload: [],
+          file_upload: "",
           nama: "",
           kode_sku: "",
           kategori_akun: "",
@@ -57,19 +57,10 @@ export default function addProduk({ data, data2, data3 }) {
           akun_penjualan: "",
           pajak_jual: "",
         }}
-        // validationSchema={ProdukSchema}
+        validationSchema={ProdukSchema}
         onSubmit={async (values) => {
-          let formData = new FormData();
-          for (var key in values) {
-            formData.append(`${key}`, `${values[key]}`);
-          }
-          Array.from(values.file_upload).map((i) => formData.append("file", i));
-          console.log(values.file_upload);
-          Axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
+          console.log(values);
+          Axios.post(url, values)
             .then(function (response) {
               console.log(response);
               router.push("../produk/tabel-produk");
@@ -105,8 +96,7 @@ export default function addProduk({ data, data2, data3 }) {
                       <Form.File
                         type='file'
                         name='file_upload'
-                        accept='image/*'
-                        onChange={(e) => props.setFieldValue("file_upload", e.target.files)}
+                        onChange={(e) => props.setFieldValue("file_upload", e.target.files[0].name)}
                       />
                       {props.errors.file_upload && props.touched.file_upload ? (
                         <div class='text-red-500 text-sm'>

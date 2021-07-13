@@ -1,34 +1,74 @@
-import { PrismaClient } from ".prisma/client"
+import { PrismaClient } from ".prisma/client";
+import { de } from "date-fns/locale";
+import multer from "multer";
+import { extname } from "path";
 const prisma = new PrismaClient();
 
-export default async (req, res) => {
+export const editFileName = (req, file, callback) => {
+  const name = file.originalname.split(".")[0];
+  const fileExtName = extname(file.originalname);
+  const randomName = Array(4)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 16).toString(16))
+    .join("");
+  callback(null, `${name}-${randomName}${fileExtName}`);
+};
 
-    try {
-        const createProduk = await prisma.produk.createMany({
-            data: [
-                {
-                    image: req.body.file_upload,
-                    nama: req.body.nama,
-                    kode_sku: req.body.kode_sku,
-                    kategoriId: parseInt(req.body.kategori_akun),
-                    unit: parseInt(req.body.unit),
-                    deskripsi: req.body.deskripsi,
+// Returns a Multer instance that provides several methods for generating
+// middleware that process files uploaded in multipart/form-data format.
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: "./public/uploads",
+    filename: editFileName,
+  }),
+});
 
-                    harga_beli_satuan: parseInt(req.body.hbs),
-                    akun_pembelian: parseInt(req.body.akun_pembelian),
-                    pajak_beli: req.body.pajak_beli,
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
 
-                    harga_jual_satuan: parseInt(req.body.hjs),
-                    akun_penjualan: parseInt(req.body.akun_penjualan),
-                    pajak_jual: req.body.pajak_jual
-                },
-            ],
-            skipDuplicates: true,
-        })
-
-        res.status(201).json({ message: 'success!', data: createProduk })
-    } catch (error) {
-        res.status(400).json({ data: 'error', error })
-        console.log(error)
-    }
+      return resolve(result);
+    });
+  });
 }
+
+export default async (req, res) => {
+  await runMiddleware(req, res, upload.single("file"));
+  try {
+    const createProduk = await prisma.produk.createMany({
+      data: [
+        {
+          image: req.file.filename,
+          nama: req.body.nama,
+          kode_sku: req.body.kode_sku,
+          kategoriId: parseInt(req.body.kategori_akun),
+          unit: parseInt(req.body.unit),
+          deskripsi: req.body.deskripsi,
+
+          harga_beli_satuan: parseInt(req.body.hbs),
+          akun_pembelian: parseInt(req.body.akun_pembelian),
+          pajak_beli: req.body.pajak_beli,
+
+          harga_jual_satuan: parseInt(req.body.hjs),
+          akun_penjualan: parseInt(req.body.akun_penjualan),
+          pajak_jual: req.body.pajak_jual,
+        },
+      ],
+      skipDuplicates: true,
+    });
+
+    res.status(201).json({ message: "success!", data: createProduk });
+  } catch (error) {
+    res.status(400).json({ data: "error", error });
+    console.log(error);
+  }
+};
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
