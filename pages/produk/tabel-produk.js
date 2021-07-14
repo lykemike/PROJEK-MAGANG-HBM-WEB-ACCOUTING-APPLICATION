@@ -15,7 +15,7 @@ import {
 import SearchIcon from "@material-ui/icons/Search";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AddIcon from "@material-ui/icons/Add";
-
+import { CSVLink, CSVDownload } from "react-csv";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -41,6 +41,9 @@ export default function tabelProduk({ data }) {
       <Row>
         <Col>
           <h2>Produk</h2>
+          <CSVLink data={data} filename='product.csv'>
+            CSV
+          </CSVLink>
         </Col>
         <Col className='d-flex justify-content-end'>
           <Link href='kategori/tabel-kategori'>
@@ -74,9 +77,7 @@ export default function tabelProduk({ data }) {
 
               <Col className='d-flex justify-content-end'>
                 <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
-                  <Dropdown.Item>
-                    <a>Excel</a>
-                  </Dropdown.Item>
+                  <Dropdown.Item></Dropdown.Item>
                   <Dropdown.Item>
                     <a>Hapus</a>
                   </Dropdown.Item>

@@ -99,6 +99,8 @@ model Akun {
 model KategoriKontak {
   id   Int    @id @default(autoincrement())
   nama String
+
+  KontakDetail KontakDetail[]
 }
 
 // Kategori Produk
@@ -138,7 +140,18 @@ model Kontak {
   Penjualan               Penjualan[]
   Pembelian               Pembelian[]
 
+  KontakDetail KontakDetail[]
   HeaderBiaya HeaderBiaya[]
+}
+
+// Kontak Detail
+model KontakDetail {
+  id     Int  @id @default(autoincrement())
+  kontak  Kontak @relation(fields: [kontak_id], references: [id])
+  kontak_id Int
+  kontak_type  KategoriKontak @relation(fields: [kontak_type_id], references: [id])
+  kontak_type_id Int
+  
 }
 
 // Produk table

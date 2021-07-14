@@ -9,10 +9,6 @@ export default async (req, res) => {
           roleType: "Admin",
           roleDesc: "Administrator",
         },
-        {
-          roleType: "User",
-          roleDesc: "User biasa",
-        },
       ],
       skipDuplicates: true,
     });
@@ -25,13 +21,6 @@ export default async (req, res) => {
           email: "admin@hbm.co.id",
           password: "admin1234",
           roleId: 1,
-        },
-        {
-          firstName: "User",
-          lastName: "User2",
-          email: "user@gmail.com",
-          password: "user1234",
-          roleId: 2,
         },
       ],
       skipDuplicates: true,
@@ -156,22 +145,16 @@ export default async (req, res) => {
           menu_id: 14,
           value: true,
         },
+      ],
+      skipDuplicates: true,
+    });
 
-        {
-          role_id: 2,
-          menu_id: 1,
-          value: true,
-        },
-        {
-          role_id: 2,
-          menu_id: 2,
-          value: true,
-        },
-        {
-          role_id: 2,
-          menu_id: 3,
-          value: true,
-        },
+    const createKategoriKontak = await prisma.kategoriKontak.createMany({
+      data: [
+        { nama: "Supplier" },
+        { nama: "Pelanggan" },
+        { nama: "Karyawan" },
+        { nama: "Lainnya" },
       ],
       skipDuplicates: true,
     });
@@ -182,7 +165,8 @@ export default async (req, res) => {
         { message: "Create Admin Role Success!", data: createRole },
         { message: "Create User Admin Success!", data: createUser },
         { message: "Create Menu Success!", data: createMenu },
-        { message: "Create Privellege Success!", data: createRolePrivellege }
+        { message: "Create Role Privellege Success!", data: createRolePrivellege },
+        { message: "Create Kategori Kontak Success!", data: createKategoriKontak }
       );
   } catch (error) {
     res
@@ -191,7 +175,8 @@ export default async (req, res) => {
         { roleType: "Create Admin Role Failed!", error },
         { firstName: "Create User Admin Failed!", error },
         { menu_name: "Create Menu Failed!", error },
-        { role_id: "Create Privellege Failed!", error }
+        { role_id: "Create Privellege Failed!", error },
+        { nama: "Create Kategori Kontak Failed!", error }
       );
     console.log(error);
   }

@@ -112,6 +112,15 @@ CREATE TABLE `Kontak` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `KontakDetail` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `kontak_id` INTEGER NOT NULL,
+    `kontak_type_id` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Produk` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `nama` VARCHAR(191) NOT NULL,
@@ -288,6 +297,12 @@ ALTER TABLE `Kontak` ADD FOREIGN KEY (`akun_piutang`) REFERENCES `Akun`(`id`) ON
 
 -- AddForeignKey
 ALTER TABLE `Kontak` ADD FOREIGN KEY (`akun_hutang`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `KontakDetail` ADD FOREIGN KEY (`kontak_id`) REFERENCES `Kontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `KontakDetail` ADD FOREIGN KEY (`kontak_type_id`) REFERENCES `KategoriKontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Produk` ADD FOREIGN KEY (`kategoriId`) REFERENCES `KategoriProduk`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

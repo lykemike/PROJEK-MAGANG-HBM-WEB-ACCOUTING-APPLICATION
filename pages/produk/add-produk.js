@@ -12,7 +12,7 @@ import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function addProduk({ data, data2, data3 }) {
+export default function addProduk({ data, data2, data3, data4 }) {
   // Form Validation
   const ProdukSchema = Yup.object().shape({
     file_upload: Yup.string().required("required"),
@@ -57,7 +57,7 @@ export default function addProduk({ data, data2, data3 }) {
           akun_penjualan: "",
           pajak_jual: "",
         }}
-        // validationSchema={ProdukSchema}
+        validationSchema={ProdukSchema}
         onSubmit={async (values) => {
           let formData = new FormData();
           for (var key in values) {
@@ -266,7 +266,7 @@ export default function addProduk({ data, data2, data3 }) {
                         as='select'
                         name='akun_pembelian'
                         onChange={props.handleChange}>
-                        <option disabled>Pilih</option>
+                        <option>Pilih</option>
                         {data.map((akunPembelian) => (
                           <option key={akunPembelian.id} value={akunPembelian.id}>
                             {akunPembelian.nama_akun}
@@ -287,9 +287,12 @@ export default function addProduk({ data, data2, data3 }) {
                         as='select'
                         name='pajak_beli'
                         onChange={props.handleChange}>
-                        <option disabled>Pilih</option>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
+                        <option>Pilih</option>
+                        {data4.map((pajak, index) => (
+                          <option key={index} value={pajak.id}>
+                            {pajak.nama}
+                          </option>
+                        ))}
                       </Form.Control>
                       {props.errors.pajak_beli && props.touched.pajak_beli ? (
                         <div class='text-red-500 text-sm'>
@@ -330,7 +333,7 @@ export default function addProduk({ data, data2, data3 }) {
                         as='select'
                         name='akun_penjualan'
                         onChange={props.handleChange}>
-                        <option disabled>Pilih</option>
+                        <option>Pilih</option>
                         {data2.map((akunPenjualan) => (
                           <option key={akunPenjualan.id} value={akunPenjualan.id}>
                             {akunPenjualan.nama_akun}
@@ -351,9 +354,12 @@ export default function addProduk({ data, data2, data3 }) {
                         as='select'
                         name='pajak_jual'
                         onChange={props.handleChange}>
-                        <option disabled>Pilih</option>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
+                        <option>Pilih</option>
+                        {data4.map((pajak, index) => (
+                          <option key={index} value={pajak.id}>
+                            {pajak.nama}
+                          </option>
+                        ))}
                       </Form.Control>
                       {props.errors.pajak_jual && props.touched.pajak_jual ? (
                         <div class='text-red-500 text-sm'>
@@ -398,6 +404,12 @@ export async function getServerSideProps() {
     },
   });
 
+  const getPajak = await prisma.pajak.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
+
   const getKategoriProduk = await prisma.kategoriProduk.findMany();
 
   return {
@@ -405,6 +417,7 @@ export async function getServerSideProps() {
       data: getAkunPembelian,
       data2: getAkunPenjualan,
       data3: getKategoriProduk,
+      data4: getPajak,
     },
   };
 }
