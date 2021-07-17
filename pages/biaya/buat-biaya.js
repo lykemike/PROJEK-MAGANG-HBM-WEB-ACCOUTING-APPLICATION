@@ -292,15 +292,9 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                                   props.setFieldValue("pajak", pajak_total);
 
                                   // Rumus total
-                                  let total1 =
-                                    pajak3 + props.values.detail_biaya[index].total_per_baris;
-                                  props.setFieldValue(
-                                    (props.values.detail_biaya[index].total = total1)
-                                  );
-                                  const total2 = props.values.detail_biaya.reduce(
-                                    (a, b) => (a = a + b.total),
-                                    0
-                                  );
+                                  let total1 = pajak3 + props.values.detail_biaya[index].total_per_baris;
+                                  props.setFieldValue((props.values.detail_biaya[index].total = total1));
+                                  const total2 = props.values.detail_biaya.reduce((a, b) => (a = a + b.total),0);
                                   props.setFieldValue("total", total2);
 
                                   // Rumus potongan

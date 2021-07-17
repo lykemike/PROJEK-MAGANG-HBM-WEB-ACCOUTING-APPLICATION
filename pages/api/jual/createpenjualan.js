@@ -1,71 +1,81 @@
-import { PrismaClient } from '.prisma/client';
+import { PrismaClient } from ".prisma/client";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
-	try {
-		const kontakPenjualan = {
-			kontakID: parseInt(req.body.nama_pelanggan),
-			namapelanggan: req.body.nama_pelanggan,
-			email: req.body.email,
-			alamatpenagihan: req.body.alamat_penagihan,
-			tgltransaksi: req.body.tgl_transaksi,
-			tgljatuhtempo: req.body.tgl_jatuhtempo,
-			syaratpembayaran: req.body.syarat_pembayaran,
-			no_ref_penagihan: parseInt(req.body.no_ref_penagihan),
-			notransaksi: parseInt(req.body.no_transaksi),
-			tag: req.body.tag,
-			uangmuka: parseInt(req.body.uangmuka),
-			sisa_tagihan: Math.floor(req.body.sisatagihan),
-			pesan: req.body.pesan,
-			memo: req.body.memo,
-			fileattachment: '-',
-			diskontambahan: req.body.diskontambahan,
-			pemotongan: req.body.pemotongan,
-			total: Math.floor(req.body.total)
-		};
+  try {
+    const frontend_data = {
+      kontak_id: parseInt(req.body.nama_supplier),
+      nama_supplier: req.body.nama_supplier,
+      email: req.body.email,
+      alamat_supplier: req.body.alamat_supplier,
+      tgl_transaksi: req.body.tgl_transaksi,
+      tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
+      syarat_pembayaran: req.body.syarat_pembayaran,
+      no_ref_penagihan: parseInt(req.body.no_ref_penagihan),
+      no_transaksi: parseInt(req.body.no_transaksi),
+      tag: req.body.no_transaksi,
+      pesan: req.body.pesan,
+      memo: req.body.memo,
+      fileattachment: req.body.fileattachment,
+      subtotal: parseInt(req.body.subtotal),
+      total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
+      diskon: parseInt(req.body.diskon),
+      total_diskon: parseInt(req.body.total_diskon),
+      total_pajak_per_baris: parseInt(req.body.total_pajak_per_baris),
+      total: parseInt(req.body.total),
+      pemotongan: parseInt(req.body.pemotongan),
+      pemotongan_total: parseInt(req.body.pemotongan_total),
+      akun_pemotongan: parseInt(req.body.akun_pemotongan),
+      uang_muka: parseInt(req.body.uang_muka),
+      akun_uang_muka: parseInt(req.body.akun_uang_muka),
+      sisa_tagihan: parseInt(req.body.sisa_tagihan),
+    };
 
-		const createpenjualan = await prisma.penjualan.createMany({
-			data: [kontakPenjualan]
-		});
-		const findpenjualan = await prisma.penjualan.findFirst({
-			where: {
-				notransaksi: parseInt(req.body.no_transaksi)
-			}
-		});
+    const create_header_penjualan = await prisma.headerPenjualan.createMany({
+      data: [frontend_data],
+      skipDuplicates: true,
+    });
 
-		let detail = [];
-		req.body.produks.map((i) => {
-			detail.push({
-				penjualanID: findpenjualan.notransaksi,
-				produkID: parseInt(i.produk_ID),
-				nama_produk: i.nama_produk,
-				desk_produk: i.deskripsi_produk,
-				kuantitas: parseInt(i.kuantitas),
-				satuan: 'gram',
-				harga_satuan: parseInt(Math.floor(i.harga_satuan)),
-				diskon: parseInt(i.diskon),
-				diskonperbaris: parseInt(i.diskonperbaris),
-				pajakperbaris: parseInt(i.pajakperbaris),
-				pajakID: parseInt(i.pajakID),
-				pajak: 0, //pajak nanti di hapus
-				jumlah: Math.floor(i.jumlah)
-			});
-		});
+    const find_header_penjualan = await prisma.headerPenjualan.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+      where: {
+        id: frontend_data.id,
+      },
+    });
 
-		const createpenjualandetail = await prisma.penjualandetail.createMany({
-			data: detail,
-			skipDuplicates: true
-		});
+    let detail = [];
+    req.body.produks.map((i) => {
+      detail.push({
+        header_penjualan_id: find_header_penjualan.id,
+        produk_id: parseInt(i.produk_id),
+        nama_produk: i.nama_produk,
+        desk_produk: i.deskripsi_produk,
+        kuantitas: parseInt(i.kuantitas),
+        satuan: i.satuan,
+        harga_satuan: parseInt(i.harga_satuan),
+        diskon: parseInt(i.diskon),
+        hasil_diskon: parseInt(i.hasil_diskon),
+        pajak_id: parseInt(i.pajak_id),
+        pajak_nama: i.pajak_nama,
+        hasil_pajak: parseInt(i.hasil_pajak),
+        jumlah: parseInt(i.jumlah),
+      });
+    });
 
-		res.status(201).json([
-			{ message: 'CREATE PENJUALAN SUCCESS!', data: findpenjualan },
-			{ message: 'CREATE PENJUALAN SUCCESS!', data: createpenjualandetail }
-		]);
-	} catch (error) {
-		res.status(400).json([
-			{ data: 'CREATE PENJUALAN FAILED!', error },
-			{ data: 'CREATE PENJUALAN FAILED!', error }
-		]);
-		console.log(error);
-	}
+    const create_detail_penjualan = await prisma.detailPenjualan.createMany({
+      data: detail,
+      skipDuplicates: true,
+    });
+
+    res.status(201).json([
+      { message: "Create Header Penjualan Success!", data: create_header_penjualan },
+      { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
+      { message: "Create Detail Penjualan Success!", data: create_detail_penjualan },
+    ]);
+  } catch (error) {
+    res.status(400).json([{ data: "Failed!", error }]);
+    console.log(error);
+  }
 };

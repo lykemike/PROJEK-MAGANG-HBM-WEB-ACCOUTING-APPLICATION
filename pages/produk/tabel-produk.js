@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import {
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  InputGroup,
-  FormControl,
-  Col,
-  Row,
-  FormCheck,
-} from "react-bootstrap";
+import { Card, Button, DropdownButton, Dropdown, InputGroup, FormControl, Col, Row, FormCheck, Pagination } from "react-bootstrap";
 import SearchIcon from "@material-ui/icons/Search";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AddIcon from "@material-ui/icons/Add";
@@ -19,9 +9,25 @@ import { CSVLink, CSVDownload } from "react-csv";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+let active = 2;
+let items = [];
+for (let number = 1; number <= 5; number++) {
+  items.push(
+    <Pagination.Item key={number} active={number === active}>
+      {number}
+    </Pagination.Item>
+  );
+}
+
 export default function tabelProduk({ data }) {
   const [search, setSearch] = useState([]);
   const [product, setProduct] = useState(data);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const firstIndex = page * rowsPerPage;
+  const lastIndex = page * rowsPerPage + rowsPerPage;
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -36,12 +42,27 @@ export default function tabelProduk({ data }) {
     return search.length > 0 ? search : product;
   };
 
+  console.log(data);
+
+  const restructure = (data) => {
+    let result = [];
+    data.map((i) => {
+      result.push({
+        Nama: i.nama,
+        "Kode SKU": i.kode_sku,
+        "Kategori Akun": i.kategori_akun.nama,
+        Unit: i.unit,
+      });
+    });
+    return result;
+  };
+
   return (
     <Layout>
       <Row>
         <Col>
           <h2>Produk</h2>
-          <CSVLink data={data} filename='product.csv'>
+          <CSVLink data={restructure(data)} filename='product.csv'>
             CSV
           </CSVLink>
         </Col>
@@ -89,12 +110,7 @@ export default function tabelProduk({ data }) {
                         <SearchIcon />
                       </InputGroup.Text>
                     </InputGroup.Prepend>
-                    <FormControl
-                      placeholder='cari'
-                      aria-label='cari'
-                      aria-describedby='basic-addon1'
-                      onChange={(e) => handleChange(e)}
-                    />
+                    <FormControl placeholder='cari' aria-label='cari' aria-describedby='basic-addon1' onChange={(e) => handleChange(e)} />
                   </InputGroup>
                 </Col>
               </Col>
@@ -140,53 +156,76 @@ export default function tabelProduk({ data }) {
                   </tr>
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  {handleList().map((produk) => (
-                    <tr>
-                      <th className='px-2 py-2'>
-                        <FormCheck />
-                      </th>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.kode_sku}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.nama}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>69</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>30</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.unit}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>-</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>-</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>
-                          <Link key={produk.id} href={`${produk.id}`}>
-                            <a>
-                              <Button variant='warning mr-2'>Edit</Button>
-                            </a>
-                          </Link>
-                        </div>
-                      </td>
-                      {/* <td className='px-2 py-2 whitespace-nowrap'>
+                  {handleList()
+                    .slice(firstIndex, lastIndex)
+                    .map((produk) => (
+                      <tr>
+                        <th className='px-2 py-2'>
+                          <FormCheck />
+                        </th>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>{produk.kode_sku}</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>{produk.nama}</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>69</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>30</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>{produk.unit}</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>-</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>-</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan}</div>
+                        </td>
+                        <td className='px-2 py-2 whitespace-nowrap'>
+                          <div className='text-sm text-gray-900'>
+                            <Link key={produk.id} href={`${produk.id}`}>
+                              <a>
+                                <Button variant='warning mr-2'>Edit</Button>
+                              </a>
+                            </Link>
+                          </div>
+                        </td>
+                        {/* <td className='px-2 py-2 whitespace-nowrap'>
                         <div className='text-sm text-gray-900'>
                           <img src={`http://localhost:3000/uploads/${produk.image}`} alt='produk' />
                         </div>
                       </td> */}
-                    </tr>
-                  ))}
+                      </tr>
+                    ))}
                 </tbody>
               </table>
+            </div>
+            <div>
+              <div>
+                <Pagination>
+                  <Pagination.First />
+                  <Pagination.Prev />
+                  <Pagination.Item>{1}</Pagination.Item>
+                  <Pagination.Ellipsis />
+
+                  <Pagination.Item>{10}</Pagination.Item>
+                  <Pagination.Item>{11}</Pagination.Item>
+                  <Pagination.Item active>{12}</Pagination.Item>
+                  <Pagination.Item>{13}</Pagination.Item>
+                  <Pagination.Item disabled>{14}</Pagination.Item>
+
+                  <Pagination.Ellipsis />
+                  <Pagination.Item>{20}</Pagination.Item>
+                  <Pagination.Next />
+                  <Pagination.Last />
+                </Pagination>
+              </div>
             </div>
           </Card.Body>
         </Card>
@@ -200,6 +239,11 @@ export async function getServerSideProps() {
   const products = await prisma.produk.findMany({
     orderBy: {
       id: "asc",
+    },
+    include: {
+      kategori_akun: true,
+      pembelian: true,
+      penjualan: true,
     },
   });
 

@@ -44,7 +44,7 @@ export default async (req, res) => {
           image: req.file.filename,
           nama: req.body.nama,
           kode_sku: req.body.kode_sku,
-          kategoriId: parseInt(req.body.kategori_akun),
+          kategori_produk_id: parseInt(req.body.kategori_produk),
           unit: parseInt(req.body.unit),
           deskripsi: req.body.deskripsi,
 

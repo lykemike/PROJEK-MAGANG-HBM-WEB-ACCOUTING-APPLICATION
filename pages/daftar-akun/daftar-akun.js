@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import { Button, DropdownButton, Dropdown, Row, Col } from "react-bootstrap";
+import TablePagination from "../../components/TablePagination";
+import { Button, DropdownButton, Dropdown, Row, Col, Pagination } from "react-bootstrap";
 import Add from "@material-ui/icons/Add";
 import Axios from "axios";
 import { useRouter } from "next/router";
@@ -9,6 +10,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function DaftarAkun({ data }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const firstIndex = page * rowsPerPage;
+  const lastIndex = page * rowsPerPage + rowsPerPage;
+
   const url1 = "http://localhost:3000/api/user/deletedaftarakun";
   const router = useRouter();
   const deletedata = (id) => {
@@ -26,6 +33,34 @@ export default function DaftarAkun({ data }) {
         console.log(error);
         alert(id);
       });
+  };
+
+  const handlePrevChange = () => {
+    if (page < 1) {
+      setPage(0);
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextChange = () => {
+    if (page < parseInt(data.length / rowsPerPage)) {
+      setPage(page + 1);
+    } else {
+      setPage(parseInt(data.length / rowsPerPage));
+    }
+  };
+
+  const handleFirstPage = () => {
+    setPage(0);
+  };
+
+  const handleClickPage = (id) => {
+    setPage(id);
+  };
+
+  const handleLastPage = () => {
+    setPage(parseInt(data.length / rowsPerPage));
   };
   return (
     <Layout>
@@ -96,8 +131,7 @@ export default function DaftarAkun({ data }) {
                   <div class='text-sm text-gray-900' />
                 </td>
               </tr>
-              {console.log(data)}
-              {data.map((i) => (
+              {data.slice(firstIndex, lastIndex).map((i) => (
                 <tr>
                   <td class='px-2 py-2 whitespace-nowrap'>
                     <div class='flex items-center'>
@@ -132,6 +166,17 @@ export default function DaftarAkun({ data }) {
               ))}
             </tbody>
           </table>
+          <div>
+            <TablePagination
+              onPrevChange={handlePrevChange}
+              onNextChange={handleNextChange}
+              onFirstPage={handleFirstPage}
+              onLastPage={handleLastPage}
+              onClickPage={handleClickPage}
+              lastIndex={parseInt(data.length / rowsPerPage)}
+              currentPage={page}
+            />
+          </div>
         </div>
       </div>
     </Layout>

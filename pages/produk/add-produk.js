@@ -18,7 +18,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
     file_upload: Yup.string().required("required"),
     nama: Yup.string().required("required"),
     kode_sku: Yup.string().required("required"),
-    kategori_akun: Yup.string().required("required"),
+    kategori_produk_id: Yup.string().required("required"),
     unit: Yup.number().integer().required("required"),
     deskripsi: Yup.string().required("required"),
     hbs: Yup.number().integer().required("required"),
@@ -47,7 +47,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
           file_upload: [],
           nama: "",
           kode_sku: "",
-          kategori_akun: "",
+          kategori_produk: "",
           unit: "",
           deskripsi: "",
           hbs: "",
@@ -123,12 +123,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                       <Form.Label>Nama</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control
-                        className='mb-2'
-                        placeholder=''
-                        name='nama'
-                        onChange={props.handleChange}
-                      />
+                      <Form.Control className='mb-2' placeholder='' name='nama' onChange={props.handleChange} />
                       {props.errors.nama && props.touched.nama ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -144,12 +139,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                       <Form.Label>Kode / SKU</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control
-                        className='mb-2'
-                        placeholder=''
-                        name='kode_sku'
-                        onChange={props.handleChange}
-                      />
+                      <Form.Control className='mb-2' placeholder='' name='kode_sku' onChange={props.handleChange} />
                       {props.errors.kode_sku && props.touched.kode_sku ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -165,23 +155,19 @@ export default function addProduk({ data, data2, data3, data4 }) {
                       <Form.Label>Kategori</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control
-                        className='mb-2'
-                        as='select'
-                        name='kategori_akun'
-                        onChange={props.handleChange}>
+                      <Form.Control className='mb-2' as='select' name='kategori_produk' onChange={props.handleChange}>
                         {/* loop over kategori and show them */}
-                        <option disabled>Pilih</option>
+                        <option>Pilih</option>
                         {data3.map((kategoriProduk) => (
                           <option key={kategoriProduk.id} value={kategoriProduk.id}>
                             {kategoriProduk.nama}
                           </option>
                         ))}
                       </Form.Control>
-                      {props.errors.kategori_akun && props.touched.kategori_akun ? (
+                      {props.errors.kategori_produk && props.touched.kategori_produk ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
-                          {props.errors.kategori_akun}
+                          {props.errors.kategori_produk}
                         </div>
                       ) : null}
                     </Col>
@@ -193,11 +179,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                       <Form.Label>Unit</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control
-                        className='mb-2'
-                        as='select'
-                        name='unit'
-                        onChange={props.handleChange}>
+                      <Form.Control className='mb-2' as='select' name='unit' onChange={props.handleChange}>
                         <option>Pilih Unit</option>
                         <option value='1'>Pcs</option>
                         <option value='2'>Buah</option>
@@ -220,12 +202,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                       <Form.Label>Deskripsi</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control
-                        className='mb-2'
-                        placeholder=''
-                        name='deskripsi'
-                        onChange={props.handleChange}
-                      />
+                      <Form.Control className='mb-2' placeholder='' name='deskripsi' onChange={props.handleChange} />
                       {props.errors.deskripsi && props.touched.deskripsi ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -246,12 +223,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                   <Row sm='6'>
                     <Col>
                       <Form.Label>Harga Beli Satuan</Form.Label>
-                      <Form.Control
-                        className='mb-2'
-                        placeholder='Rp. 0,00'
-                        name='hbs'
-                        onChange={props.handleChange}
-                      />
+                      <Form.Control className='mb-2' placeholder='Rp. 0,00' name='hbs' onChange={props.handleChange} />
                       {props.errors.hbs && props.touched.hbs ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -261,11 +233,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                     </Col>
                     <Col>
                       <Form.Label>Akun Pembelian</Form.Label>
-                      <Form.Control
-                        className='mb-2'
-                        as='select'
-                        name='akun_pembelian'
-                        onChange={props.handleChange}>
+                      <Form.Control className='mb-2' as='select' name='akun_pembelian' onChange={props.handleChange}>
                         <option>Pilih</option>
                         {data.map((akunPembelian) => (
                           <option key={akunPembelian.id} value={akunPembelian.id}>
@@ -282,11 +250,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                     </Col>
                     <Col>
                       <Form.Label>Pajak Beli</Form.Label>
-                      <Form.Control
-                        className='mb-2'
-                        as='select'
-                        name='pajak_beli'
-                        onChange={props.handleChange}>
+                      <Form.Control className='mb-2' as='select' name='pajak_beli' onChange={props.handleChange}>
                         <option>Pilih</option>
                         {data4.map((pajak, index) => (
                           <option key={index} value={pajak.id}>
@@ -313,12 +277,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                   <Row sm='6'>
                     <Col>
                       <Form.Label>Harga Jual Satuan</Form.Label>
-                      <Form.Control
-                        className='mb-2'
-                        placeholder='Rp. 0,00'
-                        name='hjs'
-                        onChange={props.handleChange}
-                      />
+                      <Form.Control className='mb-2' placeholder='Rp. 0,00' name='hjs' onChange={props.handleChange} />
                       {props.errors.hjs && props.touched.hjs ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -328,11 +287,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                     </Col>
                     <Col>
                       <Form.Label>Akun Penjualan</Form.Label>
-                      <Form.Control
-                        className='mb-2'
-                        as='select'
-                        name='akun_penjualan'
-                        onChange={props.handleChange}>
+                      <Form.Control className='mb-2' as='select' name='akun_penjualan' onChange={props.handleChange}>
                         <option>Pilih</option>
                         {data2.map((akunPenjualan) => (
                           <option key={akunPenjualan.id} value={akunPenjualan.id}>
@@ -349,11 +304,7 @@ export default function addProduk({ data, data2, data3, data4 }) {
                     </Col>
                     <Col>
                       <Form.Label>Pajak Jual</Form.Label>
-                      <Form.Control
-                        className='mb-2'
-                        as='select'
-                        name='pajak_jual'
-                        onChange={props.handleChange}>
+                      <Form.Control className='mb-2' as='select' name='pajak_jual' onChange={props.handleChange}>
                         <option>Pilih</option>
                         {data4.map((pajak, index) => (
                           <option key={index} value={pajak.id}>

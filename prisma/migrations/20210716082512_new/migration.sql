@@ -151,46 +151,52 @@ CREATE TABLE `Pajak` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Penjualan` (
+CREATE TABLE `HeaderPenjualan` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `kontakID` INTEGER NOT NULL,
-    `namapelanggan` VARCHAR(191) NOT NULL,
+    `kontak_id` INTEGER NOT NULL,
+    `nama_supplier` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `alamatpenagihan` VARCHAR(191) NOT NULL,
-    `tgltransaksi` VARCHAR(191) NOT NULL,
-    `tgljatuhtempo` VARCHAR(191) NOT NULL,
-    `syaratpembayaran` VARCHAR(191) NOT NULL,
+    `alamat_supplier` VARCHAR(191) NOT NULL,
+    `tgl_transaksi` VARCHAR(191) NOT NULL,
+    `tgl_jatuh_tempo` VARCHAR(191) NOT NULL,
+    `syarat_pembayaran` VARCHAR(191) NOT NULL,
     `no_ref_penagihan` INTEGER NOT NULL,
-    `notransaksi` INTEGER NOT NULL,
+    `no_transaksi` INTEGER NOT NULL,
     `tag` VARCHAR(191) NOT NULL,
-    `uangmuka` INTEGER NOT NULL,
-    `sisa_tagihan` INTEGER NOT NULL,
     `pesan` VARCHAR(191) NOT NULL,
     `memo` VARCHAR(191) NOT NULL,
     `fileattachment` VARCHAR(191) NOT NULL,
-    `diskontambahan` VARCHAR(191) NOT NULL,
-    `pemotongan` VARCHAR(191) NOT NULL,
+    `subtotal` INTEGER NOT NULL,
+    `total_diskon_per_baris` INTEGER NOT NULL,
+    `diskon` INTEGER NOT NULL,
+    `total_diskon` INTEGER NOT NULL,
+    `total_pajak_per_baris` INTEGER NOT NULL,
     `total` INTEGER NOT NULL,
-UNIQUE INDEX `Penjualan.notransaksi_unique`(`notransaksi`),
+    `pemotongan` INTEGER NOT NULL,
+    `pemotongan_total` INTEGER NOT NULL,
+    `akun_pemotongan` INTEGER NOT NULL,
+    `uang_muka` INTEGER NOT NULL,
+    `akun_uang_muka` INTEGER NOT NULL,
+    `sisa_tagihan` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Penjualandetail` (
+CREATE TABLE `DetailPenjualan` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `penjualanID` INTEGER NOT NULL,
-    `produkID` INTEGER NOT NULL,
+    `header_penjualan_id` INTEGER NOT NULL,
+    `produk_id` INTEGER NOT NULL,
     `nama_produk` VARCHAR(191) NOT NULL,
     `desk_produk` VARCHAR(191) NOT NULL,
     `kuantitas` INTEGER NOT NULL,
     `satuan` VARCHAR(191) NOT NULL,
     `harga_satuan` INTEGER NOT NULL,
     `diskon` INTEGER NOT NULL,
-    `diskonperbaris` INTEGER NOT NULL,
-    `pajakperbaris` INTEGER NOT NULL,
-    `pajakID` INTEGER NOT NULL,
-    `pajak` INTEGER NOT NULL,
+    `hasil_diskon` INTEGER NOT NULL,
+    `pajak_id` INTEGER NOT NULL,
+    `pajak_nama` VARCHAR(191) NOT NULL,
+    `hasil_pajak` INTEGER NOT NULL,
     `jumlah` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -320,16 +326,22 @@ ALTER TABLE `Pajak` ADD FOREIGN KEY (`akunPenjual`) REFERENCES `Akun`(`id`) ON D
 ALTER TABLE `Pajak` ADD FOREIGN KEY (`akunPembeli`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Penjualan` ADD FOREIGN KEY (`kontakID`) REFERENCES `Kontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `HeaderPenjualan` ADD FOREIGN KEY (`kontak_id`) REFERENCES `Kontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Penjualandetail` ADD FOREIGN KEY (`penjualanID`) REFERENCES `Penjualan`(`notransaksi`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `HeaderPenjualan` ADD FOREIGN KEY (`akun_pemotongan`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Penjualandetail` ADD FOREIGN KEY (`produkID`) REFERENCES `Produk`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `HeaderPenjualan` ADD FOREIGN KEY (`akun_uang_muka`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Penjualandetail` ADD FOREIGN KEY (`pajakID`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `DetailPenjualan` ADD FOREIGN KEY (`header_penjualan_id`) REFERENCES `HeaderPenjualan`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailPenjualan` ADD FOREIGN KEY (`produk_id`) REFERENCES `Produk`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailPenjualan` ADD FOREIGN KEY (`pajak_id`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Pembelian` ADD FOREIGN KEY (`kontakID`) REFERENCES `Kontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

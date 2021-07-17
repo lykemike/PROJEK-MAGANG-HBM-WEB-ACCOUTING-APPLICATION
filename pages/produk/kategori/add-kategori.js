@@ -30,7 +30,7 @@ export default function addKategoriProduk() {
             <Formik
                 initialValues={{
                     nama: '',
-                    jumlah: ''
+                    jumlah: 0
                 }}
 
                 validationSchema={KategoriProdukSchema}
@@ -68,7 +68,7 @@ export default function addKategoriProduk() {
                                         <Form.Label>Jumlah</Form.Label>
                                     </Col>
                                     <Col sm="4">
-                                        <Form.Control placeholder="Jumlah" name="jumlah" onChange={props.handleChange} onBlur={props.handleBlur} />
+                                        <Form.Control placeholder="Auto (0)" name="jumlah" disabled />
                                     </Col>
                                 </Row>
 
