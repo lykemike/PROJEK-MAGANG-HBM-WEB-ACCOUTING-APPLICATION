@@ -3,6 +3,7 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import { Card, Button, DropdownButton, Dropdown, InputGroup, FormControl, Col, Row, FormCheck, Pagination } from "react-bootstrap";
 import SearchIcon from "@material-ui/icons/Search";
+import TablePagination from "../../components/TablePagination";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AddIcon from "@material-ui/icons/Add";
 import { CSVLink, CSVDownload } from "react-csv";
@@ -42,8 +43,6 @@ export default function tabelProduk({ data }) {
     return search.length > 0 ? search : product;
   };
 
-  console.log(data);
-
   const restructure = (data) => {
     let result = [];
     data.map((i) => {
@@ -51,11 +50,40 @@ export default function tabelProduk({ data }) {
         Nama: i.nama,
         "Kode SKU": i.kode_sku,
         "Kategori Akun": i.kategori_produk.nama,
-        Unit: i.unit,
+        Unit: i.satuan.satuan,
       });
     });
     return result;
   };
+  
+  const handlePrevChange = () => {
+    if (page < 1) {
+      setPage(0);
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextChange = () => {
+    if (page < parseInt(data.length / rowsPerPage)) {
+      setPage(page + 1);
+    } else {
+      setPage(parseInt(data.length / rowsPerPage));
+    }
+  };
+
+  const handleFirstPage = () => {
+    setPage(0);
+  };
+
+  const handleClickPage = (id) => {
+    setPage(id);
+  };
+
+  const handleLastPage = () => {
+    setPage(parseInt(data.length / rowsPerPage));
+  };
+  
 
   return (
     <Layout>
@@ -67,12 +95,10 @@ export default function tabelProduk({ data }) {
           </CSVLink>
         </Col>
         <Col className='d-flex justify-content-end'>
-          <Link href='kategori/tabel-kategori'>
-            <a>
+            {/* <a>
               <SettingsIcon fontSize='Large' />
             </a>
-          </Link>
-          <h4 className='mr-4'>Kategori Produk</h4>
+          <h4 className='mr-4'>Kategori Produk</h4> */}
           <Link href='/produk/add-produk'>
             <a>
               <Button variant='primary'>
@@ -97,10 +123,31 @@ export default function tabelProduk({ data }) {
               </Col>
 
               <Col className='d-flex justify-content-end'>
+              <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Tambah'>
+                  <Dropdown.Item>
+                    <a>
+                    <Link href='kategori/tabel-kategori'>
+                        Kategori Produk
+                        </Link>
+                    </a>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <a>
+                      <Link href='satuan/tabel-satuan'>
+                      Satuan Produk
+                      </Link>
+                   </a>
+                  </Dropdown.Item>
+                </DropdownButton>
+
                 <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
                   <Dropdown.Item></Dropdown.Item>
                   <Dropdown.Item>
-                    <a>Hapus</a>
+                    <a>
+                    <CSVLink data={restructure(data)} filename='product.csv'>
+                     CSV
+                   </CSVLink>
+                   </a>
                   </Dropdown.Item>
                 </DropdownButton>
                 <Col sm='6'>
@@ -156,7 +203,7 @@ export default function tabelProduk({ data }) {
                   </tr>
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  {data.map((produk) => (
+                  {data.slice(firstIndex, lastIndex).map((produk) => (
                     <tr>
                       <th className='px-2 py-2'>
                         <FormCheck />
@@ -174,7 +221,7 @@ export default function tabelProduk({ data }) {
                         <div className='text-sm text-gray-900'>30</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.unit}</div>
+                        <div className='text-sm text-gray-900'>{produk.satuan.satuan}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
                         <div className='text-sm text-gray-900'>-</div>
@@ -203,6 +250,17 @@ export default function tabelProduk({ data }) {
                   ))}
                 </tbody>
               </table>
+              <div class='flex items-center justify-center mt-4'>
+                <TablePagination
+                  onPrevChange={handlePrevChange}
+                  onNextChange={handleNextChange}
+                  onFirstPage={handleFirstPage}
+                  onLastPage={handleLastPage}
+                  onClickPage={handleClickPage}
+                  lastIndex={parseInt(data.length / rowsPerPage)}
+                  currentPage={page}
+                />
+              </div>
             </div>
           </Card.Body>
         </Card>
@@ -221,6 +279,7 @@ export async function getServerSideProps() {
       kategori_produk: true,
       pembelian: true,
       penjualan: true,
+      satuan: true,
     },
   });
 

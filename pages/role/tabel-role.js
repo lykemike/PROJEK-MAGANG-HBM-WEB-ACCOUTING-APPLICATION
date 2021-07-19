@@ -1,9 +1,9 @@
-import React from "react";
+import React,{useState} from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import { Button, Row, Col } from "react-bootstrap";
 import Add from "@material-ui/icons/Add";
-
+import TablePagination from "../../components/TablePagination";
 import { Formik, Form as Forms } from "formik";
 import Axios from "axios";
 import { useRouter } from "next/router";
@@ -12,6 +12,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function roleList({ data }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const firstIndex = page * rowsPerPage;
+  const lastIndex = page * rowsPerPage + rowsPerPage;
+
   // Role API
   const deleteRole = "http://localhost:3000/api/role/deleteRole";
 
@@ -32,6 +38,35 @@ export default function roleList({ data }) {
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  
+  const handlePrevChange = () => {
+    if (page < 1) {
+      setPage(0);
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextChange = () => {
+    if (page < parseInt(data.length / rowsPerPage)) {
+      setPage(page + 1);
+    } else {
+      setPage(parseInt(data.length / rowsPerPage));
+    }
+  };
+
+  const handleFirstPage = () => {
+    setPage(0);
+  };
+
+  const handleClickPage = (id) => {
+    setPage(id);
+  };
+
+  const handleLastPage = () => {
+    setPage(parseInt(data.length / rowsPerPage));
   };
 
   return (
@@ -69,7 +104,7 @@ export default function roleList({ data }) {
                     </tr>
                   </thead>
                   <tbody className='bg-white divide-y divide-gray-200'>
-                    {data.map((role) => (
+                    {data.slice(firstIndex, lastIndex).map((role) => (
                       <tr>
                         <td className='px-2 py-2 whitespace-nowrap'>
                           <div className='text-sm text-gray-900'>{role.id}</div>
@@ -96,6 +131,17 @@ export default function roleList({ data }) {
                     ))}
                   </tbody>
                 </table>
+                <div class='flex items-center justify-center mt-4'>
+                  <TablePagination
+                    onPrevChange={handlePrevChange}
+                    onNextChange={handleNextChange}
+                    onFirstPage={handleFirstPage}
+                    onLastPage={handleLastPage}
+                    onClickPage={handleClickPage}
+                    lastIndex={parseInt(data.length / rowsPerPage)}
+                    currentPage={page}
+                  />
+                </div>
               </div>
             </div>
           </Forms>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
 import {
@@ -25,6 +25,23 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default function Kontak({ data }) {
+
+	const [search, setSearch] = useState([]);
+	const [product, setProduct] = useState(data);
+
+	const handleChange = (e) => {
+		e.preventDefault();
+		if (e.target.value !== "") {
+		  setSearch(product.filter((i) => i.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+		} else {
+		  setSearch([]);
+		}
+	  };
+	
+	  const handleList = () => {
+		return search.length > 0 ? search : product;
+	  };
+
 	// Kontak API
 	const deleteKontak = 'http://localhost:3000/api/kontak/deleteKontak';
 
@@ -184,8 +201,8 @@ export default function Kontak({ data }) {
 					<div eventKey="supplier">
 						<div class="mt-8">
 							<Form.Group as={Row}>
-								<SettingsIcon fontSize="Large" />
-								<h3>Daftar Pelanggan</h3>
+								<SettingsIcon fontSize="medium" />
+								<h5>Daftar Pelanggan</h5>
 							</Form.Group>
 							<div class="flex flex-row-reverse mb-2">
 								<Form.Group as={Row}>
@@ -217,6 +234,7 @@ export default function Kontak({ data }) {
 												placeholder="cari"
 												aria-label="cari"
 												aria-describedby="basic-addon1"
+												onChange={(e) => handleChange(e)}
 											/>
 										</InputGroup>
 									</Col>

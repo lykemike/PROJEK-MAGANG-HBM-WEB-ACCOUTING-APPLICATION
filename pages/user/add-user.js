@@ -44,7 +44,7 @@ export default function User({ data }) {
         }}
         validationSchema={UserSchema}
         onSubmit={async (values) => {
-          alert(JSON.stringify(values, null, 2));
+          // alert(JSON.stringify(values, null, 2));
           Axios.post(createUser, values)
             .then(function (response) {
               console.log(response);

@@ -1,14 +1,61 @@
-import React from "react";
+import React,{useState} from "react";
 import Layout from "../../components/Layout";
 import { Row, Col, Button, InputGroup, FormControl, FormCheck } from "react-bootstrap";
 import Link from "next/link";
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
-
+import TablePagination from "../../components/TablePagination";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function Pengeluaran({ data }) {
+  const [search, setSearch] = useState([]);
+  const [product, setProduct] = useState(data);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const firstIndex = page * rowsPerPage;
+  const lastIndex = page * rowsPerPage + rowsPerPage;
+  
+  const handleChange = (e) => {
+    e.preventDefault();
+    if (e.target.value !== "") {
+      setSearch(product.filter((biaya) => biaya.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+    } else {
+      setSearch([]);
+    }
+  };
+  const handlePrevChange = () => {
+    if (page < 1) {
+      setPage(0);
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextChange = () => {
+    if (page < parseInt(data.length / rowsPerPage)) {
+      setPage(page + 1);
+    } else {
+      setPage(parseInt(data.length / rowsPerPage));
+    }
+  };
+
+  const handleFirstPage = () => {
+    setPage(0);
+  };
+
+  const handleClickPage = (id) => {
+    setPage(id);
+  };
+
+  const handleLastPage = () => {
+    setPage(parseInt(data.length / rowsPerPage));
+  };
+
+
+
   return (
     <Layout>
       <div>
@@ -63,7 +110,12 @@ export default function Pengeluaran({ data }) {
                   <SearchIcon />
                 </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl placeholder='Cari' aria-label='cari' aria-describedby='basic-addon1' />
+              <FormControl 
+                placeholder='Cari' 
+                aria-label='cari' 
+                aria-describedby='basic-addon1' 
+                onChange={(e) => handleChange(e)}
+                />
             </InputGroup>
           </Col>
         </Row>
@@ -227,7 +279,7 @@ export default function Pengeluaran({ data }) {
               </td>
             </tr>
 
-            {data.map((biaya) => (
+            {data.slice(firstIndex, lastIndex).map((biaya) => (
               <tr>
                 <Link key={biaya.id} href={`${biaya.id}`}>
                   <a>
@@ -260,6 +312,17 @@ export default function Pengeluaran({ data }) {
             ))}
           </tbody>
         </table>
+        <div class='flex items-center justify-center mt-4'>
+            <TablePagination
+              onPrevChange={handlePrevChange}
+              onNextChange={handleNextChange}
+              onFirstPage={handleFirstPage}
+              onLastPage={handleLastPage}
+              onClickPage={handleClickPage}
+              lastIndex={parseInt(data.length / rowsPerPage)}
+              currentPage={page}
+            />
+          </div>
       </div>
     </Layout>
   );

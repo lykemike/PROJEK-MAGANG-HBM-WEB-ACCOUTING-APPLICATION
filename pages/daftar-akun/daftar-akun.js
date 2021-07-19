@@ -62,6 +62,7 @@ export default function DaftarAkun({ data }) {
   const handleLastPage = () => {
     setPage(parseInt(data.length / rowsPerPage));
   };
+  
   return (
     <Layout>
       <div variant='container'>
@@ -166,7 +167,7 @@ export default function DaftarAkun({ data }) {
               ))}
             </tbody>
           </table>
-          <div class='flex items-center justify-center'>
+          <div class='flex items-center justify-center mt-4'>
             <TablePagination
               onPrevChange={handlePrevChange}
               onNextChange={handleNextChange}

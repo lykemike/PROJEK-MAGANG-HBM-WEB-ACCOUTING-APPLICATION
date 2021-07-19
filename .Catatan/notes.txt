@@ -70,3 +70,14 @@ Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
 XXXXXAlamat pembayaran kontak di tampilin di buat biaya alamt penagihan
 
 Pajak Beli dan Jual List dari Dropdown pajak 
+
+
+Batas Minimum dihapus dulu.
+
+// Meeting hari ini
+Quantity dan batas minimum input dari mana?
+Harga Rata2 dan Harga beli terakhir ?
+
+
+
+

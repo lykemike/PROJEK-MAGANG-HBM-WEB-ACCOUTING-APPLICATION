@@ -177,7 +177,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
                     <textarea
                       rows='3'
                       id='message'
-                      class='px-16 py-2 border border-gray-800  '
+                      class='px-10 py-2 border border-gray-800  '
                       name='alamat_supplier'
                       value={props.values.alamat_supplier}
                       onChange={(e) => {
@@ -363,8 +363,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
                                     props.setFieldValue("total_diskon", diskon_tambahan);
 
                                     // Rumus total
-                                    let total = subtotal - (diskon_total + diskon_tambahan);
-                                    props.setFieldValue((props.values.total = total));
+                                    let total = (subtotal + pajak_total) - (diskon_total + diskon_tambahan);
+                                    props.setFieldValue(props.values.total = total);
 
                                     // Rumus pemotongan
                                     let pemotongan = props.values.total - props.values.pemotongan;
@@ -416,7 +416,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
                                     props.setFieldValue("total_diskon", diskon_tambahan);
 
                                     // Rumus total
-                                    let total = subtotal - (diskon_total + diskon_tambahan);
+                                    let total = (subtotal + parseInt(props.values.pajak_total)) - (diskon_total + diskon_tambahan);
                                     props.setFieldValue((props.values.total = total));
 
                                     // Rumus pemotongan
@@ -561,7 +561,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
                             props.setFieldValue("total_diskon", diskon_tambahan);
 
                             // Rumus total
-                            let total = props.values.subtotal - (diskon_tambahan + props.values.total_diskon_per_baris);
+                            let total = (props.values.subtotal + props.values.pajak_total) - (diskon_tambahan + props.values.total_diskon_per_baris);
                             props.setFieldValue((props.values.total = total));
 
                             // Rumus pemotongan
