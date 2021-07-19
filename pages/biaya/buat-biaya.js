@@ -63,12 +63,8 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
               <Row sm='12'>
                 <Col sm='4'>
                   <Form.Label className='font-medium'>Bayar Dari</Form.Label>
-                  <Form.Control
-                    as='select'
-                    defaultValue='Choose...'
-                    name='akun_kas_bank'
-                    onChange={props.handleChange}>
-                    <option disabled>Pilih</option>
+                  <Form.Control as='select' defaultValue='Choose...' name='akun_kas_bank' onChange={props.handleChange}>
+                    <option>Pilih</option>
                     {data.map((akun) => (
                       <option key={akun.id} value={akun.id}>
                         {akun.nama_akun}
@@ -88,8 +84,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                   <Row>
                     <h4 className='mr-2 '>Total</h4>
                     <h4 class='text-blue-600' name='jumlah_pemotongan'>
-                      Rp.{" "}
-                      {props.values.jumlah_pemotongan.toLocaleString({ minimumFractionDigits: 0 })}
+                      Rp. {props.values.jumlah_pemotongan.toLocaleString({ minimumFractionDigits: 0 })}
                     </h4>
                   </Row>
                 </Col>
@@ -116,7 +111,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                         props.setFieldValue(`alamat_penagihan`, result[0].alamat_pembayaran);
                       }
                     }}>
-                    <option disabled>Pilih</option>
+                    <option>Pilih</option>
                     {data3.map((kontak) => (
                       <option key={kontak.id} value={kontak.id}>
                         {kontak.nama}
@@ -126,33 +121,19 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                 </Col>
                 <Col sm='3'>
                   <Form.Label className='font-medium'>Tanggal Transaksi</Form.Label>
-                  <Form.Control
-                    placeholder='Auto'
-                    type='date'
-                    name='tgl_transaksi'
-                    onChange={props.handleChange}
-                  />
+                  <Form.Control placeholder='Auto' type='date' name='tgl_transaksi' onChange={props.handleChange} />
                 </Col>
                 <Col sm='3'>
                   <Form.Label className='font-medium'>Cara Pembayaran</Form.Label>
-                  <Form.Control
-                    as='select'
-                    defaultValue='Choose...'
-                    name='cara_pembayaran'
-                    onChange={props.handleChange}>
-                    <option disabled>Pilih</option>
+                  <Form.Control as='select' defaultValue='Choose...' name='cara_pembayaran' onChange={props.handleChange}>
+                    <option>Pilih</option>
                     <option value='Cash'>Tunai / Cash</option>
                     <option value='Credit'>Credit / Term of Payment</option>
                   </Form.Control>
                 </Col>
                 <Col sm='2'>
                   <Form.Label className='font-medium'>No. Transaksi</Form.Label>
-                  <Form.Control
-                    type='text'
-                    placeholder='Auto'
-                    name='no_transaksi'
-                    onChange={props.handleChange}
-                  />
+                  <Form.Control type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} />
                 </Col>
               </Row>
 
@@ -160,12 +141,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
               <Row sm='12'>
                 <Col sm='4' className='mt-3'>
                   <Form.Label className='font-medium'>Alamat Penagihan</Form.Label>
-                  <Form.Control
-                    as='textarea'
-                    rows={4}
-                    name='alamat_penagihan'
-                    value={props.values.alamat_penagihan}
-                  />
+                  <Form.Control as='textarea' rows={4} name='alamat_penagihan' value={props.values.alamat_penagihan} />
                 </Col>
                 <Col sm='3' />
                 <Col sm='3' />
@@ -217,10 +193,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                                 //   name='akun_biaya_id'
                                 name={`detail_biaya.${index}.akun_biaya_id`}
                                 onChange={(e) => {
-                                  props.setFieldValue(
-                                    `detail_biaya.${index}.akun_biaya_id`,
-                                    e.target.value
-                                  );
+                                  props.setFieldValue(`detail_biaya.${index}.akun_biaya_id`, e.target.value);
                                   if (e.target.value === "") {
                                     props.setFieldValue(`detail_biaya.${index}.akun_biaya_id`);
                                   } else {
@@ -230,12 +203,11 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                                   }
                                   props.setFieldValue(
                                     `detail_biaya.${index}.nama_akun`,
-                                    data2.filter((i) => i.id === parseInt(e.target.value))[0]
-                                      .nama_akun
+                                    data2.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun
                                   );
                                   //     console.log(data2.filter((i) => i.id === parseInt(e.target.value)));
                                 }}>
-                                <option disabled>Pilih</option>
+                                <option>Pilih</option>
                                 {data2.map((akun) => (
                                   <option key={akun.id} value={akun.id}>
                                     {akun.nama_akun}
@@ -244,22 +216,14 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                               </Form.Control>
                             </Col>
                             <Col sm='3'>
-                              <Form.Control
-                                placeholder=''
-                                type='text'
-                                name={`detail_biaya.${index}.deskripsi`}
-                                onChange={props.handleChange}
-                              />
+                              <Form.Control placeholder='' type='text' name={`detail_biaya.${index}.deskripsi`} onChange={props.handleChange} />
                             </Col>
                             <Col sm='2'>
                               <Form.Control
                                 as='select'
                                 name={`detail_biaya.${index}.pajak_id`}
                                 onChange={(e) => {
-                                  props.setFieldValue(
-                                    `detail_biaya.${index}.pajak_id`,
-                                    e.target.value
-                                  );
+                                  props.setFieldValue(`detail_biaya.${index}.pajak_id`, e.target.value);
                                   if (e.target.value === "") {
                                     props.setFieldValue(`detail_biaya.${index}.pajak_id`);
                                   } else {
@@ -267,41 +231,30 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                                       return i.id === parseInt(e.target.value);
                                     });
                                   }
-                                  props.setFieldValue(
-                                    `detail_biaya.${index}.nama`,
-                                    data4.filter((i) => i.id === parseInt(e.target.value))[0].nama
-                                  );
+                                  props.setFieldValue(`detail_biaya.${index}.nama`, data4.filter((i) => i.id === parseInt(e.target.value))[0].nama);
 
                                   // Rumus pajak
                                   let pajak1 = data4.filter((i) => {
                                     return i.id === parseInt(e.target.value);
                                   });
-                                  props.setFieldValue(
-                                    `detail_biaya.${index}.persen_pajak`,
-                                    pajak1[0].presentasaAktif
-                                  );
+                                  props.setFieldValue(`detail_biaya.${index}.persen_pajak`, pajak1[0].presentasaAktif);
                                   let pajak2 = pajak1[0].presentasaAktif / 100;
                                   let pajak3 = pajak2 * props.values.detail_biaya[index].jumlah;
-                                  props.setFieldValue(
-                                    (props.values.detail_biaya[index].pajak = pajak3)
-                                  );
-                                  const pajak_total = props.values.detail_biaya.reduce(
-                                    (a, b) => (a = a + b.pajak),
-                                    0
-                                  );
+                                  props.setFieldValue((props.values.detail_biaya[index].pajak = pajak3));
+                                  const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.pajak), 0);
                                   props.setFieldValue("pajak", pajak_total);
 
                                   // Rumus total
                                   let total1 = pajak3 + props.values.detail_biaya[index].total_per_baris;
                                   props.setFieldValue((props.values.detail_biaya[index].total = total1));
-                                  const total2 = props.values.detail_biaya.reduce((a, b) => (a = a + b.total),0);
+                                  const total2 = props.values.detail_biaya.reduce((a, b) => (a = a + b.total), 0);
                                   props.setFieldValue("total", total2);
 
                                   // Rumus potongan
                                   let jumlah_pemotongan = total2 - props.values.pemotongan;
                                   props.setFieldValue("jumlah_pemotongan", jumlah_pemotongan);
                                 }}>
-                                <option disabled>Pilih</option>
+                                <option>Pilih</option>
                                 {data4.map((pajak) => (
                                   <option key={pajak.id} value={pajak.id}>
                                     {pajak.nama}
@@ -316,30 +269,16 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                                 value={props.values.jumlah}
                                 onChange={(e) => {
                                   // Rumus jumlah
-                                  props.setFieldValue(
-                                    `detail_biaya.${index}.total_per_baris`,
-                                    parseInt(e.target.value)
-                                  );
+                                  props.setFieldValue(`detail_biaya.${index}.total_per_baris`, parseInt(e.target.value));
                                   let result = parseInt(e.target.value);
-                                  props.setFieldValue(
-                                    (props.values.detail_biaya[index].jumlah = result)
-                                  );
-                                  const subtotal = props.values.detail_biaya.reduce(
-                                    (a, b) => (a = a + b.jumlah),
-                                    0
-                                  );
+                                  props.setFieldValue((props.values.detail_biaya[index].jumlah = result));
+                                  const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
                                   props.setFieldValue("subtotal", subtotal);
 
                                   // Rumus pajak
-                                  let pajak1 =
-                                    result * (props.values.detail_biaya[index].persen_pajak / 100);
-                                  props.setFieldValue(
-                                    (props.values.detail_biaya[index].pajak = pajak1)
-                                  );
-                                  const pajak_total = props.values.detail_biaya.reduce(
-                                    (a, b) => (a = a + b.pajak),
-                                    0
-                                  );
+                                  let pajak1 = result * (props.values.detail_biaya[index].persen_pajak / 100);
+                                  props.setFieldValue((props.values.detail_biaya[index].pajak = pajak1));
+                                  const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.pajak), 0);
                                   props.setFieldValue("pajak", pajak_total);
 
                                   // Rumus total
@@ -394,15 +333,9 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                 </Col>
                 <Col sm='2' className='mt-3'>
                   <Col>
-                    <p name='subtotal'>
-                      Rp. {props.values.subtotal.toLocaleString({ minimumFractionDigits: 0 })}
-                    </p>
-                    <p name='pajak'>
-                      Rp. {props.values.pajak.toLocaleString({ minimumFractionDigits: 0 })}
-                    </p>
-                    <p name='total'>
-                      Rp. {props.values.total.toLocaleString({ minimumFractionDigits: 0 })}
-                    </p>
+                    <p name='subtotal'>Rp. {props.values.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                    <p name='pajak'>Rp. {props.values.pajak.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                    <p name='total'>Rp. {props.values.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
                   </Col>
                 </Col>
               </Row>
@@ -412,21 +345,11 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                 <Col sm='4'>
                   <Form.Label className='font-medium'>Lampiran</Form.Label>
                   <Form>
-                    <Form.File
-                      id='custom-file-translate-scss'
-                      label='ukuran maksimal 10MB/File'
-                      lang='en'
-                      custom
-                      name='lampiran'
-                    />
+                    <Form.File id='custom-file-translate-scss' label='ukuran maksimal 10MB/File' lang='en' custom name='lampiran' />
                   </Form>
                 </Col>
                 <Col sm='3'>
-                  <Form.Control
-                    as='select'
-                    defaultValue='Choose...'
-                    name='akun_pemotongan'
-                    onChange={props.handleChange}>
+                  <Form.Control as='select' defaultValue='Choose...' name='akun_pemotongan' onChange={props.handleChange}>
                     <option>pilih</option>
                     {data5.map((akun) => (
                       <option key={akun.id} value={akun.id}>
@@ -470,8 +393,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                   <Row>
                     <h4 className='mr-2 '>Total</h4>
                     <h4 class='text-blue-600' name='jumlah_pemotongan'>
-                      Rp.{" "}
-                      {props.values.jumlah_pemotongan.toLocaleString({ minimumFractionDigits: 0 })}
+                      Rp. {props.values.jumlah_pemotongan.toLocaleString({ minimumFractionDigits: 0 })}
                     </h4>
                   </Row>
                 </Col>

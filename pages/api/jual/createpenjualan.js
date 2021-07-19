@@ -1,7 +1,41 @@
+import multer from "multer";
+import { extname } from "path";
 import { PrismaClient } from ".prisma/client";
 const prisma = new PrismaClient();
 
+// export const editFileName = (req, file, callback) => {
+//   const name = file.originalname.split(".")[0];
+//   const fileExtName = extname(file.originalname);
+//   const randomName = Array(4)
+//     .fill(null)
+//     .map(() => Math.round(Math.random() * 16).toString(16))
+//     .join("");
+//   callback(null, `${name}-${randomName}${fileExtName}`);
+// };
+
+// Returns a Multer instance that provides several methods for generating
+// middleware that process files uploaded in multipart/form-data format.
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: "./public/uploads",
+//     filename: editFileName,
+//   }),
+// });
+
+// function runMiddleware(req, res, fn) {
+//   return new Promise((resolve, reject) => {
+//     fn(req, res, (result) => {
+//       if (result instanceof Error) {
+//         return reject(result);
+//       }
+
+//       return resolve(result);
+//     });
+//   });
+// }
+
 export default async (req, res) => {
+  // await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
       kontak_id: parseInt(req.body.nama_supplier),
@@ -13,10 +47,10 @@ export default async (req, res) => {
       syarat_pembayaran: req.body.syarat_pembayaran,
       no_ref_penagihan: parseInt(req.body.no_ref_penagihan),
       no_transaksi: parseInt(req.body.no_transaksi),
-      tag: req.body.no_transaksi,
+      tag: req.body.tag,
       pesan: req.body.pesan,
       memo: req.body.memo,
-      fileattachment: req.body.fileattachment,
+      file_attachment: req.body.fileattachment,
       subtotal: parseInt(req.body.subtotal),
       total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
       diskon: parseInt(req.body.diskon),
@@ -43,6 +77,27 @@ export default async (req, res) => {
       where: {
         id: frontend_data.id,
       },
+    });
+
+    const find_no_transaksi = await prisma.headerPenjualan.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+      where: {
+        no_transaksi: frontend_data.id,
+      },
+    });
+
+    const update_no_transaksi = await prisma.headerPenjualan.update({
+      where: {
+         id: frontend_data.id,
+         no_transaksi: req.body.no_transaksi
+      },
+      data:
+            {
+                no_transaksi: find_no_transaksi.id,
+            }
+      
     });
 
     let detail = [];
@@ -72,6 +127,8 @@ export default async (req, res) => {
     res.status(201).json([
       { message: "Create Header Penjualan Success!", data: create_header_penjualan },
       { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
+      { message: "Find No Transaksi Success!", data: find_no_transaksi },
+      { message: "Update No Transaksi Success!", data: update_no_transaksi },
       { message: "Create Detail Penjualan Success!", data: create_detail_penjualan },
     ]);
   } catch (error) {
@@ -79,3 +136,9 @@ export default async (req, res) => {
     console.log(error);
   }
 };
+
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };

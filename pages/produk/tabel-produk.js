@@ -50,7 +50,7 @@ export default function tabelProduk({ data }) {
       result.push({
         Nama: i.nama,
         "Kode SKU": i.kode_sku,
-        "Kategori Akun": i.kategori_akun.nama,
+        "Kategori Akun": i.kategori_produk.nama,
         Unit: i.unit,
       });
     });
@@ -156,76 +156,53 @@ export default function tabelProduk({ data }) {
                   </tr>
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  {handleList()
-                    .slice(firstIndex, lastIndex)
-                    .map((produk) => (
-                      <tr>
-                        <th className='px-2 py-2'>
-                          <FormCheck />
-                        </th>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>{produk.kode_sku}</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>{produk.nama}</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>69</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>30</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>{produk.unit}</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>-</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>-</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan}</div>
-                        </td>
-                        <td className='px-2 py-2 whitespace-nowrap'>
-                          <div className='text-sm text-gray-900'>
-                            <Link key={produk.id} href={`${produk.id}`}>
-                              <a>
-                                <Button variant='warning mr-2'>Edit</Button>
-                              </a>
-                            </Link>
-                          </div>
-                        </td>
-                        {/* <td className='px-2 py-2 whitespace-nowrap'>
+                  {data.map((produk) => (
+                    <tr>
+                      <th className='px-2 py-2'>
+                        <FormCheck />
+                      </th>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>{produk.kode_sku}</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>{produk.nama}</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>69</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>30</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>{produk.unit}</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>-</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>-</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan}</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>
+                          <Link key={produk.id} href={`${produk.id}`}>
+                            <a>
+                              <Button variant='warning mr-2'>Edit</Button>
+                            </a>
+                          </Link>
+                        </div>
+                      </td>
+                      {/* <td className='px-2 py-2 whitespace-nowrap'>
                         <div className='text-sm text-gray-900'>
                           <img src={`http://localhost:3000/uploads/${produk.image}`} alt='produk' />
                         </div>
                       </td> */}
-                      </tr>
-                    ))}
+                    </tr>
+                  ))}
                 </tbody>
               </table>
-            </div>
-            <div>
-              <div>
-                <Pagination>
-                  <Pagination.First />
-                  <Pagination.Prev />
-                  <Pagination.Item>{1}</Pagination.Item>
-                  <Pagination.Ellipsis />
-
-                  <Pagination.Item>{10}</Pagination.Item>
-                  <Pagination.Item>{11}</Pagination.Item>
-                  <Pagination.Item active>{12}</Pagination.Item>
-                  <Pagination.Item>{13}</Pagination.Item>
-                  <Pagination.Item disabled>{14}</Pagination.Item>
-
-                  <Pagination.Ellipsis />
-                  <Pagination.Item>{20}</Pagination.Item>
-                  <Pagination.Next />
-                  <Pagination.Last />
-                </Pagination>
-              </div>
             </div>
           </Card.Body>
         </Card>
@@ -241,7 +218,7 @@ export async function getServerSideProps() {
       id: "asc",
     },
     include: {
-      kategori_akun: true,
+      kategori_produk: true,
       pembelian: true,
       penjualan: true,
     },

@@ -46,7 +46,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
           tgl_jatuh_tempo: "",
           syarat_pembayaran: "",
           no_ref_penagihan: "",
-          no_transaksi: "",
+          no_transaksi: 0,
           tag: "",
           produks: [
             {
@@ -82,7 +82,26 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
         }}
         // validationSchema={}
         onSubmit={async (values) => {
-          console.log(values);
+          // console.log(values);
+          // let formData = new FormData();
+          // for (var key in values) {
+          //   formData.append(`${key}`, `${values[key]}`);
+          // }
+          // Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          // console.log(values.fileattachment);
+          // Axios.post(url, formData, {
+          //   headers: {
+          //     "Content-Type": "multipart/form-data",
+          //   },
+          // })
+          //   .then(function (response) {
+          //     console.log(response);
+          //     // router.push("sales-invoice");
+          //     router.push("penjualan");
+          //   })
+          //   .catch(function (error) {
+          //     console.log(error);
+          //   });
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
@@ -213,7 +232,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
 
                   <Form.Label column sm='3'>
                     No Transaksi <br />
-                    <Form.Control type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
                     No Referensi Penagihan <br />
                     <Form.Control type='text' placeholder='' name='no_ref_penagihan' onChange={props.handleChange} /> <br />
                     Tag <br />
@@ -505,7 +524,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5 })
                   <br />
                   <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800  ' onChange={props.handleChange}></textarea> <br />
                   File Attachment <br />
-                  <Form.File id='custom-file' label='Browse file' name='fileattachment' custom />
+                  {/* <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} /> */}
+                  <Form.File type='file' name='fileattachment' />
                 </Col>
                 <Col sm='4'></Col>
                 <Col sm='4'>

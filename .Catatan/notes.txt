@@ -30,9 +30,15 @@ PAGE PENJUALAN
 (DONE) total = subtotal - diskon per baris - diskon
 (DONE) pemotongan = potong dari total
 (DONE) uang muka potong dari total
-upload file attachment
 (DONE) perbaikan db header dan detail penjualan
+upload file attachment
 buat db jurnal penjualan
+
+|| 7/19/2021 ||
+(DONE) no transaksi ototmatis
+(DONE) api create penjualan dan pembelian
+
+
 
 Perbaikan di model produk bagian kategori_akun ganti jadi kategori_produk
 
@@ -51,3 +57,16 @@ kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting
 || PERTANYAAN ||
 Setelah buat penjualan/pembelian langsung kebuka penjualan/pembelian yg dibuat
 Nampilin Detail penjualan/pembelian
+
+XXXXXBiaya: Drop down pemotoangan dari akun pendapatannya (13) 
+XXXXXBiaya -> view -> nama pajak di ganti jadi pajak ( nominalnya )
+Di view biaya yg nomor di ambil dari expense
+Di view status : Udah bayar: selasai, yg blm bayar: hutang
+Total biaya bulan ini : total (dalam idr)
+Biaya belum dibayar (dalam idr) : sisa tagihan (dalam idr)
+XXXXXCara pembayaran buat skrg: optionnya cuman cash, ama kredit
+Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
+
+XXXXXAlamat pembayaran kontak di tampilin di buat biaya alamt penagihan
+
+Pajak Beli dan Jual List dari Dropdown pajak 

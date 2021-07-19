@@ -29,15 +29,18 @@ export default async (req, res) => {
     });
 
     const find_header_biaya = await prisma.headerBiaya.findFirst({
+      orderBy: {
+        id: "desc",
+      },
       where: {
-        no_transaksi: parseInt(req.body.no_transaksi),
+        id: frontend_data.id,
       },
     });
 
     let detail = [];
     req.body.detail_biaya.map((i) => {
       detail.push({
-        header_biaya_id: find_header_biaya.no_transaksi,
+        header_biaya_id: find_header_biaya.id,
         akun_biaya_id: parseInt(i.akun_biaya_id),
         deskripsi: i.deskripsi,
         pajak_id: parseInt(i.pajak_id),

@@ -166,7 +166,7 @@ export default function DaftarAkun({ data }) {
               ))}
             </tbody>
           </table>
-          <div>
+          <div class='flex items-center justify-center'>
             <TablePagination
               onPrevChange={handlePrevChange}
               onNextChange={handleNextChange}

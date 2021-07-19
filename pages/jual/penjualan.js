@@ -153,6 +153,8 @@ export async function getServerSideProps() {
     ],
     include: {
       kontak: true,
+      akun1: true,
+      akun2: true,
     },
   });
 

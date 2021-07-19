@@ -85,18 +85,19 @@ model Akun {
   HeaderBiaya2 HeaderBiaya[] @relation("akun_pendapatan")
   DetailBiaya DetailBiaya[]
 
-  HeaderPenjualan1 HeaderPenjualan[] @relation("akunPemotongan")
-  HeaderPenjualan2 HeaderPenjualan[] @relation("akunUangMuka")
-}
+  HeaderPenjualan1 HeaderPenjualan[] @relation("akunPemotonganPenjualan")
+  HeaderPenjualan2 HeaderPenjualan[] @relation("akunUangMukaPenjualan")
 
-// Saldo Table
-// model Saldo{
-//   id              Int     @default(autoincrement()) @id
-//   debit           Int
-//   kredit          Int
-//   akun            Akun    @relation(fields: [akunId], references: [id])
-//   akunId          Int
-// }
+  // JurnalPenjualan1  JurnalPenjualan[] @relation("akunPembayaranDiMuka")
+  // JurnalPenjualan2  JurnalPenjualan[] @relation("akunPiutangYangBlmDiTagih")
+  // JurnalPenjualan3  JurnalPenjualan[] @relation("akunDiskonPenjualan")
+  // JurnalPenjualan4  JurnalPenjualan[] @relation("akunPemotongan")
+  // JurnalPenjualan5  JurnalPenjualan[] @relation("akunPajakPenjualan")
+  // JurnalPenjualan6  JurnalPenjualan[] @relation("akunPendapatanPenjualan")
+
+  HeaderPembelian1 HeaderPembelian[] @relation("akunPemotonganPembelian")
+  HeaderPembelian2 HeaderPembelian[] @relation("akunUangMukaPembelian")
+}
 
 // Kategori Kontak
 model KategoriKontak {
@@ -112,6 +113,14 @@ model KategoriProduk {
   nama   String
   jumlah Int
   Produk Produk[]
+}
+
+// Satuan Produk
+model SatuanProduk {
+  id        Int @id @default(autoincrement())
+  satuan    String 
+
+  Produk    Produk[]
 }
 
 // Kontak Table
@@ -140,8 +149,9 @@ model Kontak {
   hutang                  Akun        @relation("akunHutang", fields: [akun_hutang], references: [id]) 
   akun_hutang             Int
   syarat_pembayaran_utama String
-  Penjualan               HeaderPenjualan[]
-  Pembelian               Pembelian[]
+  
+  HeaderPenjualan               HeaderPenjualan[]
+  HeaderPembelian               HeaderPembelian[]
 
   KontakDetail KontakDetail[]
   HeaderBiaya HeaderBiaya[]
@@ -154,33 +164,33 @@ model KontakDetail {
   kontak_id Int
   kontak_type  KategoriKontak @relation(fields: [kontak_type_id], references: [id])
   kontak_type_id Int
-  
+
 }
 
 // Produk table
 model Produk {
-  id            Int            @id @default(autoincrement())
-  nama          String
-  image         String
-  kode_sku      String
-  kategori_produk KategoriProduk @relation(fields: [kategoriId], references: [id])
-  kategori_produk_id    Int
+  id                  Int            @id @default(autoincrement())
+  nama                String
+  image               String
+  kode_sku            String
+  kategori_produk     KategoriProduk @relation(fields: [kategori_produk_id], references: [id])
+  kategori_produk_id  Int
+  satuan              SatuanProduk @relation(fields: [unit], references: [id])
+  unit                Int
+  deskripsi           String
 
-  unit      Int
-  deskripsi String
+  harga_beli_satuan   Int
+  pembelian           Akun   @relation("akunPembelian", fields: [akun_pembelian], references: [id])
+  akun_pembelian      Int
+  pajak_beli          String
 
-  harga_beli_satuan Int
-  pembelian         Akun   @relation("akunPembelian", fields: [akun_pembelian], references: [id])
-  akun_pembelian    Int
-  pajak_beli        String
+  harga_jual_satuan   Int
+  penjualan           Akun   @relation("akunPenjualan", fields: [akun_penjualan], references: [id])
+  akun_penjualan      Int
+  pajak_jual          String
 
-  harga_jual_satuan Int
-  penjualan         Akun   @relation("akunPenjualan", fields: [akun_penjualan], references: [id])
-  akun_penjualan    Int
-  pajak_jual        String
-
-  Penjualandetail DetailPenjualan[]
-  Pembeliandetail Pembeliandetail[]
+  DetailPenjualan DetailPenjualan[]
+  DetailPembelian DetailPembelian[]
 }
 
 // Pajak Table
@@ -193,15 +203,16 @@ model Pajak {
   kategori2       Akun   @relation("akunPembeli", fields: [akunPembeli], references: [id])
   akunPembeli     Int
 
-  penjualandetail DetailPenjualan[]
-  Pembeliandetail Pembeliandetail[]
+  DetailPenjualan DetailPenjualan[]
+
+  DetailPembelian DetailPembelian[]
 
   DetailBiaya DetailBiaya[]
 }
-
+// Header Penjualan Table
 model HeaderPenjualan {
   id                      Int       @id @default(autoincrement())
-  kontak               Kontak    @relation(fields: [kontak_id], references: [id])
+  kontak                  Kontak    @relation(fields: [kontak_id], references: [id])
   kontak_id               Int
   nama_supplier           String
   email                   String
@@ -210,11 +221,11 @@ model HeaderPenjualan {
   tgl_jatuh_tempo         String
   syarat_pembayaran       String
   no_ref_penagihan        Int
-  no_transaksi            Int        
+  no_transaksi            Int      @unique()  
   tag                     String
   pesan                   String
   memo                    String
-  fileattachment          String
+  file_attachment         String
   subtotal                Int
   total_diskon_per_baris  Int
   diskon                  Int
@@ -224,16 +235,19 @@ model HeaderPenjualan {
  
   pemotongan              Int
   pemotongan_total        Int
-  akun1                   Akun      @relation("akunPemotongan", fields: [akun_pemotongan], references: [id])
+  akun1                   Akun      @relation("akunPemotonganPenjualan", fields: [akun_pemotongan], references: [id])
   akun_pemotongan         Int
 
   uang_muka               Int
-  akun2                   Akun      @relation("akunUangMuka", fields: [akun_uang_muka], references: [id])
+  akun2                   Akun      @relation("akunUangMukaPenjualan", fields: [akun_uang_muka], references: [id])
   akun_uang_muka          Int
   sisa_tagihan            Int
+
   DetailPenjualan         DetailPenjualan []
+  // JurnalPenjualan         JurnalPenjualan[]
 }
 
+// Detail Penjualan Table
 model DetailPenjualan {
   id                      Int         @id @default(autoincrement())
   header_penjualan        HeaderPenjualan   @relation(fields: [header_penjualan_id], references: [id])
@@ -256,59 +270,92 @@ model DetailPenjualan {
   jumlah                  Int
 }
 
+// Jurnal Penjualan Table
 // model JurnalPenjualan {
-//   id             Int       @id @default(autoincrement())
-//   pajak_penjualanid
+//   id                  Int             @id @default(autoincrement())
+//   header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
+//   header_penjualan_id Int
+  
+//   akun1               Akun      @relation("akunPembayaranDiMuka", fields: [akun_1], references: [id])
+//   akun_1              Int
+
+//   akun2               Akun      @relation("akunPiutangYangBlmDiTagih", fields: [akun_2], references: [id])      
+//   akun_2              Int
+
+//   akun3               Akun      @relation("akunDiskonPenjualan", fields: [akun_3], references: [id])
+//   akun_3              Int
+
+//   akun4               Akun      @relation("akunPemotongan", fields: [akun_4], references: [id])
+//   akun_4              Int
+
+//   akun5               Akun      @relation("akunPajakPenjualan", fields: [akun_5], references: [id])
+//   akun_5              Int
+
+//   akun6               Akun      @relation("akunPendapatanPenjualan", fields: [akun_6], references: [id])
+//   akun_6              Int
 // }
 
-// model JurnalPembelian {
-//   id             Int       @id @default(autoincrement())
-// }
+// Header Pembelian Table
+model HeaderPembelian {
+  id                      Int       @id @default(autoincrement())
+  kontak                  Kontak    @relation(fields: [kontak_id], references: [id])
+  kontak_id               Int
+  nama_supplier           String
+  email                   String
+  alamat_supplier         String
+  tgl_transaksi           String
+  tgl_jatuh_tempo         String
+  syarat_pembayaran       String
+  no_ref_penagihan        Int
+  no_transaksi            Int       @unique()       
+  tag                     String
+  pesan                   String
+  memo                    String
+  file_attachment         String
+  subtotal                Int
+  total_diskon_per_baris  Int
+  diskon                  Int
+  total_diskon            Int
+  total_pajak_per_baris   Int
+  total                   Int
+ 
+  pemotongan              Int
+  pemotongan_total        Int
+  akun1                   Akun      @relation("akunPemotonganPembelian", fields: [akun_pemotongan], references: [id])
+  akun_pemotongan         Int
 
-model Pembelian {
-  id               Int               @id @default(autoincrement())
-  id_kontak        Kontak            @relation(fields: [kontakID], references: [id])
-  kontakID         Int
-  namasupplier     String
-  email            String
-  alamatsupplier   String
-  tgltransaksi     String
-  tgljatuhtempo    String
-  syaratpembayaran String
-  no_ref_supplier  Int
-  notransaksi      Int               @unique
-  tag              String
-  uangmuka         Int
-  sisa_tagihan     Int
-  pesan            String
-  memo             String
-  fileattachment   String
-  diskontambahan   String
-  pemotongan       String
-  total            Int
-  Pembeliandetail  Pembeliandetail[]
+  uang_muka               Int
+  akun2                   Akun      @relation("akunUangMukaPembelian", fields: [akun_uang_muka], references: [id])
+  akun_uang_muka          Int
+  sisa_tagihan            Int
+
+  DetailPembelian        DetailPembelian []
 }
 
-model Pembeliandetail {
-  id             Int       @id @default(autoincrement())
-  id_pembelian   Pembelian @relation(fields: [pembelianID], references: [notransaksi])
-  pembelianID    Int
-  id_produk      Produk    @relation(fields: [produkID], references: [id])
-  produkID       Int
-  nama_produk    String
-  desk_produk    String
-  kuantitas      Int
-  satuan         String
-  harga_satuan   Int
-  diskon         Int
-  diskonperbaris Int
-  pajakperbaris  Int
-  id_pajak       Pajak     @relation(fields: [pajakID], references: [id])
-  pajakID        Int
-  pajak          Int
-  jumlah         Int
+// Detail Pembelian Table
+model DetailPembelian {
+  id                      Int         @id @default(autoincrement())
+  header_pembelian        HeaderPembelian   @relation(fields: [header_pembelian_id], references: [id])
+  header_pembelian_id     Int
+  produk                  Produk      @relation(fields: [produk_id], references: [id])
+  produk_id               Int
+  nama_produk             String
+  desk_produk             String
+  kuantitas               Int
+  satuan                  String
+  harga_satuan            Int
+  diskon                  Int
+  hasil_diskon            Int
+  
+  pajak                   Pajak       @relation(fields: [pajak_id], references: [id])
+  pajak_id                Int
+  pajak_nama              String
+  hasil_pajak             Int
+
+  jumlah                  Int
 }
 
+// Header Biaya Table
 model HeaderBiaya {
   id              Int    @id @default(autoincrement())
   akun1           Akun   @relation("akun_kas_bank", fields: [akun_kas_bank], references: [id])
@@ -327,15 +374,16 @@ model HeaderBiaya {
 
   subtotal          Int
   pajak             Int
-  total             Int
   akun2             Akun  @relation("akun_pendapatan", fields: [akun_pemotongan], references: [id])
   akun_pemotongan   Int
   pemotongan        Int
   jumlah_pemotongan Int
+  total             Int
 
   detail_biaya DetailBiaya[]
 }
 
+// Detail Biaya Table
 model DetailBiaya {
   id              Int         @id @default(autoincrement())
   header_biaya    HeaderBiaya @relation(fields: [header_biaya_id], references: [no_transaksi])
