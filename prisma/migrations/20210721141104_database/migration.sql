@@ -43,6 +43,8 @@ CREATE TABLE `RolePrivellege` (
 CREATE TABLE `Kategori` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `saldo_normal_id` INTEGER NOT NULL,
+    `saldo_normal_nama` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -180,6 +182,7 @@ CREATE TABLE `HeaderPenjualan` (
     `total_diskon` INTEGER NOT NULL,
     `total_pajak_per_baris` INTEGER NOT NULL,
     `total` INTEGER NOT NULL,
+    `balance` INTEGER NOT NULL,
     `pemotongan` INTEGER NOT NULL,
     `pemotongan_total` INTEGER NOT NULL,
     `akun_pemotongan` INTEGER NOT NULL,
@@ -205,8 +208,21 @@ CREATE TABLE `DetailPenjualan` (
     `hasil_diskon` INTEGER NOT NULL,
     `pajak_id` INTEGER NOT NULL,
     `pajak_nama` VARCHAR(191) NOT NULL,
+    `pajak_persen` INTEGER NOT NULL,
     `hasil_pajak` INTEGER NOT NULL,
     `jumlah` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `JurnalPenjualan` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `header_penjualan_id` INTEGER NOT NULL,
+    `akun_id` INTEGER NOT NULL,
+    `akun_name` VARCHAR(191) NOT NULL,
+    `debit` INTEGER NOT NULL,
+    `kredit` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -258,6 +274,7 @@ CREATE TABLE `DetailPembelian` (
     `hasil_diskon` INTEGER NOT NULL,
     `pajak_id` INTEGER NOT NULL,
     `pajak_nama` VARCHAR(191) NOT NULL,
+    `pajak_persen` INTEGER NOT NULL,
     `hasil_pajak` INTEGER NOT NULL,
     `jumlah` INTEGER NOT NULL,
 
@@ -361,6 +378,12 @@ ALTER TABLE `DetailPenjualan` ADD FOREIGN KEY (`produk_id`) REFERENCES `Produk`(
 
 -- AddForeignKey
 ALTER TABLE `DetailPenjualan` ADD FOREIGN KEY (`pajak_id`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `JurnalPenjualan` ADD FOREIGN KEY (`header_penjualan_id`) REFERENCES `HeaderPenjualan`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `JurnalPenjualan` ADD FOREIGN KEY (`akun_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `HeaderPembelian` ADD FOREIGN KEY (`kontak_id`) REFERENCES `Kontak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

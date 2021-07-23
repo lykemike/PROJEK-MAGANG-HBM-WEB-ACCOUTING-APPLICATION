@@ -12,7 +12,7 @@ import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function addProduk({ data, data2, data3, data4,data5 }) {
+export default function addProduk({ data, data2, data3, data4, data5 }) {
   // Form Validation
   const ProdukSchema = Yup.object().shape({
     file_upload: Yup.string().required("required"),
@@ -102,12 +102,7 @@ export default function addProduk({ data, data2, data3, data4,data5 }) {
 											{props.errors.file_upload && props.touched.file_upload ?
 												<div class="text-red-500 text-sm"><ErrorOutlineIcon />{props.errors.file_upload}</div>
 												: null} */}
-                      <Form.File
-                        type='file'
-                        name='file_upload'
-                        accept='image/*'
-                        onChange={(e) => props.setFieldValue("file_upload", e.target.files)}
-                      />
+                      <Form.File type='file' name='file_upload' accept='image/*' onChange={(e) => props.setFieldValue("file_upload", e.target.files)} />
                       {props.errors.file_upload && props.touched.file_upload ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -157,7 +152,7 @@ export default function addProduk({ data, data2, data3, data4,data5 }) {
                     <Col sm='4'>
                       <Form.Control className='mb-2' as='select' name='kategori_produk' onChange={props.handleChange}>
                         {/* loop over kategori and show them */}
-                        <option>Pilih</option>
+                        <option value='0'>Pilih</option>
                         {data3.map((kategoriProduk) => (
                           <option key={kategoriProduk.id} value={kategoriProduk.id}>
                             {kategoriProduk.nama}
@@ -180,7 +175,7 @@ export default function addProduk({ data, data2, data3, data4,data5 }) {
                     </Col>
                     <Col sm='4'>
                       <Form.Control className='mb-2' as='select' name='unit' onChange={props.handleChange}>
-                        <option>Pilih Unit</option>
+                        <option value='0'>Pilih Unit</option>
                         {data5.map((satuanProduk) => (
                           <option key={satuanProduk.id} value={satuanProduk.id}>
                             {satuanProduk.satuan}
@@ -234,7 +229,7 @@ export default function addProduk({ data, data2, data3, data4,data5 }) {
                     <Col>
                       <Form.Label>Akun Pembelian</Form.Label>
                       <Form.Control className='mb-2' as='select' name='akun_pembelian' onChange={props.handleChange}>
-                        <option>Pilih</option>
+                        <option value='0'>Pilih</option>
                         {data.map((akunPembelian) => (
                           <option key={akunPembelian.id} value={akunPembelian.id}>
                             {akunPembelian.nama_akun}
@@ -251,7 +246,7 @@ export default function addProduk({ data, data2, data3, data4,data5 }) {
                     <Col>
                       <Form.Label>Pajak Beli</Form.Label>
                       <Form.Control className='mb-2' as='select' name='pajak_beli' onChange={props.handleChange}>
-                        <option>Pilih</option>
+                        <option value='0'>Pilih</option>
                         {data4.map((pajak, index) => (
                           <option key={index} value={pajak.id}>
                             {pajak.nama}
@@ -288,7 +283,7 @@ export default function addProduk({ data, data2, data3, data4,data5 }) {
                     <Col>
                       <Form.Label>Akun Penjualan</Form.Label>
                       <Form.Control className='mb-2' as='select' name='akun_penjualan' onChange={props.handleChange}>
-                        <option>Pilih</option>
+                        <option value='0'>Pilih</option>
                         {data2.map((akunPenjualan) => (
                           <option key={akunPenjualan.id} value={akunPenjualan.id}>
                             {akunPenjualan.nama_akun}
@@ -305,7 +300,7 @@ export default function addProduk({ data, data2, data3, data4,data5 }) {
                     <Col>
                       <Form.Label>Pajak Jual</Form.Label>
                       <Form.Control className='mb-2' as='select' name='pajak_jual' onChange={props.handleChange}>
-                        <option>Pilih</option>
+                        <option value='0'>Pilih</option>
                         {data4.map((pajak, index) => (
                           <option key={index} value={pajak.id}>
                             {pajak.nama}
@@ -364,7 +359,7 @@ export async function getServerSideProps() {
   const getSatuan = await prisma.satuanProduk.findMany({
     orderBy: {
       satuan: "asc",
-    }
+    },
   });
 
   const getKategoriProduk = await prisma.kategoriProduk.findMany();

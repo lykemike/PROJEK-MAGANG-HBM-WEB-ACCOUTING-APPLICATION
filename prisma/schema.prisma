@@ -52,6 +52,9 @@ model RolePrivellege {
 model Kategori {
   id   Int    @id @default(autoincrement())
   name String
+  saldo_normal_id Int
+  saldo_normal_nama String
+
   Akun Akun[]
 }
 
@@ -88,12 +91,7 @@ model Akun {
   HeaderPenjualan1 HeaderPenjualan[] @relation("akunPemotonganPenjualan")
   HeaderPenjualan2 HeaderPenjualan[] @relation("akunUangMukaPenjualan")
 
-  // JurnalPenjualan1  JurnalPenjualan[] @relation("akunPembayaranDiMuka")
-  // JurnalPenjualan2  JurnalPenjualan[] @relation("akunPiutangYangBlmDiTagih")
-  // JurnalPenjualan3  JurnalPenjualan[] @relation("akunDiskonPenjualan")
-  // JurnalPenjualan4  JurnalPenjualan[] @relation("akunPemotongan")
-  // JurnalPenjualan5  JurnalPenjualan[] @relation("akunPajakPenjualan")
-  // JurnalPenjualan6  JurnalPenjualan[] @relation("akunPendapatanPenjualan")
+  JurnalPenjualan  JurnalPenjualan[] @relation("akunJurnal")
 
   HeaderPembelian1 HeaderPembelian[] @relation("akunPemotonganPembelian")
   HeaderPembelian2 HeaderPembelian[] @relation("akunUangMukaPembelian")
@@ -232,6 +230,7 @@ model HeaderPenjualan {
   total_diskon            Int
   total_pajak_per_baris   Int
   total                   Int
+  balance                 Int
  
   pemotongan              Int
   pemotongan_total        Int
@@ -244,7 +243,7 @@ model HeaderPenjualan {
   sisa_tagihan            Int
 
   DetailPenjualan         DetailPenjualan []
-  // JurnalPenjualan         JurnalPenjualan[]
+  JurnalPenjualan         JurnalPenjualan[]
 }
 
 // Detail Penjualan Table
@@ -265,35 +264,25 @@ model DetailPenjualan {
   pajak                   Pajak       @relation(fields: [pajak_id], references: [id])
   pajak_id                Int
   pajak_nama              String
+  pajak_persen            Int
   hasil_pajak             Int
 
   jumlah                  Int
 }
 
 // Jurnal Penjualan Table
-// model JurnalPenjualan {
-//   id                  Int             @id @default(autoincrement())
-//   header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
-//   header_penjualan_id Int
+model JurnalPenjualan {
+  id                  Int             @id @default(autoincrement())
+  header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
+  header_penjualan_id Int
   
-//   akun1               Akun      @relation("akunPembayaranDiMuka", fields: [akun_1], references: [id])
-//   akun_1              Int
+  akun               Akun      @relation("akunJurnal", fields: [akun_id], references: [id])
+  akun_id              Int
+  akun_name           String
 
-//   akun2               Akun      @relation("akunPiutangYangBlmDiTagih", fields: [akun_2], references: [id])      
-//   akun_2              Int
-
-//   akun3               Akun      @relation("akunDiskonPenjualan", fields: [akun_3], references: [id])
-//   akun_3              Int
-
-//   akun4               Akun      @relation("akunPemotongan", fields: [akun_4], references: [id])
-//   akun_4              Int
-
-//   akun5               Akun      @relation("akunPajakPenjualan", fields: [akun_5], references: [id])
-//   akun_5              Int
-
-//   akun6               Akun      @relation("akunPendapatanPenjualan", fields: [akun_6], references: [id])
-//   akun_6              Int
-// }
+  debit               Int
+  kredit              Int
+}
 
 // Header Pembelian Table
 model HeaderPembelian {
@@ -350,6 +339,7 @@ model DetailPembelian {
   pajak                   Pajak       @relation(fields: [pajak_id], references: [id])
   pajak_id                Int
   pajak_nama              String
+  pajak_persen            Int
   hasil_pajak             Int
 
   jumlah                  Int

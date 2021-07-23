@@ -1,5 +1,4 @@
 import { PrismaClient } from ".prisma/client";
-import { de } from "date-fns/locale";
 import multer from "multer";
 import { extname } from "path";
 const prisma = new PrismaClient();

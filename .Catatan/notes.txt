@@ -1,26 +1,30 @@
-
-|| DATE : 7/12/2021 ||
+LAPORAN MIKE
+🗓️ Tanggal: 12 Juli 2021, Senin
 (DONE) Alamat pembayaran kontak di tampilin di page buat biaya bagian alamat penagihan
 (DONE) Cara pembayaran buat skrg: optionnya cuman cash, ama kredit
 (DONE) Biaya: Drop down pemotongan dari akun pendapatannya (13) 
 (DONE) Biaya -> view -> nama pajak di ganti jadi pajak (nominalnya)
 
-|| DATE : 7/13/2021 ||
-Technical Meeting
+🗓️ Tanggal: 13 Juli 2021, Selasa 
+(DONE) Technical Meeting
 (DONE) Upload gambar di page buat produk
 (DONE) Pagination
 
-|| DATE : 7/14/2021 ||
-Scrum Meeting Progress
+🗓️ Tanggal: 14 Juli 2021, Rabu
+(DONE) Export CSV
+(DONE) default satuan ikut dari produk -> tampilin di penjualan/pembelian
+(DONE) Meeting 
+
 (1/2 DONE) Export CSV berberapa kolom blm nampilin data
-Export PDF, XLS, CSV
+Export PDF, XLS, 
 ??? Import CSV, XLS terus update ke database
 
-|| DATE : 7/15/2021 ||
+🗓️ Tanggal: 15 Juli 2021, Kamis 
+(DONE) Meeting
 (DONE) Kontak bisa pilih supplier, karyawan, pelanggan, dll
 (DONE) Tampilin akun pajak di produk table
 
-|| DATE : 7/16/2021 ||
+🗓️ Tanggal: 16 Juli 2021, Jumat 
 PAGE PENJUALAN
 (DONE) Jumlah harga satuan * kuantitas
 (DONE) Subtotal total harga satuan * kuantitas
@@ -32,25 +36,32 @@ PAGE PENJUALAN
 (DONE) uang muka potong dari total
 (DONE) perbaikan db header dan detail penjualan
 upload file attachment
-buat db jurnal penjualan
 
-|| 7/19/2021 ||
+🗓️ Tanggal: 19 Juli 2021, Senin 
+(DONE) Meeting
 (DONE) no transaksi ototmatis
 (DONE) api create penjualan dan pembelian
 
+🗓️ Tanggal: 20 Juli 2021, Selasa 
+(DONE) Perubahan rumus penjualan di bagian sisa tagihan
+(DONE) Perbaikan di model produk bagian kategori_akun ganti jadi kategori_produk
+
+🗓️ Tanggal: 21 Juli 2021, Rabu 
+(DONE) Add opsi buat nambah satuan di produk
+(DONE) Membuat db dan api buat nambah satuan produk
+
+🗓️ Tanggal: 22 Juli 2021, Kamis
+(DONE) Tambahin field saldo id dan saldo normal (debit kredit) di database kategori akun
+(DONE) Set kategori produk jumlah default: 0
 
 
-Perbaikan di model produk bagian kategori_akun ganti jadi kategori_produk
+===================
+(DONE) Update Produk API 
 
 PENDING WORK
 ||PAGE PRODUK||
-Export XLS, PDF, CSV (CSV BARU STGH JADI UDAH BS EXPORT) 
-Import from CSV, XLS dan masuk ke database
 Check box bisa nampilin form di produk
-Add kategori produk jumlah default: 0
 Ketika buat produk baru, jumlah kategorinya nambah/update (jumlah + 1)
-Add opsi buat nambah satuan di produk
-
 harga termasuk pajak ikut setting pas buat produk
 kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
 
@@ -58,25 +69,31 @@ kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting
 Setelah buat penjualan/pembelian langsung kebuka penjualan/pembelian yg dibuat
 Nampilin Detail penjualan/pembelian
 
-XXXXXBiaya: Drop down pemotoangan dari akun pendapatannya (13) 
-XXXXXBiaya -> view -> nama pajak di ganti jadi pajak ( nominalnya )
 Di view biaya yg nomor di ambil dari expense
 Di view status : Udah bayar: selasai, yg blm bayar: hutang
 Total biaya bulan ini : total (dalam idr)
 Biaya belum dibayar (dalam idr) : sisa tagihan (dalam idr)
-XXXXXCara pembayaran buat skrg: optionnya cuman cash, ama kredit
+
 Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
 
-XXXXXAlamat pembayaran kontak di tampilin di buat biaya alamt penagihan
-
 Pajak Beli dan Jual List dari Dropdown pajak 
-
 
 Batas Minimum dihapus dulu.
 
 // Meeting hari ini
 Quantity dan batas minimum input dari mana?
 Harga Rata2 dan Harga beli terakhir ?
+
+quantity opsional
+pembelian + quanttiy
+penjualan - quantity
+
+pemjualan - pelanggan
+pembelian - supplier
+
+
+tanggal
+ketika hapus, value ikut ke hapus jg di produk
 
 
 

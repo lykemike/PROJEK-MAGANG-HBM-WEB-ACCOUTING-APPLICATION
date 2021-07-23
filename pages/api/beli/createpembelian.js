@@ -90,20 +90,18 @@ export default async (req, res) => {
 
     const update_no_transaksi = await prisma.headerPembelian.update({
       where: {
-         id: frontend_data.id,
-         no_transaksi: req.body.no_transaksi
+        id: frontend_data.id,
+        no_transaksi: req.body.no_transaksi,
       },
-      data:
-            {
-                no_transaksi: find_no_transaksi.id,
-            }
-      
+      data: {
+        no_transaksi: find_no_transaksi.id,
+      },
     });
 
     let detail = [];
     req.body.produks.map((i) => {
       detail.push({
-        header_penjualan_id: find_header_pembelian.id,
+        header_pembelian_id: find_header_pembelian.id,
         produk_id: parseInt(i.produk_id),
         nama_produk: i.nama_produk,
         desk_produk: i.deskripsi_produk,

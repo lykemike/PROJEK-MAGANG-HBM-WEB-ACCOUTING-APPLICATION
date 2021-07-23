@@ -63,6 +63,7 @@ export default async (req, res) => {
       uang_muka: parseInt(req.body.uang_muka),
       akun_uang_muka: parseInt(req.body.akun_uang_muka),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
+      balance: parseInt(req.body.balance)
     };
 
     const create_header_penjualan = await prisma.headerPenjualan.createMany({
@@ -90,14 +91,12 @@ export default async (req, res) => {
 
     const update_no_transaksi = await prisma.headerPenjualan.update({
       where: {
-         id: frontend_data.id,
-         no_transaksi: req.body.no_transaksi
+        id: frontend_data.id,
+        no_transaksi: req.body.no_transaksi,
       },
-      data:
-            {
-                no_transaksi: find_no_transaksi.id,
-            }
-      
+      data: {
+        no_transaksi: find_no_transaksi.id,
+      },
     });
 
     let detail = [];
@@ -114,6 +113,7 @@ export default async (req, res) => {
         hasil_diskon: parseInt(i.hasil_diskon),
         pajak_id: parseInt(i.pajak_id),
         pajak_nama: i.pajak_nama,
+        pajak_persen: i.pajak_persen,
         hasil_pajak: parseInt(i.hasil_pajak),
         jumlah: parseInt(i.jumlah),
       });
@@ -124,12 +124,63 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
+    const find_produk_detail = await prisma.detailPenjualan.findMany({
+      where: {
+        header_penjualan_id: find_header_penjualan.id,
+        produk_id: create_detail_penjualan.produk_id
+      }
+    })
+
+    const find_produk_kategori = await prisma.produk.findMany({
+      where: {
+        id: find_produk_detail.produk_id,
+        kategori_produk_id: find_produk_detail.produk_id
+      }
+    })
+
+    const update_jumlah_kategori_produk = await prisma.kategoriProduk.update({
+      where: {
+        id: find_produk_kategori.kategori_produk_id
+      },
+      data: {
+        jumlah: + 1
+      }
+    })
+    
+    // const frontend_data_jurnal = {
+    //   akun_1: 1,
+    //   akun_2: 2,
+    //   akun_3: 3,
+    //   akun_4: 4,
+    //   akun_5: 5,
+    //   akun_6: 6,
+
+    //   uang_muka: parseInt(req.body.uang_muka),
+    //   sisa_tagihan: parseInt(req.body.sisa_tagihan),
+    //   subtotal: parseInt(req.body.subtotal),
+
+    //   total_diskon: parseInt(req.body.total_diskon),
+    //   total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
+
+    //   total_pajak_per_baris: parseInt(req.body.total_pajak_per_baris),
+      
+    //   pemotongan: parseInt(req.body.pemotongan),
+
+    //   akun_pemotongan: parseInt(req.body.akun_pemotongan),
+      
+    //   akun_uang_muka: parseInt(req.body.akun_uang_muka),
+      
+    //   balance: parseInt(req.body.balance)
+    // }
+
     res.status(201).json([
-      { message: "Create Header Penjualan Success!", data: create_header_penjualan },
-      { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
-      { message: "Find No Transaksi Success!", data: find_no_transaksi },
-      { message: "Update No Transaksi Success!", data: update_no_transaksi },
-      { message: "Create Detail Penjualan Success!", data: create_detail_penjualan },
+      { message: "Find produk detail success!", data: update_jumlah_kategori_produk }
+      // { message: "Create Header Penjualan Success!", data: create_header_penjualan },
+      // { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
+      // { message: "Find No Transaksi Success!", data: find_no_transaksi },
+      // { message: "Update No Transaksi Success!", data: update_no_transaksi },
+      // { message: "Create Detail Penjualan Success!", data: create_detail_penjualan },
+      // { message: "Update Jumlah Kategori Produk Success!", data: update_jumlah_kategori_produk },
     ]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
