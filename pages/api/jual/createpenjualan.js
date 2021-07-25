@@ -44,7 +44,7 @@ export default async (req, res) => {
       alamat_supplier: req.body.alamat_supplier,
       tgl_transaksi: req.body.tgl_transaksi,
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
-      syarat_pembayaran: req.body.syarat_pembayaran,
+      syarat_pembayaran: String(req.body.syarat_pembayaran),
       no_ref_penagihan: parseInt(req.body.no_ref_penagihan),
       no_transaksi: parseInt(req.body.no_transaksi),
       tag: req.body.tag,
@@ -63,7 +63,7 @@ export default async (req, res) => {
       uang_muka: parseInt(req.body.uang_muka),
       akun_uang_muka: parseInt(req.body.akun_uang_muka),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
-      balance: parseInt(req.body.balance)
+      balance: parseInt(req.body.balance),
     };
 
     const create_header_penjualan = await prisma.headerPenjualan.createMany({
@@ -124,29 +124,30 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_produk_detail = await prisma.detailPenjualan.findMany({
-      where: {
-        header_penjualan_id: find_header_penjualan.id,
-        produk_id: create_detail_penjualan.produk_id
-      }
-    })
+    // const find_produk_detail = await prisma.detailPenjualan.findMany({
+    //   where: {
+    //     header_penjualan_id: find_header_penjualan.id,
+    //     produk_id: create_detail_penjualan.produk_id,
+    //     kuantitas: create_detail_penjualan.kuantitas,
+    //   },
+    // });
 
-    const find_produk_kategori = await prisma.produk.findMany({
-      where: {
-        id: find_produk_detail.produk_id,
-        kategori_produk_id: find_produk_detail.produk_id
-      }
-    })
+    // const find_produk_kategori = await prisma.produk.findMany({
+    //   where: {
+    //     id: find_produk_detail.produk_id,
+    //     kategori_produk_id: find_produk_detail.produk_id,
+    //   },
+    // });
 
-    const update_jumlah_kategori_produk = await prisma.kategoriProduk.update({
-      where: {
-        id: find_produk_kategori.kategori_produk_id
-      },
-      data: {
-        jumlah: + 1
-      }
-    })
-    
+    // const update_jumlah_kategori_produk = await prisma.kategoriProduk.update({
+    //   where: {
+    //     id: find_produk_kategori.kategori_produk_id,
+    //   },
+    //   data: {
+    //     jumlah: find_produk_detail.kuantitas,
+    //   },
+    // });
+
     // const frontend_data_jurnal = {
     //   akun_1: 1,
     //   akun_2: 2,
@@ -163,18 +164,18 @@ export default async (req, res) => {
     //   total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
 
     //   total_pajak_per_baris: parseInt(req.body.total_pajak_per_baris),
-      
+
     //   pemotongan: parseInt(req.body.pemotongan),
 
     //   akun_pemotongan: parseInt(req.body.akun_pemotongan),
-      
+
     //   akun_uang_muka: parseInt(req.body.akun_uang_muka),
-      
+
     //   balance: parseInt(req.body.balance)
     // }
 
     res.status(201).json([
-      { message: "Find produk detail success!", data: update_jumlah_kategori_produk }
+      { message: "Find produk detail success!", data: create_detail_penjualan },
       // { message: "Create Header Penjualan Success!", data: create_header_penjualan },
       // { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
       // { message: "Find No Transaksi Success!", data: find_no_transaksi },

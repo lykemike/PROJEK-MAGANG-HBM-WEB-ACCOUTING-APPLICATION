@@ -218,7 +218,7 @@ model HeaderPenjualan {
   tgl_transaksi           String
   tgl_jatuh_tempo         String
   syarat_pembayaran       String
-  no_ref_penagihan        Int
+  no_ref_penagihan        String
   no_transaksi            Int      @unique()  
   tag                     String
   pesan                   String

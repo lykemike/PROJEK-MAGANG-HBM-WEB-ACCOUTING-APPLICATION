@@ -54,7 +54,13 @@ upload file attachment
 (DONE) Tambahin field saldo id dan saldo normal (debit kredit) di database kategori akun
 (DONE) Set kategori produk jumlah default: 0
 
+🗓️ Tanggal: 23 Juli 2021, Jumat
+(DONE) Edit API produk
+(DONE) Edit API penjualan
 
+
+TANGGAL ERROR NAMPILIN MISALNYA 10 HARI DARI BULAN JULI TANGGAL 29 => AUGUSTUS TGL 9
+ERROR KARENA TIDAK ADA ANGKA 0 DI 9, => 09 
 ===================
 (DONE) Update Produk API 
 
@@ -78,7 +84,28 @@ Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
 
 Pajak Beli dan Jual List dari Dropdown pajak 
 
-Batas Minimum dihapus dulu.
+Batas Minimum dihapus.
+
+Pertanayaan
+edit produk
+cara add daftar akun sesuai kode akun
+cara upload file di penjualan
+cara masukin data ke jurnal
+cara ketika buat penjualan / pembelian jumlah di kategori produk di tambah atau di kurang
+(DONE) cara ketika pada saat buat penjualan/pembelian redirect ke sales invoice yg baru di buat
+(DONE) cara nampilin detail dari header
+cara disable/mengubah form ketika cetang checkbox
+contoh validation backend
+filter
+
+Edit produk
+
+Penjualan nampilin pelanggan
+Formik Ref error pas nampilin data dari pelanggan
+Edit Invoice
+Cara masukin data ke jurnal
+cara ketika buat penjualan
+cara ketika pada saat buat penjualan redirect ke sales invoice yg baru di buat
 
 // Meeting hari ini
 Quantity dan batas minimum input dari mana?
@@ -95,6 +122,17 @@ pembelian - supplier
 tanggal
 ketika hapus, value ikut ke hapus jg di produk
 
+Penmbelian yg di tampil harga belinya
 
 
+catatan meeting 7/23/2021
+tgl transaksi -> tgl invoice
+no transaksi -> nomor invoice
+tag -> (varchar)
+no referensi penaighan -> kontrak (varchar)
 
+Jumlah tagihan sblm ppn
+pajak pertambahan nilai
+jumlah setelah ppn
+
+- kuantitas, satuan

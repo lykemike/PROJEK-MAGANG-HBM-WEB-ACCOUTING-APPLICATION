@@ -1,279 +1,380 @@
-import React, { useEffect, useRef } from 'react'
-import Layout from '../../components/Layout';
-import { Button, Form, Col, Row, FormCheck, Card } from 'react-bootstrap';
-import LocalMallIcon from '@material-ui/icons/LocalMall';
+import React, {useEffect} from "react";
+import Layout from "../../components/Layout";
+import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
+import LocalMallIcon from "@material-ui/icons/LocalMall";
+import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+import { useRouter } from "next/router";
+import * as Yup from "yup";
+import { Formik, Form as Forms } from "formik";
+import Axios from "axios";
 
-import * as Yup from 'yup';
-import { Formik, Form as Forms } from 'formik';
-import Axios from 'axios'
-import { useRouter } from 'next/router'
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+export default function updateProduk({ data, data2, data3, data4, data5 }) {
+  // Form Validation
+  const ProdukSchema = Yup.object().shape({
+    file_upload: Yup.string().required("required"),
+    nama: Yup.string().required("required"),
+    kode_sku: Yup.string().required("required"),
+    kategori_produk_id: Yup.string().required("required"),
+    unit: Yup.number().integer().required("required"),
+    deskripsi: Yup.string().required("required"),
+    hbs: Yup.number().integer().required("required"),
+    akun_pembelian: Yup.number().integer().required("required"),
+    pajak_beli: Yup.string().required("required"),
+    hjs: Yup.number().integer().required("required"),
+    akun_penjualan: Yup.number().integer().required("required"),
+    pajak_jual: Yup.string().required("required"),
+  });
 
-export default function updateProduk({ data, data2 }) {
-	// Produk API
-	const getProduk = 'http://localhost:3000/api/produk/getProduk'
-	const updateProduk = 'http://localhost:3000/api/produk/updateProduk';
+  // Produk Api
+  const url = "http://localhost:3000/api/produk/updateProduk";
+	
+  // Redirect
+  const router = useRouter();
+	const { id } = router.query;
 
-	// Take URL Parameter [id]
-	const router = useRouter();
-	const { id } = router.query
+  // Batal Button Function
+  function cancelButton() {
+    router.push("../produk/tabel-produk");
+  }
 
-	// Get Existing Produk data based on [id]
-	const formikref = useRef(null)
-	const getData = async () => {
-		Axios.post(getProduk, {
-
-			id: id
-
-		}).then(function (response) {
-			formikref.current.setFieldValue('nama', response.data.data.nama)
-			formikref.current.setFieldValue('kode_sku', response.data.data.kode_sku)
-			formikref.current.setFieldValue('deskripsi', response.data.data.deskripsi)
-			formikref.current.setFieldValue('hbs', response.data.data.hbs)
-			formikref.current.setFieldValue('hjs', response.data.data.hjs)
-
-		}).
-			catch(function (error) {
-				console.log(error)
-			})
-	};
 	useEffect(() => {
-		getData()
+		console.log("THIS IS ID OF PAGE" + id)
 	}, [])
 
-	// Batal Button Function
-	function cancelButton() {
-		router.push('../produk/tabel-produk')
-	}
+  return (
+    <Layout>
+      <Formik
+        initialValues={{
+          file_upload: [],
+          nama: "",
+          kode_sku: "",
+          kategori_produk: "",
+          unit: "",
+          deskripsi: "",
+          hbs: "",
+          akun_pembelian: "",
+          pajak_beli: "",
+          hjs: "",
+          akun_penjualan: "",
+          pajak_jual: "",
+        }}
+        // validationSchema={ProdukSchema}
+        onSubmit={async (values) => {
+          let formData = new FormData();
+					let data = {id}
+          for (var key in values) {
+            formData.append(`${key}`, `${values[key]}`);
+          }
+          Array.from(values.file_upload).map((i) => formData.append("file", i));
+          Axios.put(url, formData, data, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+            .then(function (response) {
+              console.log(response);
+              router.push("../produk/tabel-produk");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }}>
+        {(props) => (
+          <Forms noValidate>
+            <Form>
+              <Row className='ml-2 mb-4'>
+                <LocalMallIcon fontSize='large' />
+                <h3>Edit Produk / Edit Jasa</h3>
+              </Row>
+              <Card>
+                <Card.Body>
+                  <h4>Info Product / Service</h4>
 
-	return (
-		<Layout>
-			<Formik
-				innerRef={formikref}
-				initialValues={{
-					file_upload: "",
-					nama: "",
-					kode_sku: "",
-					kategori_akun: "",
-					unit: "",
-					deskripsi: "",
-					hbs: "",
-					akun_pembelian: "",
-					pajak_beli: "",
-					hjs: "",
-					akun_penjualan: "",
-					pajak_jual: "",
-				}}
-
-				// validationSchema={UserSchema}
-				onSubmit={async (values) => {
-					let data = { ...values, id }
-					Axios.put(updateProduk, data).
-						then(function (response) {
-							console.log(response)
-							router.push('../produk/tabel-produk')
-
-						}).
-						catch(function (error) {
-							console.log(error)
-						})
-				}}
-			>
-				{(props) => (
-					<Forms noValidate>
-						<Form>
-							<Row className="ml-2 mb-4">
-								<LocalMallIcon fontSize="large" />
-								<h3>Buat Produk / Jasa Baru</h3>
-							</Row>
-							<Card>
-								<Card.Body>
-									<h4>Info Product / Service</h4>
-
-									{/* Gambar */}
-									<Row className="mb-2">
-										<Col sm="2">
-											<Form.Label>Gambar</Form.Label>
-										</Col>
-										<Col sm="4">
-											{/* <Form.File className="mb-2" id="formcheck-api-regular" name="file_upload" onChange={props.handleChange}>
+                  {/* Gambar */}
+                  <Row className='mb-2'>
+                    <Col sm='2'>
+                      <Form.Label>Gambar</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      {/* <Form.File className="mb-2" id="formcheck-api-regular" name="file_upload" onChange={props.handleChange}>
 												<Form.File.Input />
 											</Form.File> */}
-											<Form.Control className="mb-2" placeholder="" name="file_upload" onChange={props.handleChange} />
-										</Col>
-									</Row>
+                      {/* <Form.Control className="mb-2" placeholder="" name="file_upload" onChange={props.handleChange} />
+											{props.errors.file_upload && props.touched.file_upload ?
+												<div class="text-red-500 text-sm"><ErrorOutlineIcon />{props.errors.file_upload}</div>
+												: null} */}
+                      <Form.File type='file' name='file_upload' accept='image/*' onChange={(e) => props.setFieldValue("file_upload", e.target.files)} />
+                      {props.errors.file_upload && props.touched.file_upload ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.file_upload}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-									{/* Nama */}
-									<Row className="mb-2">
-										<Col sm="2">
-											<Form.Label>Nama</Form.Label>
-										</Col>
-										<Col sm="4">
-											<Form.Control className="mb-2" placeholder={props.values.nama} name="nama" onChange={props.handleChange} />
-										</Col>
-									</Row>
+                  {/* Nama */}
+                  <Row className='mb-2'>
+                    <Col sm='2'>
+                      <Form.Label>Nama</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      <Form.Control className='mb-2' placeholder='' name='nama' onChange={props.handleChange} />
+                      {props.errors.nama && props.touched.nama ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.nama}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-									{/* Kode / SKU */}
-									<Row className="mb-2">
-										<Col sm="2">
-											<Form.Label>Kode / SKU</Form.Label>
-										</Col>
-										<Col sm="4">
-											<Form.Control className="mb-2" placeholder={props.values.kode_sku} name="kode_sku" onChange={props.handleChange} />
-										</Col>
-									</Row>
+                  {/* Kode / SKU */}
+                  <Row className='mb-2'>
+                    <Col sm='2'>
+                      <Form.Label>Kode / SKU</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      <Form.Control className='mb-2' placeholder='' name='kode_sku' onChange={props.handleChange} />
+                      {props.errors.kode_sku && props.touched.kode_sku ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.kode_sku}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-									{/* Kategori */}
-									<Row className="mb-2">
-										<Col sm="2">
-											<Form.Label>Kategori</Form.Label>
-										</Col>
-										<Col sm="4">
-											<Form.Control className="mb-2" as="select" name="kategori_akun" onChange={props.handleChange}>
-												{/* loop over kategori and show them */}
-												<option disabled>Pilih</option>
-												{data.map((kategori) => (
-													<option key={kategori.id} value={kategori.id}>{kategori.nama}</option>
+                  {/* Kategori */}
+                  <Row className='mb-2'>
+                    <Col sm='2'>
+                      <Form.Label>Kategori</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      <Form.Control className='mb-2' as='select' name='kategori_produk' onChange={props.handleChange}>
+                        {/* loop over kategori and show them */}
+                        <option value='0'>Pilih</option>
+                        {data3.map((kategoriProduk) => (
+                          <option key={kategoriProduk.id} value={kategoriProduk.id}>
+                            {kategoriProduk.nama}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      {props.errors.kategori_produk && props.touched.kategori_produk ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.kategori_produk}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-												))}
-											</Form.Control>
-										</Col>
-									</Row>
+                  {/* Unit */}
+                  <Row className='mb-2'>
+                    <Col sm='2'>
+                      <Form.Label>Unit</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      <Form.Control className='mb-2' as='select' name='unit' onChange={props.handleChange}>
+                        <option value='0'>Pilih Unit</option>
+                        {data5.map((satuanProduk) => (
+                          <option key={satuanProduk.id} value={satuanProduk.id}>
+                            {satuanProduk.satuan}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      {props.errors.unit && props.touched.unit ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.unit}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-									{/* Unit */}
-									<Row className="mb-2">
-										<Col sm="2">
-											<Form.Label>Unit</Form.Label>
-										</Col>
-										<Col sm="4">
-											<Form.Control className="mb-2" as="select" name="unit" onChange={props.handleChange}>
-												<option disabled>Pilih</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
-												<option value="5">5</option>
-											</Form.Control>
-										</Col>
-									</Row>
+                  {/* Deskripsi */}
+                  <Row className='mb-12'>
+                    <Col sm='2'>
+                      <Form.Label>Deskripsi</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      <Form.Control className='mb-2' placeholder='' name='deskripsi' onChange={props.handleChange} />
+                      {props.errors.deskripsi && props.touched.deskripsi ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.deskripsi}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-									{/* Deskripsi */}
-									<Row className="mb-12">
-										<Col sm="2">
-											<Form.Label>Deskripsi</Form.Label>
-										</Col>
-										<Col sm="4">
-											<Form.Control className="mb-2" placeholder={props.values.deskripsi} name="deskripsi" onChange={props.handleChange} />
-										</Col>
-									</Row>
+                  <h4>Harga</h4>
+                  <hr />
+                  <Row className='ml-2'>
+                    <FormCheck />
+                    <h5>Saya Beli Produk Ini</h5>
+                  </Row>
+                  <hr />
 
-									<h4>Harga</h4>
-									<hr />
-									<Row className="ml-2">
-										<FormCheck />
-										<h5>Saya Beli Produk Ini</h5>
-									</Row>
-									<hr />
+                  <Row sm='6'>
+                    <Col>
+                      <Form.Label>Harga Beli Satuan</Form.Label>
+                      <Form.Control className='mb-2' placeholder='Rp. 0,00' name='hbs' onChange={props.handleChange} />
+                      {props.errors.hbs && props.touched.hbs ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.hbs}
+                        </div>
+                      ) : null}
+                    </Col>
+                    <Col>
+                      <Form.Label>Akun Pembelian</Form.Label>
+                      <Form.Control className='mb-2' as='select' name='akun_pembelian' onChange={props.handleChange}>
+                        <option value='0'>Pilih</option>
+                        {data.map((akunPembelian) => (
+                          <option key={akunPembelian.id} value={akunPembelian.id}>
+                            {akunPembelian.nama_akun}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      {props.errors.akun_pembelian && props.touched.akun_pembelian ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.akun_pembelian}
+                        </div>
+                      ) : null}
+                    </Col>
+                    <Col>
+                      <Form.Label>Pajak Beli</Form.Label>
+                      <Form.Control className='mb-2' as='select' name='pajak_beli' onChange={props.handleChange}>
+                        <option value='0'>Pilih</option>
+                        {data4.map((pajak, index) => (
+                          <option key={index} value={pajak.id}>
+                            {pajak.nama}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      {props.errors.pajak_beli && props.touched.pajak_beli ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.pajak_beli}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-									<Row sm="6">
-										<Col>
-											<Form.Label>Harga Beli Satuan</Form.Label>
-											<Form.Control className="mb-2" placeholder={"Rp. " + props.values.hbs} name="hbs" onChange={props.handleChange} />
-										</Col>
-										<Col>
-											<Form.Label>Akun Pembelian</Form.Label>
-											<Form.Control className="mb-2" as="select" name="akun_pembelian" onChange={props.handleChange}>
-												<option disabled>Pilih</option>
-												{data2.map((akun) => (
-													<option key={akun.id} value={akun.id}>{akun.nama_akun}</option>
-												))}
+                  <hr />
+                  <Row className='ml-2'>
+                    <FormCheck />
+                    <h5>Saya Jual Produk Ini</h5>
+                  </Row>
+                  <hr />
 
+                  <Row sm='6'>
+                    <Col>
+                      <Form.Label>Harga Jual Satuan</Form.Label>
+                      <Form.Control className='mb-2' placeholder='Rp. 0,00' name='hjs' onChange={props.handleChange} />
+                      {props.errors.hjs && props.touched.hjs ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.hjs}
+                        </div>
+                      ) : null}
+                    </Col>
+                    <Col>
+                      <Form.Label>Akun Penjualan</Form.Label>
+                      <Form.Control className='mb-2' as='select' name='akun_penjualan' onChange={props.handleChange}>
+                        <option value='0'>Pilih</option>
+                        {data2.map((akunPenjualan) => (
+                          <option key={akunPenjualan.id} value={akunPenjualan.id}>
+                            {akunPenjualan.nama_akun}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      {props.errors.akun_penjualan && props.touched.akun_penjualan ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.akun_penjualan}
+                        </div>
+                      ) : null}
+                    </Col>
+                    <Col>
+                      <Form.Label>Pajak Jual</Form.Label>
+                      <Form.Control className='mb-2' as='select' name='pajak_jual' onChange={props.handleChange}>
+                        <option value='0'>Pilih</option>
+                        {data4.map((pajak, index) => (
+                          <option key={index} value={pajak.id}>
+                            {pajak.nama}
+                          </option>
+                        ))}
+                      </Form.Control>
+                      {props.errors.pajak_jual && props.touched.pajak_jual ? (
+                        <div class='text-red-500 text-sm'>
+                          <ErrorOutlineIcon />
+                          {props.errors.pajak_jual}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </Row>
 
-											</Form.Control>
-										</Col>
-										<Col>
-											<Form.Label>Pajak Beli</Form.Label>
-											<Form.Control className="mb-2" as="select" name="pajak_beli" onChange={props.handleChange}>
-												<option disabled>Pilih</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-											</Form.Control>
-										</Col>
-									</Row>
-
-									<hr />
-									<Row className="ml-2">
-										<FormCheck />
-										<h5>Saya Jual Produk Ini</h5>
-									</Row>
-									<hr />
-
-									<Row sm="6">
-										<Col>
-											<Form.Label>Harga Jual Satuan</Form.Label>
-											<Form.Control className="mb-2" placeholder={("Rp. ") + props.values.hjs} name="hjs" onChange={props.handleChange} />
-										</Col>
-										<Col>
-											<Form.Label>Akun Penjualan</Form.Label>
-											<Form.Control className="mb-2" as="select" name="akun_penjualan" onChange={props.handleChange}>
-												<option disabled>Pilih</option>
-												{data2.map((akun) => (
-													<option key={akun.id} value={akun.id}>{akun.nama_akun}</option>
-												))}
-											</Form.Control>
-										</Col>
-										<Col>
-											<Form.Label>Pajak Jual</Form.Label>
-											<Form.Control className="mb-2" as="select" name="pajak_jual" onChange={props.handleChange}>
-												<option disabled>Pilih</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-											</Form.Control>
-										</Col>
-									</Row>
-
-									<Row>
-										<Col className="d-flex justify-content-end mt-10">
-											<Button variant="danger mr-2" onClick={cancelButton}>Batal</Button>
-											<Button variant="success" onClick={props.handleSubmit}>Update</Button>
-										</Col>
-									</Row>
-								</Card.Body>
-							</Card>
-						</Form>
-					</Forms>
-				)}
-			</Formik>
-		</Layout >
-
-	);
+                  <Row>
+                    <Col className='d-flex justify-content-end mt-10'>
+                      <Button variant='danger mr-2' onClick={cancelButton}>
+                        Batal
+                      </Button>
+                      <Button variant='success' onClick={props.handleSubmit}>
+                        Update
+                      </Button>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Form>
+          </Forms>
+        )}
+      </Formik>
+    </Layout>
+  );
 }
 
 export async function getServerSideProps() {
-	// Get Kategories from API
-	const kategories = await prisma.kategoriProduk.findMany({
-		orderBy: [
-			{
-				id: 'asc'
-			}
-		],
-	});
+  // Get kategori akun penjualan and pembelian from akun model
+  const getAkunPembelian = await prisma.akun.findMany({
+    where: {
+      kategoriId: 15,
+    },
+  });
 
-	// Get Akuns from API
-	const akuns = await prisma.akun.findMany({
-		orderBy: [
-			{
-				kategoriId: 'asc'
-			}
-		]
-	})
+  const getAkunPenjualan = await prisma.akun.findMany({
+    where: {
+      kategoriId: 13,
+    },
+  });
 
-	return {
-		props: {
-			data: kategories,
-			data2: akuns
-		}
-	}
+  const getPajak = await prisma.pajak.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
+
+  const getSatuan = await prisma.satuanProduk.findMany({
+    orderBy: {
+      satuan: "asc",
+    },
+  });
+
+  const getKategoriProduk = await prisma.kategoriProduk.findMany();
+
+  return {
+    props: {
+      data: getAkunPembelian,
+      data2: getAkunPenjualan,
+      data3: getKategoriProduk,
+      data4: getPajak,
+      data5: getSatuan,
+    },
+  };
 }

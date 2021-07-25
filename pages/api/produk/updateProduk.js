@@ -63,3 +63,9 @@ export default async (req, res) => {
     console.log(error);
   }
 };
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
