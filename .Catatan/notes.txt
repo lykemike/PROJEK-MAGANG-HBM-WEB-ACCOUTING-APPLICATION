@@ -58,81 +58,86 @@ upload file attachment
 (DONE) Edit API produk
 (DONE) Edit API penjualan
 
+🗓️ Tanggal: 26 Juli 2021, Senin
+(DONE) cara ketika pada saat buat penjualan/pembelian redirect ke sales invoice yg baru di buat
+(DONE) cara nampilin detail dari header
 
-TANGGAL ERROR NAMPILIN MISALNYA 10 HARI DARI BULAN JULI TANGGAL 29 => AUGUSTUS TGL 9
-ERROR KARENA TIDAK ADA ANGKA 0 DI 9, => 09 
-===================
+🗓️ Tanggal: 27 Juli 2021, Selasa
+(DONE) Api create pembelian
+(DONE) Syarat pembayaran
+
+🗓️ Tanggal: 28 Juli 2021, Rabu
+(DONE) Buat db JurnalPengirimanBayaran, PengirimanBayaran, JurnalPembelian, JurnalPenerimaanPembayaran, PenerimaanPembayaran
+(DONE) Perbaikan db produk ama api
+(DONE) Meeting
+
+----------------
+|| ON PROCESS ||
+----------------
+== Penjualan - Pembelian page ==
+Ketika data blm dibuat id buat redirect tidak ditemukan error: null
+Syarat pembayaran masih error: misalnya 10 hari dari bulan juli tanggal 29 jadi 
+  - tanggal 9 augustus, error di konversi seharusnya jadi 09 augustus => 09/08/2021
+Create/Update sales invoice udah bisa error: ketika upload file attachment
+Harga berkurang/reset ketika kita remove data dari produk
+Cara masukin data ke jurnal
+Cara ketika buat penjualan jumlah update sesuai kuantitas produk di kategori produk
+Cetak Invoice
+Ketika buat pembayaran jumlah pembayaran di cocokan dengan sisa tagihan
+  - Kalau balance status: Completed/Done/Paid
+  - Ketika udah bayar separuh status: Partial
+  - Ketika lewat jatuh tempo status: Jatuh Tempo
+
+== Produk page ==
 (DONE) Update Produk API 
+Checkbox enable/disable di jual/beli produk
+(DONE) Ketika buat produk baru, jumlah kategorinya nambah/update (jumlah + 1): misalnya buat produk jasa service database
+  - Kategori jasa bakal nambah 0 + 1
+  - Kategori produk bertambah ketika buat produk
 
-PENDING WORK
-||PAGE PRODUK||
-Check box bisa nampilin form di produk
-Ketika buat produk baru, jumlah kategorinya nambah/update (jumlah + 1)
-harga termasuk pajak ikut setting pas buat produk
-kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
+(PROCESS) Harga termasuk pajak ikut setting pas buat produk
+(PROCESS) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
+(DONE) Request untuk hapus option pajak dari produk ui, api
 
-|| PERTANYAAN ||
-Setelah buat penjualan/pembelian langsung kebuka penjualan/pembelian yg dibuat
-Nampilin Detail penjualan/pembelian
+== Miscellaneous ==
+Cara add daftar akun sesuai kode aku
+Contoh validation backend
+Filter search
+===================
+-------------
+|| UPDATES ||
+-------------
+Batas Minimum dihapus.
+Quantity field di produk: opsional
+Pembelian tambah quantity
+Penjualan kurang quantity
+Penjualan kontak pelanggan
+Pembelian kontak supplier
+Pembelian yg di tampil harga belinya
+Label tgl transaksi di ganti -> tgl invoice
+Label no transaksi -> nomor invoice
+(DONE) Database Tag di ganti -> varchar, contoh tag 1/4 bearti bayar 1/4 january, february, march
+Label no referensi penagihan diganti -> kontrak
+(DONE) Database no referensi penagihan diganti kontrak -> varchar
+== FORMAT SALES INVOICE UI ==
+Jumlah tagihan sblm ppn
+Pajak pertambahan nilai
+Jumlah setelah ppn
+Hapus label kuantitas dan satuan
+== PRODUK PAGE UI ==
+Saldo Supplier nampilin total hutang
+Saldo Pelanggan nampilin total piutang
+(DONE) Tambah field quantity -> nilai awal 0 (opsional)
+Harga rata-rata dan harga beli terakhir di ganti jadi -> harga beli ama harga jual
+CSV format template keluarin semua data-data produk
 
+
+|| PERTANYAAN Buat page biaya ||
 Di view biaya yg nomor di ambil dari expense
 Di view status : Udah bayar: selasai, yg blm bayar: hutang
 Total biaya bulan ini : total (dalam idr)
 Biaya belum dibayar (dalam idr) : sisa tagihan (dalam idr)
-
 Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
-
 Pajak Beli dan Jual List dari Dropdown pajak 
 
-Batas Minimum dihapus.
 
-Pertanayaan
-edit produk
-cara add daftar akun sesuai kode akun
-cara upload file di penjualan
-cara masukin data ke jurnal
-cara ketika buat penjualan / pembelian jumlah di kategori produk di tambah atau di kurang
-(DONE) cara ketika pada saat buat penjualan/pembelian redirect ke sales invoice yg baru di buat
-(DONE) cara nampilin detail dari header
-cara disable/mengubah form ketika cetang checkbox
-contoh validation backend
-filter
-
-Edit produk
-
-Penjualan nampilin pelanggan
-Formik Ref error pas nampilin data dari pelanggan
-Edit Invoice
-Cara masukin data ke jurnal
-cara ketika buat penjualan
-cara ketika pada saat buat penjualan redirect ke sales invoice yg baru di buat
-
-// Meeting hari ini
-Quantity dan batas minimum input dari mana?
-Harga Rata2 dan Harga beli terakhir ?
-
-quantity opsional
-pembelian + quanttiy
-penjualan - quantity
-
-pemjualan - pelanggan
-pembelian - supplier
-
-
-tanggal
-ketika hapus, value ikut ke hapus jg di produk
-
-Penmbelian yg di tampil harga belinya
-
-
-catatan meeting 7/23/2021
-tgl transaksi -> tgl invoice
-no transaksi -> nomor invoice
-tag -> (varchar)
-no referensi penaighan -> kontrak (varchar)
-
-Jumlah tagihan sblm ppn
-pajak pertambahan nilai
-jumlah setelah ppn
-
-- kuantitas, satuan

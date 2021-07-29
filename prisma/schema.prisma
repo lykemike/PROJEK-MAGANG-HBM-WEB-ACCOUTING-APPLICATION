@@ -84,17 +84,19 @@ model Akun {
   Produk1 Produk[] @relation("akunPembelian")
   Produk2 Produk[] @relation("akunPenjualan")
 
-  HeaderBiaya1 HeaderBiaya[] @relation("akun_kas_bank")
-  HeaderBiaya2 HeaderBiaya[] @relation("akun_pendapatan")
-  DetailBiaya DetailBiaya[]
+  HeaderBiaya1  HeaderBiaya[] @relation("akun_kas_bank")
+  HeaderBiaya2  HeaderBiaya[] @relation("akun_pendapatan")
+  DetailBiaya   DetailBiaya[]
 
-  HeaderPenjualan1 HeaderPenjualan[] @relation("akunPemotonganPenjualan")
-  HeaderPenjualan2 HeaderPenjualan[] @relation("akunUangMukaPenjualan")
+  HeaderPenjualan1           HeaderPenjualan[] @relation("akunPemotonganPenjualan")
+  HeaderPenjualan2           HeaderPenjualan[] @relation("akunUangMukaPenjualan")
+  JurnalPenjualan            JurnalPenjualan[] @relation("akunJurnalPenjualan")
+  JurnalPenerimaanPembayaran JurnalPenerimaanPembayaran[] @relation("akunPenerimaanPembayaran")
 
-  JurnalPenjualan  JurnalPenjualan[] @relation("akunJurnal")
-
-  HeaderPembelian1 HeaderPembelian[] @relation("akunPemotonganPembelian")
-  HeaderPembelian2 HeaderPembelian[] @relation("akunUangMukaPembelian")
+  HeaderPembelian1          HeaderPembelian[] @relation("akunPemotonganPembelian")
+  HeaderPembelian2          HeaderPembelian[] @relation("akunUangMukaPembelian")
+  JurnalPembelian           JurnalPembelian[]         @relation("akunJurnalPembelian")
+  JurnalPengirimanBayaran   JurnalPengirimanBayaran[] @relation("akunPengirimanBayaran") 
 }
 
 // Kategori Kontak
@@ -162,7 +164,6 @@ model KontakDetail {
   kontak_id Int
   kontak_type  KategoriKontak @relation(fields: [kontak_type_id], references: [id])
   kontak_type_id Int
-
 }
 
 // Produk table
@@ -176,16 +177,15 @@ model Produk {
   satuan              SatuanProduk @relation(fields: [unit], references: [id])
   unit                Int
   deskripsi           String
+  quantity            Int
 
   harga_beli_satuan   Int
   pembelian           Akun   @relation("akunPembelian", fields: [akun_pembelian], references: [id])
   akun_pembelian      Int
-  pajak_beli          String
 
   harga_jual_satuan   Int
   penjualan           Akun   @relation("akunPenjualan", fields: [akun_penjualan], references: [id])
   akun_penjualan      Int
-  pajak_jual          String
 
   DetailPenjualan DetailPenjualan[]
   DetailPembelian DetailPembelian[]
@@ -242,8 +242,10 @@ model HeaderPenjualan {
   akun_uang_muka          Int
   sisa_tagihan            Int
 
-  DetailPenjualan         DetailPenjualan []
+  DetailPenjualan         DetailPenjualan[]
   JurnalPenjualan         JurnalPenjualan[]
+  PenerimaanPembayaran    PenerimaanPembayaran[]
+  JurnalPenerimaanPembayaran  JurnalPenerimaanPembayaran[]
 }
 
 // Detail Penjualan Table
@@ -276,8 +278,32 @@ model JurnalPenjualan {
   header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
   header_penjualan_id Int
   
-  akun               Akun      @relation("akunJurnal", fields: [akun_id], references: [id])
-  akun_id              Int
+  akun                Akun      @relation("akunJurnalPenjualan", fields: [akun_id], references: [id])
+  akun_id             Int
+  akun_name           String
+
+  debit               Int
+  kredit              Int
+}
+
+// Penerimaan Pembayaran Table
+model PenerimaanPembayaran {
+  id                  Int             @id @default(autoincrement())
+  header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
+  header_penjualan_id Int
+
+  cara_penagihan      String
+  jumlah              Int
+}
+
+// Jurnal Penerimaan Pembayaran 
+model JurnalPenerimaanPembayaran {
+  id                  Int             @id @default(autoincrement())
+  header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
+  header_penjualan_id Int
+  
+  akun                Akun      @relation("akunPenerimaanPembayaran", fields: [akun_id], references: [id])
+  akun_id             Int
   akun_name           String
 
   debit               Int
@@ -318,7 +344,10 @@ model HeaderPembelian {
   akun_uang_muka          Int
   sisa_tagihan            Int
 
-  DetailPembelian        DetailPembelian []
+  DetailPembelian         DetailPembelian[]
+  JurnalPembelian         JurnalPembelian[]
+  PengirimanBayaran       PengirimanBayaran[]
+  JurnalPengirimanBayaran JurnalPengirimanBayaran[]
 }
 
 // Detail Pembelian Table
@@ -344,6 +373,46 @@ model DetailPembelian {
 
   jumlah                  Int
 }
+
+// Jurnal Pembelian Table
+model JurnalPembelian {
+  id                    Int             @id @default(autoincrement())
+  header_pembelian      HeaderPembelian   @relation(fields: [header_pembelian_id], references: [id])
+  header_pembelian_id   Int
+  
+  akun                  Akun      @relation("akunJurnalPembelian", fields: [akun_id], references: [id])
+  akun_id               Int
+  akun_name             String
+
+  debit                 Int
+  kredit                Int
+}
+
+// Pengiriman Bayaran Table
+model PengirimanBayaran {
+  id                    Int             @id @default(autoincrement())
+  header_pembelian      HeaderPembelian   @relation(fields: [header_pembelian_id], references: [id])
+  header_pembelian_id   Int
+
+  cara_penagihan        String
+  jumlah                Int
+}
+
+// Jurnal Pengiriman Bayaran Table
+model JurnalPengirimanBayaran {
+  id                    Int             @id @default(autoincrement())
+  header_pembelian      HeaderPembelian   @relation(fields: [header_pembelian_id], references: [id])
+  header_pembelian_id   Int
+  
+  akun                  Akun      @relation("akunPengirimanBayaran", fields: [akun_id], references: [id])
+  akun_id               Int
+  akun_name             String
+
+  debit                 Int
+  kredit                Int
+}
+
+
 
 // Header Biaya Table
 model HeaderBiaya {

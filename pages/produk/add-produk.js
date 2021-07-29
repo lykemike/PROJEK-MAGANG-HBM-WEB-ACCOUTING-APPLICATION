@@ -12,7 +12,7 @@ import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function addProduk({ data, data2, data3, data4, data5 }) {
+export default function addProduk({ data, data2, data3, data5 }) {
   // Form Validation
   const ProdukSchema = Yup.object().shape({
     file_upload: Yup.string().required("required"),
@@ -49,13 +49,12 @@ export default function addProduk({ data, data2, data3, data4, data5 }) {
           kode_sku: "",
           kategori_produk: "",
           unit: "",
+          quantity: 0,
           deskripsi: "",
           hbs: "",
           akun_pembelian: "",
-          pajak_beli: "",
           hjs: "",
           akun_penjualan: "",
-          pajak_jual: "",
         }}
         // validationSchema={ProdukSchema}
         onSubmit={async (values) => {
@@ -64,7 +63,7 @@ export default function addProduk({ data, data2, data3, data4, data5 }) {
             formData.append(`${key}`, `${values[key]}`);
           }
           Array.from(values.file_upload).map((i) => formData.append("file", i));
-          console.log(values.file_upload);
+          console.log(values);
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -190,6 +189,20 @@ export default function addProduk({ data, data2, data3, data4, data5 }) {
                       ) : null}
                     </Col>
                   </Row>
+                  
+                  {/* Quantity */}
+                  <Row className='mb-3'>
+                      <Col sm="2">
+                        <Form.Label>Quantity</Form.Label>
+                      </Col>
+                      <Col sm="4">
+                      <Form.Control
+											type="number"
+                      name='quantity' 
+                      onChange={props.handleChange}
+                      />
+                      </Col>
+                  </Row>
 
                   {/* Deskripsi */}
                   <Row className='mb-12'>
@@ -243,23 +256,6 @@ export default function addProduk({ data, data2, data3, data4, data5 }) {
                         </div>
                       ) : null}
                     </Col>
-                    <Col>
-                      <Form.Label>Pajak Beli</Form.Label>
-                      <Form.Control className='mb-2' as='select' name='pajak_beli' onChange={props.handleChange}>
-                        <option value='0'>Pilih</option>
-                        {data4.map((pajak, index) => (
-                          <option key={index} value={pajak.id}>
-                            {pajak.nama}
-                          </option>
-                        ))}
-                      </Form.Control>
-                      {props.errors.pajak_beli && props.touched.pajak_beli ? (
-                        <div class='text-red-500 text-sm'>
-                          <ErrorOutlineIcon />
-                          {props.errors.pajak_beli}
-                        </div>
-                      ) : null}
-                    </Col>
                   </Row>
 
                   <hr />
@@ -294,23 +290,6 @@ export default function addProduk({ data, data2, data3, data4, data5 }) {
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
                           {props.errors.akun_penjualan}
-                        </div>
-                      ) : null}
-                    </Col>
-                    <Col>
-                      <Form.Label>Pajak Jual</Form.Label>
-                      <Form.Control className='mb-2' as='select' name='pajak_jual' onChange={props.handleChange}>
-                        <option value='0'>Pilih</option>
-                        {data4.map((pajak, index) => (
-                          <option key={index} value={pajak.id}>
-                            {pajak.nama}
-                          </option>
-                        ))}
-                      </Form.Control>
-                      {props.errors.pajak_jual && props.touched.pajak_jual ? (
-                        <div class='text-red-500 text-sm'>
-                          <ErrorOutlineIcon />
-                          {props.errors.pajak_jual}
                         </div>
                       ) : null}
                     </Col>
@@ -350,12 +329,6 @@ export async function getServerSideProps() {
     },
   });
 
-  const getPajak = await prisma.pajak.findMany({
-    orderBy: {
-      id: "asc",
-    },
-  });
-
   const getSatuan = await prisma.satuanProduk.findMany({
     orderBy: {
       satuan: "asc",
@@ -369,7 +342,6 @@ export async function getServerSideProps() {
       data: getAkunPembelian,
       data2: getAkunPenjualan,
       data3: getKategoriProduk,
-      data4: getPajak,
       data5: getSatuan,
     },
   };

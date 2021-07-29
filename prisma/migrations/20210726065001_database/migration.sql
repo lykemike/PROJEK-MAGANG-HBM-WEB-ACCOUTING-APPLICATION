@@ -170,7 +170,7 @@ CREATE TABLE `HeaderPenjualan` (
     `tgl_transaksi` VARCHAR(191) NOT NULL,
     `tgl_jatuh_tempo` VARCHAR(191) NOT NULL,
     `syarat_pembayaran` VARCHAR(191) NOT NULL,
-    `no_ref_penagihan` INTEGER NOT NULL,
+    `no_ref_penagihan` VARCHAR(191) NOT NULL,
     `no_transaksi` INTEGER NOT NULL,
     `tag` VARCHAR(191) NOT NULL,
     `pesan` VARCHAR(191) NOT NULL,
