@@ -70,7 +70,7 @@ export default function pembayaran_jual({data, data2 , data3}) {
 					<Col className="d-flex justify-content-end mr-3">
 						<Row>
 							<h4 className="mr-2">Total</h4>
-							<h4 name='total' >Rp. {props.values.jumlah}</h4>
+							<h4 name='total' >Rp. {parseInt(props.values.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h4>
 						</Row>
 					</Col>
 				</Row>
@@ -156,7 +156,7 @@ export default function pembayaran_jual({data, data2 , data3}) {
 				<Row className="mb-12">
 				
 					<Col sm="2">
-						<p>Purchase Invoice #{i.id}</p>
+						<p>Sales Invoice #{i.id}</p>
 					</Col>
 
 					<Col sm="2">

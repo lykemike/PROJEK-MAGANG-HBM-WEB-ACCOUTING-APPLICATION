@@ -90,11 +90,11 @@ export default function sales_invoice({ data, data2 }) {
                 <Form.Label className='font-medium'>Harga Satuan</Form.Label>
               </Col>
 
-              <Col sm='1'>
+              <Col sm='2'>
                 <Form.Label className='font-medium'>Diskon</Form.Label>
               </Col>
 
-              <Col sm='1'>
+              <Col sm='2'>
                 <Form.Label className='font-medium'>Pajak</Form.Label>
               </Col>
               <Col sm='2'>
@@ -117,11 +117,11 @@ export default function sales_invoice({ data, data2 }) {
                   <p>Rp. {i.harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}</p>
                 </Col>
 
-                <Col sm='1'>
+                <Col sm='2'>
                   <p>{i.diskon} %</p>
                 </Col>
 
-                <Col sm='1'>
+                <Col sm='2'>
                   <p>
                     {i.pajak_nama} - {i.pajak_persen} %
                   </p>

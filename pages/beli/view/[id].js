@@ -61,11 +61,11 @@ export default function Purchase_invoice({ data, data2 }) {
                 </Col>
 
                 <Col sm='3'>
-                  <Form.Label className='font-medium'>No Transaksi: {i.no_transaksi} </Form.Label>
+                  <Form.Label className='font-medium'>No Invoice: {i.no_transaksi} </Form.Label>
                   <br />
                   <Form.Label className='font-medium'>Tag: {i.tag} </Form.Label>
                   <br />
-                  <Form.Label className='font-medium'>No Referensi Tagihan: {i.no_ref_penagihan} </Form.Label>
+                  <Form.Label className='font-medium'>Nomor Kontrak: {i.no_ref_penagihan} </Form.Label>
                 </Col>
               </Row>
             ))}
@@ -86,11 +86,11 @@ export default function Purchase_invoice({ data, data2 }) {
                 <Form.Label className='font-medium'>Harga Satuan</Form.Label>
               </Col>
 
-              <Col sm='1'>
+              <Col sm='2'>
                 <Form.Label className='font-medium'>Diskon</Form.Label>
               </Col>
 
-              <Col sm='1'>
+              <Col sm='2'>
                 <Form.Label className='font-medium'>Pajak</Form.Label>
               </Col>
               <Col sm='2'>
@@ -113,11 +113,11 @@ export default function Purchase_invoice({ data, data2 }) {
                   <p>Rp. {i.harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}</p>
                 </Col>
 
-                <Col sm='1'>
+                <Col sm='2'>
                   <p>{i.diskon} %</p>
                 </Col>
 
-                <Col sm='1'>
+                <Col sm='2'>
                   <p>
                     {i.pajak_nama} - {i.pajak_persen} %
                   </p>

@@ -17,7 +17,27 @@ export default function pembayaran_beli({data, data2 , data3}) {
 
 	return (
 		<Layout>
-			 <Formik>
+			<Formik
+        initialValues={{
+          bayar_dari: "",
+          carapembayaran: "",
+          tgl_pembayaran: "",
+          tgl_jatuh_tempo: "",
+          jumlah: 0,
+        }}
+        // validationSchema={UserSchema}
+        onSubmit={async (values) => {
+          // alert(JSON.stringify(values, null, 2));
+		  console.log(values)
+          Axios.post(url, values)
+            .then(function (response) {
+              console.log(response);
+            //   router.push("../penjualan");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }}>
         {(props) => (
           <Forms noValidate>
 			<div>
@@ -37,7 +57,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
 
 					<Col sm="3">
 						<Form.Label className="font-medium">Bayar Dari</Form.Label>
-						<Form.Control as='select' name='pembayaran' onChange={props.handleChange}>
+						<Form.Control as='select' name='bayar_dari' onChange={props.handleChange}>
                         <option value='kosong'>Pilih</option>
                         {data3.map((akun) => (
                           <option key={akun.id} value={akun.id}>
@@ -49,7 +69,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
 					<Col className="d-flex justify-content-end mr-3">
 						<Row>
 							<h4 className="mr-2">Total</h4>
-							<h4>Rp. 0,00</h4>
+							<h4 name='total' >Rp. {parseInt(props.values.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h4>
 						</Row>
 					</Col>
 				</Row>
@@ -58,18 +78,24 @@ export default function pembayaran_beli({data, data2 , data3}) {
 
 				<Row sm="12">
 					<Col sm="3">
-						<Form.Label className="font-medium">Cara Pembayaran</Form.Label>
-                        {/* {i.syarat_pembayaran} */}
+					<Form.Label className="font-medium">Cara Pembayaran</Form.Label>
+						<Form.Control as='select' name='carapembayaran' onChange={props.handleChange}>
+						<option value='kosong'>Pilih</option>
+						<option value='Kas Tunai'>Kas Tunai</option>
+						<option value='Cek dan Giro'>Cek dan Giro</option>
+						<option value='Transfer Bank'>Transfer Bank</option>
+						<option value='Kartu Kredit'>Kartu Kredit</option>
+						</Form.Control>
 					</Col>
 
 					<Col sm="3">
 						<Form.Label className="font-medium">Tanggal Pembayaran</Form.Label>
-						<Form.Control placeholder="" type="date" />
+						<Form.Control placeholder="" type="date" name='tgl_pembayaran' onChange={props.handleChange} />
 					</Col>
 
 					<Col sm="3">
 						<Form.Label className="font-medium">Tanggal Jatuh Tempo</Form.Label>
-						<Form.Control placeholder="" type="date" />
+						<Form.Control placeholder="" type="date" name='tgl_jatuh_tempo' onChange={props.handleChange}/>
 					</Col>
 
 					{data.map((i) => (
@@ -149,7 +175,16 @@ export default function pembayaran_beli({data, data2 , data3}) {
 					</Col>
 
 					<Col sm="2">
-						<Form.Control placeholder="" />
+					<Form.Control 
+						placeholder="" 
+						name="jumlah"
+						onChange={(e) => {
+							props.setFieldValue('jumlah', e.target.value)
+							const total = i.sisa_tagihan - e.target.value 
+							
+							props.setFieldValue('total', parseInt(total))
+						}}
+						/>
 					</Col>
 				</Row>
 			))}
@@ -157,7 +192,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
 					<AddIcon fontSize="small" />Tambah data
 				</Button> */}
 
-				<Row sm="12" className="mt-3">
+				{/* <Row sm="12" className="mt-3">
 					<Col sm="3">
 						<Form.Label className="font-medium">Memo</Form.Label>
 						<Form.Control as="textarea" rows={4} />
@@ -171,7 +206,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
 							<Form.File id="custom-file-translate-scss" label="ukuran maksimal 10MB/File" lang="en" custom />
 						</Form>
 					</Col>
-				</Row>
+				</Row> */}
 
 				<Row sm="12" className="mt-3">
 					<Col sm="3" />
@@ -183,7 +218,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
 					</Col>
 
 					<Col sm="3">
-						<h4>Rp. 0,00</h4>
+					<h4 name='total' >Rp. {parseInt(props.values.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h4>
 					</Col>
 				</Row>
 
@@ -192,7 +227,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
 						<Link href="/beli/pembelian">
 							<Button variant="danger mr-2">Batal</Button>
 						</Link>
-						<Link href="/beli/pengiriman-pembayaran-final">
+						<Link href="/beli/pembelian">
 							<Button variant="success">Bayar</Button>
 						</Link>
 					</Col>
