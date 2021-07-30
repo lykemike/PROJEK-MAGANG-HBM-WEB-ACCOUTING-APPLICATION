@@ -44,7 +44,7 @@ export default async (req, res) => {
       alamat_supplier: req.body.alamat_supplier,
       tgl_transaksi: req.body.tgl_transaksi,
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
-      syarat_pembayaran: req.body.syarat_pembayaran,
+      syarat_pembayaran: String(req.body.syarat_pembayaran),
       no_ref_penagihan: parseInt(req.body.no_ref_penagihan),
       no_transaksi: parseInt(req.body.no_transaksi),
       tag: req.body.tag,
@@ -112,12 +112,13 @@ export default async (req, res) => {
         hasil_diskon: parseInt(i.hasil_diskon),
         pajak_id: parseInt(i.pajak_id),
         pajak_nama: i.pajak_nama,
+        pajak_persen: i.pajak_persen,
         hasil_pajak: parseInt(i.hasil_pajak),
         jumlah: parseInt(i.jumlah),
       });
     });
 
-    const create_detail_penjualan = await prisma.detailPembelian.createMany({
+    const create_detail_pembelian = await prisma.detailPembelian.createMany({
       data: detail,
       skipDuplicates: true,
     });

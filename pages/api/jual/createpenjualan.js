@@ -45,7 +45,7 @@ export default async (req, res) => {
       tgl_transaksi: req.body.tgl_transaksi,
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
       syarat_pembayaran: String(req.body.syarat_pembayaran),
-      no_ref_penagihan: parseInt(req.body.no_ref_penagihan),
+      no_ref_penagihan: req.body.no_ref_penagihan,
       no_transaksi: parseInt(req.body.no_transaksi),
       tag: req.body.tag,
       pesan: req.body.pesan,

@@ -7,26 +7,26 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { useRouter } from "next/router";
 
-export default function sales_invoice({ data, data2 }) {
+export default function Purchase_invoice({ data, data2 }) {
   const router = useRouter();
-  const { id } = router.query;
+  const {id} = router.query;
 
   function cancelButton() {
-    router.push(`../pembayaran-jual/${id}`)
+    router.push(`../pembayaran/${id}`)
   }
 
   return (
     <Layout>
       <div>
         <h4>Transaksi</h4>
-        <h4>Sales Invoice # {id}</h4>
+        <h4>Purchase Invoice # {id}</h4>
         <hr />
       </div>
       {data.map((i) => (
         <Form>
           <Row sm='12'>
             <Col sm='3'>
-              <Form.Label className='font-medium'>Pelanggan: {i.kontak.nama} </Form.Label>
+              <Form.Label className='font-medium'>Supplier: {i.kontak.nama} </Form.Label>
             </Col>
 
             <Col sm='3'>
@@ -47,7 +47,7 @@ export default function sales_invoice({ data, data2 }) {
             {data.map((i) => (
               <Row sm='12'>
                 <Col sm='3'>
-                  <Form.Label className='font-medium'>Alamat Penagihan:</Form.Label>
+                  <Form.Label className='font-medium'>Alamat Supplier:</Form.Label>
                   <p>{i.alamat_supplier} </p>
                 </Col>
 
@@ -187,11 +187,10 @@ export default function sales_invoice({ data, data2 }) {
 
           <Row>
             <Col className='d-flex justify-content-end mt-10'>
-              <Button variant='primary mr-2'> Cetak </Button>
-              <Link href='/jual/penerimaan-pembayaran'>
-                <Button variant='danger mr-2'>Batal</Button>
+              <Link href='/beli/pembelian'>
+                <Button variant='danger mr-2'>Kembali</Button>
               </Link>
-              <Button variant='success' onClick={cancelButton} >Bayar</Button>
+                <Button variant='success' onClick={cancelButton} >Bayar</Button>
             </Col>
           </Row>
         </Form>
@@ -203,22 +202,22 @@ export default function sales_invoice({ data, data2 }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerPenjualan.findMany({
+  const header = await prisma.headerPembelian.findMany({
     where: {
       id: parseInt(id),
     },
     include: {
       kontak: true,
-      DetailPenjualan: true,
+      DetailPembelian: true,
     },
   });
 
-  const detail = await prisma.detailPenjualan.findMany({
+  const detail = await prisma.detailPembelian.findMany({
     where: {
-      header_penjualan_id: parseInt(id),
+      header_pembelian_id: parseInt(id),
     },
     include: {
-      header_penjualan: true,
+      header_pembelian: true,
       produk: true,
       pajak: true,
     },

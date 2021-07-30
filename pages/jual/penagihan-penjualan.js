@@ -19,6 +19,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
   const router = useRouter();
 
   const id = parseInt(data6.id) + 1;
+  // const id =  1;
+  
   return (
     <Layout>
       <Formik
@@ -165,7 +167,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     <textarea
                       rows='5'
                       id='message'
-                      class='px-16 py-2 border border-gray-800  '
+                      class='px-10 py-2 border border-gray-800  '
                       name='alamat_supplier'
                       value={props.values.alamat_supplier}
                       onChange={(e) => {
