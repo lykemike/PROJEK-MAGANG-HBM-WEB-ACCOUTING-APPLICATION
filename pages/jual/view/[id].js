@@ -56,19 +56,20 @@ export default function sales_invoice({ data, data2 }) {
                 </Col>
 
                 <Col sm='3'>
-                  <Form.Label className='font-medium'>Tgl Transaksi: </Form.Label>
+                  <Form.Label className='font-medium'>Tgl Invoice: </Form.Label>
                   <p>{i.tgl_transaksi} </p>
                   <Form.Label className='font-medium'>Tgl Jatuh Tempo: </Form.Label>
                   <p>{i.tgl_jatuh_tempo} </p>
-                  <Form.Label className='font-medium'>Syarat Pembayaran: {i.syarat_pembayaran}</Form.Label>
+                  {/* <Form.Label className='font-medium'>Syarat Pembayaran: {i.syarat_pembayaran}</Form.Label> */}
+                  <Form.Label className='font-medium'>Syarat Pembayaran: Cash</Form.Label>
                 </Col>
 
                 <Col sm='3'>
-                  <Form.Label className='font-medium'>No Transaksi: {i.no_transaksi} </Form.Label>
+                  <Form.Label className='font-medium'>No Invoice: {i.no_transaksi} </Form.Label>
                   <br />
                   <Form.Label className='font-medium'>Tag: {i.tag} </Form.Label>
                   <br />
-                  <Form.Label className='font-medium'>No Referensi Tagihan: {i.no_ref_penagihan} </Form.Label>
+                  <Form.Label className='font-medium'>Nomor Kontrak: {i.no_ref_penagihan} </Form.Label>
                 </Col>
               </Row>
             ))}
@@ -83,14 +84,6 @@ export default function sales_invoice({ data, data2 }) {
 
               <Col sm='2'>
                 <Form.Label className='font-medium'>Deskripsi</Form.Label>
-              </Col>
-
-              <Col sm='1'>
-                <Form.Label className='font-medium'>Kuantitas</Form.Label>
-              </Col>
-
-              <Col sm='1'>
-                <Form.Label className='font-medium'>Satuan</Form.Label>
               </Col>
 
               <Col sm='2'>
@@ -118,14 +111,6 @@ export default function sales_invoice({ data, data2 }) {
 
                 <Col sm='2'>
                   <p>{i.desk_produk}</p>
-                </Col>
-
-                <Col sm='1'>
-                  <p>{i.kuantitas}</p>
-                </Col>
-
-                <Col sm='1'>
-                  <p>{i.satuan}</p>
                 </Col>
 
                 <Col sm='2'>

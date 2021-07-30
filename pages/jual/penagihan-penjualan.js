@@ -173,7 +173,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       }}></textarea>
                   </Form.Label>
                   <Form.Label column sm='3'>
-                    Tgl Transaksi <br />
+                    Tgl Invoice <br />
                     <Form.Control
                       type='date'
                       placeholder='Auto'
@@ -233,9 +233,9 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   </Form.Label>
 
                   <Form.Label column sm='3'>
-                    No Transaksi <br />
+                    No Invoice <br />
                     <Form.Control disabled type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
-                    No Referensi Penagihan <br />
+                    Nomor Kontrak <br />
                     <Form.Control type='text' placeholder='' name='no_ref_penagihan' onChange={props.handleChange} /> <br />
                     Tag <br />
                     <Form.Control type='text' placeholder='' name='tag' onChange={props.handleChange} /> <br />
