@@ -3,39 +3,39 @@ import { extname } from "path";
 import { PrismaClient } from ".prisma/client";
 const prisma = new PrismaClient();
 
-// export const editFileName = (req, file, callback) => {
-//   const name = file.originalname.split(".")[0];
-//   const fileExtName = extname(file.originalname);
-//   const randomName = Array(4)
-//     .fill(null)
-//     .map(() => Math.round(Math.random() * 16).toString(16))
-//     .join("");
-//   callback(null, `${name}-${randomName}${fileExtName}`);
-// };
+export const editFileName = (req, file, callback) => {
+  const name = file.originalname.split(".")[0];
+  const fileExtName = extname(file.originalname);
+  const randomName = Array(4)
+    .fill(null)
+    .map(() => Math.round(Math.random() * 16).toString(16))
+    .join("");
+  callback(null, `${name}-${randomName}${fileExtName}`);
+};
 
 // Returns a Multer instance that provides several methods for generating
 // middleware that process files uploaded in multipart/form-data format.
-// const upload = multer({
-//   storage: multer.diskStorage({
-//     destination: "./public/uploads",
-//     filename: editFileName,
-//   }),
-// });
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: "./public/uploads",
+    filename: editFileName,
+  }),
+});
 
-// function runMiddleware(req, res, fn) {
-//   return new Promise((resolve, reject) => {
-//     fn(req, res, (result) => {
-//       if (result instanceof Error) {
-//         return reject(result);
-//       }
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
 
-//       return resolve(result);
-//     });
-//   });
-// }
+      return resolve(result);
+    });
+  });
+}
 
 export default async (req, res) => {
-  // await runMiddleware(req, res, upload.single("file"));
+  await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
       kontak_id: parseInt(req.body.nama_supplier),
@@ -50,7 +50,7 @@ export default async (req, res) => {
       tag: req.body.tag,
       pesan: req.body.pesan,
       memo: req.body.memo,
-      file_attachment: req.body.fileattachment,
+      file_attachment: req.file.filename,
       subtotal: parseInt(req.body.subtotal),
       total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
       diskon: parseInt(req.body.diskon),
@@ -92,7 +92,7 @@ export default async (req, res) => {
     const update_no_transaksi = await prisma.headerPenjualan.update({
       where: {
         id: frontend_data.id,
-        no_transaksi: req.body.no_transaksi,
+        no_transaksi: parseInt(req.body.no_transaksi),
       },
       data: {
         no_transaksi: find_no_transaksi.id,
@@ -100,7 +100,7 @@ export default async (req, res) => {
     });
 
     let detail = [];
-    req.body.produks.map((i) => {
+    req.body.produks && JSON.parse(req.body.produks).map((i) => {
       detail.push({
         header_penjualan_id: find_header_penjualan.id,
         produk_id: parseInt(i.produk_id),
@@ -124,58 +124,8 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    // const find_produk_detail = await prisma.detailPenjualan.findMany({
-    //   where: {
-    //     header_penjualan_id: find_header_penjualan.id,
-    //     produk_id: create_detail_penjualan.produk_id,
-    //     kuantitas: create_detail_penjualan.kuantitas,
-    //   },
-    // });
-
-    // const find_produk_kategori = await prisma.produk.findMany({
-    //   where: {
-    //     id: find_produk_detail.produk_id,
-    //     kategori_produk_id: find_produk_detail.produk_id,
-    //   },
-    // });
-
-    // const update_jumlah_kategori_produk = await prisma.kategoriProduk.update({
-    //   where: {
-    //     id: find_produk_kategori.kategori_produk_id,
-    //   },
-    //   data: {
-    //     jumlah: find_produk_detail.kuantitas,
-    //   },
-    // });
-
-    // const frontend_data_jurnal = {
-    //   akun_1: 1,
-    //   akun_2: 2,
-    //   akun_3: 3,
-    //   akun_4: 4,
-    //   akun_5: 5,
-    //   akun_6: 6,
-
-    //   uang_muka: parseInt(req.body.uang_muka),
-    //   sisa_tagihan: parseInt(req.body.sisa_tagihan),
-    //   subtotal: parseInt(req.body.subtotal),
-
-    //   total_diskon: parseInt(req.body.total_diskon),
-    //   total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
-
-    //   total_pajak_per_baris: parseInt(req.body.total_pajak_per_baris),
-
-    //   pemotongan: parseInt(req.body.pemotongan),
-
-    //   akun_pemotongan: parseInt(req.body.akun_pemotongan),
-
-    //   akun_uang_muka: parseInt(req.body.akun_uang_muka),
-
-    //   balance: parseInt(req.body.balance)
-    // }
-
     res.status(201).json([
-      { message: "Find produk detail success!", data: create_detail_penjualan },
+      { message: "Create Detail Penjualan Success!", data: create_detail_penjualan, },
       // { message: "Create Header Penjualan Success!", data: create_header_penjualan },
       // { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
       // { message: "Find No Transaksi Success!", data: find_no_transaksi },
@@ -189,8 +139,8 @@ export default async (req, res) => {
   }
 };
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

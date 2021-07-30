@@ -44,22 +44,35 @@ export default async (req, res) => {
           nama: req.body.nama,
           kode_sku: req.body.kode_sku,
           kategori_produk_id: parseInt(req.body.kategori_produk),
+          quantity: parseInt(req.body.quantity),
           unit: parseInt(req.body.unit),
           deskripsi: req.body.deskripsi,
 
           harga_beli_satuan: parseInt(req.body.hbs),
           akun_pembelian: parseInt(req.body.akun_pembelian),
-          pajak_beli: req.body.pajak_beli,
 
           harga_jual_satuan: parseInt(req.body.hjs),
           akun_penjualan: parseInt(req.body.akun_penjualan),
-          pajak_jual: req.body.pajak_jual,
         },
       ],
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "success!", data: createProduk });
+    const update_kategori_produk = await prisma.kategoriProduk.update({
+      where: {
+        id:  parseInt(req.body.kategori_produk),
+      },
+      data: {
+        jumlah: {
+          increment: 1
+        }
+      }
+    })
+
+    res.status(201).json(
+      { message: "success!", data: createProduk },
+      { message: "success!", data: update_kategori_produk }
+      );
   } catch (error) {
     res.status(400).json({ data: "error", error });
     console.log(error);

@@ -1840,18 +1840,80 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
+    const createSettings = await prisma.settingDefault.createMany({
+      data: [
+        {
+          akun_id: 116,
+          tipe: "penjualan"
+        },
+        {
+          akun_id: 116,
+          tipe: "penjualan"
+        },
+        {
+          akun_id: 116,
+          tipe: "penjualan"
+        },
+        {
+          akun_id: 1,
+          tipe: "penjualan"
+        },
+        {
+          akun_id: 20,
+          tipe: "penjualan"
+        },
+        {
+          akun_id: 116,
+          tipe: "penjualan"
+        },
+        {
+          akun_id: 121,
+          tipe: "pembelian"
+        },
+        {
+          akun_id: 121,
+          tipe: "pembelian"
+        },
+        {
+          akun_id: 1,
+          tipe: "pembelian"
+        },
+        {
+          akun_id: 74,
+          tipe: "pembelian"
+        },
+        {
+          akun_id: 116,
+          tipe: "pembelian"
+        },
+        {
+          akun_id: 116,
+          tipe: "pembelian"
+        },
+        {
+          akun_id: 116,
+          tipe: "biaya"
+        },
+        {
+          akun_id: 74,
+          tipe: "biaya"
+        },
+      ]
+    })
+
     res
       .status(201)
       .json(
-        { message: "Create Admin Role Success!", data: createRole },
-        { message: "Create User Admin Success!", data: createUser },
-        { message: "Create Menu Success!", data: createMenu },
-        { message: "Create Role Privellege Success!", data: createRolePrivellege },
-        { message: "Create Kategori Kontak Success!", data: createKategoriKontak },
-        { message: "Create Kategori Akun Success!", data: createKategoriAkun },
-        { message: "Create Tipe Akun Success!", data: createTipeAkun },
-        { message: "Create Daftar Akun Success!", data: createDaftarAkun },
-        { message: "Create Daftar Akun Success!", data: createSatuanProduk }
+        // { message: "Create Admin Role Success!", data: createRole },
+        // { message: "Create User Admin Success!", data: createUser },
+        // { message: "Create Menu Success!", data: createMenu },
+        // { message: "Create Role Privellege Success!", data: createRolePrivellege },
+        // { message: "Create Kategori Kontak Success!", data: createKategoriKontak },
+        // { message: "Create Kategori Akun Success!", data: createKategoriAkun },
+        // { message: "Create Tipe Akun Success!", data: createTipeAkun },
+        // { message: "Create Daftar Akun Success!", data: createDaftarAkun },
+        // { message: "Create Daftar Akun Success!", data: createSatuanProduk },
+        { message: "Create Default Setting Success!", data: createSettings },
       );
   } catch (error) {
     res

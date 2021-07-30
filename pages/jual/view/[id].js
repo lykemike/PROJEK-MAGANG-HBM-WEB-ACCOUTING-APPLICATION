@@ -11,8 +11,12 @@ export default function sales_invoice({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
 
-  function cancelButton() {
-    router.push(`../pembayaran-jual/${id}`)
+  function pembayaran() {
+    router.push(`../pembayaran-jual/${id}`);
+  }
+
+  function edit() {
+    router.push(`../${id}`);
   }
 
   return (
@@ -159,7 +163,7 @@ export default function sales_invoice({ data, data2 }) {
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Diskon</Col>
-                  <Col sm='4'>Rp. {((i.total_diskon) + (i.total_pajak_per_baris)).toLocaleString({ minimumFractionDigits: 0 })}</Col>
+                  <Col sm='4'>Rp. {(i.total_diskon + i.total_pajak_per_baris).toLocaleString({ minimumFractionDigits: 0 })}</Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Nama Pajak</Col>
@@ -191,7 +195,12 @@ export default function sales_invoice({ data, data2 }) {
               <Link href='/jual/penerimaan-pembayaran'>
                 <Button variant='danger mr-2'>Batal</Button>
               </Link>
-              <Button variant='success' onClick={cancelButton} >Bayar</Button>
+              <Button variant='success mr-2' onClick={pembayaran}>
+                Bayar
+              </Button>
+              <Button variant='success' onClick={edit}>
+                Ubah
+              </Button>
             </Col>
           </Row>
         </Form>
