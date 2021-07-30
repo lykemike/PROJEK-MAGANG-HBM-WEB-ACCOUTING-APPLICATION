@@ -116,16 +116,16 @@ Penjualan kurang quantity
 Penjualan kontak pelanggan
 Pembelian kontak supplier
 Pembelian yg di tampil harga belinya
-Label tgl transaksi di ganti -> tgl invoice
-Label no transaksi -> nomor invoice
+(DONE) Label tgl transaksi di ganti -> tgl invoice
+(DONE) Label no transaksi -> nomor invoice
 (DONE) Database Tag di ganti -> varchar, contoh tag 1/4 bearti bayar 1/4 january, february, march
-Label no referensi penagihan diganti -> kontrak
+(DONE) Label no referensi penagihan diganti -> kontrak
 (DONE) Database no referensi penagihan diganti kontrak -> varchar
 == FORMAT SALES INVOICE UI ==
 Jumlah tagihan sblm ppn
 Pajak pertambahan nilai
 Jumlah setelah ppn
-Hapus label kuantitas dan satuan
+(DONE) Hapus label kuantitas dan satuan
 == PRODUK PAGE UI ==
 Saldo Supplier nampilin total hutang
 Saldo Pelanggan nampilin total piutang

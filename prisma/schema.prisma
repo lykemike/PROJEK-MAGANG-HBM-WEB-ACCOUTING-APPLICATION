@@ -92,6 +92,7 @@ model Akun {
   HeaderPenjualan2           HeaderPenjualan[] @relation("akunUangMukaPenjualan")
   JurnalPenjualan            JurnalPenjualan[] @relation("akunJurnalPenjualan")
   JurnalPenerimaanPembayaran JurnalPenerimaanPembayaran[] @relation("akunPenerimaanPembayaran")
+  PenerimaanPembayaran      PenerimaanPembayaran[]
 
   HeaderPembelian1          HeaderPembelian[] @relation("akunPemotonganPembelian")
   HeaderPembelian2          HeaderPembelian[] @relation("akunUangMukaPembelian")
@@ -293,8 +294,13 @@ model PenerimaanPembayaran {
   id                  Int             @id @default(autoincrement())
   header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
   header_penjualan_id Int
+  
+  akun                Akun      @relation(fields: [akun_id], references: [id])
+  akun_id             Int
+  cara_pembayaran     String
+  tgl_pembayaran      String
+  tgl_jauth_tempo     String
 
-  cara_penagihan      String
   jumlah              Int
 }
 
