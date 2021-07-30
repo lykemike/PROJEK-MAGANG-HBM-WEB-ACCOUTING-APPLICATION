@@ -52,11 +52,12 @@ export default function Purchase_invoice({ data, data2 }) {
                 </Col>
 
                 <Col sm='3'>
-                  <Form.Label className='font-medium'>Tgl Transaksi: </Form.Label>
+                  <Form.Label className='font-medium'>Tgl Invoice: </Form.Label>
                   <p>{i.tgl_transaksi} </p>
                   <Form.Label className='font-medium'>Tgl Jatuh Tempo: </Form.Label>
                   <p>{i.tgl_jatuh_tempo} </p>
-                  <Form.Label className='font-medium'>Syarat Pembayaran: {i.syarat_pembayaran}</Form.Label>
+                  {/* <Form.Label className='font-medium'>Syarat Pembayaran: {i.syarat_pembayaran}</Form.Label> */}
+                  <Form.Label className='font-medium'>Syarat Pembayaran: Cash</Form.Label>
                 </Col>
 
                 <Col sm='3'>
@@ -79,14 +80,6 @@ export default function Purchase_invoice({ data, data2 }) {
 
               <Col sm='2'>
                 <Form.Label className='font-medium'>Deskripsi</Form.Label>
-              </Col>
-
-              <Col sm='1'>
-                <Form.Label className='font-medium'>Kuantitas</Form.Label>
-              </Col>
-
-              <Col sm='1'>
-                <Form.Label className='font-medium'>Satuan</Form.Label>
               </Col>
 
               <Col sm='2'>
@@ -114,14 +107,6 @@ export default function Purchase_invoice({ data, data2 }) {
 
                 <Col sm='2'>
                   <p>{i.desk_produk}</p>
-                </Col>
-
-                <Col sm='1'>
-                  <p>{i.kuantitas}</p>
-                </Col>
-
-                <Col sm='1'>
-                  <p>{i.satuan}</p>
                 </Col>
 
                 <Col sm='2'>
