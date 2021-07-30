@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React, useEffect , useState} from "react";
 import Layout from "../../components/Layout";
 import { Form, Row, Col, InputGroup, FormControl, Table } from "react-bootstrap";
 import Switch from "@material-ui/core/Switch";
@@ -72,34 +72,29 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
         // validationSchema={}
         onSubmit={async (values) => {
           console.log(values);
-          // let formData = new FormData();
-          // for (var key in values) {
-          //   formData.append(`${key}`, `${values[key]}`);
-          // }
-          // Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          // console.log(values.fileattachment);
-          // Axios.post(url, formData, {
-          //   headers: {
-          //     "Content-Type": "multipart/form-data",
-          //   },
-          // })
-          //   .then(function (response) {
-          //     console.log(response);
-          //     // router.push("sales-invoice");
-          //     router.push("penjualan");
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error);
-          //   });
-          Axios.post(url, values)
+          let formData = new FormData();
+          for (var key in values) {
+            if(key == "produks"){
+                formData.append(`${key}`, JSON.stringify(values[key]));
+            } else {
+                formData.append(`${key}`, `${values[key]}`);
+            }
+          }
+          Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          console.log(values.fileattachment);
+          Axios.post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
             .then(function (response) {
               console.log(response);
-              // router.push("sales-invoice");
               router.push(`view/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);
             });
+
         }}>
         {(props) => (
           <Forms noValidate>
@@ -622,7 +617,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   <br />
                   <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800  '></textarea> <br />
                   File Attachment <br />
-                  <Form.File id='custom-file' label='Browse file' name='fileattachment' custom />
+                  <Form.File type='file' name='fileattachment'  onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                 </Col>
                 <Col sm='4' />
                 <Col sm='4'>

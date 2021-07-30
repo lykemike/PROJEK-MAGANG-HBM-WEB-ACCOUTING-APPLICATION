@@ -202,8 +202,8 @@ export default function Kontak({ data, data2 }) {
           <div eventKey='supplier'>
             <div class='mt-8'>
               <Form.Group as={Row}>
-                <SettingsIcon fontSize='medium' />
-                <h5>Daftar Pelanggan</h5>
+                <SettingsIcon fontSize='large' />
+                <h3>Daftar Pelanggan</h3>
               </Form.Group>
               <div class='flex flex-row-reverse mb-2'>
                 <Form.Group as={Row}>

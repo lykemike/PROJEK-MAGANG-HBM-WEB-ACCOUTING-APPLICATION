@@ -63,7 +63,7 @@ export default async (req, res) => {
       uang_muka: parseInt(req.body.uang_muka),
       akun_uang_muka: parseInt(req.body.akun_uang_muka),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
-      balance: parseInt(req.body.balance),
+      // balance: parseInt(req.body.balance),
     };
 
     const create_header_pembelian = await prisma.headerPembelian.createMany({
@@ -92,7 +92,7 @@ export default async (req, res) => {
     const update_no_transaksi = await prisma.headerPembelian.update({
       where: {
         id: frontend_data.id,
-        no_transaksi: req.body.no_transaksi,
+        no_transaksi: parseInt(req.body.no_transaksi),
       },
       data: {
         no_transaksi: find_no_transaksi.id,
