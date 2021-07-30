@@ -112,15 +112,15 @@ const Sidebar = () => {
 
   return (
     <div>
-      <div class='fixed flex flex-col top-0 left-0 w-64 bg-dark h-full '>
-        <div class='flex items-center justify-center h-14'>
+      <div className='fixed flex flex-col top-0 left-0 w-64 bg-dark h-full '>
+        <div className='flex items-center justify-center h-14'>
           <div />
         </div>
-        <div class='overflow-y-auto overflow-x-hidden flex-grow'>
-          <ul class='flex flex-col py-4 space-y-1'>
-            <li class='px-7'>
-              <div class='flex flex-row items-center h-8'>
-                <div class='text-lg font-light tracking-wide text-white'>Menu</div>
+        <div className='overflow-y-auto overflow-x-hidden flex-grow'>
+          <ul className='flex flex-col py-4 space-y-1'>
+            <li className='px-7'>
+              <div className='flex flex-row items-center h-8'>
+                <div className='text-lg font-light tracking-wide text-white'>Menu</div>
               </div>
             </li>
             {previlleges.length > 0
@@ -129,13 +129,11 @@ const Sidebar = () => {
                     .filter((i) => i.id === j.menu_id)
                     .map((k) => {
                       return (
-                        <li>
+                        <li key='index'>
                           <Link href={k.href}>
-                            <a class='relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-600 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6'>
-                              <span class='inline-flex justify-center items-center ml-4'>
-                                {k.icon}
-                              </span>
-                              <span class='ml-2 text-sm tracking-wide truncate'>{k.menu}</span>
+                            <a className='relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-600 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6'>
+                              <span className='inline-flex justify-center items-center ml-4'>{k.icon}</span>
+                              <span className='ml-2 text-sm tracking-wide truncate'>{k.menu}</span>
                             </a>
                           </Link>
                         </li>
@@ -144,11 +142,11 @@ const Sidebar = () => {
                 })
               : ""}
 
-            {/* <hr class="ml-4 mr-4 bg-black" /> */}
+            {/* <hr className="ml-4 mr-4 bg-black" /> */}
 
-            {/* <hr class="ml-4 mr-4 bg-black" /> */}
+            {/* <hr className="ml-4 mr-4 bg-black" /> */}
 
-            {/* <hr class="ml-4 mr-4 bg-black" /> */}
+            {/* <hr className="ml-4 mr-4 bg-black" /> */}
           </ul>
         </div>
       </div>

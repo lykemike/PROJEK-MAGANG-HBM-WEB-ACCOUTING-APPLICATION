@@ -75,10 +75,12 @@ upload file attachment
 || ON PROCESS ||
 ----------------
 == Penjualan - Pembelian page ==
-Ketika data blm dibuat id buat redirect tidak ditemukan error: null
+(DONE) Ketika data blm dibuat id buat redirect tidak ditemukan error: null
+(DONE) Create/Update sales invoice udah bisa error: ketika upload file attachment
+(DONE) Database dan api settings default buat penjualan, pembelian dan biaya
 Syarat pembayaran masih error: misalnya 10 hari dari bulan juli tanggal 29 jadi 
   - tanggal 9 augustus, error di konversi seharusnya jadi 09 augustus => 09/08/2021
-Create/Update sales invoice udah bisa error: ketika upload file attachment
+
 Harga berkurang/reset ketika kita remove data dari produk
 Cara masukin data ke jurnal
 Cara ketika buat penjualan jumlah update sesuai kuantitas produk di kategori produk

@@ -100,7 +100,7 @@ export default async (req, res) => {
     });
 
     let detail = [];
-    req.body.produks.map((i) => {
+    req.body.produks && JSON.parse(req.body.produks).map((i) => {
       detail.push({
         header_penjualan_id: find_header_penjualan.id,
         produk_id: parseInt(i.produk_id),
@@ -125,7 +125,7 @@ export default async (req, res) => {
     });
 
     res.status(201).json([
-      { message: "Find produk detail success!", data: create_detail_penjualan },
+      { message: "Create Detail Penjualan Success!", data: create_detail_penjualan, },
       // { message: "Create Header Penjualan Success!", data: create_header_penjualan },
       // { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
       // { message: "Find No Transaksi Success!", data: find_no_transaksi },

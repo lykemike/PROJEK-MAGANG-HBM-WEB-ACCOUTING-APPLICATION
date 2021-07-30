@@ -3,39 +3,39 @@ import { extname } from "path";
 import { PrismaClient } from ".prisma/client";
 const prisma = new PrismaClient();
 
-export const editFileName = (req, file, callback) => {
-  const name = file.originalname.split(".")[0];
-  const fileExtName = extname(file.originalname);
-  const randomName = Array(4)
-    .fill(null)
-    .map(() => Math.round(Math.random() * 16).toString(16))
-    .join("");
-  callback(null, `${name}-${randomName}${fileExtName}`);
-};
+// export const editFileName = (req, file, callback) => {
+//   const name = file.originalname.split(".")[0];
+//   const fileExtName = extname(file.originalname);
+//   const randomName = Array(4)
+//     .fill(null)
+//     .map(() => Math.round(Math.random() * 16).toString(16))
+//     .join("");
+//   callback(null, `${name}-${randomName}${fileExtName}`);
+// };
 
 // Returns a Multer instance that provides several methods for generating
 // middleware that process files uploaded in multipart/form-data format.
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: "./public/uploads",
-    filename: editFileName,
-  }),
-});
+// const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: "./public/uploads",
+//     filename: editFileName,
+//   }),
+// });
 
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
+// function runMiddleware(req, res, fn) {
+//   return new Promise((resolve, reject) => {
+//     fn(req, res, (result) => {
+//       if (result instanceof Error) {
+//         return reject(result);
+//       }
 
-      return resolve(result);
-    });
-  });
-}
+//       return resolve(result);
+//     });
+//   });
+// }
 
 export default async (req, res) => {
-  await runMiddleware(req, res, upload.single("file"));
+  // await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
       kontak_id: parseInt(req.body.nama_supplier),
@@ -63,7 +63,6 @@ export default async (req, res) => {
       uang_muka: parseInt(req.body.uang_muka),
       akun_uang_muka: parseInt(req.body.akun_uang_muka),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
-      balance: parseInt(req.body.balance),
     };
 
     const create_header_pembelian = await prisma.headerPembelian.createMany({
@@ -100,7 +99,7 @@ export default async (req, res) => {
     });
 
     let detail = [];
-    req.body.produks && JSON.parse(req.body.produks).map((i) => {
+    req.body.produks.map((i) => {
       detail.push({
         header_pembelian_id: find_header_pembelian.id,
         produk_id: parseInt(i.produk_id),
@@ -119,17 +118,17 @@ export default async (req, res) => {
       });
     });
 
-    const create_detail_pembelian = await prisma.detailPembelian.createMany({
+    const create_detail_penjualan = await prisma.detailPembelian.createMany({
       data: detail,
       skipDuplicates: true,
     });
 
     res.status(201).json([
-      // { message: "Create Header Pembelian Success!", data: create_header_pembelian },
-      // { message: "Find Header Pembelian ID Success!", data: find_header_pembelian },
-      // { message: "Find No Transaksi Success!", data: find_no_transaksi },
-      // { message: "Update No Transaksi Success!", data: update_no_transaksi },
-      { message: "Create Detail Pembelian Success!", data: create_detail_pembelian },
+      { message: "Create Header Pembelian Success!", data: create_header_pembelian },
+      { message: "Find Header Pembelian ID Success!", data: find_header_pembelian },
+      { message: "Find No Transaksi Success!", data: find_no_transaksi },
+      { message: "Update No Transaksi Success!", data: update_no_transaksi },
+      { message: "Create Detail Penjualan Success!", data: create_detail_pembelian },
     ]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
@@ -137,8 +136,8 @@ export default async (req, res) => {
   }
 };
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };

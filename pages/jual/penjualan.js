@@ -51,19 +51,18 @@ export default function penjualan({ data }) {
               </Form>
             </div>
             <div className='border-t border-gray-200'>
-              <Container>
-                <Row>
-                  <Col sm={8}>
-                    <h3>Transaksi Penjualan</h3>
-                  </Col>
-                  <Col sm={4}>
-                    <Form inline>
-                      <FormControl type='text' placeholder='Search' className=' mr-sm-2' />
-                      <Button type='submit'>Submit</Button>
-                    </Form>
-                  </Col>
-                </Row>
-              </Container>
+            <Row sm="12" className="mt-2 mb-2"> 
+              <Col sm="8">
+                <h3>Transaksi Penjualan</h3>
+              </Col>
+              <Col sm="3">
+                <FormControl type='text' placeholder='Search'/> 
+              </Col>
+              <Col sm="1">
+                <Button>Setting</Button>
+              </Col>
+            </Row>
+                
             </div>
             <table class='min-w-full table-auto'>
               <thead class='justify-between'>

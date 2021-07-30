@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { Form, Row, Col, InputGroup, FormControl, Table } from "react-bootstrap";
 import Switch from "@material-ui/core/Switch";
@@ -18,12 +18,12 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
   const url = "http://localhost:3000/api/jual/createpenjualan";
   const router = useRouter();
 
-  const id = parseInt(data6.id) + 1;
-  console.log(id);
-  // useEffect(() => {
-  //     const id = parseInt(data6.id) + 1;
-  // console.log(id);
-  // }, [])
+
+  const id = data6 != undefined ? parseInt(data6.id) + 1 : 0 
+
+
+  const [idInvoice, setIdInvoice] = useState(id)
+  
   return (
     <Layout>
       <Formik
@@ -77,10 +77,14 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           console.log(values);
           let formData = new FormData();
           for (var key in values) {
-            formData.append(`${key}`, `${values[key]}`);
+            if(key == "produks"){
+                formData.append(`${key}`, JSON.stringify(values[key]));
+            } else {
+                formData.append(`${key}`, `${values[key]}`);
+            }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(formData);
+          console.log(values.fileattachment);
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -88,21 +92,12 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           })
             .then(function (response) {
               console.log(response);
-              // router.push("sales-invoice");
-              router.push(`view/${id}`);
+              router.push(`view/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);
             });
-          // Axios.post(url, values)
-          //   .then(function (response) {
-          //     console.log(response);
-          //     // router.push("sales-invoice");
-          //     router.push(`view/${id}`);
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error);
-          //   });
+
         }}>
         {(props) => (
           <Forms noValidate>
@@ -170,7 +165,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     <textarea
                       rows='5'
                       id='message'
-                      class='px-16 py-2 border border-gray-800  '
+                      class='px-10 py-2 border border-gray-800  '
                       name='alamat_supplier'
                       value={props.values.alamat_supplier}
                       onChange={(e) => {
@@ -522,7 +517,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
                                     props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
                                   }}>
-                                  <option value='kosong'>pilih pajak</option>
+                                  {/* <option value='0'>pilih pajak</option> */}
                                   {data2.map((nama_pajak) => (
                                     <option key={nama_pajak.id} value={nama_pajak.id}>
                                       {nama_pajak.nama} - {nama_pajak.presentasaAktif}%
@@ -625,7 +620,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   <br />
                   <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800  '></textarea> <br />
                   File Attachment <br />
-                  <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
+                  <Form.File type='file' name='fileattachment'  onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                 </Col>
                 <Col sm='4' />
                 <Col sm='4'>

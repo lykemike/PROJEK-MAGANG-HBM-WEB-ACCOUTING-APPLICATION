@@ -97,6 +97,8 @@ model Akun {
   HeaderPembelian2          HeaderPembelian[] @relation("akunUangMukaPembelian")
   JurnalPembelian           JurnalPembelian[]         @relation("akunJurnalPembelian")
   JurnalPengirimanBayaran   JurnalPengirimanBayaran[] @relation("akunPengirimanBayaran") 
+
+   SettingDefault           SettingDefault[]
 }
 
 // Kategori Kontak
@@ -412,8 +414,6 @@ model JurnalPengirimanBayaran {
   kredit                Int
 }
 
-
-
 // Header Biaya Table
 model HeaderBiaya {
   id              Int    @id @default(autoincrement())
@@ -454,4 +454,13 @@ model DetailBiaya {
   pajak         Pajak  @relation(fields: [pajak_id], references: [id])
   pajak_id      Int
   jumlah        Int
+}
+
+// Setting Penjualan, Pembelian, dan Biaya
+
+model SettingDefault {
+  id              Int         @id @default(autoincrement())
+  akun            Akun        @relation(fields: [akun_id], references: [id])
+  akun_id         Int
+  tipe            String
 }
