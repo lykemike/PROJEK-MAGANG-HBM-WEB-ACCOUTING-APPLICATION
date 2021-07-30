@@ -71,6 +71,26 @@ upload file attachment
 (DONE) Perbaikan db produk ama api
 (DONE) Meeting
 
+🗓️ Tanggal: 29 Juli 2021, Kamis
+(DONE) Ketika data blm dibuat id buat redirect tidak ditemukan error: null
+(DONE) Create sales invoice udah bisa error: ketika upload file attachment
+
+🗓️ Tanggal: 30 Juli 2021, Jumat
+== PAGE PENJUALAN ==
+- Buat database penerimaan pembayaran buat page penjualan = 100%
+- Buat API penerimaan pembayaran update sisa tagihan = 100%
+- Buat API setting default buat page penjualan = 100%
+- Database Jurnal = 80%
+- Jurnal penjualan masukin ke database = 20%
+- Jurnal pembelian masukin ke database = 20%
+== PAGE PEMBELIAN ==
+- Buat database pengiriman pembayaran buat page pembelian = 100%
+- Buat API pengiriman pembayaran update sisa tagihan = 70%
+- Buat API setting default buat page pembelian = 0%
+- Database Jurnal = 80%
+- Jurnal penjualan masukin ke database = 20%
+- Jurnal pembelian masukin ke database = 20%
+
 ----------------
 || ON PROCESS ||
 ----------------
