@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, Component, Fragment } from "react";
 import Layout from "../../components/Layout";
 import { Form, Row, Col, InputGroup, FormControl, Table } from "react-bootstrap";
 import Switch from "@material-ui/core/Switch";
@@ -14,16 +14,27 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
+// import Select from "react-select";
+
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6 }) {
   const url = "http://localhost:3000/api/jual/createpenjualan";
   const router = useRouter();
 
+  const id = data6 != undefined ? parseInt(data6.id) + 1 : 0;
 
-  const id = data6 != undefined ? parseInt(data6.id) + 1 : 0 
+  const [idInvoice, setIdInvoice] = useState(id);
 
+  // const restructure = (data) => {
+  //   let result = [];
+  //   data.map((i) => {
+  //     result.push({
+  //       value: i.id,
+  //       label: i.kontak.nama_panggilan,
+  //     });
+  //   });
+  //   return result;
+  // };
 
-  const [idInvoice, setIdInvoice] = useState(id)
-  
   return (
     <Layout>
       <Formik
@@ -77,10 +88,10 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           console.log(values);
           let formData = new FormData();
           for (var key in values) {
-            if(key == "produks"){
-                formData.append(`${key}`, JSON.stringify(values[key]));
+            if (key == "produks") {
+              formData.append(`${key}`, JSON.stringify(values[key]));
             } else {
-                formData.append(`${key}`, `${values[key]}`);
+              formData.append(`${key}`, `${values[key]}`);
             }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
@@ -97,13 +108,13 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             .catch(function (error) {
               console.log(error);
             });
-
         }}>
         {(props) => (
           <Forms noValidate>
             <h3>Buat Penagihan Penjualan</h3>
             <div className='border-t border-gray-200'>
               <Form>
+                {/* <Select name='colors' className='basic-multi-select' classNamePrefix='select' options={restructure(data)} /> */}
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Form.Label column sm='3'>
                     Pelanggan
@@ -242,9 +253,6 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   </Form.Label>
                 </Form.Group>
               </Form>
-              <div class='flex flex-row-reverse'>
-                <FormControlLabel value='' control={<Switch color='primary' />} label='Harga Termasuk Pajak' labelPlacement='start' />
-              </div>
             </div>
             <Table responsive>
               <div className='border-t border-gray-200'>
@@ -620,7 +628,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   <br />
                   <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800  '></textarea> <br />
                   File Attachment <br />
-                  <Form.File type='file' name='fileattachment'  onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
+                  <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                 </Col>
                 <Col sm='4' />
                 <Col sm='4'>
