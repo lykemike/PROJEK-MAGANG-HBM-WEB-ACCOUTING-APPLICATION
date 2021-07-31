@@ -180,19 +180,13 @@ export default function tabelProduk({ data }) {
                       <span className='text-gray-300'>Qty</span>
                     </th>
                     <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Batas Minimum</span>
-                    </th>
-                    <th className='px-2 py-2'>
                       <span className='text-gray-300'>Unit</span>
                     </th>
                     <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Harga rata-rata</span>
+                      <span className='text-gray-300'>Harga Beli Satuan</span>
                     </th>
                     <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Harga Beli Terakhir</span>
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Harga beli</span>
+                      <span className='text-gray-300'>Harga Jual Satuan</span>
                     </th>
                     <th className='px-2 py-2'>
                       <span className='text-gray-300'>Action</span>
@@ -215,22 +209,16 @@ export default function tabelProduk({ data }) {
                         <div className='text-sm text-gray-900'>{produk.nama}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>69</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>30</div>
+                        <div className='text-sm text-gray-900'>{produk.quantity}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
                         <div className='text-sm text-gray-900'>{produk.satuan.satuan}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>-</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>-</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
                         <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan}</div>
+                      </td>
+                      <td className='px-2 py-2 whitespace-nowrap'>
+                        <div className='text-sm text-gray-900'>Rp. {produk.harga_jual_satuan}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
                         <div className='text-sm text-gray-900'>

@@ -479,12 +479,12 @@ export default function BuatKontakBaru({ data, data2 }) {
                           <div class='text-red-500 text-sm'>{props.errors.nomorRekening}</div>
                         ) : null}
                       </Col>
-                      <Col sm='12'>
+                      {/* <Col sm='12'>
                         <Button className='mb-2 mt-4' variant='outline-primary' block>
                           <AddIcon fontSize='small' />
                           Tambah Bank Lain
                         </Button>
-                      </Col>
+                      </Col> */}
                     </Row>
 
                     {/* Pemetaan Akun*/}
