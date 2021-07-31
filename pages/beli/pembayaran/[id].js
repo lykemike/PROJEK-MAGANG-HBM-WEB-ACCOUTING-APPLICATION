@@ -15,10 +15,13 @@ export default function pembayaran_beli({data, data2 , data3}) {
 	const router = useRouter();
 	const { id } = router.query;
 
+	const url = "http://localhost:3000/api/beli/pengirimanPembayaran";
+
 	return (
 		<Layout>
 			<Formik
         initialValues={{
+			id: id,
           bayar_dari: "",
           carapembayaran: "",
           tgl_pembayaran: "",
@@ -32,7 +35,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-            //   router.push("../penjualan");
+              router.push("../pembelian");
             })
             .catch(function (error) {
               console.log(error);
@@ -227,9 +230,7 @@ export default function pembayaran_beli({data, data2 , data3}) {
 						<Link href="/beli/pembelian">
 							<Button variant="danger mr-2">Batal</Button>
 						</Link>
-						<Link href="/beli/pembelian">
-							<Button variant="success">Bayar</Button>
-						</Link>
+							<Button variant="success" onClick={props.handleSubmit}>Bayar</Button>
 					</Col>
 				</Row>
 			

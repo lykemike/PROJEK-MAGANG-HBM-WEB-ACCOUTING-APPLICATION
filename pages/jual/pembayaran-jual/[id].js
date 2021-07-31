@@ -17,6 +17,11 @@ export default function pembayaran_jual({ data, data2, data3 }) {
 
   const url = "http://localhost:3000/api/jual/penerimaanPembayaran";
 
+  function pembayaran() {
+    router.push(`../pembayaran-jual/view/${id}`);
+  }
+
+
   return (
     <Layout>
       <Formik
@@ -221,6 +226,7 @@ export default function pembayaran_jual({ data, data2, data3 }) {
 
               <Row>
                 <Col className='d-flex justify-content-end mt-10'>
+                <Button variant='primary mr-2' onClick={pembayaran}>Invoice</Button>
                   <Link href='/jual/penjualan'>
                     <Button variant='danger mr-2'>Batal</Button>
                   </Link>
@@ -229,6 +235,7 @@ export default function pembayaran_jual({ data, data2, data3 }) {
                     Bayar
                   </Button>
                   {/* </Link> */}
+                  {/* <Button variant='primary mr-2' onClick={pembayaran}>Invoice</Button> */}
                 </Col>
               </Row>
             </Form>

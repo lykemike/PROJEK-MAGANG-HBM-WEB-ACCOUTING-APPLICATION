@@ -5,7 +5,7 @@ export default async (req, res) => {
   try {
     const frontend_data = {
       header_pembelian_id: parseInt(req.body.id),
-      akun_id: parseInt(req.body.setor_ke),
+      akun_id: parseInt(req.body.bayar_dari),
       cara_pembayaran: req.body.carapembayaran,
       tgl_pembayaran: req.body.tgl_pembayaran,
       tgl_jauth_tempo: req.body.tgl_jatuh_tempo,
