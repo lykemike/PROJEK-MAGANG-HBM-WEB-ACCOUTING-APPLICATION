@@ -51,18 +51,17 @@ export default function penjualan({ data }) {
               </Form>
             </div>
             <div className='border-t border-gray-200'>
-            <Row sm="12" className="mt-2 mb-2"> 
-              <Col sm="8">
-                <h3>Transaksi Penjualan</h3>
-              </Col>
-              <Col sm="3">
-                <FormControl type='text' placeholder='Search'/> 
-              </Col>
-              <Col sm="1">
-                <Button>Setting</Button>
-              </Col>
-            </Row>
-                
+              <Row sm='12' className='mt-2 mb-2'>
+                <Col sm='8'>
+                  <h3>Transaksi Penjualan</h3>
+                </Col>
+                <Col sm='3'>
+                  <FormControl type='text' placeholder='Search' />
+                </Col>
+                <Col sm='1'>
+                  <Button>Setting</Button>
+                </Col>
+              </Row>
             </div>
             <table class='min-w-full table-auto'>
               <thead class='justify-between'>
@@ -124,7 +123,8 @@ export default function penjualan({ data }) {
                       <div class='text-lg text-gray-900'>{i.tag}</div>
                     </td>
                     <td class='px-2 py-2 whitespace-nowrap font-large'>
-                      <div class='text-lg text-gray-900'>aktif</div>
+                      <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{i.sisa_tagihan == 0 ? "Selasai" : "Aktif"}</span>
+                      {/* <div class='text-lg text-gray-900'>{i.sisa_tagihan == 0 ? "Selasai" : "Aktif"}</div> */}
                     </td>
                     <td class='px-2 py-2 whitespace-nowrap font-large'>
                       <div class='text-lg text-gray-900'>Rp.{i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</div>

@@ -245,6 +245,7 @@ model HeaderPenjualan {
   akun2                   Akun      @relation("akunUangMukaPenjualan", fields: [akun_uang_muka], references: [id])
   akun_uang_muka          Int
   sisa_tagihan            Int
+  status                  String
 
   DetailPenjualan         DetailPenjualan[]
   JurnalPenjualan         JurnalPenjualan[]
@@ -284,10 +285,9 @@ model JurnalPenjualan {
   
   akun                Akun      @relation("akunJurnalPenjualan", fields: [akun_id], references: [id])
   akun_id             Int
-  akun_name           String
+  nama_setting        String
 
-  debit               Int
-  kredit              Int
+  nominal             Int
 }
 
 // Penerimaan Pembayaran Table
@@ -342,6 +342,7 @@ model HeaderPembelian {
   total_diskon            Int
   total_pajak_per_baris   Int
   total                   Int
+  status                  String
  
   pemotongan              Int
   pemotongan_total        Int

@@ -20,7 +20,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
   const url = "http://localhost:3000/api/jual/createpenjualan";
   const router = useRouter();
 
-  const id = data6 != undefined ? parseInt(data6.id) + 1 : 0;
+  const id = data6 != undefined ? parseInt(data6.id) + 1 : 1;
 
   const [idInvoice, setIdInvoice] = useState(id);
 

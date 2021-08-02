@@ -188,6 +188,7 @@ CREATE TABLE `HeaderPenjualan` (
     `uang_muka` INTEGER NOT NULL,
     `akun_uang_muka` INTEGER NOT NULL,
     `sisa_tagihan` INTEGER NOT NULL,
+    `status` VARCHAR(191) NOT NULL,
 UNIQUE INDEX `HeaderPenjualan.no_transaksi_unique`(`no_transaksi`),
 
     PRIMARY KEY (`id`)
@@ -219,9 +220,8 @@ CREATE TABLE `JurnalPenjualan` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `header_penjualan_id` INTEGER NOT NULL,
     `akun_id` INTEGER NOT NULL,
-    `akun_name` VARCHAR(191) NOT NULL,
-    `debit` INTEGER NOT NULL,
-    `kredit` INTEGER NOT NULL,
+    `nama_setting` VARCHAR(191) NOT NULL,
+    `nominal` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -321,7 +321,10 @@ CREATE TABLE `JurnalPembelian` (
 CREATE TABLE `PengirimanBayaran` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `header_pembelian_id` INTEGER NOT NULL,
-    `cara_penagihan` VARCHAR(191) NOT NULL,
+    `akun_id` INTEGER NOT NULL,
+    `cara_pembayaran` VARCHAR(191) NOT NULL,
+    `tgl_pembayaran` VARCHAR(191) NOT NULL,
+    `tgl_jauth_tempo` VARCHAR(191) NOT NULL,
     `jumlah` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -490,6 +493,9 @@ ALTER TABLE `JurnalPembelian` ADD FOREIGN KEY (`akun_id`) REFERENCES `Akun`(`id`
 
 -- AddForeignKey
 ALTER TABLE `PengirimanBayaran` ADD FOREIGN KEY (`header_pembelian_id`) REFERENCES `HeaderPembelian`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `PengirimanBayaran` ADD FOREIGN KEY (`akun_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `JurnalPengirimanBayaran` ADD FOREIGN KEY (`header_pembelian_id`) REFERENCES `HeaderPembelian`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
