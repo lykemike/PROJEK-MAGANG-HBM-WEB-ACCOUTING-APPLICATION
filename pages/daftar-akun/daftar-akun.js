@@ -122,9 +122,9 @@ export default function DaftarAkun({ data }) {
                     </div>
                   </div>
                 </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
+                {/* <td class='px-2 py-2 whitespace-nowrap'>
                   <div class='text-xl text-red-600 font-medium'>Kas</div>
-                </td>
+                </td> */}
                 <td class='px-2 py-2 whitespace-nowrap'>
                   <div class='text-sm text-gray-900' />
                 </td>

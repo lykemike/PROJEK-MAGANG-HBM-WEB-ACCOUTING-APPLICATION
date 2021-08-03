@@ -59,20 +59,7 @@ export default function BuatAkunBaru({ data, data2 }) {
 								</Row>
 
 								<Row className="mb-3">
-									<Col sm="2">Sub Akun Dari</Col>
-									<Col sm="6">
-										<Form.Control as="select" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
-											{/* loop over kategori and show them */}
-											{data2.map((kategori) => (
-												<option key={kategori.id} value={kategori.id}>{kategori.name}</option>
-											))}
-										</Form.Control>
-										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
-									</Col>
-								</Row>
-
-								<Row className="mb-3">
-									<Col sm="2">Akun Header Dari</Col>
+									<Col sm="2">Kategori</Col>
 									<Col sm="6">
 										<Form.Control as="select" name="header_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
 											{/* loop over tipe akun and show them */}
@@ -82,6 +69,41 @@ export default function BuatAkunBaru({ data, data2 }) {
 
 										</Form.Control>
 										{props.errors.header_akun && props.touched.header_akun ? <div class="text-red-500 text-sm">{props.errors.header_akun}</div> : null}
+									</Col>
+								</Row>
+
+								{/* <Row className="mb-3">
+									<Col sm="2">Detail</Col>
+									<Col sm="6">
+										<Form.Control as="select" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
+										
+											{data2.map((kategori) => (
+												<option key={kategori.id} value={kategori.id}>{kategori.name}</option>
+											))}
+										</Form.Control>
+										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
+									</Col>
+								</Row> */}
+
+								<Row className="mb-3">
+									<Col sm="2">Detail</Col>
+									<Col sm="6">
+										<Form.Control as="select" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
+													<option>None</option>
+													<option>Sub Akun dari: </option>
+													<option>Akun Header dari: </option>
+										</Form.Control>
+										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
+									</Col>
+								</Row>
+
+								<Row className="mb-3">
+									<Col sm="2"></Col>
+									<Col sm="6">
+										<Form.Control type="text" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
+													
+										</Form.Control>
+										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
 									</Col>
 								</Row>
 

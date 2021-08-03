@@ -7,35 +7,55 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import EventNoteIcon from '@material-ui/icons/EventNote';
-import {Formik,Form as Forms} from 'formik'
+
+
 import * as Yup from 'yup'
+import { Formik, Form as Forms, FieldArray } from "formik";
+import Axios from "axios";
+import { useRouter } from "next/router";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
-const KirimUangSchema = Yup.object().shape({
-    bank: Yup.string()
-      .required('Required'),
-    penerima : Yup.string().required('Required')
-    // lastName: Yup.string()
-    //   .min(2, 'Too Short!')
-    //   .max(50, 'Too Long!')
-    //   .required('Required'),
-    // email: Yup.string().email('Invalid email').required('Required'),
-  });
+// const KirimUangSchema = Yup.object().shape({
+//     bank: Yup.string().required('Required'),
+//     penerima : Yup.string().required('Required')
+//   });
 
+ export default function kirim_uang({data}) {
+	const router = useRouter();
 
-const kirimuang = () => {
+	// const url = "http://localhost:3000/api/";
+
     return (
-         <div>
-            <Layout >
+            <Layout>
                 <Formik
                     initialValues={{
-                        bank : '',
-                        penerima : ""
+                        bayar_dari : '',
+                        penerima : "",
+                        tgl_transaksi: "",
+                        no_transaksi: "",
+                        tag: "",
+                        pembayaran_akun: "",
+                        deskripsi: "",
+                        pajak: "",
+                        jumlah: 0,
+                        memo: "",
+                        subtotal: "",
+                        total: ""
                     }}
-                    validationSchema={KirimUangSchema}
-                    onSubmit={(values) => {
-                        console.log(values)
-                    }}
-                >
+                    onSubmit={async (values) => {
+                        // alert(JSON.stringify(values, null, 2));
+                        // console.log(values)
+                        Axios.post(url, values)
+                          .then(function (response) {
+                            console.log(response);
+                            router.push("");
+                          })
+                          .catch(function (error) {
+                            console.log(error);
+                          });
+                      }}>
+
                     {(props) => (
                         <Forms noValidate>
                           <div variant="container">
@@ -51,15 +71,15 @@ const kirimuang = () => {
                                 <Form.Label>
                                     Bayar dari
                                     </Form.Label>
-                                        <Form.Control as="select" name="bank" onChange={props.handleChange} onBlur={props.handleBlur}>
-                                            <option value='' disabled>Pilih Bank Pengirim</option>
-                                            <option value='BCA'>BCA</option>
-                                            <option value='BRI'>BRI</option>
-                                            <option value='BNI'>BNI</option>
-                                            <option value='BUKOPIN'>BUKOPIN</option>
-                                            <option value='MANDIRI'>MANDIRI</option>
+                                        <Form.Control as="select" name="transfer_dari" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                        <option value='kosong'>Pilih</option>
+                                        {data.map((akun) => (
+                                            <option key={akun.id} value={akun.id}>
+                                                {akun.nama_akun}
+                                            </option>
+                                        ))}
                                         </Form.Control>
-                                        {props.errors.bank && props.touched.bank ? <div>{props.errors.bank}</div> : null}
+                                        {props.errors.transfer_dari && props.touched.transfer_dari ? <div>{props.errors.transfer_dari}</div> : null}
                                 </Col>
                                 <Col></Col>
                                 <Col>
@@ -77,59 +97,62 @@ const kirimuang = () => {
                                 <Form.Label>
                                     Penerima
                                 </Form.Label>
-                                        <Form.Control as="select" name="penerima" onChange={props.handleChange} onBlur={props.handleBlur}>
-                                            <option value='' disabled>Pilih Bank Penerima</option>
-                                            <option value="BCA">BCA</option>
-                                            <option value="BRI">BRI</option>
-                                        </Form.Control>
-                                        {props.errors.penerima && props.touched.penerima ? <div>{props.errors.penerima}</div> : null}
+                                    <Form.Control as="select" name="penerima" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                    <option value='kosong'>Pilih</option>
+                                        {data.map((akun) => (
+                                            <option key={akun.id} value={akun.id}>
+                                                {akun.nama_akun}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                    {props.errors.penerima && props.touched.penerima ? <div>{props.errors.penerima}</div> : null}
                                 </Col>
                                 
                                 <Col>
-                                <Form.Label>
-                                    Tanggal Transaksi
-                                </Form.Label>
-                                <InputGroup className="mb-3">
-                                        <InputGroup.Prepend>
-                                        <InputGroup.Text >
-                                            <EventNoteIcon/>
-                                        </InputGroup.Text>
-                                        </InputGroup.Prepend>
+                                    <Form.Label>
+                                            Tanggal Transaksi
+                                    </Form.Label>
+                                    <InputGroup className="mb-3">
                                         <FormControl
                                         placeholder="Pick date"
                                         type='date'
                                         aria-label="date"
+                                        name="tgl_transaksi"
                                         />
+                                        {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                                     </InputGroup>
-                               
-                            
                                 </Col>
+
                                 
                                 <Col> 
                                 <Form.Label>
                                     Nomor Transaksi
                                 </Form.Label>
-                                <Form.Control placeholder="ID" />
+                                    <Form.Control 
+                                        placeholder="Auto"
+                                        name="no_transaksi"
+                                        disabled
+                                    />
                                 </Col>
 
                                 <Col>
-                                <Form.Label>
-                                    Tag
-                                </Form.Label>
-                                <Form.Control placeholder="Tag" />
+                                    <Form.Label>
+                                        Tag
+                                    </Form.Label>
+                                    <Form.Control 
+                                        placeholder="Tag" 
+                                        name="tag"
+                                    />
                                 </Col>
                 
-                            </Row>
-                
-                        <div class="float-right mt-2 mb-8">
+                        {/* <div class="float-right mt-2 mb-8">
                                 <Form.Check
                                     label="Harga Termasuk Pajak" 
                                     type="switch"
-                                    id="custom-switch"
-                                    
+                                    id="custom-switch"   
                                 />
-                                </div>
-                                
+                                </div> */}
+                            </Row>
                         </div>
                 
                         <div class="mb-12">
@@ -145,39 +168,26 @@ const kirimuang = () => {
                                     <tbody>
                                         <tr>
                                             <td> 
-                                                <Form.Control as="select">
+                                                <Form.Control as="select" name="pembayaran_akun">
                                                     <option>Pilih 1</option>
                                                 </Form.Control>
                                             </td>
                                             <td>
-                                                <Form.Control placeholder="Isi Deskripsi" />    
+                                                <Form.Control placeholder="Isi Deskripsi" name="deskripsi"/>    
                                             </td>   
                                             <td>
-                                                <Form.Control as="select">
+                                                <Form.Control as="select" name="pajak">
                                                     <option>Pilih 1</option>
                                                 </Form.Control>
                                             </td>
                                             <td> 
-                                                <Form.Control placeholder="Input Jumlah" />  
-                                            </td>
-                                        </tr>
-                
-                                        <tr>
-                                            <td> 
-                                                <Form.Control as="select">
-                                                    <option>Pilih 1</option>
-                                                </Form.Control>
-                                            </td>
-                                            <td>
-                                                <Form.Control placeholder="Isi Deskripsi" />    
-                                            </td>   
-                                            <td>
-                                                <Form.Control as="select">
-                                                    <option>Pilih 1</option>
-                                                </Form.Control>
-                                            </td>
-                                            <td> 
-                                                <Form.Control placeholder="Input Jumlah" />  
+                                            <Form.Control 
+                                                placeholder="Jumlah Uang" 
+                                                name="jumlah" 
+                                                onChange={(e) => {
+                                                    props.setFieldValue('jumlah', e.target.value)
+                                                }}
+                                                />
                                             </td>
                                         </tr>
                                     
@@ -192,7 +202,16 @@ const kirimuang = () => {
                     
                                 <Form.Group controlId="exampleForm.ControlTextarea1">
                                     <Form.Label>Memo</Form.Label>
-                                    <Form.Control as="textarea" rows="4" />
+                                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                                    <Form.Control 
+                                        as="textarea" 
+                                        rows={3} 
+                                        name="memo"
+                                        placeholder="Isi Memo"
+                                        onChange={props.handleChange}
+                                    />
+                                {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
+                                </Form.Group>
                                 </Form.Group>
                                 
                                 </Col>
@@ -203,7 +222,7 @@ const kirimuang = () => {
                                         Subtotal
                                         </Form.Label>
                                         <Col sm="6">
-                                        <Form.Control type="subtotal" placeholder="0,00" />
+                                        <Form.Control type="subtotal" name="subtotal" placeholder="0,00" />
                                         </Col>
                                     </Form.Group>
                 
@@ -212,32 +231,11 @@ const kirimuang = () => {
                                         Total
                                         </Form.Label>
                                         <Col sm="6">
-                                        <Form.Control type="total" placeholder="Rp, 0.00" />
+                                        <Form.Control type="total" name="total" placeholder="Rp, 0.00" />
                                         </Col>
                                 </Form.Group>
                                 
-                                <Form.Label>
-                                Pemotongan
-                                </Form.Label>
-                                    <Form.Control className="mb-2" as="select">
-                                                    <option>Pemotongan A </option>
-                                                    <option>Pemotongan B </option>
-                                                    <option>Pemotongan C </option>
-                                                    <option>Pemotongan D </option>
-    
-                                    </Form.Control>
-    
-                                     <InputGroup className="">            
-                                        <FormControl
-                                        placeholder="Input Pemotongan"
-                                        aria-label=""
-                                        />
-                                        <InputGroup.Append>
-                                        <InputGroup.Text>%</InputGroup.Text>
-                                        <InputGroup.Text>Rp</InputGroup.Text>
-                                        </InputGroup.Append>
-                                        
-                                    </InputGroup>
+                             
                                 </Col>
                             </Row>
                         </div>
@@ -285,13 +283,34 @@ const kirimuang = () => {
                         </div>
                     </div>
                         </Forms>
-               
-
-                    )}
+                        )}
                  </Formik>
             </Layout>
-            </div>
     )
 }
 
-export default kirimuang
+export async function getServerSideProps() {
+
+	const akunKasBank = await prisma.akun.findMany({
+        where: {
+          kategoriId: 3,
+        },
+      });
+  
+    const kontaks = await prisma.kontakDetail.findMany({
+        where: {
+            kontak_type_id: 2,
+        },
+        include: {
+            kontak: true,
+        },
+    });
+  
+    return {
+      props: {
+        data: akunKasBank,
+        data2: kontaks
+      },
+    };
+  }
+  
