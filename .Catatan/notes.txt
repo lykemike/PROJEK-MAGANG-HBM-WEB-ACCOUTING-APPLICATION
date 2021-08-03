@@ -81,7 +81,8 @@ upload file attachment
 - Buat API penerimaan pembayaran update sisa tagihan = 100%
 - Buat API setting default buat page penjualan = 100%
 - Buat database Jurnal = 100%
-- Edit Invoice / Pembayaran = 50%
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
 - Jurnal penjualan masukin ke database = 30%
 - Jurnal penerimaan pembayaran masukin ke database = 30%
 == PAGE PEMBELIAN ==
@@ -89,9 +90,27 @@ upload file attachment
 - Buat API pengiriman pembayaran update sisa tagihan = 100%
 - Buat API setting default buat page pembelian = 100%
 - Buat database Jurnal = 100%
-- Edit Invoice / Pembayaran = 50%
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
 - Jurnal pembelian masukin ke database = 30%
 - Jurnal pengiriman pembayaran masukin ke database = 30%
+
+🗓️ Tanggal: 2 August 2021, Senin
+== PAGE PENJUALAN ==
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
+- Jurnal penjualan masukin ke database = 30%
+- Jurnal penerimaan pembayaran masukin ke database = 30%
+== PAGE PEMBELIAN ==
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
+- Jurnal pembelian masukin ke database = 30%
+- Jurnal pengiriman pembayaran masukin ke database = 30%
+== PAGE KAS DAN BANK ==
+- Planning Struktur DB Kas dan bank = 40%
+== PAGE BIAYA ==
+- API Create Biaya = 100%
+- API Edit Biaya = 100%
 
 ----------------
 || ON PROCESS ||

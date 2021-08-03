@@ -122,8 +122,11 @@ export default function penjualan({ data }) {
                     <td class='px-2 py-2 whitespace-nowrap font-large'>
                       <div class='text-lg text-gray-900'>{i.tag}</div>
                     </td>
-                    <td class='px-2 py-2 whitespace-nowrap font-large'>
-                      <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{i.sisa_tagihan == 0 ? "Selasai" : "Aktif"}</span>
+                    <td class='px-2 py-2 whitespace-nowrap font-large'>                 
+                      {i.status == "Complete" ? 
+                      <span class='bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs'>{i.status}</span> :   
+                      <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{i.status}</span>}
+                      
                       {/* <div class='text-lg text-gray-900'>{i.sisa_tagihan == 0 ? "Selasai" : "Aktif"}</div> */}
                     </td>
                     <td class='px-2 py-2 whitespace-nowrap font-large'>

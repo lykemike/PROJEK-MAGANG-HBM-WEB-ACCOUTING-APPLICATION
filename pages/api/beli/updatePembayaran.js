@@ -37,9 +37,9 @@ export default async (req, res) => {
       },
       data: {
         sisa_tagihan: sisa,
+        status: sisa == 0 ? "Completed" : "Partial"
       },
     });
-
     res.status(201).json([
       { message: "Create Penerimaan Pembayaran Success!", data: create_penerimaan_pembayaran },
       { message: "Update Sisa Tagihan Success!", data: update_sisa_tagihan },

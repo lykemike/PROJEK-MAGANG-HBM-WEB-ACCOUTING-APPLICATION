@@ -26,6 +26,7 @@ export default async (req, res) => {
       },
       select: {
         sisa_tagihan: true,
+        status: true,
       },
     });
 
@@ -37,6 +38,7 @@ export default async (req, res) => {
       },
       data: {
         sisa_tagihan: sisa,
+        status: "Partial"
       },
     });
 

@@ -101,6 +101,13 @@ model Akun {
   PengirimanBayaran         PengirimanBayaran[] 
 
    SettingDefault           SettingDefault[]
+
+   TransferUang             TransferUang[]
+
+   HeaderTerimaUang1        HeaderTerimaUang[] @relation("akunSetor")
+   HeaderTerimaUang2        HeaderTerimaUang[] @relation("akunMembayar")
+
+   DetailTerimaUang         DetailTerimaUang[]
 }
 
 // Kategori Kontak
@@ -210,6 +217,8 @@ model Pajak {
   DetailPembelian DetailPembelian[]
 
   DetailBiaya DetailBiaya[]
+
+  DetailTerimaUang DetailTerimaUang[]
 }
 // Header Penjualan Table
 model HeaderPenjualan {
@@ -476,4 +485,54 @@ model SettingDefault {
   akun            Akun        @relation(fields: [akun_id], references: [id])
   akun_id         Int
   tipe            String
+}
+
+model TransferUang {
+  id              Int         @id @default(autoincrement())
+  akun            Akun      @relation(fields: [akun_id], references: [id])
+  akun_id         Int
+  jumlah          Int
+  memo            String
+  file_attachment String
+  no_transaksi    Int
+  tgl_transaksi   String
+  tag             String
+}
+
+model HeaderTerimaUang {
+  id                  Int     @id @default(autoincrement())
+  akun_setor          Akun    @relation("akunSetor", fields: [akun_setor_id], references: [id])
+  akun_setor_id       Int
+
+  akun_membayar       Akun    @relation("akunMembayar", fields: [akun_membayar_id], references: [id])
+  akun_membayar_id    Int
+  
+  no_transaksi        Int
+  tag                 String
+  memo                String
+  file_attachment     String
+  subtotal            Int
+  pajak               Int
+  total               Int
+
+  DetailTerimaUang    DetailTerimaUang[]
+}
+
+model DetailTerimaUang {
+  id                    Int     @id @default(autoincrement())
+  header_terima_uang    HeaderTerimaUang @relation(fields: [header_terima_uang_id], references: [id])
+  header_terima_uang_id Int
+  
+  akun                  Akun  @relation(fields: [akun_id], references: [id])
+  akun_id               Int
+  nama_akun             String
+  deskripsi             String
+  
+  pajak                 Pajak       @relation(fields: [pajak_id], references: [id])
+  pajak_id              Int
+  pajak_nama            String
+  pajak_persen          Int
+  hasil_pajak           Int
+
+  jumlah                Int
 }
