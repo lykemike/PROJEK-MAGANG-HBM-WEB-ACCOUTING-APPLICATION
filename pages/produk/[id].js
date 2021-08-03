@@ -48,28 +48,27 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
     <Layout>
       <Formik
         initialValues={{
-          file_upload: [],
+          id: id,
+            file_upload: [],
           nama: "",
           kode_sku: "",
           kategori_produk: "",
           unit: "",
+          quantity: 0,
           deskripsi: "",
           hbs: "",
           akun_pembelian: "",
-          pajak_beli: "",
           hjs: "",
           akun_penjualan: "",
-          pajak_jual: "",
         }}
         // validationSchema={ProdukSchema}
         onSubmit={async (values) => {
           let formData = new FormData();
-					let data = {id}
           for (var key in values) {
             formData.append(`${key}`, `${values[key]}`);
           }
           Array.from(values.file_upload).map((i) => formData.append("file", i));
-          Axios.put(url, formData, data, {
+          Axios.put(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -83,11 +82,11 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
             });
         }}>
         {(props) => (
-          <Forms noValidate>
+<Forms noValidate>
             <Form>
               <Row className='ml-2 mb-4'>
                 <LocalMallIcon fontSize='large' />
-                <h3>Edit Produk / Edit Jasa</h3>
+                <h3>Buat Produk / Jasa Baru</h3>
               </Row>
               <Card>
                 <Card.Body>
@@ -106,7 +105,12 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
 											{props.errors.file_upload && props.touched.file_upload ?
 												<div class="text-red-500 text-sm"><ErrorOutlineIcon />{props.errors.file_upload}</div>
 												: null} */}
-                      <Form.File type='file' name='file_upload' accept='image/*' onChange={(e) => props.setFieldValue("file_upload", e.target.files)} />
+                      <Form.File
+                        type='file'
+                        name='file_upload'
+                        accept='image/*'
+                        onChange={(e) => props.setFieldValue("file_upload", e.target.files)}
+                      />
                       {props.errors.file_upload && props.touched.file_upload ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -195,6 +199,16 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
                     </Col>
                   </Row>
 
+                  {/* Quantity */}
+                  <Row className='mb-3'>
+                    <Col sm='2'>
+                      <Form.Label>Quantity</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      <Form.Control type='number' name='quantity' onChange={props.handleChange} />
+                    </Col>
+                  </Row>
+
                   {/* Deskripsi */}
                   <Row className='mb-12'>
                     <Col sm='2'>
@@ -247,23 +261,6 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
                         </div>
                       ) : null}
                     </Col>
-                    <Col>
-                      <Form.Label>Pajak Beli</Form.Label>
-                      <Form.Control className='mb-2' as='select' name='pajak_beli' onChange={props.handleChange}>
-                        <option value='0'>Pilih</option>
-                        {data4.map((pajak, index) => (
-                          <option key={index} value={pajak.id}>
-                            {pajak.nama}
-                          </option>
-                        ))}
-                      </Form.Control>
-                      {props.errors.pajak_beli && props.touched.pajak_beli ? (
-                        <div class='text-red-500 text-sm'>
-                          <ErrorOutlineIcon />
-                          {props.errors.pajak_beli}
-                        </div>
-                      ) : null}
-                    </Col>
                   </Row>
 
                   <hr />
@@ -301,23 +298,6 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
                         </div>
                       ) : null}
                     </Col>
-                    <Col>
-                      <Form.Label>Pajak Jual</Form.Label>
-                      <Form.Control className='mb-2' as='select' name='pajak_jual' onChange={props.handleChange}>
-                        <option value='0'>Pilih</option>
-                        {data4.map((pajak, index) => (
-                          <option key={index} value={pajak.id}>
-                            {pajak.nama}
-                          </option>
-                        ))}
-                      </Form.Control>
-                      {props.errors.pajak_jual && props.touched.pajak_jual ? (
-                        <div class='text-red-500 text-sm'>
-                          <ErrorOutlineIcon />
-                          {props.errors.pajak_jual}
-                        </div>
-                      ) : null}
-                    </Col>
                   </Row>
 
                   <Row>
@@ -326,7 +306,7 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
                         Batal
                       </Button>
                       <Button variant='success' onClick={props.handleSubmit}>
-                        Update
+                        Tambah
                       </Button>
                     </Col>
                   </Row>

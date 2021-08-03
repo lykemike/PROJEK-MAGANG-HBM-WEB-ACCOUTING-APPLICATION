@@ -64,6 +64,7 @@ export default async (req, res) => {
       akun_uang_muka: parseInt(req.body.akun_uang_muka),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
       balance: parseInt(req.body.balance),
+      status: "Active",
     };
 
     const create_header_penjualan = await prisma.headerPenjualan.createMany({
@@ -100,32 +101,57 @@ export default async (req, res) => {
     });
 
     let detail = [];
-    req.body.produks && JSON.parse(req.body.produks).map((i) => {
-      detail.push({
-        header_penjualan_id: find_header_penjualan.id,
-        produk_id: parseInt(i.produk_id),
-        nama_produk: i.nama_produk,
-        desk_produk: i.deskripsi_produk,
-        kuantitas: parseInt(i.kuantitas),
-        satuan: i.satuan,
-        harga_satuan: parseInt(i.harga_satuan),
-        diskon: parseInt(i.diskon),
-        hasil_diskon: parseInt(i.hasil_diskon),
-        pajak_id: parseInt(i.pajak_id),
-        pajak_nama: i.pajak_nama,
-        pajak_persen: i.pajak_persen,
-        hasil_pajak: parseInt(i.hasil_pajak),
-        jumlah: parseInt(i.jumlah),
+    req.body.produks &&
+      JSON.parse(req.body.produks).map((i) => {
+        detail.push({
+          header_penjualan_id: find_header_penjualan.id,
+          produk_id: parseInt(i.produk_id),
+          nama_produk: i.nama_produk,
+          desk_produk: i.deskripsi_produk,
+          kuantitas: parseInt(i.kuantitas),
+          satuan: i.satuan,
+          harga_satuan: parseInt(i.harga_satuan),
+          diskon: parseInt(i.diskon),
+          hasil_diskon: parseInt(i.hasil_diskon),
+          pajak_id: parseInt(i.pajak_id),
+          pajak_nama: i.pajak_nama,
+          pajak_persen: i.pajak_persen,
+          hasil_pajak: parseInt(i.hasil_pajak),
+          jumlah: parseInt(i.jumlah),
+        });
       });
-    });
 
     const create_detail_penjualan = await prisma.detailPenjualan.createMany({
       data: detail,
       skipDuplicates: true,
     });
 
+    // let jurnal = [];
+    // const get_default_settings = await prisma.settingDefault.findFirst({
+    //   where: {
+    //     tipe: "penjualan",
+    //     nama_setting: "pajak_penjualan"
+    //   }
+    // })
+
+    // req.body.produks && JSON.parse(req.body.produks).map((i) => {
+    //   jurnal.push({
+    //     header_penjualan_id: find_header_penjualan.id,
+    //     akun_id: i.pajak_id == "" ? get_default_settings.akun_id : parseInt(i.pajak_id),
+    //     akun_name: i.pajak_persen == 0 ? "" : i.pajak_nama,
+    //     nominal:
+    //   });
+    // });
+
+    // const create_jurnal_penjualan = await prisma.jurnalPenjualan.createMany({
+    //   data: {
+    //     header_penjualan_id:  frontend_data.id,
+    //     akun_id:
+    //   }
+    // })
+
     res.status(201).json([
-      { message: "Create Detail Penjualan Success!", data: create_detail_penjualan, },
+      { message: "Create Detail Penjualan Success!", data: create_detail_penjualan },
       // { message: "Create Header Penjualan Success!", data: create_header_penjualan },
       // { message: "Find Header Penjualan ID Success!", data: find_header_penjualan },
       // { message: "Find No Transaksi Success!", data: find_no_transaksi },

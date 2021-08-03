@@ -157,59 +157,23 @@ export default async (req, res) => {
 
     const createKategoriAkun = await prisma.kategori.createMany({
       data: [
-        { name: "Akun Piutang", 
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit",
-        },
-        { name: "Aktiva Lancar Lainnya",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit",
-         },
-        { name: "Kas & Bank",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
-        { name: "Persediaan",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
-        { name: "Aktiva Tetap",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
-        { name: "Aktiva Lainnya",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
-        { name: "Depresiasi & Amortasi",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
-        { name: "Akun Hutang",
-          saldo_normal_id: 2,
-          saldo_normal_nama: "Kredit", },
-        { name: "Kartu Kredit",
-          saldo_normal_id: 2,
-          saldo_normal_nama: "Kredit", },
-        { name: "Kewajiban Lancar Lainnya",
-          saldo_normal_id: 2,
-          saldo_normal_nama: "Kredit", },
-        { name: "Kewajiban Jangka Panjang",
-          saldo_normal_id: 2,
-          saldo_normal_nama: "Kredit", },
-        { name: "Ekuitas",
-          saldo_normal_id: 2,
-          saldo_normal_nama: "Kredit", },
-        { name: "Pendapatan",
-          saldo_normal_id: 2,
-          saldo_normal_nama: "Kredit", },
-        { name: "Pendapatan Lainnya",
-          saldo_normal_id: 2,
-          saldo_normal_nama: "Kredit", },
-        { name: "Harga Pokok Penjualan",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
-        { name: "Beban",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
-        { name: "Beban Lainnya",
-          saldo_normal_id: 1,
-          saldo_normal_nama: "Debit", },
+        { name: "Akun Piutang", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Aktiva Lancar Lainnya", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Kas & Bank", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Persediaan", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Aktiva Tetap", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Aktiva Lainnya", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Depresiasi & Amortasi", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Akun Hutang", saldo_normal_id: 2, saldo_normal_nama: "Kredit" },
+        { name: "Kartu Kredit", saldo_normal_id: 2, saldo_normal_nama: "Kredit" },
+        { name: "Kewajiban Lancar Lainnya", saldo_normal_id: 2, saldo_normal_nama: "Kredit" },
+        { name: "Kewajiban Jangka Panjang", saldo_normal_id: 2, saldo_normal_nama: "Kredit" },
+        { name: "Ekuitas", saldo_normal_id: 2, saldo_normal_nama: "Kredit" },
+        { name: "Pendapatan", saldo_normal_id: 2, saldo_normal_nama: "Kredit" },
+        { name: "Pendapatan Lainnya", saldo_normal_id: 2, saldo_normal_nama: "Kredit" },
+        { name: "Harga Pokok Penjualan", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Beban", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
+        { name: "Beban Lainnya", saldo_normal_id: 1, saldo_normal_nama: "Debit" },
       ],
       skipDuplicates: true,
     });
@@ -1844,77 +1808,81 @@ export default async (req, res) => {
       data: [
         {
           akun_id: 116,
-          tipe: "penjualan"
+          tipe: "penjualan",
+          nama_setting: "pendapatan_penjualan",
         },
         {
           akun_id: 116,
-          tipe: "penjualan"
+          tipe: "penjualan",
+          nama_setting: "diskon_penjualan",
         },
         {
           akun_id: 116,
-          tipe: "penjualan"
+          tipe: "penjualan",
+          nama_setting: "pemotongan",
         },
         {
           akun_id: 1,
-          tipe: "penjualan"
+          tipe: "penjualan",
+          nama_setting: "pembayaran_dimuka",
         },
         {
           akun_id: 20,
-          tipe: "penjualan"
+          tipe: "penjualan",
+          nama_setting: "piutang_blm_ditagih",
         },
         {
           akun_id: 116,
-          tipe: "penjualan"
+          tipe: "penjualan",
+          nama_setting: "pajak_penjualan",
         },
-        {
-          akun_id: 121,
-          tipe: "pembelian"
-        },
-        {
-          akun_id: 121,
-          tipe: "pembelian"
-        },
-        {
-          akun_id: 1,
-          tipe: "pembelian"
-        },
-        {
-          akun_id: 74,
-          tipe: "pembelian"
-        },
-        {
-          akun_id: 116,
-          tipe: "pembelian"
-        },
-        {
-          akun_id: 116,
-          tipe: "pembelian"
-        },
-        {
-          akun_id: 116,
-          tipe: "biaya"
-        },
-        {
-          akun_id: 74,
-          tipe: "biaya"
-        },
-      ]
-    })
+        // {
+        //   akun_id: 121,
+        //   tipe: "pembelian"
+        // },
+        // {
+        //   akun_id: 121,
+        //   tipe: "pembelian"
+        // },
+        // {
+        //   akun_id: 1,
+        //   tipe: "pembelian"
+        // },
+        // {
+        //   akun_id: 74,
+        //   tipe: "pembelian"
+        // },
+        // {
+        //   akun_id: 116,
+        //   tipe: "pembelian"
+        // },
+        // {
+        //   akun_id: 116,
+        //   tipe: "pembelian"
+        // },
+        // {
+        //   akun_id: 116,
+        //   tipe: "biaya"
+        // },
+        // {
+        //   akun_id: 74,
+        //   tipe: "biaya"
+        // },
+      ],
+    });
 
-    res
-      .status(201)
-      .json(
-        // { message: "Create Admin Role Success!", data: createRole },
-        // { message: "Create User Admin Success!", data: createUser },
-        // { message: "Create Menu Success!", data: createMenu },
-        // { message: "Create Role Privellege Success!", data: createRolePrivellege },
-        // { message: "Create Kategori Kontak Success!", data: createKategoriKontak },
-        // { message: "Create Kategori Akun Success!", data: createKategoriAkun },
-        // { message: "Create Tipe Akun Success!", data: createTipeAkun },
-        // { message: "Create Daftar Akun Success!", data: createDaftarAkun },
-        // { message: "Create Daftar Akun Success!", data: createSatuanProduk },
-        { message: "Create Default Setting Success!", data: createSettings },
-      );
+    res.status(201).json(
+      // { message: "Create Admin Role Success!", data: createRole },
+      // { message: "Create User Admin Success!", data: createUser },
+      // { message: "Create Menu Success!", data: createMenu },
+      // { message: "Create Role Privellege Success!", data: createRolePrivellege },
+      // { message: "Create Kategori Kontak Success!", data: createKategoriKontak },
+      // { message: "Create Kategori Akun Success!", data: createKategoriAkun },
+      // { message: "Create Tipe Akun Success!", data: createTipeAkun },
+      // { message: "Create Daftar Akun Success!", data: createDaftarAkun },
+      // { message: "Create Daftar Akun Success!", data: createSatuanProduk },
+      { message: "Create Default Setting Success!", data: createSettings }
+    );
   } catch (error) {
     res
       .status(400)

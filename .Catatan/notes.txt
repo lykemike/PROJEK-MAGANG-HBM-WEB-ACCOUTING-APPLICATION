@@ -72,7 +72,7 @@ upload file attachment
 (DONE) Meeting
 
 🗓️ Tanggal: 29 Juli 2021, Kamis
-(DONE) Ketika data blm dibuat id buat redirect tidak ditemukan error: null
+(DONE) Ketika data blm dibuat id buat redirect tidak ditemukan error: null 
 (DONE) Create sales invoice udah bisa error: ketika upload file attachment
 
 🗓️ Tanggal: 30 Juli 2021, Jumat
@@ -80,16 +80,37 @@ upload file attachment
 - Buat database penerimaan pembayaran buat page penjualan = 100%
 - Buat API penerimaan pembayaran update sisa tagihan = 100%
 - Buat API setting default buat page penjualan = 100%
-- Database Jurnal = 80%
-- Jurnal penjualan masukin ke database = 20%
-- Jurnal pembelian masukin ke database = 20%
+- Buat database Jurnal = 100%
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
+- Jurnal penjualan masukin ke database = 30%
+- Jurnal penerimaan pembayaran masukin ke database = 30%
 == PAGE PEMBELIAN ==
 - Buat database pengiriman pembayaran buat page pembelian = 100%
-- Buat API pengiriman pembayaran update sisa tagihan = 70%
-- Buat API setting default buat page pembelian = 0%
-- Database Jurnal = 80%
-- Jurnal penjualan masukin ke database = 20%
-- Jurnal pembelian masukin ke database = 20%
+- Buat API pengiriman pembayaran update sisa tagihan = 100%
+- Buat API setting default buat page pembelian = 100%
+- Buat database Jurnal = 100%
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
+- Jurnal pembelian masukin ke database = 30%
+- Jurnal pengiriman pembayaran masukin ke database = 30%
+
+🗓️ Tanggal: 2 August 2021, Senin
+== PAGE PENJUALAN ==
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
+- Jurnal penjualan masukin ke database = 30%
+- Jurnal penerimaan pembayaran masukin ke database = 30%
+== PAGE PEMBELIAN ==
+- API Edit Invoice / Pembayaran = 100%
+- API Edit Pembayaran = 100%
+- Jurnal pembelian masukin ke database = 30%
+- Jurnal pengiriman pembayaran masukin ke database = 30%
+== PAGE KAS DAN BANK ==
+- Planning Struktur DB Kas dan bank = 40%
+== PAGE BIAYA ==
+- API Create Biaya = 100%
+- API Edit Biaya = 100%
 
 ----------------
 || ON PROCESS ||
@@ -100,7 +121,7 @@ upload file attachment
 (DONE) Database dan api settings default buat penjualan, pembelian dan biaya
 Syarat pembayaran masih error: misalnya 10 hari dari bulan juli tanggal 29 jadi 
   - tanggal 9 augustus, error di konversi seharusnya jadi 09 augustus => 09/08/2021
-
+Ganti semua select option jadi select2, dimana kita bisa searching
 Harga berkurang/reset ketika kita remove data dari produk
 Cara masukin data ke jurnal
 Cara ketika buat penjualan jumlah update sesuai kuantitas produk di kategori produk
