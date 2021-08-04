@@ -1,6 +1,6 @@
-import { PrismaClient } from ".prisma/client";
 import multer from "multer";
 import { extname } from "path";
+import { PrismaClient } from ".prisma/client";
 const prisma = new PrismaClient();
 
 export const editFileName = (req, file, callback) => {
@@ -38,24 +38,51 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      akun_transfer_id: parseInt(req.body.akun_transfer),
-      akun_setor_id: parseInt(req.body.akun_setor),
-      jumlah: parseInt(req.body.jumlah),
-      memo: req.body.memo,
-      file_attachment: req.file.filename,
-      no_transaksi: Int,
+      no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
-      tag: req.body.tag,
+      total_debit: parseInt(req.body.total_debit),
+      total_kredit: parseInt(req.body.total_kredit),
+      lampiran: req.file.filename,
     };
 
-    const create_transfer_uang = await prisma.transferUang.createMany({
+    const update_header_jurnal = await prisma.headerJurnal.updateMany({
+      where: {
+        id: parseInt(req.body.id),
+      },
       data: [frontend_data],
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create Transfer Uang Success!", data: create_transfer_uang });
+    const find_header_jurnal = await prisma.headerJurnal.findFirst({
+      where: {
+        id: parseInt(req.body.id),
+      },
+    });
+
+    let detail = [];
+    req.body.akuns &&
+      JSON.parse(req.body.akuns).map((i) => {
+        detail.push({
+          header_jurnal_id: find_header_jurnal.id,
+          akun_id: parseInt(i.akun_id),
+          deskripsi: i.deskripsi,
+          tag: i.tag,
+          debit: parseInt(i.debit),
+          kredit: parseInt(i.kredit),
+        });
+      });
+
+    const update_detail_jurnal = await prisma.detailJurnal.update({
+      where: {
+        header_jurnal_id: parseInt(req.body.id),
+      },
+      data: detail,
+      skipDuplicates: true,
+    });
+
+    res.status(201).json([{ message: "Update Jurnal success!", data: update_detail_jurnal }]);
   } catch (error) {
-    res.status(400).json({ data: "Failed to create transfer uang!", error });
+    res.status(400).json([{ data: "Failed to update jurnal!", error }]);
     console.log(error);
   }
 };

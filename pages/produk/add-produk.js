@@ -101,7 +101,12 @@ export default function addProduk({ data, data2, data3, data5 }) {
 											{props.errors.file_upload && props.touched.file_upload ?
 												<div class="text-red-500 text-sm"><ErrorOutlineIcon />{props.errors.file_upload}</div>
 												: null} */}
-                      <Form.File type='file' name='file_upload' accept='image/*' onChange={(e) => props.setFieldValue("file_upload", e.target.files)} />
+                      <Form.File
+                        type='file'
+                        name='file_upload'
+                        accept='image/*'
+                        onChange={(e) => props.setFieldValue("file_upload", e.target.files)}
+                      />
                       {props.errors.file_upload && props.touched.file_upload ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -189,19 +194,15 @@ export default function addProduk({ data, data2, data3, data5 }) {
                       ) : null}
                     </Col>
                   </Row>
-                  
+
                   {/* Quantity */}
                   <Row className='mb-3'>
-                      <Col sm="2">
-                        <Form.Label>Quantity</Form.Label>
-                      </Col>
-                      <Col sm="4">
-                      <Form.Control
-											type="number"
-                      name='quantity' 
-                      onChange={props.handleChange}
-                      />
-                      </Col>
+                    <Col sm='2'>
+                      <Form.Label>Quantity</Form.Label>
+                    </Col>
+                    <Col sm='4'>
+                      <Form.Control type='number' name='quantity' onChange={props.handleChange} />
+                    </Col>
                   </Row>
 
                   {/* Deskripsi */}
@@ -319,13 +320,17 @@ export async function getServerSideProps() {
   // Get kategori akun penjualan and pembelian from akun model
   const getAkunPembelian = await prisma.akun.findMany({
     where: {
-      kategoriId: 15,
+      kategoriId: {
+        in: [15, 5],
+      },
     },
   });
 
   const getAkunPenjualan = await prisma.akun.findMany({
     where: {
-      kategoriId: 13,
+      kategoriId: {
+        in: [13, 5],
+      },
     },
   });
 

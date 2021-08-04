@@ -112,6 +112,29 @@ upload file attachment
 - API Create Biaya = 100%
 - API Edit Biaya = 100%
 
+🗓️ Tanggal: 3 August 2021, Selasa
+== PAGE KAS DAN BANK ==
+- Meeting aplikasi akuntansi
+- Planning Struktur DB Kas dan bank = 100%
+- Buat DB Transfer Uang = 100%
+- Buat DB Header detail terima uang = 100%
+- Api Create transfer uang (Sisa testing) = 90%
+- Api Create terima uang (Sisa testing) = 90%
+
+🗓️ Tanggal: 4 August 2021, Rabu
+== PAGE KAS DAN BANK ==
+- Buat DB Edit Uang = 100%
+- Buat DB Header Detail Jurnal = 100%
+- Api Create transfer uang (Sisa testing) = 90%
+- Api Create & Edit terima uang (Sisa testing) = 90%
+- Api Create & Edit kirim uang (Sisa testing) = 90%
+- Api Create & Edit uang (Sisa testing) = 90%
+- Pebaikian Api Create Biaya (sisa testing) = 90%
+- Api Update biaya (sisa testing) = 90%
+- Api Create & Edit Jurnal (sisa testing) = 90%
+
+
+
 ----------------
 || ON PROCESS ||
 ----------------

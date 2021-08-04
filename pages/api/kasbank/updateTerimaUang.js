@@ -49,36 +49,14 @@ export default async (req, res) => {
       total: parseInt(req.body.total),
     };
 
-    const create_terima_uang = await prisma.headerTerimaUang.createMany({
+    const update_terima_uang = await prisma.headerTerimaUang.updateMany({
       data: [frontend_data],
       skipDuplicates: true,
     });
 
-    const find_header_terima_uang = await prisma.headerTerimaUang.findFirst({
-      orderBy: {
-        id: "desc",
-      },
+    const find_header_terima_uang = await prisma.headerTerimaUang.findUnique({
       where: {
-        id: frontend_data.id,
-      },
-    });
-
-    const find_no_transaksi = await prisma.headerTerimaUang.findFirst({
-      orderBy: {
-        id: "desc",
-      },
-      where: {
-        no_transaksi: frontend_data.id,
-      },
-    });
-
-    const update_no_transaksi = await prisma.headerTerimaUang.update({
-      where: {
-        id: frontend_data.id,
-        no_transaksi: parseInt(req.body.no_transaksi),
-      },
-      data: {
-        no_transaksi: find_no_transaksi.id,
+        id: parseInt(req.body.id),
       },
     });
 
@@ -98,14 +76,17 @@ export default async (req, res) => {
         });
       });
 
-    const create_detail_terima_uang = await prisma.detailTerimaUang.createMany({
+    const update_detail_terima_uang = await prisma.detailTerimaUang.update({
+      where: {
+        header_terima_uang_id: parseInt(req.body.id),
+      },
       data: detail,
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create terima uang sucess!", data: create_detail_terima_uang });
+    res.status(201).json({ message: "Update Terima Uang Success!", data: update_detail_terima_uang });
   } catch (error) {
-    res.status(400).json({ data: "Failed to create terima uang!", error });
+    res.status(400).json({ data: "Failed to update terima uang!", error });
     console.log(error);
   }
 };

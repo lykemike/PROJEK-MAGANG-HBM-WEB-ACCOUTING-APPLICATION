@@ -60,19 +60,16 @@ export default async (req, res) => {
 
     const update_kategori_produk = await prisma.kategoriProduk.update({
       where: {
-        id:  parseInt(req.body.kategori_produk),
+        id: parseInt(req.body.kategori_produk),
       },
       data: {
         jumlah: {
-          increment: 1
-        }
-      }
-    })
+          increment: 1,
+        },
+      },
+    });
 
-    res.status(201).json(
-      { message: "success!", data: createProduk },
-      { message: "success!", data: update_kategori_produk }
-      );
+    res.status(201).json({ message: "success!", data: createProduk }, { message: "success!", data: update_kategori_produk });
   } catch (error) {
     res.status(400).json({ data: "error", error });
     console.log(error);

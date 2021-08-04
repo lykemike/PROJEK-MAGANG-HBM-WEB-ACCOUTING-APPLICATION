@@ -1,6 +1,6 @@
-import { PrismaClient } from ".prisma/client";
 import multer from "multer";
 import { extname } from "path";
+import { PrismaClient } from ".prisma/client";
 const prisma = new PrismaClient();
 
 export const editFileName = (req, file, callback) => {
@@ -38,80 +38,63 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      akun_setor_id: parseInt(req.body.akun_setor),
-      akun_membayar_id: parseInt(req.body.akun_membayar),
+      akun_kas_bank: parseInt(req.body.akun_kas_bank),
+      nama_penerima: parseInt(req.body.nama_penerima),
+      tgl_transaksi: req.body.tgl_transaksi,
+      cara_pembayaran: req.body.cara_pembayaran,
       no_transaksi: parseInt(req.body.no_transaksi),
+
+      alamat_penagihan: req.body.alamat_penagihan,
       tag: req.body.tag,
+
       memo: req.body.memo,
-      file_attachment: req.body.filename,
+      lampiran: req.body.lampiran,
+
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.pajak),
       total: parseInt(req.body.total),
+      akun_pemotongan: parseInt(req.body.akun_pemotongan),
+      pemotongan: parseInt(req.body.pemotongan),
+      jumlah_pemotongan: parseInt(req.body.jumlah_pemotongan),
     };
 
-    const create_terima_uang = await prisma.headerTerimaUang.createMany({
+    const update_header_biaya = await prisma.headerBiaya.updateMany({
+      where: {
+        id: parseInt(req.body.id),
+      },
       data: [frontend_data],
       skipDuplicates: true,
     });
 
-    const find_header_terima_uang = await prisma.headerTerimaUang.findFirst({
-      orderBy: {
-        id: "desc",
-      },
+    const find_header_biaya = await prisma.headerBiaya.findFirst({
       where: {
-        id: frontend_data.id,
-      },
-    });
-
-    const find_no_transaksi = await prisma.headerTerimaUang.findFirst({
-      orderBy: {
-        id: "desc",
-      },
-      where: {
-        no_transaksi: frontend_data.id,
-      },
-    });
-
-    const update_no_transaksi = await prisma.headerTerimaUang.update({
-      where: {
-        id: frontend_data.id,
-        no_transaksi: parseInt(req.body.no_transaksi),
-      },
-      data: {
-        no_transaksi: find_no_transaksi.id,
+        id: parseInt(req.body.id),
       },
     });
 
     let detail = [];
-    req.body.akuns &&
-      JSON.parse(req.body.akuns).map((i) => {
+    req.body.detail_biaya &&
+      JSON.parse(req.body.detail_biaya).map((i) => {
         detail.push({
-          header_terima_uang_id: find_header_terima_uang.id,
-          akun_id: parseInt(i.akun_id),
-          nama_akun: i.nama_akun,
+          header_biaya_id: find_header_biaya.id,
+          akun_biaya_id: parseInt(i.akun_biaya_id),
           deskripsi: i.deskripsi,
           pajak_id: parseInt(i.pajak_id),
-          pajak_nama: i.pajak_nama,
-          pajak_persen: i.pajak_persen,
-          hasil_pajak: parseInt(i.hasil_pajak),
-          jumlah: parseInt(i.jumlah),
+          jumlah: Math.floor(i.jumlah),
         });
       });
 
-    const create_detail_terima_uang = await prisma.detailTerimaUang.createMany({
+    const update_detail_biaya = await prisma.detailBiaya.update({
+      where: {
+        header_biaya_id: parseInt(req.body.id),
+      },
       data: detail,
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create terima uang sucess!", data: create_detail_terima_uang });
+    res.status(201).json([{ message: "Update biaya success!", data: update_detail_biaya }]);
   } catch (error) {
-    res.status(400).json({ data: "Failed to create terima uang!", error });
+    res.status(400).json([{ data: "Failed to update biaya!", error }]);
     console.log(error);
   }
-};
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
 };

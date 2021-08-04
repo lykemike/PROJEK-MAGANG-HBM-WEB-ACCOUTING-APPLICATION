@@ -42,7 +42,7 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_header_penjualan = await prisma.headerPenjualan.findMany({
+    const find_header_penjualan = await prisma.headerPenjualan.findUnique({
       where: {
         id: parseInt(req.body.id),
       },
