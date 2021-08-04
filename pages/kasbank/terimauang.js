@@ -21,27 +21,37 @@ const prisma = new PrismaClient();
 //     penerima : Yup.string().required('Required')
 //   });
 
- export default function kirim_uang({data}) {
+ export default function kirim_uang({data,data2,data3}) {
 	const router = useRouter();
 
-	// const url = "http://localhost:3000/api/";
+	const url = "http://localhost:3000/api/createTerimaUang";
+
+    const id = data4 != undefined ? parseInt(data4.id) + 1 : 1;
+
+    const [idInvoice, setIdInvoice] = useState(id);
 
     return (
             <Layout>
                 <Formik
                     initialValues={{
-                        setor_ke : '',
-                        pembayar : "",
+                        akun_setor_id : '',
+                        akun_membayar_id : "",
                         tgl_transaksi: "",
-                        no_transaksi: "",
+                        no_transaksi: 0,
                         tag: "",
-                        pembayaran_akun: "",
-                        deskripsi: "",
-                        pajak: "",
-                        jumlah: 0,
                         memo: "",
                         subtotal: "",
-                        total: ""
+                        total: "",
+                        detail_terima_uang: [
+                            {
+                                nama_akun: "",
+                                deskripsi: "",
+                                pajak_id: "",
+                                pajak_nama: "",
+                                pajak_persen: "",
+                                hasil_pajak: ""
+                            }
+                        ]
                     }}
                     onSubmit={async (values) => {
                         // alert(JSON.stringify(values, null, 2));
@@ -71,7 +81,7 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Bayar dari
                                     </Form.Label>
-                                        <Form.Control as="select" name="setor_ke" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                        <Form.Control as="select" name="akun_setor_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                                         <option value='kosong'>Pilih</option>
                                         {data.map((akun) => (
                                             <option key={akun.id} value={akun.id}>
@@ -79,7 +89,7 @@ const prisma = new PrismaClient();
                                             </option>
                                         ))}
                                         </Form.Control>
-                                        {props.errors.setor_ke && props.touched.setor_ke ? <div>{props.errors.setor_ke}</div> : null}
+                                        {props.errors.akun_setor_id && props.touched.akun_setor_id ? <div>{props.errors.akun_setor_id}</div> : null}
                                 </Col>
                                 <Col></Col>
                                 <Col>
@@ -97,15 +107,15 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Yang Membayar
                                 </Form.Label>
-                                    <Form.Control as="select" name="pembayar" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                    <Form.Control as="select" name="akun_membayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                                     <option value='kosong'>Pilih</option>
-                                        {data.map((akun) => (
-                                            <option key={akun.id} value={akun.id}>
-                                                {akun.nama_akun}
-                                            </option>
-                                        ))}
+                                    {data2.map((nama_supplier) => (
+                                        <option key={nama_supplier.kontak.id} value={nama_supplier.kontak.id}>
+                                        {nama_supplier.kontak.nama_panggilan}
+                                        </option>
+                                    ))}
                                     </Form.Control>
-                                    {props.errors.pembayar && props.touched.pembayar ? <div>{props.errors.pembayar}</div> : null}
+                                    {props.errors.akun_membayar_id && props.touched.akun_membayar_id ? <div>{props.errors.akun_membayar_id}</div> : null}
                                 </Col>
                                 
                                 <Col>
@@ -296,6 +306,14 @@ export async function getServerSideProps() {
           kategoriId: 3,
         },
       });
+
+    
+    const namaAkun = await prisma.akun.findMany({
+        where: {
+            nama_akun: 'Piutang'
+        }
+
+    })
   
     const kontaks = await prisma.kontakDetail.findMany({
         where: {
@@ -305,11 +323,19 @@ export async function getServerSideProps() {
             kontak: true,
         },
     });
-  
+
+    const terimauangterakhir = await prisma.headerTerimaUang.findFirst({
+        orderBy: {
+          id: "desc",
+        },
+      });
+
     return {
       props: {
         data: akunKasBank,
-        data2: kontaks
+        data2: kontaks,
+        data3: namaAkun,
+        data4: terimauangterakhir
       },
     };
   }
