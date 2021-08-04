@@ -38,8 +38,8 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      akun_setor_id: parseInt(req.body.akun_setor),
-      akun_membayar_id: parseInt(req.body.akun_membayar),
+      akun_bayar_id: parseInt(req.body.akun_setor),
+      akun_penerima_id: parseInt(req.body.akun_membayar),
       no_transaksi: parseInt(req.body.no_transaksi),
       tag: req.body.tag,
       memo: req.body.memo,
@@ -49,12 +49,12 @@ export default async (req, res) => {
       total: parseInt(req.body.total),
     };
 
-    const create_terima_uang = await prisma.headerTerimaUang.createMany({
+    const create_kirim_uang = await prisma.headerKirimUang.createMany({
       data: [frontend_data],
       skipDuplicates: true,
     });
 
-    const find_header_terima_uang = await prisma.headerTerimaUang.findFirst({
+    const find_header_kirim_uang = await prisma.headerKirimUang.findFirst({
       orderBy: {
         id: "desc",
       },
@@ -63,7 +63,7 @@ export default async (req, res) => {
       },
     });
 
-    const find_no_transaksi = await prisma.headerTerimaUang.findFirst({
+    const find_no_transaksi = await prisma.headerKirimUang.findFirst({
       orderBy: {
         id: "desc",
       },
@@ -72,7 +72,7 @@ export default async (req, res) => {
       },
     });
 
-    const update_no_transaksi = await prisma.headerTerimaUang.update({
+    const update_no_transaksi = await prisma.headerKirimUang.update({
       where: {
         id: frontend_data.id,
         no_transaksi: parseInt(req.body.no_transaksi),
@@ -86,7 +86,7 @@ export default async (req, res) => {
     req.body.akuns &&
       JSON.parse(req.body.akuns).map((i) => {
         detail.push({
-          header_terima_uang_id: find_header_terima_uang.id,
+          header_kirim_uang_id: find_header_kirim_uang.id,
           akun_id: parseInt(i.akun_id),
           nama_akun: i.nama_akun,
           deskripsi: i.deskripsi,
@@ -98,14 +98,14 @@ export default async (req, res) => {
         });
       });
 
-    const create_detail_terima_uang = await prisma.detailTerimaUang.createMany({
+    const create_detail_kirim_uang = await prisma.detailKirimUang.createMany({
       data: detail,
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create terima uang sucess!", data: create_detail_terima_uang });
+    res.status(201).json({ message: "Create Kirim Uang Success!", data: create_detail_kirim_uang });
   } catch (error) {
-    res.status(400).json({ data: "Failed to create terima uang!", error });
+    res.status(400).json({ data: "Failed to create kirim uang!", error });
     console.log(error);
   }
 };

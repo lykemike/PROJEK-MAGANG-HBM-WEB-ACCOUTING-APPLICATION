@@ -48,14 +48,17 @@ export default async (req, res) => {
       tag: req.body.tag,
     };
 
-    const create_transfer_uang = await prisma.transferUang.createMany({
+    const update_transfer_uang = await prisma.transferUang.update({
+      where: {
+        id: parseInt(req.body.id),
+      },
       data: [frontend_data],
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create Transfer Uang Success!", data: create_transfer_uang });
+    res.status(201).json({ message: "Update Transfer Uang Success!", data: update_transfer_uang });
   } catch (error) {
-    res.status(400).json({ data: "Failed to create transfer uang!", error });
+    res.status(400).json({ data: "Failed!", error });
     console.log(error);
   }
 };
