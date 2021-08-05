@@ -35,15 +35,15 @@ const prisma = new PrismaClient();
             <Layout>
                 <Formik
                     initialValues={{
-                        akun_setor_id : '',
-                        akun_membayar_id : "",
+                        akun_bayar_id : '',
+                        akun_penerima_id : "",
                         tgl_transaksi: "",
                         no_transaksi: 0,
                         tag: "",
                         memo: "",
                         subtotal: 0,
                         total: "",
-                        detail_terima_uang: [
+                        detail_kirim_uang: [
                             {
                                 akun_id:"",
                                 nama_akun: "",
@@ -84,7 +84,7 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Setor dari
                                     </Form.Label>
-                                        <Form.Control as="select" name="akun_setor_id" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                        <Form.Control as="select" name="akun_bayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                                         <option value='kosong'>Pilih</option>
                                         {data.map((akun) => (
                                             <option key={akun.id} value={akun.id}>
@@ -92,7 +92,7 @@ const prisma = new PrismaClient();
                                             </option>
                                         ))}
                                         </Form.Control>
-                                        {props.errors.akun_setor_id && props.touched.akun_setor_id ? <div>{props.errors.akun_setor_id}</div> : null}
+                                        {props.errors.akun_bayar_id && props.touched.akun_bayar_id ? <div>{props.errors.akun_bayar_id}</div> : null}
                                 </Col>
                                 <Col></Col>
                                 <Col>
@@ -110,7 +110,7 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Penerima
                                 </Form.Label>
-                                    <Form.Control as="select" name="akun_membayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                    <Form.Control as="select" name="akun_penerima_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                                     <option value='kosong'>Pilih</option>
                                     {data2.map((kontaks) => (
                                         <option key={kontaks.kontak.id} value={kontaks.kontak.id}>
@@ -118,7 +118,7 @@ const prisma = new PrismaClient();
                                         </option>
                                     ))}
                                     </Form.Control>
-                                    {props.errors.akun_membayar_id && props.touched.akun_membayar_id ? <div>{props.errors.akun_membayar_id}</div> : null}
+                                    {props.errors.akun_penerima_id && props.touched.akun_penerima_id ? <div>{props.errors.akun_penerima_id}</div> : null}
                                 </Col>
                                 
                                 <Col>
@@ -180,25 +180,25 @@ const prisma = new PrismaClient();
                                 <th  >Jumlah</th>
                             </tr>
                         </thead>
-                    <FieldArray name='detail_terima_uang'>
+                    <FieldArray name='detail_kirim_uang'>
                     {({ insert, remove, push }) => (
                       <div>
-                        {props.values.detail_terima_uang.length > 0 &&
-                          props.values.detail_terima_uang.map((i, index) => (
-                                    <tbody key={index} name='detail_terima_uang'>
+                        {props.values.detail_kirim_uang.length > 0 &&
+                          props.values.detail_kirim_uang.map((i, index) => (
+                                    <tbody key={index} name='detail_kirim_uang'>
                                         <tr>
                                             <td > 
                                                 <Form.Control 
                                                 as="select" 
-                                                name={`detail_terima_uang.${index}.akun_id`}
+                                                name={`detail_kirim_uang.${index}.akun_id`}
                                                 onChange={(e) => {
-                                                    props.setFieldValue(`detail_terima_uang.${index}.akun_id`, e.target.value);  
+                                                    props.setFieldValue(`detail_kirim_uang.${index}.akun_id`, e.target.value);  
                                                     let hasil2 = data3.filter((i) => {
                                                     return i.id === parseInt(e.target.value);
                                                     });
-                                                    props.setFieldValue(`detail_terima_uang.${index}.akun_id`, hasil2[0].id);
+                                                    props.setFieldValue(`detail_kirim_uang.${index}.akun_id`, hasil2[0].id);
                                                     props.setFieldValue(
-                                                    `detail_terima_uang.${index}.nama_akun`,
+                                                    `detail_kirim_uang.${index}.nama_akun`,
                                                     data3.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun
                                                     );
                                                   }}>
@@ -214,9 +214,9 @@ const prisma = new PrismaClient();
                                             <td >
                                                 <Form.Control 
                                                 placeholder="Isi Deskripsi" 
-                                                name={`detail_terima_uang.${index}.deskripsi`}
+                                                name={`detail_kirim_uang.${index}.deskripsi`}
                                                 onChange={(e) => {
-                                                    props.setFieldValue(`detail_terima_uang.${index}.deskripsi`, e.target.value);  
+                                                    props.setFieldValue(`detail_kirim_uang.${index}.deskripsi`, e.target.value);  
                                                 }}
                                                     />    
                                             </td>    
@@ -224,26 +224,26 @@ const prisma = new PrismaClient();
                                             <td >
                                                 <Form.Control 
                                                 as="select" 
-                                                name={`detail_terima_uang.${index}.pajak_id`}
+                                                name={`detail_kirim_uang.${index}.pajak_id`}
                                                 onChange={(e) => {
-                                                    props.setFieldValue(`detail_terima_uang.${index}.pajak_id`, e.target.value);  
+                                                    props.setFieldValue(`detail_kirim_uang.${index}.pajak_id`, e.target.value);  
                                                     let hasil2 = data4.filter((i) => {
                                                     return i.id === parseInt(e.target.value);
                                                     });
-                                                    props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                                    props.setFieldValue(`detail_kirim_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
                                                     props.setFieldValue(
-                                                    `detail_terima_uang.${index}.pajak_nama`,
+                                                    `detail_kirim_uang.${index}.pajak_nama`,
                                                     hasil2[0].nama
                                                     );
-                                                    let jumlah = props.values.detail_terima_uang[index].jumlah
-                                                    props.setFieldValue(props.values.detail_terima_uang[index].jumlah = jumlah)
-                                                    const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0)
+                                                    let jumlah = props.values.detail_kirim_uang[index].jumlah
+                                                    props.setFieldValue(props.values.detail_kirim_uang[index].jumlah = jumlah)
+                                                    const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0)
                                                     props.setFieldValue((props.values.subtotal = jumlah_total))
                                                     props.setFieldValue("subtotal", jumlah_total);
 
-                                                    let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
-                                                    props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
-                                                    const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                    let pajak = props.values.detail_kirim_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                                    props.setFieldValue((props.values.detail_kirim_uang[index].hasil_pajak = pajak));
+                                                    const pajak_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
                                                     props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                                     props.setFieldValue("hasil_pajak", pajak_total);
 
@@ -265,18 +265,18 @@ const prisma = new PrismaClient();
                                             <td > 
                                             <Form.Control 
                                                 placeholder="Jumlah Uang" 
-                                                name={`detail_terima_uang.${index}.jumlah`} 
+                                                name={`detail_kirim_uang.${index}.jumlah`} 
                                                 onChange={(e) => {
-                                                    props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value))
+                                                    props.setFieldValue(`detail_kirim_uang.${index}.jumlah`, parseInt(e.target.value))
                                                     let jumlah = parseInt(e.target.value)
-                                                    props.setFieldValue(props.values.detail_terima_uang[index].jumlah = jumlah)
-                                                    const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0)
+                                                    props.setFieldValue(props.values.detail_kirim_uang[index].jumlah = jumlah)
+                                                    const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0)
                                                     props.setFieldValue((props.values.subtotal = jumlah_total))
                                                     props.setFieldValue("subtotal", jumlah_total);
 
-                                                    let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
-                                                    props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
-                                                    const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                    let pajak = parseInt(e.target.value) * (props.values.detail_kirim_uang[index].pajak_persen / 100);
+                                                    props.setFieldValue((props.values.detail_kirim_uang[index].hasil_pajak = pajak));
+                                                    const pajak_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
                                                     props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                                     props.setFieldValue("hasil_pajak", pajak_total);
 
