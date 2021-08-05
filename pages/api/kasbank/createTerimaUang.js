@@ -63,25 +63,6 @@ export default async (req, res) => {
       },
     });
 
-    const find_no_transaksi = await prisma.headerTerimaUang.findFirst({
-      orderBy: {
-        id: "desc",
-      },
-      where: {
-        no_transaksi: frontend_data.id,
-      },
-    });
-
-    const update_no_transaksi = await prisma.headerTerimaUang.update({
-      where: {
-        id: frontend_data.id,
-        no_transaksi: parseInt(req.body.no_transaksi),
-      },
-      data: {
-        no_transaksi: find_no_transaksi.id,
-      },
-    });
-
     let detail = [];
     req.body.akuns &&
       JSON.parse(req.body.akuns).map((i) => {
