@@ -9,7 +9,10 @@ import EventNoteIcon from '@material-ui/icons/EventNote';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import PrintIcon from '@material-ui/icons/Print';
 
-const banktransfer = () => {
+export default function bank_transfer({ data }) {
+    const router = useRouter();
+    const { id } = router.query;
+
     return (
         <Layout>
         <div variant="container">
@@ -19,7 +22,7 @@ const banktransfer = () => {
                 <Row>
                     <Col>
                         <h4 class="mt-2 mb-5">
-                            Bank Transfer #XXX
+                            Bank Transfer #{id}
                             </h4>
                     </Col>
                     <Col>
@@ -31,31 +34,37 @@ const banktransfer = () => {
                     </Col>
                 </Row>
             </div>        
-        
-                <div class="mb-10">
+
+                <div class="mb-10">            
+                {data.map((i) => (
                     <Row>
                         <Col >
                             <Form.Label>
-                                Transfer Dari
+                                Transfer Dari : {i.nama_akun}
                             </Form.Label>
-                            <Form.Control placeholder="" />
                         </Col>
 
                         <Col>
                             <Form.Label>
-                                Tanggal Transaksi
+                                Tanggal Transaksi: {i.tgl_transaksi}
                             </Form.Label>
-                                <InputGroup className="mb-3">
-                                <InputGroup.Prepend>
-                                <InputGroup.Text >
-                                <EventNoteIcon/>
-                                </InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <FormControl
-                                    placeholder="Pick date"
-                                    aria-label="date"
-                                    />
-                                </InputGroup>
+                        </Col>
+                    </Row> 
+                    ))}
+                </div>
+               
+                <div class="mb-10">
+                    <Row>
+                        <Col >
+                            <Form.Label>
+                                Setor ke: {i.nama_akun}
+                            </Form.Label>
+                        </Col>
+
+                        <Col>
+                            <Form.Label>
+                                Nomor Transaksi: {i.no_transaksi}
+                            </Form.Label>
                         </Col>
                     </Row>
                 </div>
@@ -64,27 +73,8 @@ const banktransfer = () => {
                     <Row>
                         <Col >
                             <Form.Label>
-                                Setor ke
+                                Jumlah: {i.jumlah}
                             </Form.Label>
-                            <Form.Control placeholder="" />
-                        </Col>
-
-                        <Col>
-                            <Form.Label>
-                                Nomor Transaksi
-                            </Form.Label>
-                            <Form.Control placeholder="Auto" />
-                        </Col>
-                    </Row>
-                </div>
-
-                <div class="mb-10">
-                    <Row>
-                        <Col >
-                            <Form.Label>
-                                Jumlah
-                            </Form.Label>
-                            <Form.Control placeholder="" />
                         </Col>
 
                         <Col></Col>
@@ -99,10 +89,30 @@ const banktransfer = () => {
                     <Button variant="danger mr-2"><HighlightOffIcon fontSize="medium"/> Hapus</Button>
                     <Button variant="success"><CheckCircleIcon fontSize="medium"/>Ubah</Button>
                 </div>
-             </div>
-        </div>
+          
+             </div> 
+    
+        </div> 
+       
     </Layout>
     )
 }
 
-export default banktransfer
+export async function getServerSideProps(context) {
+    const { id } = context.query;
+
+	const akunKasBank = await prisma.akun.findMany({
+        where: {
+          kategoriId: 3,
+        },
+      });
+  
+    
+    return {
+      props: {
+        data: akunKasBank,
+      },
+    };
+  }
+  
+

@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../../components/layout'
+import Layout from '../../../components/layout'
 import Link from 'next/link';
 import { Button, Table, DropdownButton , Dropdown , Row , Col, Form, Card, InputGroup,FormControl} from 'react-bootstrap';
 import AttachmentIcon from '@material-ui/icons/Attachment';
@@ -9,10 +9,12 @@ import EventNoteIcon from '@material-ui/icons/EventNote';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import PrintIcon from '@material-ui/icons/Print';
 
-const bankwithdraw = () => {
+export default function bank_deposit({ data }) {
+    const router = useRouter();
+    const { id } = router.query;
+
     return (
-        <div>
-             <Layout>
+        <Layout>
         <div variant="container">
         <div class="text-md font-medium text-gray-900 mb-2">
            
@@ -20,7 +22,7 @@ const bankwithdraw = () => {
             <Row>
                 <Col>
                     <h4 class="mt-2 mb-5">
-                        Bank Withdrawal #XXX
+                        Bank Deposit #{id}
                         </h4>
                  </Col>
             
@@ -38,7 +40,7 @@ const bankwithdraw = () => {
             <Row>
                 <Col >
                 <Form.Label>
-                    Bayar Dari
+                    Setor ke
                     </Form.Label>
                         <Form.Control>
                          
@@ -58,7 +60,7 @@ const bankwithdraw = () => {
             <Row>
                 <Col >
                     <Form.Label>
-                        Penerima
+                        Pembayar
                     </Form.Label>
                     <Form.Control placeholder="" />
                 </Col>
@@ -116,16 +118,16 @@ const bankwithdraw = () => {
                 <Col></Col>
                 <Col></Col> 
                 <Col>
-                <Form.Group as={Row} controlId="\">
+                <Form.Group as={Row} controlId="">
                         <Form.Label column sm="4">
                         Subtotal
                         </Form.Label>
                         <Col sm="6">
-                        <Form.Control type="sub" placeholder="0,00" />
+                        <Form.Control type="subtotal" placeholder="0,00" />
                         </Col>
                     </Form.Group>
 
-                <Form.Group as={Row} controlId="\\">
+                <Form.Group as={Row} controlId="">
                         <Form.Label column sm="4">
                         Nama Pajak
                         </Form.Label>
@@ -134,15 +136,14 @@ const bankwithdraw = () => {
                         </Col>
                 </Form.Group>
 
-                <Form.Group as={Row} controlId="[]">
+                <Form.Group as={Row} controlId="">
                         <Form.Label column sm="4">
                         Total
                         </Form.Label>
                         <Col sm="6">
-                        <Form.Control type="total" placeholder="0,00" />
+                        <Form.Control type="total" placeholder="Rp, 0.00" />
                         </Col>
-                    </Form.Group>
-
+                </Form.Group>
                 </Col>
             </Row>
         </div>
@@ -159,8 +160,6 @@ const bankwithdraw = () => {
         </div>
        
         </Layout>
-        </div>
     )
 }
 
-export default bankwithdraw

@@ -26,19 +26,25 @@ const prisma = new PrismaClient();
 //   });
 
   
- export default function tranfer_uang({data}) {
+ export default function tranfer_uang({data,data2}) {
 	const router = useRouter();
+	const url = "http://localhost:3000/api/kasbank/createTransferUang";
 
-	// const url = "http://localhost:3000/api/";
+    const id = data2 != undefined ? parseInt(data2.id) + 1 : 1;
+
+    const [idInvoice, setIdInvoice] = useState(id);
+
+
     return (
         <Layout>
              <Formik
                 initialValues={{
-                    bankPengirim: '',
-                    bankPenerima: "",
-                    jumlah: 0,
+                    akun_transfer: '',
+                    akun_setor: "",
+                    jumlah: "",
                     memo: "",
-                    no_transaksi: "",
+                    no_transaksi: 0,
+                    tgl_transaksi:"",
                     tag: ""
                 }}
                 onSubmit={async (values) => {
@@ -47,7 +53,7 @@ const prisma = new PrismaClient();
                     Axios.post(url, values)
                         .then(function (response) {
                         console.log(response);
-                        router.push("");
+                        router.push(`view/${idInvoice}`);
                         })
                         .catch(function (error) {
                         console.log(error);
@@ -69,7 +75,7 @@ const prisma = new PrismaClient();
                 <Form.Label>
                     Transfer dari
                 </Form.Label>
-                        <Form.Control as="select"  name="bankPengirim" onChange={props.handleChange} onBlur={props.handleBlur}>
+                        <Form.Control as="select"  name="akun_transfer" onChange={props.handleChange} onBlur={props.handleBlur}>
                             <option value='kosong'>Pilih</option>
                                 {data.map((akun) => (
                                     <option key={akun.id} value={akun.id}>
@@ -77,14 +83,14 @@ const prisma = new PrismaClient();
                                     </option>
                                 ))}
                         </Form.Control>
-                        {props.errors.bankPengirim && props.touched.bankPengirim ? <div>{props.errors.bankPengirim}</div> : null}
+                        {props.errors.akun_transfer && props.touched.akun_transfer ? <div>{props.errors.akun_transfer}</div> : null}
                 </Col>
 
                 <Col>
                     <Form.Label>
                     Setor ke
                     </Form.Label>
-                        <Form.Control as="select" name="bankPenerima" onChange={props.handleChange} onBlur={props.handleBlur}>
+                        <Form.Control as="select" name="akun_setor" onChange={props.handleChange} onBlur={props.handleBlur}>
                               <option value='kosong'>Pilih</option>
                                 {data.map((akun) => (
                                     <option key={akun.id} value={akun.id}>
@@ -92,7 +98,7 @@ const prisma = new PrismaClient();
                                     </option>
                                 ))}
                           </Form.Control>
-                          {props.errors.bankPenerima && props.touched.bankPenerima ? <div>{props.errors.bankPenerima}</div> : null}
+                          {props.errors.akun_setor && props.touched.akun_setor ? <div>{props.errors.akun_setor}</div> : null}
                  </Col>
 
                 <Col>
@@ -213,9 +219,16 @@ export async function getServerSideProps() {
         },
       });
   
+    const transferUang = await prisma.transferUang.findFirst({
+        orderBy: {
+            id: 'desc'
+        }
+    })
+    
     return {
       props: {
         data: akunKasBank,
+        data2: transferUang
       },
     };
   }

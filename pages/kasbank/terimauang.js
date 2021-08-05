@@ -21,12 +21,13 @@ const prisma = new PrismaClient();
 //     penerima : Yup.string().required('Required')
 //   });
 
- export default function kirim_uang({data,data2,data3}) {
+ export default function terima_uang({data,data2,data3,data4,data5}) {
 	const router = useRouter();
 
-	const url = "http://localhost:3000/api/createTerimaUang";
+	const url = "http://localhost:3000/api/kasbank/createTerimaUang";
 
-    const id = data4 != undefined ? parseInt(data4.id) + 1 : 1;
+    const id = data5 != undefined ? parseInt(data5.id) + 1 : 1;
+    // const id = 1;
 
     const [idInvoice, setIdInvoice] = useState(id);
 
@@ -40,30 +41,32 @@ const prisma = new PrismaClient();
                         no_transaksi: 0,
                         tag: "",
                         memo: "",
-                        subtotal: "",
+                        subtotal: 0,
                         total: "",
                         detail_terima_uang: [
                             {
+                                akun_id:"",
                                 nama_akun: "",
                                 deskripsi: "",
                                 pajak_id: "",
                                 pajak_nama: "",
                                 pajak_persen: "",
-                                hasil_pajak: ""
+                                hasil_pajak: 0,
+                                jumlah: ""
                             }
                         ]
                     }}
                     onSubmit={async (values) => {
                         // alert(JSON.stringify(values, null, 2));
-                        // console.log(values)
-                        Axios.post(url, values)
-                          .then(function (response) {
-                            console.log(response);
-                            router.push("");
-                          })
-                          .catch(function (error) {
-                            console.log(error);
-                          });
+                        console.log(values)
+                        // Axios.post(url, values)
+                        //   .then(function (response) {
+                        //     console.log(response);
+                        //     router.push(`view-terima/${idInvoice}`);
+                        //   })
+                        //   .catch(function (error) {
+                        //     console.log(error);
+                        //   });
                       }}>
 
                     {(props) => (
@@ -96,7 +99,7 @@ const prisma = new PrismaClient();
                                 <h3>
                                     Total Amount 
                                 </h3>
-                                <h2 class="text-purple-700 text-opacity-100 ">Rp, 0.00</h2>
+                                <h2 class="text-purple-700 text-opacity-100 "> Rp.{props.values.total}</h2>
                                 </Col>
                             </Row>
                         </div>
@@ -109,9 +112,9 @@ const prisma = new PrismaClient();
                                 </Form.Label>
                                     <Form.Control as="select" name="akun_membayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                                     <option value='kosong'>Pilih</option>
-                                    {data2.map((nama_supplier) => (
-                                        <option key={nama_supplier.kontak.id} value={nama_supplier.kontak.id}>
-                                        {nama_supplier.kontak.nama_panggilan}
+                                    {data2.map((kontaks) => (
+                                        <option key={kontaks.kontak.id} value={kontaks.kontak.id}>
+                                        {kontaks.kontak.nama}
                                         </option>
                                     ))}
                                     </Form.Control>
@@ -128,6 +131,7 @@ const prisma = new PrismaClient();
                                         type='date'
                                         aria-label="date"
                                         name="tgl_transaksi"
+                                        onChange={props.handleChange}
                                         />
                                         {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                                     </InputGroup>
@@ -152,6 +156,7 @@ const prisma = new PrismaClient();
                                     <Form.Control 
                                         placeholder="Tag" 
                                         name="tag"
+                                        onChange={props.handleChange}
                                     />
                                 </Col>
                 
@@ -164,47 +169,163 @@ const prisma = new PrismaClient();
                                 </div> */}
                             </Row>
                         </div>
-                
-                        <div class="mb-12">
-                        <Table class="table mt-4">
-                                    <thead class="thead-light">
+        
+                <div class="mb-12">
+                    <Table class="table mt-4">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Pembayaran Untuk Akun</th>
+                                <th  >Deskripsi</th>
+                                <th  >Pajak</th>
+                                <th  >Jumlah</th>
+                            </tr>
+                        </thead>
+                    <FieldArray name='detail_terima_uang'>
+                    {({ insert, remove, push }) => (
+                      <div>
+                        {props.values.detail_terima_uang.length > 0 &&
+                          props.values.detail_terima_uang.map((i, index) => (
+                                    <tbody key={index} name='detail_terima_uang'>
                                         <tr>
-                                            <th class="text-center" scope="col">Pembayaran Untuk Akun</th>
-                                            <th class="text-center" scope="col">Deskripsi</th>
-                                            <th class="text-center" scope="col">Pajak</th>
-                                            <th class="text-center" scope="col">Jumlah</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td> 
-                                                <Form.Control as="select" name="pembayaran_akun">
-                                                    <option>Pilih 1</option>
+                                            <td > 
+                                                <Form.Control 
+                                                as="select" 
+                                                name={`detail_terima_uang.${index}.akun_id`}
+                                                onChange={(e) => {
+                                                    props.setFieldValue(`detail_terima_uang.${index}.akun_id`, e.target.value);  
+                                                    let hasil2 = data3.filter((i) => {
+                                                    return i.id === parseInt(e.target.value);
+                                                    });
+                                                    props.setFieldValue(`detail_terima_uang.${index}.akun_id`, hasil2[0].id);
+                                                    props.setFieldValue(
+                                                    `detail_terima_uang.${index}.nama_akun`,
+                                                    data3.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun
+                                                    );
+                                                  }}>
+                                                <option value="0">Pilih</option>
+                                                {data3.map((namaAkun) => (
+                                                    <option key={namaAkun.id} value={namaAkun.id}>
+                                                        {namaAkun.nama_akun}
+                                                    </option>
+                                                ))}
                                                 </Form.Control>
                                             </td>
-                                            <td>
-                                                <Form.Control placeholder="Isi Deskripsi" name="deskripsi"/>    
-                                            </td>   
-                                            <td>
-                                                <Form.Control as="select" name="pajak">
-                                                    <option>Pilih 1</option>
+
+                                            <td >
+                                                <Form.Control 
+                                                placeholder="Isi Deskripsi" 
+                                                name={`detail_terima_uang.${index}.deskripsi`}
+                                                onChange={(e) => {
+                                                    props.setFieldValue(`detail_terima_uang.${index}.deskripsi`, e.target.value);  
+                                                }}
+                                                    />    
+                                            </td>    
+
+                                            <td >
+                                                <Form.Control 
+                                                as="select" 
+                                                name={`detail_terima_uang.${index}.pajak_id`}
+                                                onChange={(e) => {
+                                                    props.setFieldValue(`detail_terima_uang.${index}.pajak_id`, e.target.value);  
+                                                    let hasil2 = data4.filter((i) => {
+                                                    return i.id === parseInt(e.target.value);
+                                                    });
+                                                    props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                                    props.setFieldValue(
+                                                    `detail_terima_uang.${index}.pajak_nama`,
+                                                    hasil2[0].nama
+                                                    );
+                                                    let jumlah = props.values.detail_terima_uang[index].jumlah
+                                                    props.setFieldValue(props.values.detail_terima_uang[index].jumlah = jumlah)
+                                                    const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0)
+                                                    props.setFieldValue((props.values.subtotal = jumlah_total))
+                                                    props.setFieldValue("subtotal", jumlah_total);
+
+                                                    let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                                    props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                                    const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                    props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                                    props.setFieldValue("hasil_pajak", pajak_total);
+
+                                                    let total = jumlah_total + pajak_total
+                                                    props.setFieldValue((props.values.total = total))
+                                                    props.setFieldValue("total", total)
+                                                
+                                                  }}>
+                                                
+                                                <option value="0">Pilih</option>
+                                                {data4.map((pajaks) => (
+                                                    <option key={pajaks.id} value={pajaks.id}>
+                                                        {pajaks.nama}
+                                                    </option>
+                                                ))}
                                                 </Form.Control>
                                             </td>
-                                            <td> 
+
+                                            <td > 
                                             <Form.Control 
                                                 placeholder="Jumlah Uang" 
-                                                name="jumlah" 
+                                                name={`detail_terima_uang.${index}.jumlah`} 
                                                 onChange={(e) => {
-                                                    props.setFieldValue('jumlah', e.target.value)
+                                                    props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value))
+                                                    let jumlah = parseInt(e.target.value)
+                                                    props.setFieldValue(props.values.detail_terima_uang[index].jumlah = jumlah)
+                                                    const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0)
+                                                    props.setFieldValue((props.values.subtotal = jumlah_total))
+                                                    props.setFieldValue("subtotal", jumlah_total);
+
+                                                    let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
+                                                    props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                                    const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                    props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                                    props.setFieldValue("hasil_pajak", pajak_total);
+
+                                                    let total = jumlah_total + pajak_total
+                                                    props.setFieldValue((props.values.total = total))
+                                                    props.setFieldValue("total", total)
+                                                    
+                                                  
                                                 }}
-                                                />
+                                                >   
+
+                                                </Form.Control>
                                             </td>
+
+                                            <td>
+                                                <Button 
+                                                variant="primary"
+                                                onClick={() => remove(index)}
+                                                >
+                                                 Remove
+                                                </Button>
+                                            </td>
+
                                         </tr>
                                     
+                                            
                                     </tbody>
-                                </Table>
-                                <Button variant="primary ml-2"><PlaylistAddIcon fontSize="medium"/> Tambah Data</Button>
+                                     ))}
+             
+                            <Button 
+                            variant="primary ml-2"
+                            onClick={() =>
+                                push({
+                                   nama_akun: "",
+                                   deskripsi: "",
+                                   pajak_id: "",
+                                   pajak_nama: "",
+                                   pajak_persen: "",
+                                   hasil_pajak: "",
+                                   jumlah: ""
+                                })
+                              }>
+                            <PlaylistAddIcon fontSize="medium"/> Tambah Data</Button>
                             </div>
+                            )}
+                        </FieldArray>
+                        </Table>
+                    </div>
+
                 
                         <div class="mb-6">
                             <Row>
@@ -232,16 +353,20 @@ const prisma = new PrismaClient();
                                         Subtotal
                                         </Form.Label>
                                         <Col sm="6">
-                                        <Form.Control type="subtotal" name="subtotal" placeholder="0,00" />
+                                        <Form.Label column sm='2' name='subtotal'>
+                                            Rp.{props.values.subtotal.toLocaleString({ minimumFractionDigits: 0 })}
+                                         </Form.Label>
                                         </Col>
                                     </Form.Group>
                 
                                 <Form.Group as={Row}>
                                         <Form.Label column sm="3">
-                                        Total
+                                        Pajak
                                         </Form.Label>
                                         <Col sm="6">
-                                        <Form.Control type="total" name="total" placeholder="Rp, 0.00" />
+                                        <Form.Label column sm='2' name='hasil_pajak'>
+                                            Rp.{props.values.hasil_pajak}
+                                        </Form.Label>
                                         </Col>
                                 </Form.Group>
                                 
@@ -278,7 +403,9 @@ const prisma = new PrismaClient();
                                         Total Fixed
                                         </Form.Label>
                                         <Col sm="8">
-                                        <Form.Control type="total" placeholder="Rp, 0.00" />
+                                        <Form.Label column sm='2' name='total'>
+                                            Rp.{props.values.total}
+                                        </Form.Label>
                                         </Col>
                                         </Form.Group>
                                 </Col>
@@ -307,22 +434,32 @@ export async function getServerSideProps() {
         },
       });
 
-    
-    const namaAkun = await prisma.akun.findMany({
-        where: {
-            nama_akun: 'Piutang'
-        }
-
-    })
   
     const kontaks = await prisma.kontakDetail.findMany({
-        where: {
-            kontak_type_id: 2,
+        orderBy: {
+            id: 'asc'
         },
         include: {
             kontak: true,
         },
     });
+
+    const namaAkun = await prisma.akun.findMany({
+        where: {
+            nama_akun: {
+                contains: 'piutang',
+            } 
+        }
+    })
+
+    const pajaks = await prisma.pajak.findMany({
+        orderBy: [
+          {
+            id: "asc",
+          },
+        ],
+      });
+    
 
     const terimauangterakhir = await prisma.headerTerimaUang.findFirst({
         orderBy: {
@@ -335,7 +472,8 @@ export async function getServerSideProps() {
         data: akunKasBank,
         data2: kontaks,
         data3: namaAkun,
-        data4: terimauangterakhir
+        data4: pajaks,
+        data5: terimauangterakhir
       },
     };
   }

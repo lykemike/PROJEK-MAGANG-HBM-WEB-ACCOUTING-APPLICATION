@@ -506,7 +506,6 @@ model TransferUang {
   akun_setor_id       Int
   jumlah              Int
   memo                String
-  file_attachment     String
   no_transaksi        Int
   tgl_transaksi       String
   tag                 String
