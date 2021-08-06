@@ -520,6 +520,7 @@ model HeaderTerimaUang {
   akun_membayar_id    Int
   
   no_transaksi        Int
+  tgl_transaksi       String
   tag                 String
   memo                String
   file_attachment     String
@@ -558,6 +559,7 @@ model HeaderKirimUang {
   akun_penerima_id    Int
   
   no_transaksi        Int
+  tgl_transaksi       String
   tag                 String
   memo                String
   file_attachment     String

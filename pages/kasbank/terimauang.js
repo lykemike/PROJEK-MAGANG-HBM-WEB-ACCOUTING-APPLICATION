@@ -35,14 +35,16 @@ const prisma = new PrismaClient();
             <Layout>
                 <Formik
                     initialValues={{
-                        akun_setor_id : '',
-                        akun_membayar_id : "",
+                        akun_setor_id: '',
+                        akun_membayar_id: "",
                         tgl_transaksi: "",
-                        no_transaksi: 0,
+                        no_transaksi: id,
                         tag: "",
                         memo: "",
                         subtotal: 0,
                         total: "",
+                        fileattachment: [],
+                        hasil_pajak: "",
                         detail_terima_uang: [
                             {
                                 akun_id:"",
@@ -57,16 +59,28 @@ const prisma = new PrismaClient();
                         ]
                     }}
                     onSubmit={async (values) => {
-                        // alert(JSON.stringify(values, null, 2));
-                        console.log(values)
-                        // Axios.post(url, values)
-                        //   .then(function (response) {
-                        //     console.log(response);
-                        //     router.push(`view-terima/${idInvoice}`);
-                        //   })
-                        //   .catch(function (error) {
-                        //     console.log(error);
-                        //   });
+                        let formData = new FormData();
+                        for (var key in values) {
+                          if (key == "detail_terima_uang") {
+                            formData.append(`${key}`, JSON.stringify(values[key]));
+                          } else {
+                            formData.append(`${key}`, `${values[key]}`);
+                          }
+                        }
+                        Array.from(values.fileattachment).map((i) => formData.append("file", i));
+                        console.log(values);
+                        Axios.post(url, formData, {
+                          headers: {
+                            "Content-Type": "multipart/form-data",
+                          },
+                        })
+                          .then(function (response) {
+                            console.log(response);
+                            router.push(`view-terima/${idInvoice}`);
+                          })
+                          .catch(function (error) {
+                            console.log(error);
+                          });
                       }}>
 
                     {(props) => (
@@ -143,7 +157,7 @@ const prisma = new PrismaClient();
                                     Nomor Transaksi
                                 </Form.Label>
                                     <Form.Control 
-                                        placeholder="Auto"
+                                         placeholder={"Auto " + "(" + id + ")"}
                                         name="no_transaksi"
                                         disabled
                                     />
@@ -284,7 +298,7 @@ const prisma = new PrismaClient();
                                                     props.setFieldValue((props.values.total = total))
                                                     props.setFieldValue("total", total)
                                                     
-                                                  
+                            
                                                 }}
                                                 >   
 
@@ -384,13 +398,8 @@ const prisma = new PrismaClient();
                                 </Form.Label>  
                                 
                                 <Card border="secondary" style={{ width: '15rem' }}>
-                                        <p>
-                                            Tarik file ke sini, atau   
-                                        <Card.Link href="#"> pilih file</Card.Link>
-                                        </p>
-                                        <p>
-                                            Ukuran Max 10MB
-                                        </p>
+                                File Attachment <br />
+                                <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                                     </Card>
                                 </div>
                                 </Col>

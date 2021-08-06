@@ -38,14 +38,15 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      akun_bayar_id: parseInt(req.body.akun_setor),
-      akun_penerima_id: parseInt(req.body.akun_membayar),
+      akun_bayar_id: parseInt(req.body.akun_bayar_id),
+      akun_penerima_id: parseInt(req.body.akun_penerima_id),
       no_transaksi: parseInt(req.body.no_transaksi),
+      tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
       memo: req.body.memo,
-      file_attachment: req.body.filename,
+      file_attachment: req.file.filename,
       subtotal: parseInt(req.body.subtotal),
-      pajak: parseInt(req.body.pajak),
+      pajak: parseInt(req.body.hasil_pajak),
       total: parseInt(req.body.total),
     };
 
@@ -64,8 +65,8 @@ export default async (req, res) => {
     });
     
     let detail = [];
-    req.body.akuns &&
-      JSON.parse(req.body.akuns).map((i) => {
+    req.body.detail_kirim_uang &&
+      JSON.parse(req.body.detail_kirim_uang).map((i) => {
         detail.push({
           header_kirim_uang_id: find_header_kirim_uang.id,
           akun_id: parseInt(i.akun_id),

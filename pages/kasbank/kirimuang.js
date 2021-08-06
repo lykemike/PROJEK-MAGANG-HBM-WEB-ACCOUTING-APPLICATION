@@ -38,11 +38,13 @@ const prisma = new PrismaClient();
                         akun_bayar_id : '',
                         akun_penerima_id : "",
                         tgl_transaksi: "",
-                        no_transaksi: 0,
+                        no_transaksi: id,
                         tag: "",
                         memo: "",
                         subtotal: 0,
                         total: "",
+                        fileattachment: [],
+                        hasil_pajak: 0,
                         detail_kirim_uang: [
                             {
                                 akun_id:"",
@@ -57,16 +59,28 @@ const prisma = new PrismaClient();
                         ]
                     }}
                     onSubmit={async (values) => {
-                        // alert(JSON.stringify(values, null, 2));
-                        console.log(values)
-                        // Axios.post(url, values)
-                        //   .then(function (response) {
-                        //     console.log(response);
-                        //     router.push(`view-terima/${idInvoice}`);
-                        //   })
-                        //   .catch(function (error) {
-                        //     console.log(error);
-                        //   });
+                        let formData = new FormData();
+                        for (var key in values) {
+                          if (key == "detail_kirim_uang") {
+                            formData.append(`${key}`, JSON.stringify(values[key]));
+                          } else {
+                            formData.append(`${key}`, `${values[key]}`);
+                          }
+                        }
+                        Array.from(values.fileattachment).map((i) => formData.append("file", i));
+                        console.log(values);
+                        Axios.post(url, formData, {
+                          headers: {
+                            "Content-Type": "multipart/form-data",
+                          },
+                        })
+                          .then(function (response) {
+                            console.log(response);
+                            router.push(`view-kirim/${idInvoice}`);
+                          })
+                          .catch(function (error) {
+                            console.log(error);
+                          });
                       }}>
 
                     {(props) => (
@@ -75,7 +89,7 @@ const prisma = new PrismaClient();
                         <div class="text-md font-medium text-gray-900 mb-2">
                             Transaksi</div>
                             <h4 class="mt-2 mb-5">
-                                Terima Uang
+                                Kirim Uang
                                 </h4>
                 
                         <div class="mb-10">
@@ -143,7 +157,7 @@ const prisma = new PrismaClient();
                                     Nomor Transaksi
                                 </Form.Label>
                                     <Form.Control 
-                                        placeholder="Auto"
+                                        placeholder={"Auto " + "(" + id + ")"}
                                         name="no_transaksi"
                                         disabled
                                     />
@@ -283,11 +297,9 @@ const prisma = new PrismaClient();
                                                     let total = jumlah_total + pajak_total
                                                     props.setFieldValue((props.values.total = total))
                                                     props.setFieldValue("total", total)
-                                                    
-                                                  
-                                                }}
-                                                >   
 
+                                                }}
+                                                >  
                                                 </Form.Control>
                                             </td>
 
@@ -310,6 +322,7 @@ const prisma = new PrismaClient();
                             variant="primary ml-2"
                             onClick={() =>
                                 push({
+                                   akun_id: "",
                                    nama_akun: "",
                                    deskripsi: "",
                                    pajak_id: "",
@@ -384,13 +397,8 @@ const prisma = new PrismaClient();
                                 </Form.Label>  
                                 
                                 <Card border="secondary" style={{ width: '15rem' }}>
-                                        <p>
-                                            Tarik file ke sini, atau   
-                                        <Card.Link href="#"> pilih file</Card.Link>
-                                        </p>
-                                        <p>
-                                            Ukuran Max 10MB
-                                        </p>
+                                File Attachment <br />
+                                <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                                     </Card>
                                 </div>
                                 </Col>
@@ -414,9 +422,9 @@ const prisma = new PrismaClient();
                 
                     <div className="float-right mb-10">
                                 <Button variant="danger mr-2"><HighlightOffIcon fontSize="medium"/> Batal</Button>
-                                <Link href="/kasbank/bankwithdraw">
+                          
                                 <Button variant="success" type="submit" onClick={props.handleSubmit}><CheckCircleIcon fontSize="medium"/> Buat Transferan</Button>
-                                </Link>
+                            
                         </div>
                     </div>
                         </Forms>
@@ -461,7 +469,7 @@ export async function getServerSideProps() {
       });
     
 
-    const terimauangterakhir = await prisma.headerTerimaUang.findFirst({
+    const Kirimuangterakhir = await prisma.headerKirimUang.findFirst({
         orderBy: {
           id: "desc",
         },
@@ -473,7 +481,7 @@ export async function getServerSideProps() {
         data2: kontaks,
         data3: namaAkun,
         data4: pajaks,
-        data5: terimauangterakhir
+        data5: Kirimuangterakhir
       },
     };
   }

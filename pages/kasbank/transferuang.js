@@ -51,7 +51,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-              // router.push(`view/${idInvoice}`);
+              router.push(`view-transfer/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);

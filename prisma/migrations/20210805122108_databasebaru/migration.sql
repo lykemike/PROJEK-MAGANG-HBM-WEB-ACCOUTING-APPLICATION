@@ -394,7 +394,6 @@ CREATE TABLE `TransferUang` (
     `akun_setor_id` INTEGER NOT NULL,
     `jumlah` INTEGER NOT NULL,
     `memo` VARCHAR(191) NOT NULL,
-    `file_attachment` VARCHAR(191) NOT NULL,
     `no_transaksi` INTEGER NOT NULL,
     `tgl_transaksi` VARCHAR(191) NOT NULL,
     `tag` VARCHAR(191) NOT NULL,

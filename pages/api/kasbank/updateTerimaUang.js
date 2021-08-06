@@ -41,6 +41,7 @@ export default async (req, res) => {
       akun_setor_id: parseInt(req.body.akun_setor),
       akun_membayar_id: parseInt(req.body.akun_membayar),
       no_transaksi: parseInt(req.body.no_transaksi),
+      tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
       memo: req.body.memo,
       file_attachment: req.body.filename,

@@ -60,8 +60,8 @@ export default async (req, res) => {
     });
 
     let detail = [];
-    req.body.akuns &&
-      JSON.parse(req.body.akuns).map((i) => {
+    req.body.detail_jurnal &&
+      JSON.parse(req.body.detail_jurnal).map((i) => {
         detail.push({
           header_jurnal_id: find_header_jurnal.id,
           akun_id: parseInt(i.akun_id),
@@ -82,4 +82,10 @@ export default async (req, res) => {
     res.status(400).json([{ data: "Failed to create jurnal!", error }]);
     console.log(error);
   }
+};
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
 };
