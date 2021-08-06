@@ -125,15 +125,30 @@ upload file attachment
 == PAGE KAS DAN BANK ==
 - Buat DB Edit Uang = 100%
 - Buat DB Header Detail Jurnal = 100%
-- Api Create transfer uang (Sisa testing) = 90%
-- Api Create & Edit terima uang (Sisa testing) = 90%
+- Api Create transfer uang = 100%
+- Api Edit terima uang (Sisa testing) = 90%
 - Api Create & Edit kirim uang (Sisa testing) = 90%
 - Api Create & Edit uang (Sisa testing) = 90%
 - Pebaikian Api Create Biaya (sisa testing) = 90%
 - Api Update biaya (sisa testing) = 90%
 - Api Create & Edit Jurnal (sisa testing) = 90%
+- Rumus Terima Uang = 100%
 
-
+🗓️ Tanggal: 5 August 2021, Kamis
+== PAGE KAS DAN BANK ==
+- Meeting bahas jurnal
+- Buat DB Edit Uang = 100%
+- Buat DB Header Detail Jurnal = 100%
+- Api Create & Edit terima uang (Sisa testing) = 100%
+- Api Create & Edit kirim uang (Sisa testing) = 100%
+- Api Create & Edit uang (Sisa testing) = 100%
+- Pebaikian Api Create Biaya (sisa testing) = 90%
+- Api Update biaya (sisa testing) = 90%
+- Api Create Jurnal (sisa testing) = 100%
+- Api Edit (sisa testing) = 100%
+- Rumus Terima Uang = 100%
+- Penambahan field di database terima uang, kirim uang, transfer uang = 20%
+- Buat struktur database jurnal terima uang, kirim uang, transfer uang = 20%
 
 ----------------
 || ON PROCESS ||
@@ -165,10 +180,15 @@ Checkbox enable/disable di jual/beli produk
 (PROCESS) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
 (DONE) Request untuk hapus option pajak dari produk ui, api
 
+== Jurnal ==
+- Kalau isi debit atau kredit sebelahnya auto 0 dan di disable
+
+
 == Miscellaneous ==
 Cara add daftar akun sesuai kode aku
 Contoh validation backend
 Filter search
+Tiap option menu di tambahin select2
 ===================
 -------------
 || UPDATES ||
@@ -207,3 +227,28 @@ Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
 Pajak Beli dan Jual List dari Dropdown pajak 
 
 
+CARA PAKE SWITCH 
+{props.values.produks.length > 0 &&
+  props.values.produks.map((i, index) => (
+    <Form.Check
+      type='switch'
+      id='custom-switch'
+      label='Check this switch'
+      onChange={(e) => {
+        if (e.target.checked == true) {
+          let jumlah = parseInt(props.values.produks[index].kuantitas) + parseInt(props.values.produks[index].harga_satuan);
+          props.setFieldValue((props.values.produks[index].jumlah = parseInt(jumlah)));
+          const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+          props.setFieldValue((props.values.subtotal = subtotal));
+          props.setFieldValue("subtotal", subtotal);
+        } else {
+           console.log("OF OF OF");
+        }
+      }}
+    />
+))}
+
+CSV Solution
+<Dropdown.Item eventKey='1' as='button'>
+  <CSVLink data={restructure(data)} filename='product.csv'> CSV </CSVLink>
+</Dropdown.Item>
