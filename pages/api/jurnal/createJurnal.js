@@ -59,28 +59,9 @@ export default async (req, res) => {
       },
     });
 
-    const find_no_transaksi = await prisma.headerJurnal.findFirst({
-      orderBy: {
-        id: "desc",
-      },
-      where: {
-        no_transaksi: frontend_data.id,
-      },
-    });
-
-    const update_no_transaksi = await prisma.headerJurnal.update({
-      where: {
-        id: frontend_data.id,
-        no_transaksi: parseInt(req.body.no_transaksi),
-      },
-      data: {
-        no_transaksi: find_no_transaksi.id,
-      },
-    });
-
     let detail = [];
-    req.body.akuns &&
-      JSON.parse(req.body.akuns).map((i) => {
+    req.body.detail_jurnal &&
+      JSON.parse(req.body.detail_jurnal).map((i) => {
         detail.push({
           header_jurnal_id: find_header_jurnal.id,
           akun_id: parseInt(i.akun_id),
@@ -101,4 +82,10 @@ export default async (req, res) => {
     res.status(400).json([{ data: "Failed to create jurnal!", error }]);
     console.log(error);
   }
+};
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
 };

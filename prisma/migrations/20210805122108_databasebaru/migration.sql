@@ -273,6 +273,7 @@ CREATE TABLE `HeaderPembelian` (
     `total_diskon` INTEGER NOT NULL,
     `total_pajak_per_baris` INTEGER NOT NULL,
     `total` INTEGER NOT NULL,
+    `status` VARCHAR(191) NOT NULL,
     `pemotongan` INTEGER NOT NULL,
     `pemotongan_total` INTEGER NOT NULL,
     `akun_pemotongan` INTEGER NOT NULL,
@@ -382,6 +383,109 @@ CREATE TABLE `SettingDefault` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `akun_id` INTEGER NOT NULL,
     `tipe` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `TransferUang` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `akun_transfer_id` INTEGER NOT NULL,
+    `akun_setor_id` INTEGER NOT NULL,
+    `jumlah` INTEGER NOT NULL,
+    `memo` VARCHAR(191) NOT NULL,
+    `no_transaksi` INTEGER NOT NULL,
+    `tgl_transaksi` VARCHAR(191) NOT NULL,
+    `tag` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `HeaderTerimaUang` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `akun_setor_id` INTEGER NOT NULL,
+    `akun_membayar_id` INTEGER NOT NULL,
+    `no_transaksi` INTEGER NOT NULL,
+    `tag` VARCHAR(191) NOT NULL,
+    `memo` VARCHAR(191) NOT NULL,
+    `file_attachment` VARCHAR(191) NOT NULL,
+    `subtotal` INTEGER NOT NULL,
+    `pajak` INTEGER NOT NULL,
+    `total` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `DetailTerimaUang` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `header_terima_uang_id` INTEGER NOT NULL,
+    `akun_id` INTEGER NOT NULL,
+    `nama_akun` VARCHAR(191) NOT NULL,
+    `deskripsi` VARCHAR(191) NOT NULL,
+    `pajak_id` INTEGER NOT NULL,
+    `pajak_nama` VARCHAR(191) NOT NULL,
+    `pajak_persen` INTEGER NOT NULL,
+    `hasil_pajak` INTEGER NOT NULL,
+    `jumlah` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `HeaderKirimUang` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `akun_bayar_id` INTEGER NOT NULL,
+    `akun_penerima_id` INTEGER NOT NULL,
+    `no_transaksi` INTEGER NOT NULL,
+    `tag` VARCHAR(191) NOT NULL,
+    `memo` VARCHAR(191) NOT NULL,
+    `file_attachment` VARCHAR(191) NOT NULL,
+    `subtotal` INTEGER NOT NULL,
+    `pajak` INTEGER NOT NULL,
+    `total` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `DetailKirimUang` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `header_kirim_uang_id` INTEGER NOT NULL,
+    `akun_id` INTEGER NOT NULL,
+    `nama_akun` VARCHAR(191) NOT NULL,
+    `deskripsi` VARCHAR(191) NOT NULL,
+    `pajak_id` INTEGER NOT NULL,
+    `pajak_nama` VARCHAR(191) NOT NULL,
+    `pajak_persen` INTEGER NOT NULL,
+    `hasil_pajak` INTEGER NOT NULL,
+    `jumlah` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `HeaderJurnal` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `no_transaksi` INTEGER NOT NULL,
+    `tgl_transaksi` VARCHAR(191) NOT NULL,
+    `total_debit` INTEGER NOT NULL,
+    `total_kredit` INTEGER NOT NULL,
+    `lampiran` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `DetailJurnal` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `header_jurnal_id` INTEGER NOT NULL,
+    `akun_id` INTEGER NOT NULL,
+    `debit` INTEGER NOT NULL,
+    `kredit` INTEGER NOT NULL,
+    `deskripsi` VARCHAR(191) NOT NULL,
+    `tag` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -523,3 +627,45 @@ ALTER TABLE `DetailBiaya` ADD FOREIGN KEY (`pajak_id`) REFERENCES `Pajak`(`id`) 
 
 -- AddForeignKey
 ALTER TABLE `SettingDefault` ADD FOREIGN KEY (`akun_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `TransferUang` ADD FOREIGN KEY (`akun_transfer_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `TransferUang` ADD FOREIGN KEY (`akun_setor_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `HeaderTerimaUang` ADD FOREIGN KEY (`akun_setor_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `HeaderTerimaUang` ADD FOREIGN KEY (`akun_membayar_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailTerimaUang` ADD FOREIGN KEY (`header_terima_uang_id`) REFERENCES `HeaderTerimaUang`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailTerimaUang` ADD FOREIGN KEY (`akun_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailTerimaUang` ADD FOREIGN KEY (`pajak_id`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `HeaderKirimUang` ADD FOREIGN KEY (`akun_bayar_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `HeaderKirimUang` ADD FOREIGN KEY (`akun_penerima_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailKirimUang` ADD FOREIGN KEY (`header_kirim_uang_id`) REFERENCES `HeaderKirimUang`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailKirimUang` ADD FOREIGN KEY (`akun_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailKirimUang` ADD FOREIGN KEY (`pajak_id`) REFERENCES `Pajak`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailJurnal` ADD FOREIGN KEY (`header_jurnal_id`) REFERENCES `HeaderJurnal`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DetailJurnal` ADD FOREIGN KEY (`akun_id`) REFERENCES `Akun`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
