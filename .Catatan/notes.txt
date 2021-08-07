@@ -150,6 +150,15 @@ upload file attachment
 - Penambahan field di database terima uang, kirim uang, transfer uang = 20%
 - Buat struktur database jurnal terima uang, kirim uang, transfer uang = 20%
 
+🗓️ Tanggal: 6 August 2021, Jumat
+== PAGE KAS DAN BANK, BIAYA, JURNAL ==
+- Api Update biaya (sisa testing) = 100%
+- Api Create Jurnal (sisa testing) = 100%
+- Tambah field tanggal_transaksi ke api ama db kirim & terima uang = 100%
+- Harga termasuk pajak di terima dan kirim uang = 50%
+- Penambahan field di database terima uang, kirim uang, transfer uang = 30%
+- Buat struktur database jurnal terima uang, kirim uang, transfer uang = 30%
+
 ----------------
 || ON PROCESS ||
 ----------------

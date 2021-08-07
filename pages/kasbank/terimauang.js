@@ -45,6 +45,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
           truefalse: "",
           fileattachment: [],
           hasil_pajak: "",
+          boolean: false,
           detail_terima_uang: [
             {
               akun_id: "",
@@ -69,18 +70,18 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
           console.log(values);
-          Axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then(function (response) {
-              console.log(response);
-              router.push(`view-terima/${idInvoice}`);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          // Axios.post(url, formData, {
+          //   headers: {
+          //     "Content-Type": "multipart/form-data",
+          //   },
+          // })
+          //   .then(function (response) {
+          //     console.log(response);
+          //     router.push(`view-terima/${idInvoice}`);
+          //   })
+          //   .catch(function (error) {
+          //     console.log(error);
+          //   });
         }}>
         {(props) => (
           <Forms noValidate>
@@ -150,12 +151,14 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                       id="custom-switch"
                       onChange={(e) => {
                         if (e.target.checked == true) {
+                          props.setFieldValue(props.values.boolean == true)
                           let total = props.values.subtotal;
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
                           const test = "true";
                           props.setFieldValue((props.values.truefalse = test));
                         } else {
+                          props.setFieldValue(props.values.boolean == false)
                           let total = props.values.subtotal + props.values.hasil_pajak;
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
