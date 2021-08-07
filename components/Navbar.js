@@ -7,6 +7,9 @@ import Axios from "axios";
 export default function navbar() {
   const url = "http://localhost:3000/api/user/logout";
   const router = useRouter();
+
+  // const userId = JSON.parse(localStorage.getItem("user_login"));
+  // const name = userId.firstName;
   return (
     <Formik
       initialValues={{}}
@@ -20,7 +23,7 @@ export default function navbar() {
 
               // console.log(response.data)
               localStorage.removeItem("user_login");
-              router.push("login");
+              router.push("/login");
             } else {
               alert("Logout gagal");
               router.push("/");
@@ -39,7 +42,7 @@ export default function navbar() {
               <Navbar.Collapse id='responsive-navbar-nav'>
                 <Nav className='mr-auto' />
                 <Nav>
-                  <NavDropdown title='Welcome, Admin' id='collasible-nav-dropdown'>
+                  <NavDropdown title={"Welcome, "} id='collasible-nav-dropdown'>
                     <NavDropdown.Item href='#action/3.1'>Settings</NavDropdown.Item>
                     <NavDropdown.Divider />
 

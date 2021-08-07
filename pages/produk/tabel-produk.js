@@ -55,7 +55,7 @@ export default function tabelProduk({ data }) {
     });
     return result;
   };
-  
+
   const handlePrevChange = () => {
     if (page < 1) {
       setPage(0);
@@ -83,19 +83,15 @@ export default function tabelProduk({ data }) {
   const handleLastPage = () => {
     setPage(parseInt(data.length / rowsPerPage));
   };
-  
 
   return (
     <Layout>
       <Row>
         <Col>
           <h2>Produk</h2>
-          <CSVLink data={restructure(data)} filename='product.csv'>
-            CSV
-          </CSVLink>
         </Col>
         <Col className='d-flex justify-content-end'>
-            {/* <a>
+          {/* <a>
               <SettingsIcon fontSize='Large' />
             </a>
           <h4 className='mr-4'>Kategori Produk</h4> */}
@@ -123,31 +119,26 @@ export default function tabelProduk({ data }) {
               </Col>
 
               <Col className='d-flex justify-content-end'>
-              <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Tambah'>
+                <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Tambah'>
                   <Dropdown.Item>
                     <a>
-                    <Link href='kategori/tabel-kategori'>
-                        Kategori Produk
-                        </Link>
+                      <Link href='kategori/tabel-kategori'>Kategori Produk</Link>
                     </a>
                   </Dropdown.Item>
                   <Dropdown.Item>
                     <a>
-                      <Link href='satuan/tabel-satuan'>
-                      Satuan Produk
-                      </Link>
-                   </a>
+                      <Link href='satuan/tabel-satuan'>Satuan Produk</Link>
+                    </a>
                   </Dropdown.Item>
                 </DropdownButton>
 
                 <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
                   <Dropdown.Item></Dropdown.Item>
-                  <Dropdown.Item>
-                    <a>
+                  <Dropdown.Item eventKey='1' as='button'>
                     <CSVLink data={restructure(data)} filename='product.csv'>
-                     CSV
-                   </CSVLink>
-                   </a>
+                      {" "}
+                      CSV{" "}
+                    </CSVLink>
                   </Dropdown.Item>
                 </DropdownButton>
                 <Col sm='6'>

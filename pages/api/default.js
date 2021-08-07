@@ -1804,72 +1804,72 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const createSettings = await prisma.settingDefault.createMany({
-      data: [
-        {
-          akun_id: 116,
-          tipe: "penjualan",
-          nama_setting: "pendapatan_penjualan",
-        },
-        {
-          akun_id: 116,
-          tipe: "penjualan",
-          nama_setting: "diskon_penjualan",
-        },
-        {
-          akun_id: 116,
-          tipe: "penjualan",
-          nama_setting: "pemotongan",
-        },
-        {
-          akun_id: 1,
-          tipe: "penjualan",
-          nama_setting: "pembayaran_dimuka",
-        },
-        {
-          akun_id: 20,
-          tipe: "penjualan",
-          nama_setting: "piutang_blm_ditagih",
-        },
-        {
-          akun_id: 116,
-          tipe: "penjualan",
-          nama_setting: "pajak_penjualan",
-        },
-        // {
-        //   akun_id: 121,
-        //   tipe: "pembelian"
-        // },
-        // {
-        //   akun_id: 121,
-        //   tipe: "pembelian"
-        // },
-        // {
-        //   akun_id: 1,
-        //   tipe: "pembelian"
-        // },
-        // {
-        //   akun_id: 74,
-        //   tipe: "pembelian"
-        // },
-        // {
-        //   akun_id: 116,
-        //   tipe: "pembelian"
-        // },
-        // {
-        //   akun_id: 116,
-        //   tipe: "pembelian"
-        // },
-        // {
-        //   akun_id: 116,
-        //   tipe: "biaya"
-        // },
-        // {
-        //   akun_id: 74,
-        //   tipe: "biaya"
-        // },
-      ],
-    });
+    // const createSettings = await prisma.settingDefault.createMany({
+    //   data: [
+    //     {
+    //       akun_id: 116,
+    //       tipe: "penjualan",
+    //       nama_setting: "pendapatan_penjualan",
+    //     },
+    //     {
+    //       akun_id: 116,
+    //       tipe: "penjualan",
+    //       nama_setting: "diskon_penjualan",
+    //     },
+    //     {
+    //       akun_id: 116,
+    //       tipe: "penjualan",
+    //       nama_setting: "pemotongan",
+    //     },
+    //     {
+    //       akun_id: 1,
+    //       tipe: "penjualan",
+    //       nama_setting: "pembayaran_dimuka",
+    //     },
+    //     {
+    //       akun_id: 20,
+    //       tipe: "penjualan",
+    //       nama_setting: "piutang_blm_ditagih",
+    //     },
+    //     {
+    //       akun_id: 116,
+    //       tipe: "penjualan",
+    //       nama_setting: "pajak_penjualan",
+    //     },
+    //     // {
+    //     //   akun_id: 121,
+    //     //   tipe: "pembelian"
+    //     // },
+    //     // {
+    //     //   akun_id: 121,
+    //     //   tipe: "pembelian"
+    //     // },
+    //     // {
+    //     //   akun_id: 1,
+    //     //   tipe: "pembelian"
+    //     // },
+    //     // {
+    //     //   akun_id: 74,
+    //     //   tipe: "pembelian"
+    //     // },
+    //     // {
+    //     //   akun_id: 116,
+    //     //   tipe: "pembelian"
+    //     // },
+    //     // {
+    //     //   akun_id: 116,
+    //     //   tipe: "pembelian"
+    //     // },
+    //     // {
+    //     //   akun_id: 116,
+    //     //   tipe: "biaya"
+    //     // },
+    //     // {
+    //     //   akun_id: 74,
+    //     //   tipe: "biaya"
+    //     // },
+    //   ],
+    // });
 
     res.status(201).json(
       // { message: "Create Admin Role Success!", data: createRole },
@@ -1881,7 +1881,7 @@ export default async (req, res) => {
       // { message: "Create Tipe Akun Success!", data: createTipeAkun },
       // { message: "Create Daftar Akun Success!", data: createDaftarAkun },
       // { message: "Create Daftar Akun Success!", data: createSatuanProduk },
-      { message: "Create Default Setting Success!", data: createSettings }
+      { message: "Create Default Setting Success!", data: createSatuanProduk }
     );
   } catch (error) {
     res
