@@ -153,12 +153,14 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                           let total = props.values.subtotal;
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
-                          props.setFieldValue((props.values.truefalse = "true"));
+                          const test = "true";
+                          props.setFieldValue((props.values.truefalse = test));
                         } else {
                           let total = props.values.subtotal + props.values.hasil_pajak;
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
-                          props.setFieldValue((props.values.truefalse = "false"));
+                          const test = "false";
+                          props.setFieldValue((props.values.truefalse = test));
                         }
                       }}
                     />
@@ -237,12 +239,12 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
-                                      if ((props.values.truefalse = "true")) {
-                                        let total = jumlah_total + pajak_total;
+                                      if (props.values.truefalse == "true") {
+                                        let total = jumlah_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        let total = jumlah_total;
+                                        let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
@@ -274,12 +276,12 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
-                                      if ((props.values.truefalse = "true")) {
-                                        let total = jumlah_total + pajak_total;
+                                      if (props.values.truefalse == "true") {
+                                        let total = jumlah_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        let total = jumlah_total;
+                                        let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
@@ -287,7 +289,24 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                 </td>
 
                                 <td>
-                                  <Button variant="primary" onClick={() => remove(index)}>
+                                  <Button
+                                    variant="primary"
+                                    onClick={() => remove(index)}
+                                    onChange={(e) => {
+                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                                      if (props.values.truefalse == "true") {
+                                        let total = jumlah_total;
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+                                      } else {
+                                        let total = jumlah_total + pajak_total;
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+                                      }
+                                    }}>
                                     Remove
                                   </Button>
                                 </td>
