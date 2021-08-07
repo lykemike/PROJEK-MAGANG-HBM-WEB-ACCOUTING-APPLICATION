@@ -95,7 +95,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values.fileattachment);
+          console.log(values);
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -623,10 +623,10 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     Pesan
                   </label>
                   <br />
-                  <textarea rows='3' name='pesan' class='px-16 py-2 border border-gray-800  '></textarea> <br />
+                  <textarea rows='3' name='pesan' class='px-16 py-2 border border-gray-800  ' onChange={props.handleChange}></textarea> <br />
                   <label for='memo'>Memo</label>
                   <br />
-                  <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800  '></textarea> <br />
+                  <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800' onChange={props.handleChange}></textarea> <br />
                   File Attachment <br />
                   <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                 </Col>
