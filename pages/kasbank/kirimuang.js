@@ -42,6 +42,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
           memo: "",
           subtotal: 0,
           total: "",
+          truefalse: "",
           fileattachment: [],
           hasil_pajak: 0,
           detail_kirim_uang: [
@@ -152,10 +153,12 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                           let total = props.values.subtotal;
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
+                          props.setFieldValue((props.values.truefalse = "true"));
                         } else {
                           let total = props.values.subtotal + props.values.hasil_pajak;
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
+                          props.setFieldValue((props.values.truefalse = "false"));
                         }
                       }}
                     />
@@ -234,9 +237,15 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
-                                      let total = jumlah_total + pajak_total;
-                                      props.setFieldValue((props.values.total = total));
-                                      props.setFieldValue("total", total);
+                                      if ((props.values.truefalse = "true")) {
+                                        let total = jumlah_total + pajak_total;
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+                                      } else {
+                                        let total = jumlah_total;
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+                                      }
                                     }}>
                                     <option value="0">Pilih</option>
                                     {data4.map((pajaks) => (
@@ -265,9 +274,15 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
-                                      let total = jumlah_total + pajak_total;
-                                      props.setFieldValue((props.values.total = total));
-                                      props.setFieldValue("total", total);
+                                      if ((props.values.truefalse = "true")) {
+                                        let total = jumlah_total + pajak_total;
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+                                      } else {
+                                        let total = jumlah_total;
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+                                      }
                                     }}></Form.Control>
                                 </td>
 
