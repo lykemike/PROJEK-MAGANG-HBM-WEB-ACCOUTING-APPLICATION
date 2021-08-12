@@ -41,7 +41,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
           akun_setor: "",
           jumlah: "",
           memo: "",
-          no_transaksi: id,
+          no_transaksi: 0,
           tgl_transaksi: "",
           tag: "",
         }}
@@ -110,7 +110,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control placeholder={"Auto " + "(" + id + ")"} name='no_transaksi' disabled />
+                    <Form.Control placeholder={"Auto"} name='no_transaksi' disabled />
                   </Col>
 
                   <Col>

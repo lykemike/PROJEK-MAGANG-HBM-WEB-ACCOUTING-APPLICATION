@@ -159,6 +159,37 @@ upload file attachment
 - Penambahan field di database terima uang, kirim uang, transfer uang = 30%
 - Buat struktur database jurnal terima uang, kirim uang, transfer uang = 30%
 
+🗓️ Tanggal: 9 August 2021, Senin
+== PAGE KAS DAN BANK, BIAYA, JURNAL ==
+- Harga termasuk pajak di terima dan kirim uang = 100%
+- Penambahan field di database terima uang, kirim uang, transfer uang = 100%
+- Buat struktur database jurnal terima uang, kirim uang, transfer uang = 30%
+- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
+
+🗓️ Tanggal: 10 August 2021, Selasa
+== PAGE KAS DAN BANK, BIAYA, JURNAL ==
+- Meeting Akuntansi & Technical Meeting
+- Buat struktur api dan database jurnal pembelian, penjualan, biaya = 30%
+- Buat struktur api dan database jurnal terima uang, kirim uang, transfer uang = 30%
+- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api ama database aset peyimpanan baru = 30%
+
+🗓️ Tanggal: 11 August 2021, Rabu
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+- Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 50%
+- Buat struktur api dan database jurnal pembelian, biaya = 30%
+- Buat struktur api dan database jurnal terima uang, kirim uang = 30%
+- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api ama database aset peyimpanan baru = 30%
+
+
 ----------------
 || ON PROCESS ||
 ----------------
@@ -198,6 +229,7 @@ Cara add daftar akun sesuai kode aku
 Contoh validation backend
 Filter search
 Tiap option menu di tambahin select2
+Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
 ===================
 -------------
 || UPDATES ||
@@ -235,8 +267,7 @@ Biaya belum dibayar (dalam idr) : sisa tagihan (dalam idr)
 Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
 Pajak Beli dan Jual List dari Dropdown pajak 
 
-
-CARA PAKE SWITCH 
+(DONE) CARA PAKE SWITCH 
 {props.values.produks.length > 0 &&
   props.values.produks.map((i, index) => (
     <Form.Check
@@ -257,7 +288,22 @@ CARA PAKE SWITCH
     />
 ))}
 
-CSV Solution
+(DONE) CSV Solution
 <Dropdown.Item eventKey='1' as='button'>
   <CSVLink data={restructure(data)} filename='product.csv'> CSV </CSVLink>
 </Dropdown.Item>
+
+MEETING 8/10/2021
+CONTOH RUMUS RATE
+==================================================================================
+kuantitas   pajak   harga_satuan  rate     jumlah(USD) 		          jumlah (idr)
+2	          10%     100000	      15000    20000/15000 = 13,3333    200000
+
+*ambil dua digit setelah koma
+
+pajak * jumlah (usd) * rate pajak  = hasil_pajak_dlm_idr_hasil_konversi
+0.10  * 1,33         * 14500       = IDR 1.928,50
+
+PERTANYAAN MEETING
+- Akun Uang Muka dan Akun Pemotongan isi atau gadisi, tetap harus pilih akunnya
+    Jadi nanti di setting ada: Pendapatan penjualan, diskon penjualan, piutang blm di tagih, pajak penjualan

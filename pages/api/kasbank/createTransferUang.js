@@ -18,7 +18,56 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create Transfer Uang Success!", data: create_transfer_uang });
+    const find_akun_setor = await prisma.akun.findFirst({
+      where: {
+        id: parseInt(req.body.akun_setor),
+      },
+    });
+
+    const find_akun_transfer = await prisma.akun.findFirst({
+      where: {
+        id: parseInt(req.body.akun_transfer),
+      },
+    });
+
+    const find_latest = await prisma.transferUang.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    const update_no_transaksi = await prisma.transferUang.update({
+      where: {
+        id: find_latest.id
+      },
+      data: {
+        no_transaksi: find_latest.id
+      }
+    })
+
+    const jurnal_transfer_uang = await prisma.jurnalTransferUang.createMany({
+      data: [
+        {
+          transfer_uang_id: find_latest.id,
+          nama_transfer_akun: find_akun_setor.nama_akun,
+          nominal: parseInt(req.body.jumlah),
+          tipe_saldo: "Debit",
+        },
+        {
+          transfer_uang_id: find_latest.id,
+          nama_transfer_akun: find_akun_transfer.nama_akun,
+          nominal: parseInt(req.body.jumlah),
+          tipe_saldo: "Kredit",
+        },
+      ],
+    });
+
+    res
+      .status(201)
+      .json(
+        { message: "Create Transfer dan Jurnal Uang Success!", data: create_transfer_uang },
+        { message: "Create Transfer dan Jurnal Uang Success!", data: jurnal_transfer_uang }
+      );
   } catch (error) {
     res.status(400).json({ data: "Failed to create transfer uang!", error });
     console.log(error);
