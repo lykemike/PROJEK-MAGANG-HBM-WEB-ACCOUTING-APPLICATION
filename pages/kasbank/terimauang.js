@@ -53,6 +53,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
               deskripsi: "",
               pajak_id: "",
               pajak_nama: "",
+              pajak_nama_akun_jual: "",
               pajak_persen: "",
               hasil_pajak: 0,
               jumlah: "",
@@ -70,18 +71,18 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
           console.log(values);
-          // Axios.post(url, formData, {
-          //   headers: {
-          //     "Content-Type": "multipart/form-data",
-          //   },
-          // })
-          //   .then(function (response) {
-          //     console.log(response);
-          //     router.push(`view-terima/${idInvoice}`);
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error);
-          //   });
+          Axios.post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+            .then(function (response) {
+              console.log(response);
+              router.push(`view-terima/${idInvoice}`);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
         }}>
         {(props) => (
           <Forms noValidate>
@@ -136,7 +137,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control placeholder={"Auto " + "(" + id + ")"} name='no_transaksi' disabled />
+                    <Form.Control placeholder={"Auto"} name='no_transaksi' disabled />
                   </Col>
 
                   <Col>
@@ -233,6 +234,9 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       });
                                       props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
                                       props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
+                                      
+
                                       let jumlah = props.values.detail_terima_uang[index].jumlah;
                                       props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
                                       const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
@@ -246,11 +250,11 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
                                       if (props.values.truefalse == "true") {
-                                        let total = jumlah_total;
+                                        let total = parseInt(jumlah_total);
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        let total = jumlah_total + pajak_total;
+                                        let total = parseInt(jumlah_total + pajak_total);
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
@@ -283,11 +287,11 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
                                       if (props.values.truefalse == "true") {
-                                        let total = jumlah_total;
+                                        let total = parseInt(jumlah_total);
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        let total = jumlah_total + pajak_total;
+                                        let total = parseInt(jumlah_total + pajak_total);
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
@@ -304,11 +308,11 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
                                       if (props.values.truefalse == "true") {
-                                        let total = jumlah_total;
+                                        let total = parseInt(jumlah_total);
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        let total = jumlah_total + pajak_total;
+                                        let total = parseInt(jumlah_total + pajak_total);
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
@@ -413,11 +417,11 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                 <Button variant='danger mr-2'>
                   <HighlightOffIcon fontSize='medium' /> Batal
                 </Button>
-                <Link href='/kasbank/bankwithdraw'>
+           
                   <Button variant='success' type='submit' onClick={props.handleSubmit}>
                     <CheckCircleIcon fontSize='medium' /> Buat Transferan
                   </Button>
-                </Link>
+             
               </div>
             </div>
           </Forms>
@@ -452,11 +456,12 @@ export async function getServerSideProps() {
   });
 
   const pajaks = await prisma.pajak.findMany({
-    orderBy: [
-      {
+    orderBy: {
         id: "asc",
       },
-    ],
+      include: {
+        kategori1: true
+      }
   });
 
   const terimauangterakhir = await prisma.headerTerimaUang.findFirst({

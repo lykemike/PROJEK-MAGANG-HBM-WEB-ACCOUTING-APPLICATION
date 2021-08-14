@@ -58,11 +58,11 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
               harga_satuan: "",
               diskon: "",
               hasil_diskon: "",
-              pajak_id: "",
-              pajak_nama: "",
+              pajak_id: 0,
+              pajak_nama: "kosong",
               pajak_nama_akun_jual: "",
-              pajak_persen: "",
-              hasil_pajak: "",
+              pajak_persen: 0,
+              hasil_pajak: 0,
               jumlah: "",
             },
           ],
@@ -464,8 +464,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   name={`produks.${index}.pajak_id`}
                                   onChange={(e) => {
                                     props.setFieldValue(`produks.${index}.pajak_id`, e.target.value);
-                                    if (e.target.value == "" || e.target.value == 0) {
-                                      props.setFieldValue(`produks.${index}.pajak_persen` == 0);
+                                    if (e.target.value == undefined || e.target.value == "" || e.target.value == 0) {
                                       // Rumus total: kuantitas * harga satuan
                                       let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
                                       props.setFieldValue((props.values.produks[index].jumlah = jumlah));
@@ -908,7 +907,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             </Form>
             <div class='left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3'>
               <Link href='/jual/penjualan'>
-                <button onclick='openModal(false)' class='bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none'>
+                <button onClick='openModal(false)' class='bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none'>
                   Batal
                 </button>
               </Link>
