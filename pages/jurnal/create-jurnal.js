@@ -82,7 +82,7 @@ export default function create_jurnal({ data, data2 }) {
               </Form.Group>
               <Form.Group as={Row} controlId='formPlaintext'>
                 <Col sm='2'>
-                  <Form.Control placeholder={"Auto " + "(" + id + ")"} name='no_transaksi' onChange={props.handleChange} disabled />
+                  <Form.Control placeholder={"Auto"} name='no_transaksi' onChange={props.handleChange} disabled />
                 </Col>
                 <Col sm='2'>
                   <FormControl placeholder='Pick date' type='date' aria-label='date' onChange={props.handleChange} name='tgl_transaksi' />

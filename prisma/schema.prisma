@@ -90,12 +90,10 @@ model Akun {
 
   HeaderPenjualan1            HeaderPenjualan[] @relation("akunPemotonganPenjualan")
   HeaderPenjualan2            HeaderPenjualan[] @relation("akunUangMukaPenjualan")
-  // JurnalPenjualan             JurnalPenjualan[] @relation("akunJurnalPenjualan")
   PenerimaanPembayaran        PenerimaanPembayaran[]
 
   HeaderPembelian1          HeaderPembelian[] @relation("akunPemotonganPembelian")
   HeaderPembelian2          HeaderPembelian[] @relation("akunUangMukaPembelian")
-  JurnalPembelian           JurnalPembelian[]         @relation("akunJurnalPembelian")
   PengirimanBayaran         PengirimanBayaran[] 
 
    SettingDefault           SettingDefault[]
@@ -389,6 +387,7 @@ model DetailPembelian {
   pajak                   Pajak       @relation(fields: [pajak_id], references: [id])
   pajak_id                Int
   pajak_nama              String
+  pajak_nama_akun_beli    String
   pajak_persen            Int
   hasil_pajak             Int
 
@@ -397,16 +396,12 @@ model DetailPembelian {
 
 // Jurnal Pembelian Table
 model JurnalPembelian {
-  id                    Int             @id @default(autoincrement())
-  header_pembelian      HeaderPembelian   @relation(fields: [header_pembelian_id], references: [id])
-  header_pembelian_id   Int
-  
-  akun                  Akun      @relation("akunJurnalPembelian", fields: [akun_id], references: [id])
-  akun_id               Int
-  akun_name             String
-
-  debit                 Int
-  kredit                Int
+  id                  Int             @id @default(autoincrement())
+  header_pembelian    HeaderPembelian @relation(fields: [header_pembelian_id], references: [id])
+  header_pembelian_id Int
+  nama_akun           String
+  tipe_saldo          String
+  nominal             Int
 }
 
 // Pengiriman Bayaran Table

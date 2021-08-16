@@ -228,13 +228,15 @@ Penjualan
 - Jurnal Penjualan Database = 100%
 - Jurnal Penjualan API = 100% (udah fix)
 - Jurnal Penerimaan Pembayaran Database dan API = 100%
-- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
 
 Pembelian 
+- Jurnal Pembelian Database = 0%
+- Jurnal Pembelian API = 0%
 - Jurnal Pengiriman Pembayaran Database dan API = 100%
 
 Transfer Uang 
 - Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
 
 Aset
 - Jurnal Penyimpanan Aset Baru Database = 100%
@@ -251,8 +253,10 @@ Kas Bank
 - Jurnal Kirim Uang API = 100% (SISA TESTING)
 
 Jurnal
-- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilai otomatis 0 = 100%
+- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
 
+Produk
+- Udah bisa pilih mau jual atau beli produk = 100%
 
 ===
 - Buat struktur api dan database jurnal pembelian, biaya = 30%
@@ -279,6 +283,8 @@ Ketika buat pembayaran jumlah pembayaran di cocokan dengan sisa tagihan
   - Ketika udah bayar separuh status: Partial
   - Ketika lewat jatuh tempo status: Jatuh Tempo
 
+HARGA TERMASUK PAJAK Pembelian, Penjualan, Biaya, Terima uang, Kirim Uang rumus -> subtotal - pajak
+
 == Produk page ==
 (DONE) Update Produk API 
 Checkbox enable/disable di jual/beli produk
@@ -289,6 +295,8 @@ Checkbox enable/disable di jual/beli produk
 (PROCESS) Harga termasuk pajak ikut setting pas buat produk
 (PROCESS) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
 (DONE) Request untuk hapus option pajak dari produk ui, api
+
+
 
 == Jurnal ==
 - Kalau isi debit atau kredit sebelahnya auto 0 dan di disable
@@ -394,13 +402,16 @@ pajak * jumlah (usd) * rate pajak  = hasil_pajak_dlm_idr_hasil_konversi
 0.10  * 1,33         * 14500       = IDR 1.928,50
 
 PERTANYAAN MEETING
-- Akun Uang Muka dan Akun Pemotongan isi atau gadisi, tetap harus pilih akunnya
+(DONE) Akun Uang Muka dan Akun Pemotongan isi atau gadisi, tetap harus pilih akunnya
     Jadi nanti di setting ada: Pendapatan penjualan, diskon penjualan, piutang blm di tagih, pajak penjualan
-- Harga termasuk pajaka jurnal kaya gimana
-- Invoice pelepasan aset
+(DONE) Harga termasuk pajak, jurnalnya kaya gimana
+(TIDAK JADI) No. Transaksi lebih ke kode, misalnya buat pembelian JL-5D14F blkgnya huruf dan angka random dengan length 5
+(DONE) Invoice pelepasan aset
 
-PERTANYAAN MEETING TEKNIKAL
+PERTANYAAN MEETING TEKNIKAL 8/14/2021
 (DONE) Masih error ketika blm pilih pajak, tdk semua data masuk ke detail
 (DONE) ketika isi debit/kredit sebelahnya disable
 - cara import data dan query ke database  
 - Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
+
+

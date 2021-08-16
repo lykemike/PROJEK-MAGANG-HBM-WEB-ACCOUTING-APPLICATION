@@ -157,6 +157,9 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
                           const test = "true";
+                          let harga_termasuk_pajak = total - props.values.hasil_pajak;
+                          props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                          props.setFieldValue("subtotal", harga_termasuk_pajak);
                           props.setFieldValue((props.values.truefalse = test));
                         } else {
                           props.setFieldValue(props.values.boolean == false);
@@ -199,10 +202,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                         return i.id === parseInt(e.target.value);
                                       });
                                       props.setFieldValue(`detail_terima_uang.${index}.akun_id`, hasil2[0].id);
-                                      props.setFieldValue(
-                                        `detail_terima_uang.${index}.nama_akun`,
-                                        data3.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun
-                                      );
+                                      props.setFieldValue(`detail_terima_uang.${index}.nama_akun`, data3.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun);
                                     }}>
                                     <option value='0'>Pilih</option>
                                     {data3.map((namaAkun) => (
@@ -235,7 +235,6 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
                                       props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
                                       props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
-                                      
 
                                       let jumlah = props.values.detail_terima_uang[index].jumlah;
                                       props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
@@ -417,11 +416,10 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                 <Button variant='danger mr-2'>
                   <HighlightOffIcon fontSize='medium' /> Batal
                 </Button>
-           
-                  <Button variant='success' type='submit' onClick={props.handleSubmit}>
-                    <CheckCircleIcon fontSize='medium' /> Buat Transferan
-                  </Button>
-             
+
+                <Button variant='success' type='submit' onClick={props.handleSubmit}>
+                  <CheckCircleIcon fontSize='medium' /> Buat Transferan
+                </Button>
               </div>
             </div>
           </Forms>
@@ -457,11 +455,11 @@ export async function getServerSideProps() {
 
   const pajaks = await prisma.pajak.findMany({
     orderBy: {
-        id: "asc",
-      },
-      include: {
-        kategori1: true
-      }
+      id: "asc",
+    },
+    include: {
+      kategori1: true,
+    },
   });
 
   const terimauangterakhir = await prisma.headerTerimaUang.findFirst({
