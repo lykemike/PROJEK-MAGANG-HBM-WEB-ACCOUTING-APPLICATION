@@ -6,10 +6,11 @@ export default async (req, res) => {
     const createpelepasanAset = await prisma.aset.createMany({
       data: [
         {
-          biaya_akuisisi_id: parseInt(req.body.biaya_akuisisi_id),
-          akumulasi_penyusutan_id: parseInt(req.body.akumulasi_penyusutan_id),
-          harga_pelepasan_aset_id: parseInt(req.body.harga_pelepasan_aset_id),
-          untungrugi: req.body.untungrugi,
+          nama_akun: req.body.nama_akun,
+          nominal: parseInt(req.body.nominal),
+          tipe_saldo: req.body.tipe_saldo,
+          untungrugi: parseInt(req.body.untungrugi),
+          untungrugiakun: req.body.untungrugiakun,
         },
       ],
       skipDuplicates: true,

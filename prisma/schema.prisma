@@ -643,8 +643,9 @@ model Aset{
   akumulasi_penyusutan Int
   tgl_penyusutan    String
 
-  InvoicePelepasanAset1 InvoicePelepasanAset[]@relation("biayaakuisisi")
-  InvoicePelepasanAset2 InvoicePelepasanAset[]@relation("akumulasipenyusutan")
+
+
+  JurnalAset  JurnalAset[]
 }
 
 model PelepasanAset{
@@ -656,16 +657,45 @@ model PelepasanAset{
   memo              String
   tag               String
 
-  InvoicePelepasanAset InvoicePelepasanAset[]
+  
+
+  JurnalPelepasanAset   JurnalPelepasanAset[]
 }
 
 model InvoicePelepasanAset{
   id                Int @id @default(autoincrement())
-  biaya_akuisisi    Aset@relation("biayaakuisisi",fields:[biaya_akuisisi_id],references:[id])
-  biaya_akuisisi_id Int
-  akumulasi_penyusutan Aset@relation("akumulasipenyusutan",fields:[akumulasi_penyusutan_id],references:[id])
-  akumulasi_penyusutan_id Int
-  nama_akun_deposit PelepasanAset@relation(fields:[harga_pelepasan_aset_id],references: [id])
-  harga_pelepasan_aset_id Int
-  untungrugi        String
+  nama_akun         String
+  nominal           Int
+  tipe_saldo        String
+  untungrugi        Int
+  untungrugiakun    String
+
+  JurnalInvoicePelepasanAset   JurnalInvoicePelepasanAset[]
+}
+
+model JurnalAset{
+  id              Int@id @default(autoincrement())
+  header_create_aset  Aset@relation(fields:[header_create_aset_id],references: [id])
+  header_create_aset_id Int
+  nama_akun       String
+  nominal         Int
+  tipe_saldo      String
+}
+
+model JurnalPelepasanAset{
+  id              Int@id @default(autoincrement())
+  header_pelepasan_aset  PelepasanAset@relation(fields:[header_pelepasan_aset_id],references: [id])
+  header_pelepasan_aset_id Int
+  nama_akun       String
+  nominal         Int
+  tipe_saldo      String
+}
+
+model JurnalInvoicePelepasanAset{
+  id              Int@id @default(autoincrement())
+  invoice_pelepasan_aset  InvoicePelepasanAset@relation(fields:[invoice_pelepasan_aset_id],references: [id])
+  invoice_pelepasan_aset_id Int
+  nama_akun       String
+  nominal         Int
+  tipe_saldo      String
 }
