@@ -52,6 +52,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
               deskripsi: "",
               pajak_id: "",
               pajak_nama: "",
+              pajak_nama_akun_beli: "",
               pajak_persen: "",
               hasil_pajak: 0,
               jumlah: "",
@@ -76,7 +77,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
           })
             .then(function (response) {
               console.log(response);
-              router.push(`view-kirim/${idInvoice}`);
+              // router.push(`view-kirim/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -91,7 +92,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
               <div class="mb-10">
                 <Row>
                   <Col>
-                    <Form.Label>Setor dari</Form.Label>
+                    <Form.Label>Bayar dari</Form.Label>
                     <Form.Control as="select" name="akun_bayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value="kosong">Pilih</option>
                       {data.map((akun) => (
@@ -227,6 +228,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       });
                                       props.setFieldValue(`detail_kirim_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
                                       props.setFieldValue(`detail_kirim_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                      props.setFieldValue(`detail_kirim_uang.${index}.pajak_nama_akun_beli`, hasil2[0].kategori2.nama_akun);
                                       let jumlah = props.values.detail_kirim_uang[index].jumlah;
                                       props.setFieldValue((props.values.detail_kirim_uang[index].jumlah = jumlah));
                                       const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0);
@@ -293,9 +295,9 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                     variant="primary"
                                     onClick={() => remove(index)}
                                     onChange={(e) => {
-                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                      const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      const pajak_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
                                       if (props.values.truefalse == "true") {
                                         let total = jumlah_total;
@@ -324,6 +326,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                               pajak_id: "",
                               pajak_nama: "",
                               pajak_persen: "",
+                              pajak_nama_akun_beli: "",
                               hasil_pajak: "",
                               jumlah: "",
                             })
@@ -446,11 +449,12 @@ export async function getServerSideProps() {
   });
 
   const pajaks = await prisma.pajak.findMany({
-    orderBy: [
-      {
+    orderBy: {
         id: "asc",
       },
-    ],
+      include: {
+        kategori2: true
+      }
   });
 
   const Kirimuangterakhir = await prisma.headerKirimUang.findFirst({

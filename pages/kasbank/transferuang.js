@@ -156,11 +156,11 @@ export default function tranfer_uang({ data, data2, data3 }) {
                 <Button variant='danger mr-2'>
                   <HighlightOffIcon fontSize='medium' /> Batal
                 </Button>
-                <Link href='/kasbank/banktransfer'>
+              
                   <Button variant='success' type='submit' onClick={props.handleSubmit}>
                     <CheckCircleIcon fontSize='medium' /> Buat Transferan
                   </Button>
-                </Link>
+              
               </div>
             </div>
           </Forms>

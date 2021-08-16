@@ -536,6 +536,7 @@ model HeaderTerimaUang {
   total               Int
 
   DetailTerimaUang    DetailTerimaUang[]
+  JurnalTerimaUang    JurnalTerimaUang[]
 }
 
 model DetailTerimaUang {
@@ -553,8 +554,18 @@ model DetailTerimaUang {
   pajak_nama            String
   pajak_persen          Int
   hasil_pajak           Int
+  pajak_nama_akun_jual  String
 
   jumlah                Int
+}
+
+model JurnalTerimaUang {
+  id                    Int               @id @default(autoincrement())
+  header_terima_uang    HeaderTerimaUang  @relation(fields: [header_terima_uang_id], references: [id])
+  header_terima_uang_id Int
+  nama_akun             String
+  nominal               Int
+  tipe_saldo            String
 }
 
 model HeaderKirimUang {
@@ -575,6 +586,7 @@ model HeaderKirimUang {
   total               Int
 
   DetailKirimUang     DetailKirimUang[]
+  JurnalKirimUang     JurnalKirimUang[]
 }
 
 model DetailKirimUang {
@@ -587,13 +599,23 @@ model DetailKirimUang {
   nama_akun             String
   deskripsi             String
   
-  pajak                 Pajak       @relation(fields: [pajak_id], references: [id])
-  pajak_id              Int
+  pajak                 Pajak?       @relation(fields: [pajak_id], references: [id])
+  pajak_id              Int?         
   pajak_nama            String
   pajak_persen          Int
   hasil_pajak           Int
+  pajak_nama_akun_beli  String
 
   jumlah                Int
+}
+
+model JurnalKirimUang {
+  id                    Int               @id @default(autoincrement())
+  header_kirim_uang     HeaderKirimUang   @relation(fields: [header_kirim_uang_id], references: [id])
+  header_kirim_uang_id  Int
+  nama_akun             String
+  nominal               Int
+  tipe_saldo            String
 }
 
 model HeaderJurnal {

@@ -50,7 +50,7 @@ export default async (req, res) => {
       tag: req.body.tag,
       pesan: req.body.pesan,
       memo: req.body.memo,
-      file_attachment: "req.file.filename",
+      file_attachment: req.file.filename,
       subtotal: parseInt(req.body.subtotal),
       total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
       diskon: parseInt(req.body.diskon),
@@ -107,7 +107,7 @@ export default async (req, res) => {
     let detail = [];
     req.body.produks &&
       JSON.parse(req.body.produks).map((i) => {
-        if (i.pajak_id == "" || i.pajak_id == 0) {
+        if (parseInt(i.hasil_pajak) == 0) {
           detail.push({
             header_penjualan_id: find_latest.id,
             produk_id: parseInt(i.produk_id),
@@ -118,10 +118,10 @@ export default async (req, res) => {
             harga_satuan: parseInt(i.harga_satuan),
             diskon: parseInt(i.diskon),
             hasil_diskon: parseInt(i.hasil_diskon),
-            pajak_id: 0,
+            pajak_id: 1,
             pajak_nama: "KOSONG",
             pajak_persen: 0,
-            hasil_pajak: parseInt(i.hasil_pajak),
+            hasil_pajak: 0,
             jumlah: parseInt(i.jumlah),
             pajak_nama_akun_jual: setting_pajak_penjualan[0].akun.nama_akun,
           });
@@ -146,9 +146,36 @@ export default async (req, res) => {
         }
       });
 
+    // let index = 0;
+    // while (index < detail.length) {
+    //   await prisma.detailPenjualan.create({
+    //     data: {
+    //       header_penjualan_id: detail[index].header_penjualan_id,
+    //       produk_id: detail[index].produk_id,
+    //       nama_produk: detail[index].nama_produk,
+    //       desk_produk: detail[index].desk_produk,
+    //       kuantitas: detail[index].kuantitas,
+    //       satuan: detail[index].satuan,
+    //       harga_satuan: detail[index].harga_satuan,
+    //       diskon: detail[index].diskon,
+    //       hasil_diskon: detail[index].hasil_diskon,
+    //       pajak_id: detail[index].pajak_id === 0 ? 1 : detail[index].pajak_id,
+    //       pajak_nama: detail[index].pajak_nama,
+    //       pajak_persen: detail[index].pajak_persen,
+    //       hasil_pajak: detail[index].hasil_pajak,
+    //       jumlah: detail[index].jumlah,
+    //       pajak_nama_akun_jual: detail[index].pajak_nama_akun_jual,
+    //     },
+    //   });
+    //   index++;
+    // }
+
+    // detail.map(async (i) => {
+
+    // });
+
     const create_detail_penjualan = await prisma.detailPenjualan.createMany({
       data: detail,
-      skipDuplicates: true,
     });
 
     // const get_pajak_id = async () => {
@@ -238,13 +265,18 @@ export default async (req, res) => {
 
     const add_jurnal_penjualan = await prisma.jurnalPenjualan.createMany({
       data: list_pajak,
-      skipDuplicates: true,
     });
 
     res.status(201).json([
       {
         message: "Create Detail Penjualan Success!",
         data: create_jurnal_penjualan,
+        add_jurnal_penjualan,
+        // add_jurnal_penjualan,
+        // create_jurnal_penjualan,
+        // frontend_data,
+        // detail,
+        // list_pajak,
       },
     ]);
   } catch (error) {

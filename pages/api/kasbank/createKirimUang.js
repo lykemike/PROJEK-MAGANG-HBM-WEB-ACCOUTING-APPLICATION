@@ -44,7 +44,7 @@ export default async (req, res) => {
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
       memo: req.body.memo,
-      file_attachment: req.file.filename,
+      file_attachment:" req.file.filename",
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.hasil_pajak),
       total: parseInt(req.body.total),
@@ -55,12 +55,9 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_header_kirim_uang = await prisma.headerKirimUang.findFirst({
+    const find_latest = await prisma.headerKirimUang.findFirst({
       orderBy: {
         id: "desc",
-      },
-      where: {
-        id: frontend_data.id,
       },
     });
     
@@ -68,24 +65,72 @@ export default async (req, res) => {
     req.body.detail_kirim_uang &&
       JSON.parse(req.body.detail_kirim_uang).map((i) => {
         detail.push({
-          header_kirim_uang_id: find_header_kirim_uang.id,
+          header_kirim_uang_id: find_latest.id,
           akun_id: parseInt(i.akun_id),
           nama_akun: i.nama_akun,
           deskripsi: i.deskripsi,
           pajak_id: parseInt(i.pajak_id),
           pajak_nama: i.pajak_nama,
           pajak_persen: i.pajak_persen,
+          pajak_nama_akun_beli: i.pajak_nama_akun_beli,
           hasil_pajak: parseInt(i.hasil_pajak),
           jumlah: parseInt(i.jumlah),
         });
       });
-
+    
     const create_detail_kirim_uang = await prisma.detailKirimUang.createMany({
       data: detail,
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create Kirim Uang Success!", data: create_detail_kirim_uang });
+    const find_nama_akun = await prisma.akun.findFirst({
+      where: {
+        id: parseInt(req.body.akun_bayar_id)
+      }
+    })
+
+    const akun_bayar = {
+      header_kirim_uang_id: find_latest.id,
+      nama_akun: find_nama_akun.nama_akun,
+      nominal: parseInt(req.body.total),
+      tipe_saldo: "Kredit"
+    }
+
+    let akun_pembayaran = []
+    detail.map((i) => {
+      akun_pembayaran.push({
+        header_kirim_uang_id: find_latest.id,
+        nama_akun: i.nama_akun,
+        nominal: parseInt(i.jumlah),
+        tipe_saldo: "Debit"
+      })
+    })
+
+    let list_pajak = []
+    detail.map((i) => {
+      list_pajak.push({
+        header_kirim_uang_id: find_latest.id,
+        nama_akun: i.pajak_nama_akun_beli,
+        nominal: parseInt(i.hasil_pajak),
+        tipe_saldo: "Debit"
+      })
+    })
+
+    const create_akun_bayar = await prisma.jurnalKirimUang.createMany({
+      data: akun_bayar
+    })
+
+    const create_akun_pembayaran = await prisma.jurnalKirimUang.createMany({
+      data: akun_pembayaran
+    })
+
+    const create_list_pajak = await prisma.jurnalKirimUang.createMany({
+      data: list_pajak
+    })
+
+    res.status(201).json({ message: "Create Kirim Uang Success!", 
+    create_kirim_uang, create_detail_kirim_uang, create_akun_bayar, create_akun_pembayaran, create_list_pajak
+     });
   } catch (error) {
     res.status(400).json({ data: "Failed to create kirim uang!", error });
     console.log(error);
