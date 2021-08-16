@@ -42,7 +42,6 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
           memo: "",
           subtotal: 0,
           total: "",
-          truefalse: "",
           fileattachment: [],
           hasil_pajak: "",
           boolean: false,
@@ -57,6 +56,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
               pajak_persen: "",
               hasil_pajak: 0,
               jumlah: "",
+              jumlah2: 0
             },
           ],
         }}
@@ -78,7 +78,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
           })
             .then(function (response) {
               console.log(response);
-              router.push(`view-terima/${idInvoice}`);
+              // router.push(`view-terima/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -96,7 +96,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                     <Form.Label>Bayar dari</Form.Label>
                     <Form.Control as='select' name='akun_setor_id' onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value='kosong'>Pilih</option>
-                      {data.map((akun) => (
+                      {data.map((akun, index) => (
                         <option key={akun.id} value={akun.id}>
                           {akun.nama_akun}
                         </option>
@@ -118,8 +118,8 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                     <Form.Label>Yang Membayar</Form.Label>
                     <Form.Control as='select' name='akun_membayar_id' onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value='kosong'>Pilih</option>
-                      {data2.map((kontaks) => (
-                        <option key={kontaks.kontak.id} value={kontaks.kontak.id}>
+                      {data2.map((kontaks, index) => (
+                        <option key={index} value={kontaks.kontak.id}>
                           {kontaks.kontak.nama}
                         </option>
                       ))}
@@ -151,23 +151,38 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                       type='switch'
                       id='custom-switch'
                       onChange={(e) => {
-                        if (e.target.checked == true) {
-                          props.setFieldValue(props.values.boolean == true);
-                          let total = props.values.subtotal;
-                          props.setFieldValue((props.values.total = total));
-                          props.setFieldValue("total", total);
-                          const test = "true";
-                          let harga_termasuk_pajak = total - props.values.hasil_pajak;
+                        if (e.target.checked === true) {
+                          props.setFieldValue((props.values.boolean = true));
+                          const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                          const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                          let harga_termasuk_pajak = jumlah_total - pajak_total;
                           props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
                           props.setFieldValue("subtotal", harga_termasuk_pajak);
-                          props.setFieldValue((props.values.truefalse = test));
-                        } else {
-                          props.setFieldValue(props.values.boolean == false);
-                          let total = props.values.subtotal + props.values.hasil_pajak;
+
+                          props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                          props.setFieldValue("hasil_pajak", pajak_total);
+
+                          
+
+                          let total = jumlah_total;
                           props.setFieldValue((props.values.total = total));
                           props.setFieldValue("total", total);
-                          const test = "false";
-                          props.setFieldValue((props.values.truefalse = test));
+                        } else {
+                          props.setFieldValue((props.values.boolean = false));
+                          const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                          const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                          let harga_tidak_termasuk_pajak = jumlah_total;
+                          props.setFieldValue((props.values.subtotal = harga_tidak_termasuk_pajak));
+                          props.setFieldValue("subtotal", harga_tidak_termasuk_pajak);
+
+                          props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                          props.setFieldValue("hasil_pajak", pajak_total);
+
+                          let total = jumlah_total + pajak_total;
+                          props.setFieldValue((props.values.total = total));
+                          props.setFieldValue("total", total);
                         }
                       }}
                     />
@@ -205,8 +220,8 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue(`detail_terima_uang.${index}.nama_akun`, data3.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun);
                                     }}>
                                     <option value='0'>Pilih</option>
-                                    {data3.map((namaAkun) => (
-                                      <option key={namaAkun.id} value={namaAkun.id}>
+                                    {data3.map((namaAkun, index) => (
+                                      <option key={index} value={namaAkun.id}>
                                         {namaAkun.nama_akun}
                                       </option>
                                     ))}
@@ -232,35 +247,57 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       let hasil2 = data4.filter((i) => {
                                         return i.id === parseInt(e.target.value);
                                       });
-                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
-                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
-                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
 
-                                      let jumlah = props.values.detail_terima_uang[index].jumlah;
-                                      props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
-                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
-                                      props.setFieldValue((props.values.subtotal = jumlah_total));
-                                      props.setFieldValue("subtotal", jumlah_total);
+                                      if (props.values.boolean == false) {
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
 
-                                      let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
-                                      props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
-                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
-                                      props.setFieldValue((props.values.hasil_pajak = pajak_total));
-                                      props.setFieldValue("hasil_pajak", pajak_total);
+                                        let jumlah = props.values.detail_terima_uang[index].jumlah;
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                        const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                        props.setFieldValue((props.values.subtotal = jumlah_total));
+                                        props.setFieldValue("subtotal", jumlah_total);
 
-                                      if (props.values.truefalse == "true") {
-                                        let total = parseInt(jumlah_total);
+                                        let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                        props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
+
+                                        let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        let total = parseInt(jumlah_total + pajak_total);
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
+
+                                        let jumlah = props.values.detail_terima_uang[index].jumlah;
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                        const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                                        let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                        props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
+
+                                        let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak
+                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+
+                                        let harga_termasuk_pajak = jumlah_total - pajak_total;
+                                        props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                        props.setFieldValue("subtotal", harga_termasuk_pajak);
+
+                                        let total = jumlah_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
                                     }}>
                                     <option value='0'>Pilih</option>
-                                    {data4.map((pajaks) => (
-                                      <option key={pajaks.id} value={pajaks.id}>
+                                    {data4.map((pajaks, index) => (
+                                      <option key={index} value={pajaks.id}>
                                         {pajaks.nama}
                                       </option>
                                     ))}
@@ -273,24 +310,42 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                     name={`detail_terima_uang.${index}.jumlah`}
                                     onChange={(e) => {
                                       props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value));
-                                      let jumlah = parseInt(e.target.value);
-                                      props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
-                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
-                                      props.setFieldValue((props.values.subtotal = jumlah_total));
-                                      props.setFieldValue("subtotal", jumlah_total);
 
-                                      let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
-                                      props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
-                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
-                                      props.setFieldValue((props.values.hasil_pajak = pajak_total));
-                                      props.setFieldValue("hasil_pajak", pajak_total);
+                                      if (props.values.boolean == false) {
+                                        let jumlah = parseInt(e.target.value);
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                        const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                        props.setFieldValue((props.values.subtotal = jumlah_total));
+                                        props.setFieldValue("subtotal", jumlah_total);
 
-                                      if (props.values.truefalse == "true") {
-                                        let total = parseInt(jumlah_total);
+                                        let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
+                                        props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
+
+                                        let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        let total = parseInt(jumlah_total + pajak_total);
+                                        let jumlah = parseInt(e.target.value);
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                        const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                                        let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
+                                        props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
+
+                                        let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak
+                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+
+                                        let harga_termasuk_pajak = jumlah_total - pajak_total;
+                                        props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                        props.setFieldValue("subtotal", harga_termasuk_pajak);
+
+                                        let total = jumlah_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
@@ -302,19 +357,6 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                     variant='primary'
                                     onClick={() => remove(index)}
                                     onChange={(e) => {
-                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
-
-                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
-
-                                      if (props.values.truefalse == "true") {
-                                        let total = parseInt(jumlah_total);
-                                        props.setFieldValue((props.values.total = total));
-                                        props.setFieldValue("total", total);
-                                      } else {
-                                        let total = parseInt(jumlah_total + pajak_total);
-                                        props.setFieldValue((props.values.total = total));
-                                        props.setFieldValue("total", total);
-                                      }
                                     }}>
                                     Remove
                                   </Button>
@@ -334,6 +376,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                               pajak_persen: "",
                               hasil_pajak: "",
                               jumlah: "",
+                              jumlah2: 0,
                             })
                           }>
                           <PlaylistAddIcon fontSize='medium' /> Tambah Data

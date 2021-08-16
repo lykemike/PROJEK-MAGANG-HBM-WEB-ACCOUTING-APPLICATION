@@ -44,11 +44,15 @@ export default async (req, res) => {
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
       memo: req.body.memo,
-      file_attachment: req.file.filename,
+      file_attachment: "req.file.filename",
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.hasil_pajak),
       total: parseInt(req.body.total),
     };
+
+    const bool = {
+      boolean: req.body.boolean
+    }
 
     const create_terima_uang = await prisma.headerTerimaUang.createMany({
       data: [frontend_data],
@@ -75,6 +79,7 @@ export default async (req, res) => {
           pajak_nama_akun_jual: i.pajak_nama_akun_jual,
           hasil_pajak: parseInt(i.hasil_pajak),
           jumlah: parseInt(i.jumlah),
+          jumlah2: parseInt(i.jumlah2)
         });
       });
 
@@ -98,12 +103,22 @@ export default async (req, res) => {
 
     let akun_terima = [];
     detail.map((i) => {
-      akun_terima.push({
+      if(bool.boolean == "true"){
+        akun_terima.push({
+        header_terima_uang_id: find_latest.id,
+          nama_akun: i.nama_akun,
+          nominal: parseInt(i.jumlah2),
+          tipe_saldo: "Kredit",
+      })
+      } else {
+        akun_terima.push({
         header_terima_uang_id: find_latest.id,
           nama_akun: i.nama_akun,
           nominal: parseInt(i.jumlah),
           tipe_saldo: "Kredit",
       })
+      }
+      
     })
 
     let list_pajak = [];
@@ -129,7 +144,7 @@ export default async (req, res) => {
     })
 
     res.status(201).json({ message: "Create Header, Detail, Jurnal Terima Uang Sucess!", 
-      create_terima_uang, create_detail_terima_uang, create_akun_setor, create_akun_terima, create_list_pajak
+      akun_terima, bool, detail
     });
   } catch (error) {
     res.status(400).json({ data: "Failed Header, Detail, Jurnal Terima Uang!", error });
