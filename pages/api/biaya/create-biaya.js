@@ -86,7 +86,9 @@ export default async (req, res) => {
           akun_biaya_id: parseInt(i.akun_biaya_id),
           deskripsi: i.deskripsi,
           pajak_id: parseInt(i.pajak_id),
-          jumlah: parseInt(i.jumlah),
+          nama_pajak: i.nama_pajak,
+          nama_akun_pajak_beli: i.nama_akun_pajak_beli,
+          jumlah: Math.floor(i.jumlah),
         });
       });
 

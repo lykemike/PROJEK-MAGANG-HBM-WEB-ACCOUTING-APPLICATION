@@ -112,6 +112,13 @@ model Akun {
    DetailKirimUang          DetailKirimUang[]
 
    DetailJurnal             DetailJurnal[]
+
+   Aset1                    Aset[]@relation("AkunAsetTetap")
+   Aset2                    Aset[]@relation("AkunDikreditkan")
+   Aset3                    Aset[]@relation("AkunPenyusutan")
+   Aset4                    Aset[]@relation("AkumulasiAkunPenyusutan")
+
+   PelepasanAset            PelepasanAset[]
 }
 
 // Kategori Kontak
@@ -630,4 +637,82 @@ model DetailJurnal {
   tag               String
 }
 
+model Aset{
+  id                Int @id @default(autoincrement())
+  nama_aset         String
+  nomor_aset        String
+  akun_aset_tetap   Akun @relation("AkunAsetTetap",fields: [akun_aset_id], references: [id])
+  akun_aset_id      Int
+  deskripsi_aset    String
+  tgl_akuisisi      String
+  biaya_akuisisi    Int
+  akun_dikreditkan  Akun @relation("AkunDikreditkan",fields:[akun_dikreditkan_id],references:[id])
+  akun_dikreditkan_id Int
+  tag               String
+  aset_non_depresiasi Boolean
+  metode            String
+  masa_manfaat      Int
+  nilai_tahun       Int
+  akun_penyusutan  Akun @relation("AkunPenyusutan",fields:[akun_penyusutan_id],references:[id])
+  akun_penyusutan_id Int
+  akumulasi_akun_penyusutan  Akun @relation("AkumulasiAkunPenyusutan",fields:[akumulasi_akun_penyusutan_id],references:[id])
+  akumulasi_akun_penyusutan_id Int
+  akumulasi_penyusutan Int
+  tgl_penyusutan    String
 
+
+
+  JurnalAset  JurnalAset[]
+}
+
+model PelepasanAset{
+  id                Int @id @default(autoincrement())
+  tgl_transaksi     String
+  harga_jual        Int
+  deposit           Akun @relation(fields:[deposit_id], references:[id])
+  deposit_id        Int
+  memo              String
+  tag               String
+
+  
+
+  JurnalPelepasanAset   JurnalPelepasanAset[]
+}
+
+model InvoicePelepasanAset{
+  id                Int @id @default(autoincrement())
+  nama_akun         String
+  nominal           Int
+  tipe_saldo        String
+  untungrugi        Int
+  untungrugiakun    String
+
+  JurnalInvoicePelepasanAset   JurnalInvoicePelepasanAset[]
+}
+
+model JurnalAset{
+  id              Int@id @default(autoincrement())
+  header_create_aset  Aset@relation(fields:[header_create_aset_id],references: [id])
+  header_create_aset_id Int
+  nama_akun       String
+  nominal         Int
+  tipe_saldo      String
+}
+
+model JurnalPelepasanAset{
+  id              Int@id @default(autoincrement())
+  header_pelepasan_aset  PelepasanAset@relation(fields:[header_pelepasan_aset_id],references: [id])
+  header_pelepasan_aset_id Int
+  nama_akun       String
+  nominal         Int
+  tipe_saldo      String
+}
+
+model JurnalInvoicePelepasanAset{
+  id              Int@id @default(autoincrement())
+  invoice_pelepasan_aset  InvoicePelepasanAset@relation(fields:[invoice_pelepasan_aset_id],references: [id])
+  invoice_pelepasan_aset_id Int
+  nama_akun       String
+  nominal         Int
+  tipe_saldo      String
+}
