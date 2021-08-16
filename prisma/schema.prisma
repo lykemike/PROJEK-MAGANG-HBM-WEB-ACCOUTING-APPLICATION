@@ -552,7 +552,6 @@ model DetailTerimaUang {
   pajak_nama_akun_jual  String
 
   jumlah                Int
-  jumlah2               Int
 }
 
 model JurnalTerimaUang {

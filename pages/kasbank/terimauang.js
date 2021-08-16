@@ -78,7 +78,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
           })
             .then(function (response) {
               console.log(response);
-              // router.push(`view-terima/${idInvoice}`);
+              router.push(`view-terima/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -162,8 +162,6 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
 
                           props.setFieldValue((props.values.hasil_pajak = pajak_total));
                           props.setFieldValue("hasil_pajak", pajak_total);
-
-                          
 
                           let total = jumlah_total;
                           props.setFieldValue((props.values.total = total));

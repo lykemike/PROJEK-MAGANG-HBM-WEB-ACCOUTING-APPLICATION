@@ -259,6 +259,52 @@ Jurnal
 Produk
 - Udah bisa pilih mau jual atau beli produk = 100%
 
+New Updates
+- Perbaikan Harga Termasuk/Tidak Termasuk Pajak Terima Uang = 100%
+
+🗓️ Tanggal: 18 August 2021, Rabu
+Meeting progress dan perubahan berbrp page
+Penjualan 
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 100% (udah fix)
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+
+Pembelian 
+- Jurnal Pembelian Database = 0%
+- Jurnal Pembelian API = 0%
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+
+Transfer Uang 
+- Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+
+Aset
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
+- Jurnal Pelepasan Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
+- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Invoice Untung Rugi API = 20%
+
+Kas Bank
+- Jurnal Terima Uang Database = 100%
+- Jurnal Terima Uang API = 100% 
+- Jurnal Kirim Uang Database = 100% (SISA TESTING)
+- Jurnal Kirim Uang API = 100% (SISA TESTING)
+
+Jurnal
+- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
+
+Produk
+- Udah bisa pilih mau jual atau beli produk = 100%
+
+New Updates
+- Perbaikan Harga Termasuk Pajak Page Terima Uang = 100%
+- Perbaikan Harga Termasuk Pajak Page Penjualan = 100%
+- Perbaikan Harga Termasuk Pajak Page Pembelian = 0%
+- Perbaikan Harga Termasuk Pajak Page Biaya = 0%
+- Perbaikan Harga Termasuk Pajak Page Kirim Uang = 0%
+
 ===================================
 - Buat struktur api dan database jurnal pembelian, biaya = 30%
 - Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
@@ -284,10 +330,9 @@ Ketika buat pembayaran jumlah pembayaran di cocokan dengan sisa tagihan
   - Ketika udah bayar separuh status: Partial
   - Ketika lewat jatuh tempo status: Jatuh Tempo
 
-HARGA TERMASUK PAJAK Pembelian, Penjualan, Biaya -> subtotal - pajak
+HARGA TERMASUK PAJAK Pembelian, Penjualan, Biaya, Kirim Uang -> subtotal - pajak
 
-(DONE) Perbaikan Harga Termasuk/Tidak Termasuk Pajak Terima Uang = 100%
-(DONE) Perbaikan Harga Termasuk/Tidak Termasuk Pajak Kirim Uang =  100%
+
 
 == Produk page ==
 (DONE) Update Produk API 
