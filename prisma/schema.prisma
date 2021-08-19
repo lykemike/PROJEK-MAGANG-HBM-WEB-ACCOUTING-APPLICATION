@@ -462,6 +462,7 @@ model HeaderBiaya {
   total             Int
 
   detail_biaya DetailBiaya[]
+  jurnal_biaya JurnalBiaya[]
 }
 
 // Detail Biaya Table
@@ -472,10 +473,26 @@ model DetailBiaya {
 
   akun_biaya      Akun   @relation(fields: [akun_biaya_id], references: [id])
   akun_biaya_id   Int
+  nama_akun       String
   deskripsi       String
-  pajak           Pajak  @relation(fields: [pajak_id], references: [id])
+  pajakk           Pajak  @relation(fields: [pajak_id], references: [id])
   pajak_id        Int
+  pajak           Int
+  nama_pajak      String
+  pajak_persen    Int
+  hasil_pajak     Int
+  nama_pajak_akun_beli  String
   jumlah          Int
+  total_per_baris Int
+}
+
+model JurnalBiaya{
+  id              Int       @id@default(autoincrement())
+  header_biaya    HeaderBiaya @relation(fields:[header_biaya_id],references: [id])       
+  header_biaya_id Int
+  nama_akun             String
+  nominal               Int
+  tipe_saldo            String
 }
 
 // Setting Penjualan, Pembelian, dan Biaya

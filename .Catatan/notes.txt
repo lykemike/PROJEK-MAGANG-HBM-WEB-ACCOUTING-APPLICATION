@@ -462,5 +462,6 @@ PERTANYAAN MEETING TEKNIKAL 8/14/2021
 (DONE) ketika isi debit/kredit sebelahnya disable
 - cara import data dan query ke database  
 - Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
+- jurnal biaya belum bisa di update dibagian jumlah switch dan pemotongan
 
 

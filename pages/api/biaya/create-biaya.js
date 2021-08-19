@@ -48,7 +48,7 @@ export default async (req, res) => {
       tag: req.body.tag,
 
       memo: req.body.memo,
-      lampiran: req.file.filename,
+      lampiran: "req.file.filename",
 
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.pajak),
@@ -56,6 +56,10 @@ export default async (req, res) => {
       akun_pemotongan: parseInt(req.body.akun_pemotongan),
       pemotongan: parseInt(req.body.pemotongan),
       jumlah_pemotongan: parseInt(req.body.jumlah_pemotongan),
+    };
+
+    const bool = {
+      boolean: req.body.boolean,
     };
 
     const create_header_biaya = await prisma.headerBiaya.createMany({
@@ -66,7 +70,7 @@ export default async (req, res) => {
     const find_latest = await prisma.headerBiaya.findFirst({
       orderBy: {
         id: "desc",
-      }
+      },
     });
 
     const update_no_transaksi = await prisma.headerBiaya.update({
@@ -78,17 +82,34 @@ export default async (req, res) => {
       },
     });
 
+    const get_setting_biaya = await prisma.settingDefault.findMany({
+      where: {
+        tipe: "biaya",
+      },
+      include: {
+        akun: true,
+      },
+    });
+
+    const setting_pemotongan = get_setting_biaya.filter((i) => i.nama_setting === "pemotongan");
+    const setting_hutang_usaha = get_setting_biaya.filter((i) => i.nama_setting === "hutang_usaha");
+
     let detail = [];
     req.body.detail_biaya &&
       JSON.parse(req.body.detail_biaya).map((i) => {
         detail.push({
           header_biaya_id: find_latest.id,
           akun_biaya_id: parseInt(i.akun_biaya_id),
+          nama_akun: i.nama_akun,
           deskripsi: i.deskripsi,
           pajak_id: parseInt(i.pajak_id),
+          pajak: i.pajak,
           nama_pajak: i.nama_pajak,
-          nama_akun_pajak_beli: i.nama_akun_pajak_beli,
-          jumlah: Math.floor(i.jumlah),
+          pajak_persen: parseInt(i.persen_pajak),
+          hasil_pajak: parseInt(i.hasil_pajak),
+          nama_pajak_akun_beli: i.nama_pajak_akun_beli,
+          jumlah: parseInt(i.jumlah),
+          total_per_baris: parseInt(i.total_per_baris),
         });
       });
 
@@ -97,9 +118,99 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json([{ message: "Create biaya success!", data: create_detail_biaya }]);
+    const find_nama_akun = await prisma.akun.findFirst({
+      where: {
+        id: parseInt(req.body.akun_kas_bank),
+      },
+    });
+
+    let list_pajak = [];
+    detail.map((i) => {
+      // let pajak = get_pajak_id(i.pajak_id);
+
+      list_pajak.push({
+        header_biaya_id: find_latest.id,
+        nama_akun: i.nama_pajak_akun_beli,
+        nominal: parseInt(i.hasil_pajak),
+        tipe_saldo: "Debit",
+      });
+    });
+
+    let list_akun = [];
+    detail.map((i) => {
+      // let pajak = get_pajak_id(i.pajak_id);
+
+      list_akun.push({
+        header_biaya_id: find_latest.id,
+        nama_akun: i.nama_akun,
+        nominal: parseInt(i.total_per_baris),
+        tipe_saldo: "Debit",
+      });
+    });
+
+    const akunbayardari = await prisma.akun.findMany({
+      where: {
+        id: parseInt(req.body.akun_kas_bank),
+      },
+    });
+
+    const nama_akun_biaya = akunbayardari.nama_akun;
+
+    let data_biaya = [];
+
+    if (bool.boolean == "true") {
+      data_biaya.push(
+        {
+          header_biaya_id: find_latest.id,
+          nama_akun: setting_pemotongan[0].akun.nama_akun,
+          tipe_saldo: "Kredit",
+          nominal: parseInt(req.body.pemotongan),
+        },
+        {
+          header_biaya_id: find_latest.id,
+          nama_akun: "KOSONG",
+          tipe_saldo: "Kredit",
+          nominal: parseInt(req.body.jumlah_pemotongan),
+        }
+      );
+    } else {
+      data_biaya.push(
+        {
+          header_biaya_id: find_latest.id,
+          nama_akun: setting_pemotongan[0].akun.nama_akun,
+          tipe_saldo: "Kredit",
+          nominal: parseInt(req.body.pemotongan),
+        },
+        {
+          header_biaya_id: find_latest.id,
+          nama_akun: akunbayardari[0].nama_akun,
+          tipe_saldo: "Kredit",
+          nominal: parseInt(req.body.jumlah_pemotongan),
+        }
+      );
+    }
+
+    const create_jurnal_biaya = await prisma.jurnalBiaya.createMany({
+      data: list_akun,
+    });
+
+    const create_jurnal_pajak = await prisma.jurnalBiaya.createMany({
+      data: list_pajak,
+    });
+
+    const create_jurnal_kredit = await prisma.jurnalBiaya.createMany({
+      data: data_biaya,
+    });
+
+    res.status(201).json([{ message: "Create biaya success!", data: create_jurnal_biaya }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed to create detail biaya!", error }]);
     console.log(error);
   }
+};
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
 };
