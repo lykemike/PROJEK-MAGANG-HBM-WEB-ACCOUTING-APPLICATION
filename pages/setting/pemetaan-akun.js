@@ -4,7 +4,14 @@ import {Form,Row,Col,InputGroup,FormControl,Button,OverlayTrigger,Tooltip,Card} 
 import SidebarSetting from '../../components/SidebarSetting'
 import Divider from '@material-ui/core/Divider';
 
-export default function pemetaanakun() {
+import * as Yup from 'yup'
+import { Formik, Form as Forms, FieldArray } from "formik";
+import Axios from "axios";
+import { useRouter } from "next/router";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,data8,data9,data10}) {
     return ( 
         <Layout>
             <h1>Pengaturan</h1>
@@ -23,59 +30,87 @@ export default function pemetaanakun() {
                         Pendapatan Penjualan
                         </Col>
                         <Col>
-                            <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                            {data.map((i) => (
+                                <option key={i.id} value={i.id}>
+                                {i.nama_akun}
+                                </option>
+                            ))}
+                        </Form.Control>
                         </Col>
+
                         <Col>
                         Pembayaran Dimuka
                         </Col>
                         <Col>
-                            <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data4.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
                         </Col>
                     </Row> 
+
                     <Row className="mb-2">
                         <Col>
                         Diskon Penjualan
                         </Col>
                         <Col>
-                            <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data2.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
+                        </Col>
+
+                        <Col>
+                        Piutang Belum Ditagih
                         </Col>
                         <Col>
-                        Pengiriman Penjualan
-                        </Col>
-                        <Col>
-                            <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data5.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
                         </Col>
                     </Row>
 
                     <Row className="mb-2">
                         <Col>
-                        Retur Penjualan
+                        Pemotongan
                         </Col>
                         <Col>
-                            <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data3.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
+                        </Col>
+
+                        <Col>
+                        Pajak Penjualan
                         </Col>
                         <Col>
-                        Pengiriman Penjualan
-                        </Col>
-                        <Col>
-                            <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data6.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
                         </Col>
                     </Row>
                     </div>
 
-                    <Row className="mb-2">
+                    {/* <Row className="mb-2">
                         <Col>
                         Pengiriman Penjualan
                         </Col>
@@ -92,7 +127,7 @@ export default function pemetaanakun() {
                                 <option></option>
                             </Form.Control>
                         </Col>
-                    </Row>
+                    </Row> */}
 
                     <h4>Pembelian</h4>
                     <div className="border-t border-gray-200 py-2">
@@ -101,35 +136,51 @@ export default function pemetaanakun() {
                         Pembelian (COGS)
                         </Col>
                         <Col>
-                        <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data7.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
                         </Col>
                         <Col>
                             Hutang Belum Ditagih
                         </Col>
                         <Col>
-                        <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data11.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
                         </Col>
                     </Row> 
 
                     <Row className="mb-2">
                         <Col>
-                        Pengiriman Pembelian
+                        Pemotongan
                         </Col>
                         <Col>
-                        <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data8.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
                         </Col>
                         <Col>
                             Pajak Pembelian
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                                <option></option>
+                        {data12.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
                             </Form.Control>
                         </Col>
                     </Row> 
@@ -139,30 +190,55 @@ export default function pemetaanakun() {
                         Uang Muka Pembelian
                         </Col>
                         <Col sm="3">
-                        <Form.Control as="select">
-                                <option></option>
-                            </Form.Control>
+                        <Form.Control as='select'>
+                        {data10.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
+                        </Col>
+
+                        <Col sm="3">
+                        Diskon Pembelian
+                        </Col>
+                        <Col sm="3">
+                        <Form.Control as='select'>
+                        {data9.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
+                        </Form.Control>
                         </Col>
                     </Row>
                     </div>
 
-                    <h4>AR/AP</h4>
+                    <h4>Biaya</h4>
                     <div className="border-t border-gray-200 py-2">
                     <Row className="mb-2">
                         <Col>
-                        Pembelian (COGS)
+                        Pemotongan
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                                <option></option>
+                        {data13.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
                             </Form.Control>
                         </Col>
                         <Col>
-                            Hutang Belum Ditagih
+                            Hutang Usaha
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                                <option></option>
+                        {data14.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
                             </Form.Control>
                         </Col>
                     </Row> 
@@ -216,7 +292,11 @@ export default function pemetaanakun() {
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                                <option></option>
+                        {data19.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
                             </Form.Control>
                         </Col>
                         <Col>
@@ -224,7 +304,11 @@ export default function pemetaanakun() {
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                                <option></option>
+                        {data20.map((i) => (
+                            <option key={i.id} value={i.id}>
+                            {i.nama_akun}
+                            </option>
+                        ))}
                             </Form.Control>
                         </Col>
                     </Row>
@@ -238,3 +322,155 @@ export default function pemetaanakun() {
         </Layout>
     )
 }
+
+export async function getServerSideProps() {
+    const akunA = await prisma.akun.findMany({
+      where: {
+        kategoriId: {
+          in: [13, 14],
+        },
+      },
+    });
+  
+    const akunB = await prisma.akun.findMany({
+      where: {
+        kategoriId: {
+          in: [13],
+        },
+      },
+    });
+  
+    const akunC = await prisma.akun.findMany({
+      where: {
+        kategoriId: {
+          in: [13],
+        },
+      },
+    });
+  
+    const akunD = await prisma.akun.findMany({
+      where: {
+        kategoriId: {
+          in: [3],
+        },
+      },
+    });
+  
+    const akunE = await prisma.akun.findMany({
+      where: {
+        kategoriId: {
+          in: [1, 2],
+        },
+      },
+    });
+  
+    const akunF = await prisma.akun.findMany({
+      where: {
+        kategoriId: {
+          in: [10, 13, 14, 16, 17],
+        },
+      },
+    });
+  
+    const akunG = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [15],
+          },
+        },
+      });
+    
+      const akunH = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [15],
+          },
+        },
+      });
+    
+      const akunI = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [13],
+          },
+        },
+      });
+    
+      const akunJ = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [3],
+          },
+        },
+      });
+    
+      const akunK = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [8],
+          },
+        },
+      });
+    
+      const akunL = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [2, 13, 14, 16, 17],
+          },
+        },
+      });
+
+      const akunM = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [15],
+          },
+        },
+      });
+    
+      const akunN = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [8],
+          },
+        },
+      });
+//OPQR
+      const akunS = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [12],
+          },
+        },
+      });
+    
+      const akunT = await prisma.akun.findMany({
+        where: {
+          kategoriId: {
+            in: [5],
+          },
+        },
+      });
+    
+    return {
+      props: {
+        data: akunA,
+        data2: akunB,
+        data3: akunC,
+        data4: akunD,
+        data5: akunE,
+        data6: akunF,
+        data7: akunG,
+        data8: akunH,
+        data9: akunI,
+        data10: akunJ,
+        data11: akunK,
+        data12: akunL,
+        data13: akunM,
+        data14: akunN,
+        data19: akunS,
+        data20: akunT,
+      },
+    };
+  }
+  
