@@ -1849,7 +1849,7 @@ export default async (req, res) => {
         {
           akun_id: 1,
           tipe: "pembelian",
-          nama_setting: "uang_muka_pembelian ",
+          nama_setting: "uang_muka_pembelian",
         },
         {
           akun_id: 74,

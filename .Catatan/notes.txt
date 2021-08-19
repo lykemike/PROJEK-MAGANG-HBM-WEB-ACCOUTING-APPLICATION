@@ -299,11 +299,55 @@ Produk
 - Udah bisa pilih mau jual atau beli produk = 100%
 
 New Updates
-- Perbaikan Harga Termasuk Pajak Page Terima Uang = 100%
-- Perbaikan Harga Termasuk Pajak Page Penjualan = 100%
-- Perbaikan Harga Termasuk Pajak Page Pembelian = 0%
-- Perbaikan Harga Termasuk Pajak Page Biaya = 0%
-- Perbaikan Harga Termasuk Pajak Page Kirim Uang = 0%
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 85%
+- Buat Jurnal Termasuk Pajak Page Biaya = 75%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 90%
+
+🗓️ Tanggal: 19 August 2021, Kamis
+Meeting progress dan perubahan berbrp page
+Penjualan 
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 100% (udah fix)
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+
+Pembelian 
+- Jurnal Pembelian Database = 100%
+- Jurnal Pembelian API = 100%
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+
+Transfer Uang 
+- Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+
+Aset
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
+- Jurnal Pelepasan Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
+- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Invoice Untung Rugi API = 20%
+
+Kas Bank
+- Jurnal Terima Uang Database = 100%
+- Jurnal Terima Uang API = 100% 
+- Jurnal Kirim Uang Database = 100% (SISA TESTING)
+- Jurnal Kirim Uang API = 100% (SISA TESTING)
+
+Jurnal
+- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
+
+Produk
+- Udah bisa pilih mau jual atau beli produk = 100%
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 75%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 90%
+
 
 ===================================
 - Buat struktur api dan database jurnal pembelian, biaya = 30%
@@ -374,6 +418,7 @@ Contoh validation backend
 Filter search
 Tiap option menu di tambahin select2
 Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
+Tambah kalkulasi ketika ganti produk otomatis kehitung
 ===================
 -------------
 || UPDATES ||
