@@ -11,7 +11,11 @@ import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+<<<<<<< HEAD
 export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,data8,data9,data10}) {
+=======
+export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,data8,data9,data10, data11, data12, data13, data14, data15,data16,data17, data18, data19, data20}) {
+>>>>>>> 85777909e487d9bea248add5ee5309f083e7b774
     return ( 
         <Layout>
             <h1>Pengaturan</h1>

@@ -41,7 +41,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
           akun_setor: "",
           jumlah: "",
           memo: "",
-          no_transaksi: id,
+          no_transaksi: 0,
           tgl_transaksi: "",
           tag: "",
         }}
@@ -110,7 +110,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control placeholder={"Auto " + "(" + id + ")"} name='no_transaksi' disabled />
+                    <Form.Control placeholder={"Auto"} name='no_transaksi' disabled />
                   </Col>
 
                   <Col>
@@ -156,11 +156,11 @@ export default function tranfer_uang({ data, data2, data3 }) {
                 <Button variant='danger mr-2'>
                   <HighlightOffIcon fontSize='medium' /> Batal
                 </Button>
-                <Link href='/kasbank/banktransfer'>
+              
                   <Button variant='success' type='submit' onClick={props.handleSubmit}>
                     <CheckCircleIcon fontSize='medium' /> Buat Transferan
                   </Button>
-                </Link>
+              
               </div>
             </div>
           </Forms>

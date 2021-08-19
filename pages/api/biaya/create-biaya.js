@@ -63,12 +63,18 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_header_biaya = await prisma.headerBiaya.findFirst({
+    const find_latest = await prisma.headerBiaya.findFirst({
       orderBy: {
         id: "desc",
-      },
+      }
+    });
+
+    const update_no_transaksi = await prisma.headerBiaya.update({
       where: {
-        id: frontend_data.id,
+        id: find_latest.id,
+      },
+      data: {
+        no_transaksi: find_latest.id,
       },
     });
 
@@ -76,10 +82,12 @@ export default async (req, res) => {
     req.body.detail_biaya &&
       JSON.parse(req.body.detail_biaya).map((i) => {
         detail.push({
-          header_biaya_id: find_header_biaya.id,
+          header_biaya_id: find_latest.id,
           akun_biaya_id: parseInt(i.akun_biaya_id),
           deskripsi: i.deskripsi,
           pajak_id: parseInt(i.pajak_id),
+          nama_pajak: i.nama_pajak,
+          nama_akun_pajak_beli: i.nama_akun_pajak_beli,
           jumlah: Math.floor(i.jumlah),
         });
       });

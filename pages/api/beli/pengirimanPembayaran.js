@@ -37,9 +37,42 @@ export default async (req, res) => {
       },
     });
 
+    const find_akun_bayar = await prisma.akun.findFirst({
+      where: {
+        id: parseInt(req.body.bayar_dari),
+      },
+    });
+
+    const find_default_hutang_blm_ditagih = await prisma.settingDefault.findFirst({
+      where: {
+        id: 10
+      },
+      include: {
+        akun: true
+      }
+    })
+
+    const jurnal_pengiriman_pembayaran = await prisma.jurnalPengirimanBayaran.createMany({
+      data: [
+        {
+          header_penjualan_id: parseInt(req.body.id),
+          nama_penerimaan_akun: find_default_hutang_blm_ditagih.akun.nama_akun,
+          nominal: parseInt(req.body.jumlah),
+          tipe_saldo: "Debit",
+        },
+        {
+          header_penjualan_id: parseInt(req.body.id),
+          nama_penerimaan_akun: find_akun_bayar.nama_akun,
+          nominal: parseInt(req.body.jumlah),
+          tipe_saldo: "Kredit",
+        },
+      ],
+    });
+
     res.status(201).json([
       { message: "Create Penerimaan Pembayaran Success!", data: create_penerimaan_pembayaran },
       { message: "Update Sisa Tagihan Success!", data: update_sisa_tagihan },
+      { message: "Create Jurnal Pengiriman Pembayaran!", data: jurnal_pengiriman_pembayaran },
     ]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);

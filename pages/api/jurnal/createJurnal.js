@@ -50,12 +50,9 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_header_jurnal = await prisma.headerJurnal.findFirst({
+    const find_latest = await prisma.headerJurnal.findFirst({
       orderBy: {
         id: "desc",
-      },
-      where: {
-        id: frontend_data.id,
       },
     });
 
@@ -63,7 +60,7 @@ export default async (req, res) => {
     req.body.detail_jurnal &&
       JSON.parse(req.body.detail_jurnal).map((i) => {
         detail.push({
-          header_jurnal_id: find_header_jurnal.id,
+          header_jurnal_id: find_latest.id,
           akun_id: parseInt(i.akun_id),
           deskripsi: i.deskripsi,
           tag: i.tag,

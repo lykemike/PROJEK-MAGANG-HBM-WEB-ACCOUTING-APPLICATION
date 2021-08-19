@@ -51,10 +51,12 @@ export default function addProduk({ data, data2, data3, data5 }) {
           unit: "",
           quantity: 0,
           deskripsi: "",
-          hbs: "",
-          akun_pembelian: "",
-          hjs: "",
-          akun_penjualan: "",
+          hbs: 0,
+          akun_pembelian: 1,
+          hjs: 0,
+          akun_penjualan: 1,
+          beli_disable: true,
+          jual_disable: true,
         }}
         // validationSchema={ProdukSchema}
         onSubmit={async (values) => {
@@ -101,12 +103,7 @@ export default function addProduk({ data, data2, data3, data5 }) {
 											{props.errors.file_upload && props.touched.file_upload ?
 												<div class="text-red-500 text-sm"><ErrorOutlineIcon />{props.errors.file_upload}</div>
 												: null} */}
-                      <Form.File
-                        type='file'
-                        name='file_upload'
-                        accept='image/*'
-                        onChange={(e) => props.setFieldValue("file_upload", e.target.files)}
-                      />
+                      <Form.File type='file' name='file_upload' accept='image/*' onChange={(e) => props.setFieldValue("file_upload", e.target.files)} />
                       {props.errors.file_upload && props.touched.file_upload ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -224,7 +221,15 @@ export default function addProduk({ data, data2, data3, data5 }) {
                   <h4>Harga</h4>
                   <hr />
                   <Row className='ml-2'>
-                    <FormCheck />
+                    <FormCheck
+                      onChange={(e) => {
+                        if (e.target.checked == true) {
+                          props.setFieldValue(`beli_disable`, false);
+                        } else {
+                          props.setFieldValue(`beli_disable`, true);
+                        }
+                      }}
+                    />
                     <h5>Saya Beli Produk Ini</h5>
                   </Row>
                   <hr />
@@ -232,7 +237,7 @@ export default function addProduk({ data, data2, data3, data5 }) {
                   <Row sm='6'>
                     <Col>
                       <Form.Label>Harga Beli Satuan</Form.Label>
-                      <Form.Control className='mb-2' placeholder='Rp. 0,00' name='hbs' onChange={props.handleChange} />
+                      <Form.Control disabled={props.values.beli_disable} className='mb-2' placeholder='Rp. 0,00' name='hbs' onChange={props.handleChange} />
                       {props.errors.hbs && props.touched.hbs ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -242,7 +247,7 @@ export default function addProduk({ data, data2, data3, data5 }) {
                     </Col>
                     <Col>
                       <Form.Label>Akun Pembelian</Form.Label>
-                      <Form.Control className='mb-2' as='select' name='akun_pembelian' onChange={props.handleChange}>
+                      <Form.Control disabled={props.values.beli_disable} className='mb-2' as='select' name='akun_pembelian' onChange={props.handleChange}>
                         <option value='0'>Pilih</option>
                         {data.map((akunPembelian) => (
                           <option key={akunPembelian.id} value={akunPembelian.id}>
@@ -261,7 +266,15 @@ export default function addProduk({ data, data2, data3, data5 }) {
 
                   <hr />
                   <Row className='ml-2'>
-                    <FormCheck />
+                    <FormCheck
+                      onChange={(e) => {
+                        if (e.target.checked == true) {
+                          props.setFieldValue(`jual_disable`, false);
+                        } else {
+                          props.setFieldValue(`jual_disable`, true);
+                        }
+                      }}
+                    />
                     <h5>Saya Jual Produk Ini</h5>
                   </Row>
                   <hr />
@@ -269,7 +282,7 @@ export default function addProduk({ data, data2, data3, data5 }) {
                   <Row sm='6'>
                     <Col>
                       <Form.Label>Harga Jual Satuan</Form.Label>
-                      <Form.Control className='mb-2' placeholder='Rp. 0,00' name='hjs' onChange={props.handleChange} />
+                      <Form.Control disabled={props.values.jual_disable} className='mb-2' placeholder='Rp. 0,00' name='hjs' onChange={props.handleChange} />
                       {props.errors.hjs && props.touched.hjs ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
@@ -279,7 +292,7 @@ export default function addProduk({ data, data2, data3, data5 }) {
                     </Col>
                     <Col>
                       <Form.Label>Akun Penjualan</Form.Label>
-                      <Form.Control className='mb-2' as='select' name='akun_penjualan' onChange={props.handleChange}>
+                      <Form.Control disabled={props.values.jual_disable} className='mb-2' as='select' name='akun_penjualan' onChange={props.handleChange}>
                         <option value='0'>Pilih</option>
                         {data2.map((akunPenjualan) => (
                           <option key={akunPenjualan.id} value={akunPenjualan.id}>

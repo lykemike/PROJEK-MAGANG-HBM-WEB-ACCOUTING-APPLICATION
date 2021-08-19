@@ -9,12 +9,18 @@ import { Formik, Form as Forms, Field } from "formik";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function defaultJurnal({ data, data2, data3, data4, data5, data6 }) {
+export default function defaultJurnal({ data, data2, data3, data4, data5, data6, data7 }) {
   return (
     <Layout>
       <Card className='bg-white rounded-lg shadow-md '>
         <Card.Body>
           <h3 className='font-semibold text-gray-600 py-2'>Setting Penjualan</h3>
+          <div className='border-t border-gray-200'>
+            <h5>CURRENT SETTING</h5>
+            {data7.map((i) => (
+              <p>{i.akun.nama_akun}</p>
+            ))}
+          </div>
           <div className='border-t border-gray-200'>
             <Row sm='12' className='mt-3'>
               <Col sm='6'>
@@ -122,7 +128,7 @@ export default function defaultJurnal({ data, data2, data3, data4, data5, data6 
 }
 
 export async function getServerSideProps() {
-  const akunA = await prisma.akun.findMany({
+  const pendapatan_penjualan = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [13, 14],
@@ -130,7 +136,7 @@ export async function getServerSideProps() {
     },
   });
 
-  const akunB = await prisma.akun.findMany({
+  const diskon_penjualan = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [13],
@@ -138,7 +144,7 @@ export async function getServerSideProps() {
     },
   });
 
-  const akunC = await prisma.akun.findMany({
+  const pemotongan = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [13],
@@ -146,7 +152,7 @@ export async function getServerSideProps() {
     },
   });
 
-  const akunD = await prisma.akun.findMany({
+  const pembayaran_dimuka = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [3],
@@ -154,7 +160,7 @@ export async function getServerSideProps() {
     },
   });
 
-  const akunE = await prisma.akun.findMany({
+  const piutang_blm_ditagih = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [1, 2],
@@ -162,7 +168,7 @@ export async function getServerSideProps() {
     },
   });
 
-  const akunF = await prisma.akun.findMany({
+  const pajak_penjualan = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [10, 13, 14, 16, 17],
@@ -170,14 +176,26 @@ export async function getServerSideProps() {
     },
   });
 
+  const curr_setting = await prisma.settingDefault.findMany({
+    where: {
+      id: {
+        in: [1, 2, 3, 4, 5, 6],
+      },
+    },
+    include: {
+      akun: true,
+    },
+  });
+
   return {
     props: {
-      data: akunA,
-      data2: akunB,
-      data3: akunC,
-      data4: akunD,
-      data5: akunE,
-      data6: akunF,
+      data: pendapatan_penjualan,
+      data2: diskon_penjualan,
+      data3: pemotongan,
+      data4: pembayaran_dimuka,
+      data5: piutang_blm_ditagih,
+      data6: pajak_penjualan,
+      data7: curr_setting,
     },
   };
 }

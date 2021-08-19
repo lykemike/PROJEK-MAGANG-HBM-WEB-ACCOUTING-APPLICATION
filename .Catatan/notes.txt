@@ -125,14 +125,234 @@ upload file attachment
 == PAGE KAS DAN BANK ==
 - Buat DB Edit Uang = 100%
 - Buat DB Header Detail Jurnal = 100%
-- Api Create transfer uang (Sisa testing) = 90%
-- Api Create & Edit terima uang (Sisa testing) = 90%
+- Api Create transfer uang = 100%
+- Api Edit terima uang (Sisa testing) = 90%
 - Api Create & Edit kirim uang (Sisa testing) = 90%
 - Api Create & Edit uang (Sisa testing) = 90%
 - Pebaikian Api Create Biaya (sisa testing) = 90%
 - Api Update biaya (sisa testing) = 90%
 - Api Create & Edit Jurnal (sisa testing) = 90%
+- Rumus Terima Uang = 100%
 
+🗓️ Tanggal: 5 August 2021, Kamis
+== PAGE KAS DAN BANK ==
+- Meeting bahas jurnal
+- Buat DB Edit Uang = 100%
+- Buat DB Header Detail Jurnal = 100%
+- Api Create & Edit terima uang (Sisa testing) = 100%
+- Api Create & Edit kirim uang (Sisa testing) = 100%
+- Api Create & Edit uang (Sisa testing) = 100%
+- Pebaikian Api Create Biaya (sisa testing) = 90%
+- Api Update biaya (sisa testing) = 90%
+- Api Create Jurnal (sisa testing) = 100%
+- Api Edit (sisa testing) = 100%
+- Rumus Terima Uang = 100%
+- Penambahan field di database terima uang, kirim uang, transfer uang = 20%
+- Buat struktur database jurnal terima uang, kirim uang, transfer uang = 20%
+
+🗓️ Tanggal: 6 August 2021, Jumat
+== PAGE KAS DAN BANK, BIAYA, JURNAL ==
+- Api Update biaya (sisa testing) = 100%
+- Api Create Jurnal (sisa testing) = 100%
+- Tambah field tanggal_transaksi ke api ama db kirim & terima uang = 100%
+- Harga termasuk pajak di terima dan kirim uang = 50%
+- Penambahan field di database terima uang, kirim uang, transfer uang = 30%
+- Buat struktur database jurnal terima uang, kirim uang, transfer uang = 30%
+
+🗓️ Tanggal: 9 August 2021, Senin
+== PAGE KAS DAN BANK, BIAYA, JURNAL ==
+- Harga termasuk pajak di terima dan kirim uang = 100%
+- Penambahan field di database terima uang, kirim uang, transfer uang = 100%
+- Buat struktur database jurnal terima uang, kirim uang, transfer uang = 30%
+- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
+
+🗓️ Tanggal: 10 August 2021, Selasa
+== PAGE KAS DAN BANK, BIAYA, JURNAL ==
+- Meeting Akuntansi & Technical Meeting
+- Buat struktur api dan database jurnal pembelian, penjualan, biaya = 30%
+- Buat struktur api dan database jurnal terima uang, kirim uang, transfer uang = 30%
+- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api ama database aset peyimpanan baru = 30%
+
+🗓️ Tanggal: 11 August 2021, Rabu
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+- Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 50%
+- Buat struktur api dan database jurnal pembelian, biaya = 30%
+- Buat struktur api dan database jurnal terima uang, kirim uang = 30%
+- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api ama database aset peyimpanan baru = 30%
+
+🗓️ Tanggal: 12 August 2021, Kamis
+Penjualan 
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 100%
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+
+🗓️ Tanggal: 13 August 2021, Jumat
+Penjualan 
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 90% (ada error ketika pajak tidak di pilih/kosong)
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+
+Pembelian 
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+
+Transfer Uang 
+- Jurnal Transfer Uang Database dan API = 100%
+
+Aset
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
+- Jurnal Pelepasan Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
+- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Invoice Untung Rugi API = 20%
+
+Kas Bank
+- Jurnal Terima Uang Database = 100%
+- Jurnal Terima Uang API = 100% 
+- Jurnal Kirim Uang Database = 20%
+- Jurnal Kirim Uang API = 20%
+
+🗓️ Tanggal: 16 August 2021, Senin
+Meeting progress dan perubahan berbrp page
+Penjualan 
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 100% (udah fix)
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+
+Pembelian 
+- Jurnal Pembelian Database = 0%
+- Jurnal Pembelian API = 0%
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+
+Transfer Uang 
+- Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+
+Aset
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
+- Jurnal Pelepasan Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
+- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Invoice Untung Rugi API = 20%
+
+Kas Bank
+- Jurnal Terima Uang Database = 100%
+- Jurnal Terima Uang API = 100% 
+- Jurnal Kirim Uang Database = 100% (SISA TESTING)
+- Jurnal Kirim Uang API = 100% (SISA TESTING)
+
+Jurnal
+- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
+
+Produk
+- Udah bisa pilih mau jual atau beli produk = 100%
+
+New Updates
+- Perbaikan Harga Termasuk/Tidak Termasuk Pajak Terima Uang = 100%
+
+🗓️ Tanggal: 18 August 2021, Rabu
+Meeting progress dan perubahan berbrp page
+Penjualan 
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 100% (udah fix)
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+
+Pembelian 
+- Jurnal Pembelian Database = 0%
+- Jurnal Pembelian API = 0%
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+
+Transfer Uang 
+- Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+
+Aset
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
+- Jurnal Pelepasan Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
+- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Invoice Untung Rugi API = 20%
+
+Kas Bank
+- Jurnal Terima Uang Database = 100%
+- Jurnal Terima Uang API = 100% 
+- Jurnal Kirim Uang Database = 100% (SISA TESTING)
+- Jurnal Kirim Uang API = 100% (SISA TESTING)
+
+Jurnal
+- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
+
+Produk
+- Udah bisa pilih mau jual atau beli produk = 100%
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 85%
+- Buat Jurnal Termasuk Pajak Page Biaya = 75%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 90%
+
+🗓️ Tanggal: 19 August 2021, Kamis
+Meeting progress dan perubahan berbrp page
+Penjualan 
+- Jurnal Penjualan Database = 100%
+- Jurnal Penjualan API = 100% (udah fix)
+- Jurnal Penerimaan Pembayaran Database dan API = 100%
+
+Pembelian 
+- Jurnal Pembelian Database = 100%
+- Jurnal Pembelian API = 100%
+- Jurnal Pengiriman Pembayaran Database dan API = 100%
+
+Transfer Uang 
+- Jurnal Transfer Uang Database dan API = 100%
+- Perbaikan API Create dan Update transfer uang pada nomor transaksi = 100%
+
+Aset
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
+- Jurnal Pelepasan Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
+- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Invoice Untung Rugi API = 20%
+
+Kas Bank
+- Jurnal Terima Uang Database = 100%
+- Jurnal Terima Uang API = 100% 
+- Jurnal Kirim Uang Database = 100% (SISA TESTING)
+- Jurnal Kirim Uang API = 100% (SISA TESTING)
+
+Jurnal
+- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
+
+Produk
+- Udah bisa pilih mau jual atau beli produk = 100%
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 75%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 90%
+
+
+===================================
+- Buat struktur api dan database jurnal pembelian, biaya = 30%
+- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
+- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
 
 
 ----------------
@@ -154,6 +374,10 @@ Ketika buat pembayaran jumlah pembayaran di cocokan dengan sisa tagihan
   - Ketika udah bayar separuh status: Partial
   - Ketika lewat jatuh tempo status: Jatuh Tempo
 
+HARGA TERMASUK PAJAK Pembelian, Penjualan, Biaya, Kirim Uang -> subtotal - pajak
+
+
+
 == Produk page ==
 (DONE) Update Produk API 
 Checkbox enable/disable di jual/beli produk
@@ -165,37 +389,65 @@ Checkbox enable/disable di jual/beli produk
 (PROCESS) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
 (DONE) Request untuk hapus option pajak dari produk ui, api
 
+
+
+== Jurnal ==
+- Kalau isi debit atau kredit sebelahnya auto 0 dan di disable
+
+== Kas Bank ==
+(DONE) Terima Uang -> Jurnal (Pajak ambil dari Pajak Penjualan)
+    Akun Setor Ke     DEBIT
+    Akun Pajak              KREDIT
+    Akun Terima Dari        KREDIT
+
+(DONE) Kirim Uang -> Jurnal (Pajak ambil dari Pajak Pembelian)
+    Pembayaran untuk akun DEBIT
+    Pajak                 DEBIT
+    Baya Dari                   KREDIT
+
+== Biaya ==
+- Biaya -> Jurnal (Pajak ambil dari Pajak Pembelian)
+    Akun Biaya    DEBIT			            KATEGORI (16, 17)
+    Pajak         DEBIT			
+    Pemotongan    DEBIT			            KATEGORI (13)
+    BAYAR DARI               KREDIT	    KATEGORI (3)
+
 == Miscellaneous ==
 Cara add daftar akun sesuai kode aku
 Contoh validation backend
 Filter search
+Tiap option menu di tambahin select2
+Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
+Tambah kalkulasi ketika ganti produk otomatis kehitung
 ===================
 -------------
 || UPDATES ||
 -------------
 Batas Minimum dihapus.
-Quantity field di produk: opsional
+(DONE?) Quantity field di produk: opsional
 Pembelian tambah quantity
 Penjualan kurang quantity
-Penjualan kontak pelanggan
-Pembelian kontak supplier
+(DONE) Penjualan kontak pelanggan
+(DONE) Pembelian kontak supplier
 Pembelian yg di tampil harga belinya
 (DONE) Label tgl transaksi di ganti -> tgl invoice
 (DONE) Label no transaksi -> nomor invoice
 (DONE) Database Tag di ganti -> varchar, contoh tag 1/4 bearti bayar 1/4 january, february, march
 (DONE) Label no referensi penagihan diganti -> kontrak
 (DONE) Database no referensi penagihan diganti kontrak -> varchar
+
 == FORMAT SALES INVOICE UI ==
 Jumlah tagihan sblm ppn
 Pajak pertambahan nilai
 Jumlah setelah ppn
 (DONE) Hapus label kuantitas dan satuan
+
 == PRODUK PAGE UI ==
 Saldo Supplier nampilin total hutang
 Saldo Pelanggan nampilin total piutang
 (DONE) Tambah field quantity -> nilai awal 0 (opsional)
-Harga rata-rata dan harga beli terakhir di ganti jadi -> harga beli ama harga jual
-CSV format template keluarin semua data-data produk
+(DONE) Harga rata-rata dan harga beli terakhir di ganti jadi -> harga beli ama harga jual
+(DONE) CSV format template keluarin semua data-data produk
 
 
 || PERTANYAAN Buat page biaya ||
@@ -205,6 +457,56 @@ Total biaya bulan ini : total (dalam idr)
 Biaya belum dibayar (dalam idr) : sisa tagihan (dalam idr)
 Kalau lewat dari periodenya statusnya: pending, optionya: 30hari dll
 Pajak Beli dan Jual List dari Dropdown pajak 
+
+(DONE) CARA PAKE SWITCH 
+{props.values.produks.length > 0 &&
+  props.values.produks.map((i, index) => (
+    <Form.Check
+      type='switch'
+      id='custom-switch'
+      label='Check this switch'
+      onChange={(e) => {
+        if (e.target.checked == true) {
+          let jumlah = parseInt(props.values.produks[index].kuantitas) + parseInt(props.values.produks[index].harga_satuan);
+          props.setFieldValue((props.values.produks[index].jumlah = parseInt(jumlah)));
+          const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+          props.setFieldValue((props.values.subtotal = subtotal));
+          props.setFieldValue("subtotal", subtotal);
+        } else {
+           console.log("OF OF OF");
+        }
+      }}
+    />
+))}
+
+(DONE) CSV Solution
+<Dropdown.Item eventKey='1' as='button'>
+  <CSVLink data={restructure(data)} filename='product.csv'> CSV </CSVLink>
+</Dropdown.Item>
+
+MEETING 8/10/2021
+CONTOH RUMUS RATE
+==================================================================================
+kuantitas   pajak   harga_satuan  rate     jumlah(USD) 		          jumlah (idr)
+2	          10%     100000	      15000    20000/15000 = 13,3333    200000
+
+*ambil dua digit setelah koma
+
+pajak * jumlah (usd) * rate pajak  = hasil_pajak_dlm_idr_hasil_konversi
+0.10  * 1,33         * 14500       = IDR 1.928,50
+
+PERTANYAAN MEETING
+(DONE) Akun Uang Muka dan Akun Pemotongan isi atau gadisi, tetap harus pilih akunnya
+    Jadi nanti di setting ada: Pendapatan penjualan, diskon penjualan, piutang blm di tagih, pajak penjualan
+(DONE) Harga termasuk pajak, jurnalnya kaya gimana
+(TIDAK JADI) No. Transaksi lebih ke kode, misalnya buat pembelian JL-5D14F blkgnya huruf dan angka random dengan length 5
+(DONE) Invoice pelepasan aset
+
+PERTANYAAN MEETING TEKNIKAL 8/14/2021
+(DONE) Masih error ketika blm pilih pajak, tdk semua data masuk ke detail
+(DONE) ketika isi debit/kredit sebelahnya disable
+- cara import data dan query ke database  
+- Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
 
 
 Employee Kevin Prawira
