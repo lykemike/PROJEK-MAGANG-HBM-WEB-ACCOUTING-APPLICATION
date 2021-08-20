@@ -75,8 +75,13 @@ export default async (req, res) => {
           pajak_nama_akun_beli: i.pajak_nama_akun_beli,
           hasil_pajak: parseInt(i.hasil_pajak),
           jumlah: parseInt(i.jumlah),
+          jumlah2: parseInt(i.jumlah2)
         });
       });
+
+      const bool = {
+        boolean: req.body.boolean
+      }
     
     const create_detail_kirim_uang = await prisma.detailKirimUang.createMany({
       data: detail,
@@ -98,12 +103,21 @@ export default async (req, res) => {
 
     let akun_pembayaran = []
     detail.map((i) => {
-      akun_pembayaran.push({
-        header_kirim_uang_id: find_latest.id,
-        nama_akun: i.nama_akun,
-        nominal: parseInt(i.jumlah),
-        tipe_saldo: "Debit"
-      })
+      if(bool.boolean == "true"){
+        akun_pembayaran.push({
+          header_kirim_uang_id: find_latest.id,
+          nama_akun: i.nama_akun,
+          nominal: parseInt(i.jumlah2),
+          tipe_saldo: "Debit"
+        })
+      } else {
+        akun_pembayaran.push({
+          header_kirim_uang_id: find_latest.id,
+          nama_akun: i.nama_akun,
+          nominal: parseInt(i.jumlah),
+          tipe_saldo: "Debit"
+        })
+      }
     })
 
     let list_pajak = []
@@ -116,16 +130,16 @@ export default async (req, res) => {
       })
     })
 
-    const create_akun_bayar = await prisma.jurnalKirimUang.createMany({
-      data: akun_bayar
-    })
-
     const create_akun_pembayaran = await prisma.jurnalKirimUang.createMany({
       data: akun_pembayaran
     })
 
     const create_list_pajak = await prisma.jurnalKirimUang.createMany({
       data: list_pajak
+    })
+
+    const create_akun_bayar = await prisma.jurnalKirimUang.createMany({
+      data: akun_bayar
     })
 
     res.status(201).json({ message: "Create Kirim Uang Success!", 

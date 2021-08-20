@@ -43,6 +43,7 @@ export default function create_jurnal({ data, data2 }) {
               kredit_disable: false,
             },
           ],
+          submit: true,
         }}
         onSubmit={async (values) => {
           let formData = new FormData();
@@ -257,7 +258,10 @@ export default function create_jurnal({ data, data2 }) {
                 Batal
               </button>
 
-              <button class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none' onClick={props.handleSubmit}>
+              <button 
+              class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none' 
+              onClick={props.handleSubmit} 
+              disabled={props.values.submit}>
                 Submit
               </button>
             </div>

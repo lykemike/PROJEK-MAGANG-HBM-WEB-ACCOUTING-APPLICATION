@@ -55,13 +55,13 @@ export default async (req, res) => {
     const jurnal_pengiriman_pembayaran = await prisma.jurnalPengirimanBayaran.createMany({
       data: [
         {
-          header_penjualan_id: parseInt(req.body.id),
+          header_pembelian_id: parseInt(req.body.id),
           nama_penerimaan_akun: find_default_hutang_blm_ditagih.akun.nama_akun,
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Debit",
         },
         {
-          header_penjualan_id: parseInt(req.body.id),
+          header_pembelian_id: parseInt(req.body.id),
           nama_penerimaan_akun: find_akun_bayar.nama_akun,
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Kredit",

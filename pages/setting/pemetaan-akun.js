@@ -14,6 +14,23 @@ const prisma = new PrismaClient();
 export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,data8,data9,data10, data11, data12, data13, data14, data15,data16,data17, data18, data19, data20}) {
     return ( 
         <Layout>
+        <Formik
+        initialValues={{
+          
+        }}
+        onSubmit={async (values) => {
+          console.log(values);
+          Axios.post(url, values)
+          .then(function (response) {
+            console.log(response);
+            router.push("");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }}>
+        {(props) => (
+          <Forms noValidate>
             <h1>Pengaturan</h1>
             <Row>
                 <Col sm="3">
@@ -31,8 +48,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                            {data.map((i) => (
-                                <option key={i.id} value={i.id}>
+                            {data.map((i, index) => (
+                                <option key={index} value={i.id}>
                                 {i.nama_akun}
                                 </option>
                             ))}
@@ -44,8 +61,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data4.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data4.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -59,8 +76,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data2.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data2.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -72,8 +89,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data5.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data5.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -87,8 +104,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data3.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data3.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -100,8 +117,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data6.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data6.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -137,8 +154,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data7.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data7.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -149,8 +166,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data11.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data11.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -164,8 +181,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as='select'>
-                        {data8.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data8.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -176,8 +193,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                        {data12.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data12.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -191,8 +208,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col sm="3">
                         <Form.Control as='select'>
-                        {data10.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data10.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -204,8 +221,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col sm="3">
                         <Form.Control as='select'>
-                        {data9.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data9.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -222,8 +239,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                        {data13.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data13.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -234,8 +251,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                        {data14.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data14.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -292,8 +309,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                        {data19.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data19.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -304,8 +321,8 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
                         </Col>
                         <Col>
                         <Form.Control as="select">
-                        {data20.map((i) => (
-                            <option key={i.id} value={i.id}>
+                        {data20.map((i, index) => (
+                            <option key={index} value={i.id}>
                             {i.nama_akun}
                             </option>
                         ))}
@@ -319,6 +336,9 @@ export default function pemetaanakun({data,data2,data3,data4,data5,data6,data7,d
             <div class="left-0 px-4 py-3 w-full flex justify-center items-end gap-3">  
                         <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none">Simpan</button>
                     </div>
+                              </Forms>
+        )}
+      </Formik>
         </Layout>
     )
 }
