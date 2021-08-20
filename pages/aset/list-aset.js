@@ -9,8 +9,10 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import AddIcon from '@material-ui/icons/Add';
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
-const akundetail = () => {
+export default function listaset({data}) {
     return (
         <div>
             <Layout>
@@ -29,19 +31,21 @@ const akundetail = () => {
                 </Col>
        </Row>
        </div>        
+
 			<div variant="container">
 				<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
 					<Tab eventKey="listAsetTetap" title="List Aset Tetap" />
 					<Tab eventKey="transaksiAsetTetap" title="Transaksi Aset Tetap" />
 
-                    <div eventKey="listAsetTetap">
+                 <div eventKey="listAsetTetap">
+                   
                     <div class="mt-6">
 							<div class="float-right mb-6">
                             <Form.Control placeholder="Search" />
 							</div>
 							
                       <Table class="table mt-8">
-				            	<thead class="thead-light">
+				        <thead class="thead-light">
                               <tr>
                             <th class="px-2 py-2">
                                 <span>Tanggal Akuisisi</span>
@@ -68,28 +72,29 @@ const akundetail = () => {
                                  <span>Action</span>
                             </th>
                         </tr>
-                        </thead>    
+                        </thead> 
+                    {data.map((i) => (    
                         <tr>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
-                            <div class="text-lg text-gray-900">1 Januari 2021</div>
+                            <div class="text-lg text-gray-900">{i.tgl_akuisisi}</div>
                             </td>
                             <td class="px-8 py-2 whitespace-nowrap font-medium">
-                            <div class="text-lg text-gray-900">01-02</div>
+                            <div class="text-lg text-gray-900">{i.nomor_aset}</div>
                             </td>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
-                            <div class="text-lg text-gray-900">Rp, 0.00</div>
+                            <div class="text-lg text-gray-900">{i.nama_aset}</div>
                             </td>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
-                            <div class="text-lg text-gray-900">Rp, 0.00</div>
+                            <div class="text-lg text-gray-900">{i.biaya_akuisisi}</div>
                             </td>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
-                            <div class="text-lg text-gray-900">Rp.0,00</div>
+                            <div class="text-lg text-gray-900">{i.tag}</div>
                             </td>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
-                            <div class="text-lg text-gray-900">Data Dummy</div>
+                            <div class="text-lg text-gray-900">{i.masa_manfaat}</div>
                             </td>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
-                            <div class="text-lg text-gray-900">Data Dummy</div>
+                            <div class="text-lg text-gray-900">{i.nilai_tahun}</div>
                             </td>    
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
                             <div class="text-lg text-gray-900">
@@ -98,12 +103,16 @@ const akundetail = () => {
                                 <Button variant='danger'>Hapus</Button>
                             </div>
                             </td>                     
-                        </tr>    
+                        </tr>                 
+                         ))}   
                     </Table>                
 				</div>
+
 			</div>
 
+
             <div eventKey="transaksiAsetTetap">
+             
                     <div class="mt-6">
 							<div class="float-right mb-6">
                             <Form.Control placeholder="Search" />
@@ -138,6 +147,7 @@ const akundetail = () => {
                             </th>
                         </tr>
                         </thead>    
+                        {data.map((aset) => (
                         <tr>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
                             <div class="text-lg text-gray-900">1 Januari 2021</div>
@@ -164,8 +174,9 @@ const akundetail = () => {
                             <div class="text-lg text-gray-900">Data Dummy</div>
                             </td>                     
                         </tr>    
-                    </Table>                
-				</div>
+                         ))}  
+                    </Table>             
+				</div>   
 			</div>
 
 				</Tabs>
@@ -175,4 +186,18 @@ const akundetail = () => {
     )
 }
 
-export default akundetail
+export async function getServerSideProps() {
+    // Get Produk from API
+    const asets = await prisma.aset.findMany({
+      orderBy: {
+        id: "asc",
+      }, 
+    });
+  
+    return {
+      props: {
+        data: asets,
+      },
+    };
+  }
+  

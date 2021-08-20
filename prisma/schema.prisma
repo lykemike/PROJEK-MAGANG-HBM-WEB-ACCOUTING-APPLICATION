@@ -655,7 +655,7 @@ model Aset{
   akun_dikreditkan  Akun @relation("AkunDikreditkan",fields:[akun_dikreditkan_id],references:[id])
   akun_dikreditkan_id Int
   tag               String
-  aset_non_depresiasi Boolean
+  aset_non_depresiasi String
   metode            String
   masa_manfaat      Int
   nilai_tahun       Int

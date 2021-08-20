@@ -10,18 +10,64 @@ import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function addaset({ data,data2,data3,data4 }) {
-    const router = useRouter();
-    const url = "http://localhost:3000/api/aset/createaset";
+export default function editaset({ data,data2,data3,data4 }) {
+    // const router = useRouter();
+    // const url = "http://localhost:3000/api/aset/createaset";
   
-    const id = data != undefined ? parseInt(data.id) + 1 : 1;
+    // const id = data != undefined ? parseInt(data.id) + 1 : 1;
   
-    const [idInvoice, setIdInvoice] = useState(id);
+    // const [idInvoice, setIdInvoice] = useState(id);
   
-   
+        //Kontak API
+        const getkontak = 'http://localhost:3000/api/aset/getAset';
+        const updateAset = 'http://localhost:3000/api/kontak/updateAset';
+    
+        //Take Parameter [ID]
+        const router = useRouter();
+        const { id } = router.query;
+    
+        // Get Existing Role data based on [id]
+        const formikref = useRef(null);
+        const getdata = async () => {
+            Axios.post(getAset, {
+                id: id
+            })
+                .then(function (response) {
+                    formikref.current.setFieldValue('namaPanggilan', response.data.data.nama_panggilan);
+                    formikref.current.setFieldValue('nama', response.data.data.nama);
+                    formikref.current.setFieldValue('nomorHp', response.data.data.nomor_hp);
+                    formikref.current.setFieldValue('nomorIdentitas', response.data.data.nomor_identitas);
+                    formikref.current.setFieldValue('email', response.data.data.email);
+                    formikref.current.setFieldValue('infoLain', response.data.data.info_lain);
+                    formikref.current.setFieldValue('namaPerusahaan', response.data.data.nama_perusahaan);
+                    formikref.current.setFieldValue('nomorTelepon', response.data.data.nomor_telepon);
+                    formikref.current.setFieldValue('nomorFax', response.data.data.nomor_fax);
+                    formikref.current.setFieldValue('nomorNpwp', response.data.data.nomor_npwp);
+                    formikref.current.setFieldValue('alamatPembayaran', response.data.data.alamat_pembayaran);
+                    formikref.current.setFieldValue('alamatPengiriman', response.data.data.alamat_pengiriman);
+                    formikref.current.setFieldValue('namaBank', response.data.data.nama_bank);
+                    formikref.current.setFieldValue('kantorCabangBank', response.data.data.kantor_cabang_bank);
+                    formikref.current.setFieldValue('pemegangAkunBank', response.data.data.pemegang_akun_bank);
+                    formikref.current.setFieldValue('nomorRekening', response.data.data.nomor_rekening);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        };
+        useEffect(() => {
+            getdata();
+        }, []);
+    
+        // Batal Button Function
+        function cancelButton() {
+            router.push('');
+        }
+
+
     return (
         <Layout>
           <Formik
+            innerRef={formikref}
             initialValues={{
               nama_aset: "",
               nomor_aset: "",
@@ -45,7 +91,7 @@ export default function addaset({ data,data2,data3,data4 }) {
             onSubmit={async (values) => {
               // alert(JSON.stringify(values, null, 2));
               console.log(values);
-              Axios.post(url, values)
+              Axios.post(updateAset, values)
                 .then(function (response) {
                   console.log(response);
                   router.push(`../aset/list-aset`);
