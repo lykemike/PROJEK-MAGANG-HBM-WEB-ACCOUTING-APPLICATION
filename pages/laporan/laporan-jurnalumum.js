@@ -2,15 +2,8 @@ import React from 'react'
 import Layout from '../../components/layout'
 import Link from 'next/link';
 import { Button, Table, DropdownButton ,Row,Col,Form, FormControl,InputGroup, Dropdown } from 'react-bootstrap';
-
-export async function getServerSideProps() {
-	// Fetch data from external API
-	const res = await fetch(`http://localhost:3000/api/laporan-jurnalumum`)
-	const data = await res.json()
-
-	// Pass data to the page via props
-	return { props: { data } }
-}
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 export default function laporanjurnalumum({ data }) {
 
@@ -81,19 +74,20 @@ export default function laporanjurnalumum({ data }) {
 							<th scope="col">Debit</th>
 							<th scope="col">Kredit</th>
 						</tr>
-					</thead>
-					<tbody>
-						<td>Journal Entry</td>
-						
-						{data.map((i, index) => (
+					</thead>	
+				{data.map((i,index) => (
+					<tbody key={index}>
+
+						<td>Journal Entry #{i.id} || created on {i.tgl_transaksi} </td>
+					
 						<tr>
-							<td>{i.akun}</td>
-							<td>{i.deskripsi}</td>
+							<td>{i.DetailJurnal.akun.kode_akun}</td>
+							<td></td>
                             <td></td>
-							<td>Rp. {i.debit}</td>
-							<td>Rp. {i.kredit}</td>
+							{/* <td>Rp. {i.debit}</td>
+							<td>Rp. {i.kredit}</td> */}
 						</tr>
-						))}
+						
 
 						{/* <tr>
 							<td>1-10002</td>
@@ -127,9 +121,30 @@ export default function laporanjurnalumum({ data }) {
 						</tr> */}
 
 					</tbody>
+					))}
 				</Table>
 			</div>
         </Layout>
     )
 }
 
+export async function getServerSideProps() {
+
+    const header = await prisma.headerJurnal.findMany({
+      orderBy: {
+       	id: "asc"
+      },
+		  DetailJurnal: {
+			include:{
+				akun: true,
+			}
+      },
+    });
+  
+    return {
+      props: {
+        data: header,
+      },
+    };
+  }
+  

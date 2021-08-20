@@ -181,6 +181,7 @@ export default function sales_invoice({ data, data2, data3 }) {
             <Col className='d-flex justify-content-end mt-10'>
               <Button variant='primary mr-2'> Cetak </Button>
               <Link href='/jual/penerimaan-pembayaran'>
+              <Button variant='secondary mr-2'>Ubah</Button>
                 <Button variant='danger mr-2'>Batal</Button>
               </Link>
               <Button variant='success mr-2' onClick={pembayaran}>

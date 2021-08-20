@@ -368,7 +368,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     }
                                   }}>
                                   <option value='kosong'>pilih produk</option>
-                                  {data3.map((nama_produk) => (
+                                  {data3.filter(nama_produk => nama_produk.harga_jual_satuan > 0).map((nama_produk) => (
                                     <option key={nama_produk.id} value={nama_produk.id}>
                                       {nama_produk.nama}
                                     </option>
