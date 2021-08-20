@@ -7,13 +7,16 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { useRouter } from "next/router";
 
-export default function Purchase_invoice({ data, data2 }) {
+export default function Purchase_invoice({ data, data2, data3 }) {
   const router = useRouter();
   const {id} = router.query;
 
   function cancelButton() {
     router.push(`../pembayaran/${id}`)
   }
+
+  const diskon_total = data2.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+  const jurnal_pengerimaan_pembayaran = data3.reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
     <Layout>
@@ -131,6 +134,7 @@ export default function Purchase_invoice({ data, data2 }) {
           </div>
 
           <div class='mt-20'>
+          
             <Row sm='12'>
               <Col sm='3' />
 
@@ -144,7 +148,7 @@ export default function Purchase_invoice({ data, data2 }) {
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Diskon</Col>
-                  <Col sm='4'>Rp. {((i.total_diskon) + (i.total_pajak_per_baris)).toLocaleString({ minimumFractionDigits: 0 })}</Col>
+                  <Col sm='4'>Rp. {((i.total_diskon) + (diskon_total)).toLocaleString({ minimumFractionDigits: 0 })}</Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Nama Pajak</Col>
@@ -160,7 +164,7 @@ export default function Purchase_invoice({ data, data2 }) {
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Sudah Dibayar</Col>
-                  <Col sm='4'>Rp. {i.uang_muka.toLocaleString({ minimumFractionDigits: 0 })}</Col>
+                  <Col sm='4'>Rp. {(i.uang_muka + jurnal_pengerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}</Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Sisa Tagihan</Col>
@@ -207,11 +211,19 @@ export async function getServerSideProps(context) {
       pajak: true,
     },
   });
+  
+  const jurnal_pengerimaan_pembayaran = await prisma.jurnalPengirimanBayaran.findMany({
+    where: {
+      header_pembelian_id: parseInt(id),
+      tipe_saldo: "Debit"
+    }
+  })
 
   return {
     props: {
       data: header,
       data2: detail,
+      data3: jurnal_pengerimaan_pembayaran
     },
   };
 }

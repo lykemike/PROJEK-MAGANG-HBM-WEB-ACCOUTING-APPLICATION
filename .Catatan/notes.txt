@@ -325,8 +325,8 @@ Aset
 - Jurnal Penyimpanan Aset Baru Database = 100%
 - Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
 - Jurnal Pelepasan Aset Database = 100%
-- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
-- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 90% 
+- Jurnal Invoice Untung Rugi Aset Database = 90%
 - Jurnal Invoice Untung Rugi API = 20%
 
 Kas Bank
@@ -334,6 +334,11 @@ Kas Bank
 - Jurnal Terima Uang API = 100% 
 - Jurnal Kirim Uang Database = 100% (SISA TESTING)
 - Jurnal Kirim Uang API = 100% (SISA TESTING)
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar dari opsional = 100%
 
 Jurnal
 - Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
@@ -345,8 +350,9 @@ New Updates
 - Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
 - Buat Jurnal Termasuk Pajak Page Penjualan = 100%
 - Buat Jurnal Termasuk Pajak Page Pembelian = 100%
-- Buat Jurnal Termasuk Pajak Page Biaya = 75%
-- Buat Jurnal Termasuk Pajak Page Kirim Uang = 90%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 20%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
 
 
 ===================================
@@ -380,19 +386,17 @@ HARGA TERMASUK PAJAK Pembelian, Penjualan, Biaya, Kirim Uang -> subtotal - pajak
 
 == Produk page ==
 (DONE) Update Produk API 
-Checkbox enable/disable di jual/beli produk
+(DONE) Checkbox enable/disable di jual/beli produk
 (DONE) Ketika buat produk baru, jumlah kategorinya nambah/update (jumlah + 1): misalnya buat produk jasa service database
   - Kategori jasa bakal nambah 0 + 1
   - Kategori produk bertambah ketika buat produk
 
-(PROCESS) Harga termasuk pajak ikut setting pas buat produk
-(PROCESS) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
+(DONE) Harga termasuk pajak ikut setting pas buat produk
+(DONE) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
 (DONE) Request untuk hapus option pajak dari produk ui, api
 
-
-
 == Jurnal ==
-- Kalau isi debit atau kredit sebelahnya auto 0 dan di disable
+(DONE) Kalau isi debit atau kredit sebelahnya auto 0 dan di disable
 
 == Kas Bank ==
 (DONE) Terima Uang -> Jurnal (Pajak ambil dari Pajak Penjualan)
@@ -406,7 +410,7 @@ Checkbox enable/disable di jual/beli produk
     Baya Dari                   KREDIT
 
 == Biaya ==
-- Biaya -> Jurnal (Pajak ambil dari Pajak Pembelian)
+(DONE) Biaya -> Jurnal (Pajak ambil dari Pajak Pembelian)
     Akun Biaya    DEBIT			            KATEGORI (16, 17)
     Pajak         DEBIT			
     Pemotongan    DEBIT			            KATEGORI (13)
@@ -506,6 +510,17 @@ PERTANYAAN MEETING TEKNIKAL 8/14/2021
 (DONE) Masih error ketika blm pilih pajak, tdk semua data masuk ke detail
 (DONE) ketika isi debit/kredit sebelahnya disable
 - cara import data dan query ke database  
+- nampilin setting yg kepake dan update
 - Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
+
+MEETING 
+- status awal pas buat terima, kirim, transfer, itu blm terkonsiliasi
+	2 status sudah terkonsiliasi ama blm
+- kalo pilih jual/beli di produk, nnti di penjualan pembelian munculin sesuai yg di pilih
+- di akun penjualan produk di hapus kategori aktiva tetap
+- Di invoice pembelian lupa tambahin tombol ubah
+(DONE) Invoice pembelian dan penjualan diskon nampilin hasil yg salah
+(DONE) Invoice pembelian dan penjualan bagian sudah di bayar + jumlah yg sudah dibayar
+(DONE) Jurnal di pembelian di bagian pengerimaan pembayaran, setelah bayar datanya blm masuk ke database jurnal pengerimaan pembayaran
 
 
