@@ -73,7 +73,6 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
         }}
         // validationSchema={}
         onSubmit={async (values) => {
-          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "produks") {
@@ -83,15 +82,13 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values);
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           })
             .then(function (response) {
-              console.log(response);
-              router.push(`view/${idInvoice}`);
+              router.push(`view/${response.data[0].id.id}`);
             })
             .catch(function (error) {
               console.log(error);

@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import Layout from "../../components/Layout";
 import { Form, Row, Col, InputGroup, FormControl, Table } from "react-bootstrap";
 import Switch from "@material-ui/core/Switch";
@@ -14,19 +14,29 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6 }) {
+export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, data7, produk }) {
   const url = "http://localhost:3000/api/jual/createpenjualan";
   const router = useRouter();
+  const { id } = router.query;
 
-  const id = data6 != undefined ? parseInt(data6.id) + 1 : 0;
+  const formik = useRef(null)
 
-  const [idInvoice, setIdInvoice] = useState(id);
+  // const redirect = data6 != undefined ? parseInt(data6.id) + 1 : 0;
+  // 20
+  // 21 -> hapus
+  // 22
 
+  // const [idInvoice, setIdInvoice] = useState(redirect);
+
+  console.log(produk)
+  
   return (
     <Layout>
       <Formik
+        enableReinitialize={true}
+        innerRef={formik}
         initialValues={{
-          nama_supplier: "",
+          nama_supplier: data7[0].nama_supplier,
           email: "",
           alamat_supplier: "",
           tgl_transaksi: "",
@@ -35,23 +45,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           no_ref_penagihan: "",
           no_transaksi: 0,
           tag: "",
-          produks: [
-            {
-              produk_id: "",
-              nama_produk: "",
-              deskripsi_produk: "",
-              kuantitas: "",
-              satuan: "",
-              harga_satuan: "",
-              diskon: "",
-              hasil_diskon: "",
-              pajak_id: "",
-              pajak_nama: "",
-              pajak_persen: "",
-              hasil_pajak: "",
-              jumlah: "",
-            },
-          ],
+          produks: produk,
           pesan: "",
           memo: "",
           fileattachment: [],
@@ -90,7 +84,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           })
             .then(function (response) {
               console.log(response);
-              router.push(`view/${idInvoice}`);
+              router.push(`view/${id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -114,6 +108,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     <Form.Control
                       as='select'
                       name='nama_supplier'
+                      disabled={true}
+                      value={props.values.nama_supplier}
                       onChange={(e) => {
                         props.setFieldValue("nama_supplier", e.target.value);
                         if (e.target.value === "") {
@@ -138,6 +134,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     <Form.Control
                       type='text'
                       placeholder=''
+                      disabled={true}
                       name='email'
                       value={props.values.email}
                       onChange={(e) => {
@@ -162,6 +159,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     <textarea
                       rows='5'
                       id='message'
+                      disabled={true}
                       class='px-10 py-2 border border-gray-800  '
                       name='alamat_supplier'
                       value={props.values.alamat_supplier}
@@ -175,6 +173,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       type='date'
                       placeholder='Auto'
                       name='tgl_transaksi'
+                      disabled={true}
                       onChange={
                         // props.handleChange
                         (e) => {
@@ -197,6 +196,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       type='date'
                       placeholder='Auto'
                       name='tgl_jatuh_tempo'
+                      disabled={true}
                       onChange={props.handleChange}
                       value={props.values.tgl_jatuh_tempo}
                     />{" "}
@@ -206,6 +206,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       as='select'
                       defaultValue='Choose...'
                       name='syarat_pembayaran'
+                      disabled={true}
                       onChange={(e) => {
                         props.setFieldValue("syarat_pembayaran", parseInt(e.target.value));
                         props.setFieldValue((props.values.syarat_pembayaran = parseInt(e.target.value)));
@@ -231,11 +232,11 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
 
                   <Form.Label column sm='3'>
                     No Transaksi <br />
-                    <Form.Control disabled type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled={true} type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
                     No Referensi Penagihan <br />
-                    <Form.Control type='text' placeholder='' name='no_ref_penagihan' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled={true} type='text' placeholder='' name='no_ref_penagihan' onChange={props.handleChange} /> <br />
                     Tag <br />
-                    <Form.Control type='text' placeholder='' name='tag' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled={true} type='text' placeholder='' name='tag' onChange={props.handleChange} /> <br />
                   </Form.Label>
                 </Form.Group>
               </Form>
@@ -289,6 +290,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   as='select'
                                   size=''
                                   name={`produks.${index}.produk_id`}
+                                  value={props.values.produks[index].produk_id}
                                   onChange={(e) => {
                                     props.setFieldValue(`produks.${index}.produk_id`, e.target.value);
                                     if (e.target.value === "") {
@@ -305,7 +307,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                         return i.id === parseInt(e.target.value);
                                       });
                                       props.setFieldValue(`produks.${index}.deskripsi_produk`, hasil1[0].deskripsi),
-                                        props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
+                                      props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
                                       props.setFieldValue(`produks.${index}.satuan`, hasil1[0].satuan.satuan);
                                       props.setFieldValue(
                                         `produks.${index}.nama_produk`,
@@ -314,8 +316,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     }
                                   }}>
                                   <option value='kosong'>pilih produk</option>
-                                  {data3.map((nama_produk) => (
-                                    <option key={nama_produk.id} value={nama_produk.id}>
+                                  {data3.map((nama_produk, index) => (
+                                    <option key={index} value={nama_produk.id}>
                                       {nama_produk.nama}
                                     </option>
                                   ))}
@@ -335,7 +337,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   type='number'
                                   size=''
                                   name={`produks.${index}.kuantitas`}
-                                  value={props.values.kuantitas}
+                                  value={props.values.produks[index].kuantitas}
                                   onChange={(e) => {
                                     // Rumus jumlah
                                     props.setFieldValue(`produks.${index}.kuantitas`, e.target.value);
@@ -407,6 +409,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   size=''
                                   placeholder='ex:100%'
                                   name={`produks.${index}.diskon`}
+                                  value={props.values.produks[index].diskon}
                                   onChange={(e) => {
                                     props.setFieldValue(`produks.${index}.diskon`, e.target.value);
 
@@ -460,6 +463,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   as='select'
                                   size=''
                                   name={`produks.${index}.pajak_id`}
+                                  value={props.values.produks[index].pajak_id}
                                   onChange={(e) => {
                                     props.setFieldValue(`produks.${index}.pajak_id`, e.target.value);
                                     let hasil2 = data2.filter((i) => {
@@ -883,7 +887,19 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+
+  const header = await prisma.headerPenjualan.findMany({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      kontak: true,
+      DetailPenjualan: true,
+    },
+  });
+
   // Get kontak,produk,pajak from API
   const kontaks = await prisma.kontakDetail.findMany({
     where: {
@@ -933,7 +949,26 @@ export async function getServerSideProps() {
       id: "desc",
     },
   });
-
+  
+  let produk = []
+  header[0].DetailPenjualan.map((i) => {
+    produk.push({
+              produk_id: i.produk_id.toString(),
+              nama_produk: i.nama_produk,
+              deskripsi_produk: i.desk_produk,
+              kuantitas: i.kuantitas,
+              satuan: i.satuan,
+              harga_satuan: i.harga_satuan,
+              diskon: i.diskon,
+              hasil_diskon: i.hasil_diskon,
+              pajak_id: i.pajak_id ,
+              pajak_nama: i.pajak_nama,
+              pajak_nama_akun_jual: i.pajak_nama_akun_jual,
+              pajak_persen: i.pajak_persen,
+              hasil_pajak: i.hasil_pajak,
+              jumlah: i.jumlah,
+    })
+  })
   return {
     props: {
       data: kontaks,
@@ -942,6 +977,8 @@ export async function getServerSideProps() {
       data4: akunPendapatan,
       data5: akunKasBank,
       data6: penjualanTerakhir,
+      data7: header,
+      produk: produk
     },
   };
 }

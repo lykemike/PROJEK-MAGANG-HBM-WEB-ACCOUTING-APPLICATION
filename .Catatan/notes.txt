@@ -516,9 +516,9 @@ PERTANYAAN MEETING TEKNIKAL 8/14/2021
 MEETING 
 - status awal pas buat terima, kirim, transfer, itu blm terkonsiliasi
 	2 status sudah terkonsiliasi ama blm
-- kalo pilih jual/beli di produk, nnti di penjualan pembelian munculin sesuai yg di pilih
-- di akun penjualan produk di hapus kategori aktiva tetap
-- Di invoice pembelian lupa tambahin tombol ubah
+(DONE) kalo pilih jual/beli di produk, nnti di penjualan pembelian munculin sesuai yg di pilih
+(DONE) di akun penjualan produk di hapus kategori aktiva tetap
+(DONE) Di invoice pembelian lupa tambahin tombol ubah
 (DONE) Invoice pembelian dan penjualan diskon nampilin hasil yg salah
 (DONE) Invoice pembelian dan penjualan bagian sudah di bayar + jumlah yg sudah dibayar
 (DONE) Jurnal di pembelian di bagian pengerimaan pembayaran, setelah bayar datanya blm masuk ke database jurnal pengerimaan pembayaran
