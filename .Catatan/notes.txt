@@ -524,3 +524,21 @@ MEETING
 (DONE) Jurnal di pembelian di bagian pengerimaan pembayaran, setelah bayar datanya blm masuk ke database jurnal pengerimaan pembayaran
 
 
+Employee Kevin Prawira
+Laporan 📄*
+• ⏱️ _Waktu
+In	 : 09.00
+Out	 : 17.30
+Lokasi : wfh
+🗓️ Tanggal: 12 Agustus 2021, Kamis
+
+
+
+==PAGE ASET==
+-UI Front end : 100%
+- Add aset page : 60%
+- Delete aset page : 50%
+
+==PAGE SETTING==
+- Form Settings Perusahan : 60&
+- Setting Jurnal : 30%

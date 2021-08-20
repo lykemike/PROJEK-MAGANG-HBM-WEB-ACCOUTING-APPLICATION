@@ -292,11 +292,14 @@ export default function bank_transfer({ data ,data2}) {
                  <Button variant="primary"><PrintIcon fontSize="medium"/> Cetak</Button>
 
       <div className="float-right">
-                 <Button variant="danger mr-2"><HighlightOffIcon fontSize="medium"/> Hapus</Button>
-                <Button variant="success"><CheckCircleIcon fontSize="medium"/>Ubah</Button>
-        </div>
-       </div>
- 
+                         <Link key={kasbank.id} href={`${kasbank.id}`}>
+                                   <a>
+                                     <Button variant="success"><CheckCircleIcon fontSize="medium"/>Ubah</Button>
+                                  </a>
+                          </Link>
+               
+                   </div>
+            </div>
         </Layout>
     )
 }
