@@ -271,6 +271,7 @@ export default async (req, res) => {
       {
         message: "Create Detail Penjualan Success!",
         data: create_jurnal_penjualan,
+        id : find_latest,
         add_jurnal_penjualan,
       },
     ]);

@@ -66,18 +66,18 @@ export default function addProduk({ data, data2, data3, data5 }) {
           }
           Array.from(values.file_upload).map((i) => formData.append("file", i));
           console.log(values);
-          Axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then(function (response) {
-              console.log(response);
-              router.push("../produk/tabel-produk");
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          // Axios.post(url, formData, {
+          //   headers: {
+          //     "Content-Type": "multipart/form-data",
+          //   },
+          // })
+          //   .then(function (response) {
+          //     console.log(response);
+          //     router.push("../produk/tabel-produk");
+          //   })
+          //   .catch(function (error) {
+          //     console.log(error);
+          //   });
         }}>
         {(props) => (
           <Forms noValidate>
@@ -225,6 +225,7 @@ export default function addProduk({ data, data2, data3, data5 }) {
                       onChange={(e) => {
                         if (e.target.checked == true) {
                           props.setFieldValue(`beli_disable`, false);
+                          
                         } else {
                           props.setFieldValue(`beli_disable`, true);
                         }
@@ -292,7 +293,12 @@ export default function addProduk({ data, data2, data3, data5 }) {
                     </Col>
                     <Col>
                       <Form.Label>Akun Penjualan</Form.Label>
-                      <Form.Control disabled={props.values.jual_disable} className='mb-2' as='select' name='akun_penjualan' onChange={props.handleChange}>
+                      <Form.Control 
+                      disabled={props.values.jual_disable} 
+                      className='mb-2' 
+                      as='select' 
+                      name='akun_penjualan' 
+                      onChange={props.handleChange}>
                         <option value='0'>Pilih</option>
                         {data2.map((akunPenjualan) => (
                           <option key={akunPenjualan.id} value={akunPenjualan.id}>
