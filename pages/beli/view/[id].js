@@ -15,6 +15,10 @@ export default function Purchase_invoice({ data, data2, data3 }) {
     router.push(`../pembayaran/${id}`)
   }
 
+  function editButton() {
+    router.push(`../${id}`)
+  }
+
   const diskon_total = data2.reduce((a, b) => (a = a + b.hasil_diskon), 0);
   const jurnal_pengerimaan_pembayaran = data3.reduce((a, b) => (a = a + b.nominal), 0);
 
@@ -179,6 +183,7 @@ export default function Purchase_invoice({ data, data2, data3 }) {
               <Link href='/beli/pembelian'>
                 <Button variant='danger mr-2'>Kembali</Button>
               </Link>
+                <Button variant='secondary mr-2 ' onClick={editButton} >Edit</Button>
                 <Button variant='success' onClick={cancelButton} >Bayar</Button>
             </Col>
           </Row>

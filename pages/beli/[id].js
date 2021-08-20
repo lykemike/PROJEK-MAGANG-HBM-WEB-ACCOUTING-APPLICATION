@@ -15,7 +15,7 @@ import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, data7, produk }) {
-  const url = "http://localhost:3000/api/jual/createpenjualan";
+  const url = "http://localhost:3000/api/beli/createpembelian";
   const router = useRouter();
   const { id } = router.query;
 
@@ -38,13 +38,13 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
         initialValues={{
           nama_supplier: data7[0].nama_supplier,
           email: data7[0].email,
-          alamat_supplier: "",
-          tgl_transaksi: "",
-          tgl_jatuh_tempo: "",
-          syarat_pembayaran: "",
-          no_ref_penagihan: "",
-          no_transaksi: 0,
-          tag: "",
+          alamat_supplier: data7[0].alamat_supplier,
+          tgl_transaksi: data7[0].tgl_transaksi,
+          tgl_jatuh_tempo: data7[0].tgl_jatuh_tempo,
+          syarat_pembayaran: data7[0].syarat_pembayaran,
+          no_ref_penagihan: data7[0].no_ref_penagihan,
+          no_transaksi: data7[0].no_transaksi,
+          tag: data7[0].tag,
           produks: produk,
           pesan: "",
           memo: "",
@@ -92,12 +92,12 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
         }}>
         {(props) => (
           <Forms noValidate>
-            <h3>Edit Penagihan Penjualan</h3>
+            <h3>Edit Penagihan Pembelian</h3>
             <div className='border-t border-gray-200'>
               <Form>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Form.Label column sm='3'>
-                    Pelanggan
+                    Supplier
                   </Form.Label>
                   <Form.Label column sm='3'>
                     Email
@@ -173,6 +173,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       type='date'
                       placeholder='Auto'
                       name='tgl_transaksi'
+                      value={props.values.tgl_transaksi}
                       disabled={true}
                       onChange={
                         // props.handleChange
@@ -206,6 +207,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       as='select'
                       defaultValue='Choose...'
                       name='syarat_pembayaran'
+                      value={props.values.syarat_pembayaran}
                       disabled={true}
                       onChange={(e) => {
                         props.setFieldValue("syarat_pembayaran", parseInt(e.target.value));
@@ -232,17 +234,81 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
 
                   <Form.Label column sm='3'>
                     No Transaksi <br />
-                    <Form.Control disabled={true} type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled={true} type='text' placeholder='Auto' value={props.values.no_transaksi}  name='no_transaksi' onChange={props.handleChange} /> <br />
                     No Referensi Penagihan <br />
-                    <Form.Control disabled={true} type='text' placeholder='' name='no_ref_penagihan' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled={true} type='text' placeholder='' value={props.values.no_ref_penagihan} name='no_ref_penagihan' onChange={props.handleChange} /> <br />
                     Tag <br />
-                    <Form.Control disabled={true} type='text' placeholder='' name='tag' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled={true} type='text' placeholder='' name='tag' value={props.values.tag} onChange={props.handleChange} /> <br />
                   </Form.Label>
                 </Form.Group>
               </Form>
               <div class='flex flex-row-reverse'>
-                <FormControlLabel value='' control={<Switch color='primary' />} label='Harga Termasuk Pajak' labelPlacement='start' />
+              <Form.Check
+                label='Harga Termasuk Pajak'
+                type='switch'
+                id='custom-switch'
+                onChange={(e) => {
+                  if (e.target.checked === true) {
+                    props.setFieldValue((props.values.boolean = true));
+                    const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                    const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                    const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                    let new_subtotal = subtotal - pajak_total;
+                    props.setFieldValue((props.values.subtotal = new_subtotal));
+                    props.setFieldValue("subtotal", new_subtotal);
+
+                    props.setFieldValue("total_diskon_per_baris", diskon_total);
+
+                    let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+                    props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                    props.setFieldValue("total_diskon", diskon_tambahan);
+
+                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                    let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                    props.setFieldValue((props.values.total = total));
+                    props.setFieldValue("total", total);
+
+                    let pemotongan = total - props.values.pemotongan;
+                    props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                    props.setFieldValue("pemotongan_total", pemotongan);
+
+                    let sisa_tagihan = pemotongan - props.values.uang_muka;
+                    props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                    props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                  } else {
+                    props.setFieldValue((props.values.boolean = false));
+                    const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                    const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                    const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                    props.setFieldValue("subtotal", subtotal);
+
+                    props.setFieldValue("total_diskon_per_baris", diskon_total);
+
+                    let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                    props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                    props.setFieldValue("total_diskon", diskon_tambahan);
+
+                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                    let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                    props.setFieldValue((props.values.total = total));
+                    props.setFieldValue("total", total);
+
+                    let pemotongan = total - props.values.pemotongan;
+                    props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                    props.setFieldValue("pemotongan_total", pemotongan);
+
+                    let sisa_tagihan = pemotongan - props.values.uang_muka;
+                    props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                    props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                  }
+                }}
+              />
               </div>
+
             </div>
             <Table responsive>
               <div className='border-t border-gray-200'>
@@ -307,7 +373,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                         return i.id === parseInt(e.target.value);
                                       });
                                       props.setFieldValue(`produks.${index}.deskripsi_produk`, hasil1[0].deskripsi),
-                                      props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
+                                      props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_beli_satuan);
                                       props.setFieldValue(`produks.${index}.satuan`, hasil1[0].satuan.satuan);
                                       props.setFieldValue(
                                         `produks.${index}.nama_produk`,
@@ -316,7 +382,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     }
                                   }}>
                                   <option value='kosong'>pilih produk</option>
-                                  {data3.filter(nama_produk => nama_produk.harga_jual_satuan > 0).map((nama_produk, index) => (
+                                  {data3.filter(nama_produk => nama_produk.harga_beli_satuan > 0).map((nama_produk, index) => (
                                     <option key={index} value={nama_produk.id}>
                                       {nama_produk.nama}
                                     </option>
@@ -890,20 +956,20 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerPenjualan.findMany({
+  const header = await prisma.headerPembelian.findMany({
     where: {
       id: parseInt(id),
     },
     include: {
       kontak: true,
-      DetailPenjualan: true,
+      DetailPembelian: true,
     },
   });
 
   // Get kontak,produk,pajak from API
   const kontaks = await prisma.kontakDetail.findMany({
     where: {
-      kontak_type_id: 2,
+      kontak_type_id: 1,
     },
     // orderBy: {
     //   id: "asc",
@@ -944,14 +1010,14 @@ export async function getServerSideProps(context) {
     },
   });
 
-  const penjualanTerakhir = await prisma.headerPenjualan.findFirst({
+  const pembelianTerakhir = await prisma.headerPembelian.findFirst({
     orderBy: {
       id: "desc",
     },
   });
   
   let produk = []
-  header[0].DetailPenjualan.map((i) => {
+  header[0].DetailPembelian.map((i) => {
     produk.push({
               produk_id: i.produk_id.toString(),
               nama_produk: i.nama_produk,
@@ -963,7 +1029,7 @@ export async function getServerSideProps(context) {
               hasil_diskon: i.hasil_diskon,
               pajak_id: i.pajak_id ,
               pajak_nama: i.pajak_nama,
-              pajak_nama_akun_jual: i.pajak_nama_akun_jual,
+              pajak_nama_akun_beli: i.pajak_nama_akun_beli,
               pajak_persen: i.pajak_persen,
               hasil_pajak: i.hasil_pajak,
               jumlah: i.jumlah,
@@ -976,7 +1042,7 @@ export async function getServerSideProps(context) {
       data3: produks,
       data4: akunPendapatan,
       data5: akunKasBank,
-      data6: penjualanTerakhir,
+      data6: pembelianTerakhir,
       data7: header,
       produk: produk
     },

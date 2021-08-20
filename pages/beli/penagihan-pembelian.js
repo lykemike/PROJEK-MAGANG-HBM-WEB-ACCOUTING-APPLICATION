@@ -17,8 +17,6 @@ const prisma = new PrismaClient();
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6 }) {
   const url = "http://localhost:3000/api/beli/createpembelian";
   const router = useRouter();
-  const id = data6 != undefined ? parseInt(data6.id) + 1 : 0;
-  const [idInvoice, setIdInvoice] = useState(id);
 
   return (
     <Layout>
@@ -88,8 +86,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             },
           })
             .then(function (response) {
-              console.log(response);
-              router.push(`view/${idInvoice}`);
+              router.push(`view/${response.data[0].id.id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -364,7 +361,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                       let hasil1 = data3.filter((i) => {
                                         return i.id === parseInt(e.target.value);
                                       });
-                                      props.setFieldValue(`produks.${index}.deskripsi_produk`, hasil1[0].deskripsi), props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
+                                      props.setFieldValue(`produks.${index}.deskripsi_produk`, hasil1[0].deskripsi), props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_beli_satuan);
                                       props.setFieldValue(`produks.${index}.satuan`, hasil1[0].satuan.satuan);
                                       props.setFieldValue(`produks.${index}.nama_produk`, data3.filter((i) => i.id === parseInt(e.target.value))[0].nama);
                                     }
