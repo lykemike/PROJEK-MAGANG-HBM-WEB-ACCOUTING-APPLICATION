@@ -15,7 +15,7 @@ import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, header, produk }) {
-  const url = "http://localhost:3000/api/jual/createpenjualan";
+  const url = "http://localhost:3000/api/jual/updatepenjualan"
   const router = useRouter();
   const { id } = router.query;
   const formik = useRef(null);
@@ -51,6 +51,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           uang_muka: header[0].uang_muka,
           akun_uang_muka: header[0].akun_uang_muka,
           sisa_tagihan: header[0].sisa_tagihan,
+          balance: header[0].balance,
+          boolean: false,
         }}
         // validationSchema={}
         onSubmit={async (values) => {
@@ -64,20 +66,19 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
           console.log(values);
-          //   Axios.post(url, formData, {
-          //     headers: {
-          //       "Content-Type": "multipart/form-data",
-          //     },
-          //   })
-          //     .then(function (response) {
-          //       console.log(response);
-          //       router.push(`view/${id}`);
-          //     })
-          //     .catch(function (error) {
-          //       console.log(error);
-          //     });
-          // }}
-        }}
+            Axios.post(url, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+              .then(function (response) {
+                console.log(response);
+                // router.push(`view/${id}`);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          }}
       >
         {(props) => (
           <Forms noValidate>
@@ -157,7 +158,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       disabled={true}
                       value={props.values.syarat_pembayaran}
                       onChange={props.handleChange}
-                      onBLur={props.handleBlur}
+                      onBlur={props.handleBlur}
                     >
                       {header.map((i) => {
                         <option>{i.syarat_pembayaran}</option>;
@@ -194,7 +195,70 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                 </Form.Group>
               </Form>
               <div class="flex flex-row-reverse">
-                <FormControlLabel value="" control={<Switch color="primary" />} label="Harga Termasuk Pajak" labelPlacement="start" />
+                <Form.Check
+                  label="Harga Termasuk Pajak"
+                  type="switch"
+                  id="custom-switch"
+                  onChange={(e) => {
+                    if (e.target.checked === true) {
+                      props.setFieldValue((props.values.boolean = true));
+                      const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                      const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                      const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                      let new_subtotal = subtotal - pajak_total;
+                      props.setFieldValue((props.values.subtotal = new_subtotal));
+                      props.setFieldValue("subtotal", new_subtotal);
+
+                      props.setFieldValue("total_diskon_per_baris", diskon_total);
+
+                      let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+                      props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                      props.setFieldValue("total_diskon", diskon_tambahan);
+
+                      props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                      let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                      props.setFieldValue((props.values.total = total));
+                      props.setFieldValue("total", total);
+
+                      let pemotongan = total - props.values.pemotongan;
+                      props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                      props.setFieldValue("pemotongan_total", pemotongan);
+
+                      let sisa_tagihan = pemotongan - props.values.uang_muka;
+                      props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                      props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                    } else {
+                      props.setFieldValue((props.values.boolean = false));
+                      const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                      const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                      const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                      props.setFieldValue("subtotal", subtotal);
+
+                      props.setFieldValue("total_diskon_per_baris", diskon_total);
+
+                      let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                      props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                      props.setFieldValue("total_diskon", diskon_tambahan);
+
+                      props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                      let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                      props.setFieldValue((props.values.total = total));
+                      props.setFieldValue("total", total);
+
+                      let pemotongan = total - props.values.pemotongan;
+                      props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                      props.setFieldValue("pemotongan_total", pemotongan);
+
+                      let sisa_tagihan = pemotongan - props.values.uang_muka;
+                      props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                      props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                    }
+                  }}
+                />
               </div>
             </div>
             <Table responsive>
@@ -269,9 +333,9 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     }
                                   }}
                                 >
-                                  <option value="kosong">pilih produk</option>
-                                  {data3.map((nama_produk, index) => (
-                                    <option key={index} value={nama_produk.id}>
+                                  <option value='kosong'>pilih produk</option>
+                                  {data3.filter(nama_produk => nama_produk.harga_jual_satuan > 0).map((nama_produk) => (
+                                    <option key={nama_produk.id} value={nama_produk.id}>
                                       {nama_produk.nama}
                                     </option>
                                   ))}
@@ -295,55 +359,101 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   name={`produks.${index}.kuantitas`}
                                   value={props.values.produks[index].kuantitas}
                                   onChange={(e) => {
-                                    // Rumus jumlah
-                                    props.setFieldValue(`produks.${index}.kuantitas`, e.target.value);
-                                    let jumlah = e.target.value * props.values.produks[index].harga_satuan;
-                                    props.setFieldValue((props.values.produks[index].jumlah = jumlah));
-                                    const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
-                                    props.setFieldValue((props.values.subtotal = subtotal));
-                                    props.setFieldValue("subtotal", subtotal);
+                                    if (props.values.boolean == false) {
+                                      // Rumus jumlah
+                                      props.setFieldValue(`produks.${index}.kuantitas`, e.target.value);
+                                      let jumlah = e.target.value * props.values.produks[index].harga_satuan;
+                                      props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                      const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                                      props.setFieldValue((props.values.subtotal = subtotal));
+                                      props.setFieldValue("subtotal", subtotal);
 
-                                    // Rumus diskon per baris
-                                    let diskon = jumlah * (props.values.produks[index].diskon / 100);
-                                    props.setFieldValue((props.values.produks[index].hasil_diskon = diskon));
-                                    const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
-                                    props.setFieldValue((props.values.total_diskon_per_baris = diskon_total));
-                                    props.setFieldValue("total_diskon_per_baris", diskon_total);
+                                      // Rumus diskon per baris
+                                      let diskon = jumlah * (props.values.produks[index].diskon / 100);
+                                      props.setFieldValue((props.values.produks[index].hasil_diskon = diskon));
+                                      const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                                      props.setFieldValue((props.values.total_diskon_per_baris = diskon_total));
+                                      props.setFieldValue("total_diskon_per_baris", diskon_total);
 
-                                    // Rumus diskon tambahan
-                                    let diskon_tambahan = (props.values.diskon / 100) * subtotal;
-                                    props.setFieldValue((props.values.total_diskon = diskon_tambahan));
-                                    props.setFieldValue("total_diskon", diskon_tambahan);
+                                      // Rumus diskon tambahan
+                                      let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                                      props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                                      props.setFieldValue("total_diskon", diskon_tambahan);
 
-                                    // Rumus pajak per baris
-                                    let pajak = jumlah * (props.values.produks[index].pajak_persen / 100);
-                                    props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
-                                    const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
-                                    props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
-                                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+                                      // Rumus pajak per baris
+                                      let pajak = jumlah * (props.values.produks[index].pajak_persen / 100);
+                                      props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
+                                      const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                      props.setFieldValue("total_pajak_per_baris", pajak_total);
 
-                                    // Rumus total
-                                    let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
-                                    props.setFieldValue((props.values.total = total));
-                                    props.setFieldValue("total", total);
+                                      // Rumus total
+                                      let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
 
-                                    // Rumus pemotongan
-                                    let pemotongan = total - props.values.pemotongan;
-                                    props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                                    props.setFieldValue("pemotongan_total", pemotongan);
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                      props.setFieldValue("pemotongan_total", pemotongan);
 
-                                    // Rumus sisa tagihan
-                                    let sisa_tagihan = pemotongan - props.values.uang_muka;
-                                    props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                                    props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                                      // Rumus sisa tagihan
+                                      let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                      props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                      props.setFieldValue("sisa_tagihan", sisa_tagihan);
 
-                                    // Rumus balance akun pendapatan
-                                    let balance = parseInt(subtotal + pajak_total);
-                                    props.setFieldValue((props.values.balance = balance));
+                                      // Rumus balance akun pendapatan
+                                      let balance = parseInt(subtotal + pajak_total);
+                                      props.setFieldValue((props.values.balance = balance));
+                                    } else {
+                                      // Rumus jumlah
+                                      props.setFieldValue(`produks.${index}.kuantitas`, e.target.value);
+                                      let jumlah = e.target.value * props.values.produks[index].harga_satuan;
+                                      props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                      const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                                    // Rumus diskon jurnal
-                                    let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
-                                    props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
+                                      // Rumus diskon per baris
+                                      let diskon = jumlah * (props.values.produks[index].diskon / 100);
+                                      props.setFieldValue((props.values.produks[index].hasil_diskon = diskon));
+                                      const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                                      props.setFieldValue((props.values.total_diskon_per_baris = diskon_total));
+                                      props.setFieldValue("total_diskon_per_baris", diskon_total);
+
+                                      // Rumus pajak per baris
+                                      let pajak = jumlah * (props.values.produks[index].pajak_persen / 100);
+                                      props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
+                                      const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                      props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                      let new_subtotal = subtotal - pajak_total;
+                                      props.setFieldValue((props.values.subtotal = new_subtotal));
+                                      props.setFieldValue("subtotal", new_subtotal);
+
+                                      // Rumus diskon tambahan
+                                      let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+                                      props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                                      props.setFieldValue("total_diskon", diskon_tambahan);
+
+                                      // Rumus total
+                                      let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
+
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                      props.setFieldValue("pemotongan_total", pemotongan);
+
+                                      // Rumus sisa tagihan
+                                      let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                      props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                      props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                                      // Rumus balance akun pendapatan
+                                      let balance = parseInt(subtotal + pajak_total);
+                                      props.setFieldValue((props.values.balance = balance));
+                                    }
                                   }}
                                 />
                               </Col>
@@ -375,49 +485,87 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   value={props.values.produks[index].diskon}
                                   onChange={(e) => {
                                     props.setFieldValue(`produks.${index}.diskon`, e.target.value);
+                                    if (props.values.boolean == false) {
+                                      // Rumus jumlah
+                                      let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
+                                      props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                      const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                                      props.setFieldValue((props.values.subtotal = subtotal));
+                                      props.setFieldValue("subtotal", subtotal);
 
-                                    // Rumus jumlah
-                                    let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
-                                    props.setFieldValue((props.values.produks[index].jumlah = jumlah));
-                                    const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
-                                    props.setFieldValue((props.values.subtotal = subtotal));
-                                    props.setFieldValue("subtotal", subtotal);
+                                      // Rumus diskon per baris
+                                      let diskon = jumlah * (e.target.value / 100);
+                                      props.setFieldValue((props.values.produks[index].hasil_diskon = diskon));
+                                      const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                                      props.setFieldValue((props.values.total_diskon_per_baris = diskon_total));
+                                      props.setFieldValue("total_diskon_per_baris", diskon_total);
 
-                                    // Rumus diskon per baris
-                                    let diskon = jumlah * (e.target.value / 100);
-                                    props.setFieldValue((props.values.produks[index].hasil_diskon = diskon));
-                                    const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
-                                    props.setFieldValue((props.values.total_diskon_per_baris = diskon_total));
-                                    props.setFieldValue("total_diskon_per_baris", diskon_total);
+                                      // Rumus diskon tambahan
+                                      let diskon_tambahan = (props.values.diskon / 100) * subtotal;
 
-                                    // Rumus diskon tambahan
-                                    let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                                      // Rumus pajak per baris
+                                      const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-                                    // Rumus pajak per baris
-                                    const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      // Rumus total
+                                      let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
 
-                                    // Rumus total
-                                    let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
-                                    props.setFieldValue((props.values.total = total));
-                                    props.setFieldValue("total", total);
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                      props.setFieldValue("pemotongan_total", pemotongan);
 
-                                    // Rumus pemotongan
-                                    let pemotongan = total - props.values.pemotongan;
-                                    props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                                    props.setFieldValue("pemotongan_total", pemotongan);
+                                      // Rumus sisa tagihan
+                                      let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                      props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                      props.setFieldValue("sisa_tagihan", sisa_tagihan);
 
-                                    // Rumus sisa tagihan
-                                    let sisa_tagihan = pemotongan - props.values.uang_muka;
-                                    props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                                    props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                                      // Rumus balance akun pendapatan
+                                      let balance = parseInt(subtotal + pajak_total);
+                                      props.setFieldValue((props.values.balance = balance));
+                                    } else {
+                                      // Rumus jumlah
+                                      let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
+                                      props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                      const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                                    // Rumus balance akun pendapatan
-                                    let balance = parseInt(subtotal + pajak_total);
-                                    props.setFieldValue((props.values.balance = balance));
+                                      // Rumus diskon per baris
+                                      let diskon = jumlah * (e.target.value / 100);
+                                      props.setFieldValue((props.values.produks[index].hasil_diskon = diskon));
+                                      const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                                      props.setFieldValue((props.values.total_diskon_per_baris = diskon_total));
+                                      props.setFieldValue("total_diskon_per_baris", diskon_total);
 
-                                    // Rumus diskon jurnal
-                                    let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
-                                    props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
+                                      // Rumus pajak per baris
+                                      const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                                      let new_subtotal = subtotal - pajak_total;
+                                      props.setFieldValue((props.values.subtotal = new_subtotal));
+                                      props.setFieldValue("subtotal", new_subtotal);
+
+                                      // Rumus diskon tambahan
+                                      let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+
+                                      // Rumus total
+                                      let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
+
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                      props.setFieldValue("pemotongan_total", pemotongan);
+
+                                      // Rumus sisa tagihan
+                                      let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                      props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                      props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                                      // Rumus balance akun pendapatan
+                                      let balance = parseInt(subtotal + pajak_total);
+                                      props.setFieldValue((props.values.balance = balance));
+                                    }
                                   }}
                                 />
                               </Col>
@@ -429,60 +577,198 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   value={props.values.produks[index].pajak_id}
                                   onChange={(e) => {
                                     props.setFieldValue(`produks.${index}.pajak_id`, e.target.value);
-                                    let hasil2 = data2.filter((i) => {
-                                      return i.id === parseInt(e.target.value);
-                                    });
-                                    props.setFieldValue(`produks.${index}.pajak_persen`, hasil2[0].presentasaAktif);
-                                    props.setFieldValue(
-                                      `produks.${index}.pajak_nama`,
-                                      data2.filter((i) => i.id === parseInt(e.target.value))[0].nama
-                                    );
+                                    if (props.values.boolean == false) {
+                                      if (e.target.value == undefined || e.target.value == "" || e.target.value == 0) {
+                                        // Rumus total: kuantitas * harga satuan
+                                        let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
+                                        props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                        const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                                        props.setFieldValue((props.values.subtotal = subtotal));
+                                        props.setFieldValue("subtotal", subtotal);
 
-                                    // Rumus total: kuantitas * harga satuan
-                                    let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
-                                    props.setFieldValue((props.values.produks[index].jumlah = jumlah));
-                                    const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
-                                    props.setFieldValue((props.values.subtotal = subtotal));
-                                    props.setFieldValue("subtotal", subtotal);
+                                        // Rumus pajak per baris
+                                        let pajak = jumlah * (0 / 100);
+                                        props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                        props.setFieldValue("total_pajak_per_baris", pajak_total);
 
-                                    // Rumus pajak per baris
-                                    let pajak = jumlah * (hasil2[0].presentasaAktif / 100);
-                                    props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
-                                    const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
-                                    props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
-                                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+                                        // Rumus diskon per baris
+                                        const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
 
-                                    // Rumus diskon per baris
-                                    const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                                        // Rumus diskon tambahan
+                                        let diskon_tambahan = (props.values.diskon / 100) * subtotal;
 
-                                    // Rumus diskon tambahan
-                                    let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                                        // Rumus total
+                                        let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
 
-                                    // Rumus total
-                                    let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
-                                    props.setFieldValue((props.values.total = total));
-                                    props.setFieldValue("total", total);
+                                        // Rumus pemotongan
+                                        let pemotongan = total - props.values.pemotongan;
+                                        props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                        props.setFieldValue("pemotongan_total", pemotongan);
 
-                                    // Rumus pemotongan
-                                    let pemotongan = total - props.values.pemotongan;
-                                    props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                                    props.setFieldValue("pemotongan_total", pemotongan);
+                                        // Rumus sisa tagihan
+                                        let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                        props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                        props.setFieldValue("sisa_tagihan", sisa_tagihan);
 
-                                    // Rumus sisa tagihan
-                                    let sisa_tagihan = pemotongan - props.values.uang_muka;
-                                    props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                                    props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                                        // Rumus balance akun pendapatan
+                                        let balance = parseInt(subtotal + pajak_total);
+                                        props.setFieldValue((props.values.balance = balance));
+                                      } else {
+                                        let hasil2 = data2.filter((i) => {
+                                          return i.id === parseInt(e.target.value);
+                                        });
+                                        props.setFieldValue(`produks.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                        props.setFieldValue(
+                                          `produks.${index}.pajak_nama`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].nama
+                                        );
+                                        props.setFieldValue(
+                                          `produks.${index}.pajak_nama_akun_jual`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori1.nama_akun
+                                        );
 
-                                    // Rumus balance akun pendapatan
-                                    let balance = parseInt(subtotal + pajak_total);
-                                    props.setFieldValue((props.values.balance = balance));
+                                        // Rumus total: kuantitas * harga satuan
+                                        let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
+                                        props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                        const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                                        props.setFieldValue((props.values.subtotal = subtotal));
+                                        props.setFieldValue("subtotal", subtotal);
 
-                                    // Rumus diskon jurnal
-                                    let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
-                                    props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
+                                        // Rumus pajak per baris
+                                        let pajak = jumlah * (hasil2[0].presentasaAktif / 100);
+                                        props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                        props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                        // Rumus diskon per baris
+                                        const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+
+                                        // Rumus diskon tambahan
+                                        let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+
+                                        // Rumus total
+                                        let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+
+                                        // Rumus pemotongan
+                                        let pemotongan = total - props.values.pemotongan;
+                                        props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                        props.setFieldValue("pemotongan_total", pemotongan);
+
+                                        // Rumus sisa tagihan
+                                        let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                        props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                        props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                                        // Rumus balance akun pendapatan
+                                        let balance = parseInt(subtotal + pajak_total);
+                                        props.setFieldValue((props.values.balance = balance));
+                                      }
+                                    } else {
+                                      if (e.target.value == undefined || e.target.value == "" || e.target.value == 0) {
+                                        // Rumus total: kuantitas * harga satuan
+                                        let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
+                                        props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                        const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                                        props.setFieldValue((props.values.subtotal = subtotal));
+                                        props.setFieldValue("subtotal", subtotal);
+
+                                        // Rumus pajak per baris
+                                        let pajak = jumlah * (0 / 100);
+                                        props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                        props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                        // Rumus diskon per baris
+                                        const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+
+                                        // Rumus diskon tambahan
+                                        let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+
+                                        // Rumus total
+                                        let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+
+                                        // Rumus pemotongan
+                                        let pemotongan = total - props.values.pemotongan;
+                                        props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                        props.setFieldValue("pemotongan_total", pemotongan);
+
+                                        // Rumus sisa tagihan
+                                        let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                        props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                        props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                                        // Rumus balance akun pendapatan
+                                        let balance = parseInt(subtotal + pajak_total);
+                                        props.setFieldValue((props.values.balance = balance));
+                                      } else {
+                                        let hasil2 = data2.filter((i) => {
+                                          return i.id === parseInt(e.target.value);
+                                        });
+                                        props.setFieldValue(`produks.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                        props.setFieldValue(
+                                          `produks.${index}.pajak_nama`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].nama
+                                        );
+                                        props.setFieldValue(
+                                          `produks.${index}.pajak_nama_akun_jual`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori1.nama_akun
+                                        );
+
+                                        // Rumus total: kuantitas * harga satuan
+                                        let jumlah = props.values.produks[index].kuantitas * props.values.produks[index].harga_satuan;
+                                        props.setFieldValue((props.values.produks[index].jumlah = jumlah));
+                                        const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                                        // Rumus pajak per baris
+                                        let pajak = jumlah * (hasil2[0].presentasaAktif / 100);
+                                        props.setFieldValue((props.values.produks[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                        props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                        props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                        // Rumus diskon per baris
+                                        const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+
+                                        let new_subtotal = subtotal - pajak_total;
+                                        props.setFieldValue((props.values.subtotal = new_subtotal));
+                                        props.setFieldValue("subtotal", new_subtotal);
+
+                                        // Rumus diskon tambahan
+                                        let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+
+                                        // Rumus total
+                                        let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                                        props.setFieldValue((props.values.total = total));
+                                        props.setFieldValue("total", total);
+
+                                        // Rumus pemotongan
+                                        let pemotongan = total - props.values.pemotongan;
+                                        props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                                        props.setFieldValue("pemotongan_total", pemotongan);
+
+                                        // Rumus sisa tagihan
+                                        let sisa_tagihan = pemotongan - props.values.uang_muka;
+                                        props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                                        props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                                        // Rumus balance akun pendapatan
+                                        let balance = parseInt(subtotal + pajak_total);
+                                        props.setFieldValue((props.values.balance = balance));
+                                      }
+                                    }
                                   }}
                                 >
-                                  {/* <option value='0'>pilih pajak</option> */}
+                                  <option value="0">Pilih</option>
                                   {data2.map((nama_pajak) => (
                                     <option key={nama_pajak.id} value={nama_pajak.id}>
                                       {nama_pajak.nama} - {nama_pajak.presentasaAktif}%
@@ -557,13 +843,14 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                               kuantitas: "",
                               satuan: "",
                               harga_satuan: "",
-                              diskon: "",
-                              pajak_id: "",
-                              pajak_nama: "",
-                              pajak_persen: "",
+                              diskon: 0,
+                              pajak_id: 0,
+                              pajak_nama: "kosong",
+                              pajak_persen: 0,
+                              pajak_nama_akun_jual: "kosong",
                               jumlah: "",
-                              hasil_diskon: "",
-                              hasil_pajak: "",
+                              hasil_diskon: 0,
+                              hasil_pajak: 0,
                             })
                           }
                         >
@@ -593,7 +880,13 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   <br />
                   <label for="memo">Memo</label>
                   <br />
-                  <textarea rows="3" name="memo" class="px-16 py-2 border border-gray-800" />
+                  <textarea
+                    rows="3"
+                    name="memo"
+                    class="px-16 py-2 border border-gray-800"
+                    placeholder={props.values.memo}
+                    onChange={props.handleChange}
+                  />
                   <br />
                   File Attachment <br />
                   <Form.File type="file" name="fileattachment" onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
@@ -627,43 +920,78 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                           placeholder={props.values.diskon}
                           name="diskon"
                           onChange={(e) => {
-                            props.setFieldValue("diskon", parseInt(e.target.value));
-                            // Rumus diskon tambahan
-                            let diskon_tambahan = (e.target.value / 100) * props.values.subtotal;
-                            props.setFieldValue((props.values.total_diskon = diskon_tambahan));
-                            props.setFieldValue("total_diskon", diskon_tambahan);
+                            props.setFieldValue("diskon", e.target.value);
+                            if (props.values.boolean == false) {
+                              // Rumus diskon tambahan
+                              let diskon_tambahan = (e.target.value / 100) * props.values.subtotal;
+                              props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                              props.setFieldValue("total_diskon", diskon_tambahan);
 
-                            // Rumus jumlah
-                            const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                              // Rumus jumlah
+                              const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                            // Rumus pajak per baris
-                            const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                              // Rumus pajak per baris
+                              const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-                            // Rumus diskon per baris
-                            const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                              // Rumus diskon per baris
+                              const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
 
-                            // Rumus total
-                            let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
-                            props.setFieldValue((props.values.total = total));
-                            props.setFieldValue("total", total);
+                              // Rumus total
+                              let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                              props.setFieldValue((props.values.total = total));
+                              props.setFieldValue("total", total);
 
-                            // Rumus pemotongan
-                            let pemotongan = total - props.values.pemotongan;
-                            props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                            props.setFieldValue("pemotongan_total", pemotongan);
+                              // Rumus pemotongan
+                              let pemotongan = total - props.values.pemotongan;
+                              props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                              props.setFieldValue("pemotongan_total", pemotongan);
 
-                            // Rumus sisa tagihan
-                            let sisa_tagihan = pemotongan - props.values.uang_muka;
-                            props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                            props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                              // Rumus sisa tagihan
+                              let sisa_tagihan = pemotongan - props.values.uang_muka;
+                              props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                              props.setFieldValue("sisa_tagihan", sisa_tagihan);
 
-                            // Rumus balance akun pendapatan
-                            let balance = parseInt(subtotal + pajak_total);
-                            props.setFieldValue((props.values.balance = balance));
+                              // Rumus balance akun pendapatan
+                              let balance = parseInt(subtotal + pajak_total);
+                              props.setFieldValue((props.values.balance = balance));
+                            } else {
+                              // Rumus diskon tambahan
+                              let diskon_tambahan = (e.target.value / 100) * props.values.subtotal;
+                              props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                              props.setFieldValue("total_diskon", diskon_tambahan);
 
-                            // Rumus diskon jurnal
-                            let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
-                            props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
+                              // Rumus jumlah
+                              const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                              // Rumus pajak per baris
+                              const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                              // Rumus diskon per baris
+                              const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+
+                              let new_subtotal = subtotal - pajak_total;
+                              props.setFieldValue((props.values.subtotal = new_subtotal));
+                              props.setFieldValue("subtotal", new_subtotal);
+
+                              // Rumus total
+                              let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                              props.setFieldValue((props.values.total = total));
+                              props.setFieldValue("total", total);
+
+                              // Rumus pemotongan
+                              let pemotongan = total - props.values.pemotongan;
+                              props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                              props.setFieldValue("pemotongan_total", pemotongan);
+
+                              // Rumus sisa tagihan
+                              let sisa_tagihan = pemotongan - props.values.uang_muka;
+                              props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                              props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                              // Rumus balance akun pendapatan
+                              let balance = parseInt(subtotal + pajak_total);
+                              props.setFieldValue((props.values.balance = balance));
+                            }
                           }}
                         />
 
@@ -707,38 +1035,69 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                           onChange={(e) => {
                             props.setFieldValue("pemotongan", parseInt(e.target.value));
 
-                            // Rumus jumlah
-                            const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                            if (props.values.boolean == false) {
+                              // Rumus jumlah
+                              const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                            // Rumus pajak per baris
-                            const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                              // Rumus pajak per baris
+                              const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-                            // Rumus diskon per baris
-                            const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                              // Rumus diskon per baris
+                              const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
 
-                            // Rumus diskon tambahan
-                            let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                              // Rumus diskon tambahan
+                              let diskon_tambahan = (props.values.diskon / 100) * subtotal;
 
-                            // Rumus total
-                            let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                              // Rumus total
+                              let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
 
-                            // Rumus pemotongan
-                            let pemotongan = total - e.target.value;
-                            props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                            props.setFieldValue("pemotongan_total", pemotongan);
+                              // Rumus pemotongan
+                              let pemotongan = total - e.target.value;
+                              props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                              props.setFieldValue("pemotongan_total", pemotongan);
 
-                            // Rumus sisa tagihan
-                            let sisa_tagihan = pemotongan - props.values.uang_muka;
-                            props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                            props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                              // Rumus sisa tagihan
+                              let sisa_tagihan = pemotongan - props.values.uang_muka;
+                              props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                              props.setFieldValue("sisa_tagihan", sisa_tagihan);
 
-                            // Rumus balance akun pendapatan
-                            let balance = parseInt(subtotal + pajak_total);
-                            props.setFieldValue((props.values.balance = balance));
+                              // Rumus balance akun pendapatan
+                              let balance = parseInt(subtotal + pajak_total);
+                              props.setFieldValue((props.values.balance = balance));
+                            } else {
+                              // Rumus jumlah
+                              const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                            // Rumus diskon jurnal
-                            let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
-                            props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
+                              // Rumus pajak per baris
+                              const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                              // Rumus diskon per baris
+                              const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+
+                              let new_subtotal = subtotal - pajak_total;
+                              props.setFieldValue((props.values.subtotal = new_subtotal));
+                              props.setFieldValue("subtotal", new_subtotal);
+
+                              // Rumus diskon tambahan
+                              let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+
+                              // Rumus total
+                              let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+
+                              // Rumus pemotongan
+                              let pemotongan = total - e.target.value;
+                              props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                              props.setFieldValue("pemotongan_total", pemotongan);
+
+                              // Rumus sisa tagihan
+                              let sisa_tagihan = pemotongan - props.values.uang_muka;
+                              props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                              props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                              // Rumus balance akun pendapatan
+                              let balance = parseInt(subtotal + pajak_total);
+                              props.setFieldValue((props.values.balance = balance));
+                            }
                           }}
                         />
                         <InputGroup.Append>
@@ -757,8 +1116,9 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     <Col>
                       <Form.Control as="select" name="akun_pemotongan" onChange={props.handleChange}>
                         {/* {header.map((i) => {
-                          <option value="">{i.akun_pemotongan}</option>;
+                          <option value={i.akun_pemotongan}>{i.akun_pemotongan}</option>;
                         })} */}
+                        <option value={header[0].akun1.id}>Pilih</option>
                         {data4.map((akun) => (
                           <option key={akun.id} value={akun.id}>
                             {akun.nama_akun}
@@ -777,38 +1137,69 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                         onChange={(e) => {
                           props.setFieldValue("uang_muka", parseInt(e.target.value));
 
-                          // Rumus jumlah
-                          const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                          if (props.values.boolean == false) {
+                            // Rumus jumlah
+                            const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                          // Rumus pajak per baris
-                          const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                            // Rumus pajak per baris
+                            const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-                          // Rumus diskon per baris
-                          const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                            // Rumus diskon per baris
+                            const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
 
-                          // Rumus diskon tambahan
-                          let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                            // Rumus diskon tambahan
+                            let diskon_tambahan = (props.values.diskon / 100) * subtotal;
 
-                          // Rumus total
-                          let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                            // Rumus total
+                            let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
 
-                          // Rumus pemotongan
-                          let pemotongan = total - props.values.pemotongan;
-                          props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                          props.setFieldValue("pemotongan_total", pemotongan);
+                            // Rumus pemotongan
+                            let pemotongan = total - props.values.pemotongan;
+                            props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                            props.setFieldValue("pemotongan_total", pemotongan);
 
-                          // Rumus sisa tagihan
-                          let sisa_tagihan = pemotongan - e.target.value;
-                          props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                          props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                            // Rumus sisa tagihan
+                            let sisa_tagihan = pemotongan - e.target.value;
+                            props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                            props.setFieldValue("sisa_tagihan", sisa_tagihan);
 
-                          // Rumus balance akun pendapatan
-                          let balance = parseInt(subtotal + pajak_total);
-                          props.setFieldValue((props.values.balance = balance));
+                            // Rumus balance akun pendapatan
+                            let balance = parseInt(subtotal + pajak_total);
+                            props.setFieldValue((props.values.balance = balance));
+                          } else {
+                            // Rumus jumlah
+                            const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
 
-                          // Rumus diskon jurnal
-                          let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
-                          props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
+                            // Rumus pajak per baris
+                            const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                            // Rumus diskon per baris
+                            const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+
+                            let new_subtotal = subtotal - pajak_total;
+                            props.setFieldValue((props.values.subtotal = new_subtotal));
+                            props.setFieldValue("subtotal", new_subtotal);
+
+                            // Rumus diskon tambahan
+                            let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+
+                            // Rumus total
+                            let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+
+                            // Rumus pemotongan
+                            let pemotongan = total - props.values.pemotongan;
+                            props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                            props.setFieldValue("pemotongan_total", pemotongan);
+
+                            // Rumus sisa tagihan
+                            let sisa_tagihan = pemotongan - e.target.value;
+                            props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                            props.setFieldValue("sisa_tagihan", sisa_tagihan);
+
+                            // Rumus balance akun pendapatan
+                            let balance = parseInt(subtotal + pajak_total);
+                            props.setFieldValue((props.values.balance = balance));
+                          }
                         }}
                       />
                     </Col>
@@ -816,7 +1207,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   <Row className="mb-3">
                     <Col>
                       <Form.Control as="select" name="akun_uang_muka" onChange={props.handleChange}>
-                        <option value="kosong">Pilih</option>
+                        <option value={header[0].akun2.id}>Pilih</option>
                         {data5.map((akun) => (
                           <option key={akun.id} value={akun.id}>
                             {akun.nama_akun}
@@ -844,15 +1235,13 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             </Form>
             <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
               <Link href="/jual/penjualan">
-                <button onclick="openModal(false)" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none">
+                <button onClick="openModal(false)" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none">
                   Batal
                 </button>
               </Link>
-              <Link href="/jual/penjualan">
                 <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
                   Buat Penjualan
                 </button>
-              </Link>
             </div>
           </Forms>
         )}
@@ -869,6 +1258,8 @@ export async function getServerSideProps(context) {
       id: parseInt(id),
     },
     include: {
+      akun1: true,
+      akun2: true,
       kontak: true,
       DetailPenjualan: true,
     },
@@ -880,6 +1271,9 @@ export async function getServerSideProps(context) {
         id: "asc",
       },
     ],
+    include: {
+      kategori1: true,
+    },
   });
 
   const produks = await prisma.produk.findMany({

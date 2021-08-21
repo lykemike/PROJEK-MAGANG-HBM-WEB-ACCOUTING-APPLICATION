@@ -223,10 +223,13 @@ export default async (req, res) => {
     });
 
     const pembayaran_di_muka = parseInt(req.body.uang_muka) >= 0 ? akunUangMuka[0].nama_akun : akunUangMuka[0].nama_akun;
-    const piutang_blm_ditagih = parseInt(req.body.sisa_tagihan) >= 0 ? setting_piutang_blm_ditagih[0].akun.nama_akun : setting_piutang_blm_ditagih[0].akun.nama_akun;
-    const nilai_diskon_penjualan = parseInt(total_diskon) >= 0 ? setting_diskon_penjualan[0].akun.nama_akun : setting_diskon_penjualan[0].akun.nama_akun;
+    const piutang_blm_ditagih =
+      parseInt(req.body.sisa_tagihan) >= 0 ? setting_piutang_blm_ditagih[0].akun.nama_akun : setting_piutang_blm_ditagih[0].akun.nama_akun;
+    const nilai_diskon_penjualan =
+      parseInt(total_diskon) >= 0 ? setting_diskon_penjualan[0].akun.nama_akun : setting_diskon_penjualan[0].akun.nama_akun;
     const pemotongan = parseInt(req.body.pemotongan) >= 0 ? akunPemotongan[0].nama_akun : akunPemotongan[0].nama_akun;
-    const pendapatan_penjualan = parseInt(req.body.subtotal) >= 0 ? setting_pendapatan_penjualan[0].akun.nama_akun : setting_pendapatan_penjualan[0].akun.nama_akun;
+    const pendapatan_penjualan =
+      parseInt(req.body.subtotal) >= 0 ? setting_pendapatan_penjualan[0].akun.nama_akun : setting_pendapatan_penjualan[0].akun.nama_akun;
 
     const create_jurnal_penjualan = await prisma.jurnalPenjualan.createMany({
       data: [
@@ -271,7 +274,7 @@ export default async (req, res) => {
       {
         message: "Create Detail Penjualan Success!",
         data: create_jurnal_penjualan,
-        id : find_latest,
+        id: find_latest,
         add_jurnal_penjualan,
       },
     ]);
