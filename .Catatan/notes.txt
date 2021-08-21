@@ -354,6 +354,42 @@ New Updates
 - Buat Jurnal Pengiriman Pembayaran = 20%
 - Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
 
+🗓️ Tanggal: 20 August 2021, Jumat
+Meeting progress dan perubahan berbrp page
+Aset
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
+- Jurnal Pelepasan Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 90% 
+- Jurnal Invoice Untung Rugi Aset Database = 90%
+- Jurnal Invoice Untung Rugi API = 20%
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar dari opsional = 100%
+
+Jurnal
+- Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
+
+Produk
+- Udah bisa pilih mau jual atau beli produk = 100%
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 20%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
+
+New Updates2
+- Ada Perubahan di edit penjualan
+  Invoice 
+- Ada Perubahan di edit pembelian
+  Invoice
+
+
 
 ===================================
 - Buat struktur api dan database jurnal pembelian, biaya = 30%

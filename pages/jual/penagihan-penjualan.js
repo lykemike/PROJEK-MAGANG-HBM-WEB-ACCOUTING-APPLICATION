@@ -14,7 +14,6 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-// import Select from "react-select";
 
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6 }) {
   const url = "http://localhost:3000/api/jual/createpenjualan";
@@ -1111,7 +1110,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   <Row className="mb-3">
                     <Col>
                       <Form.Control as="select" name="akun_pemotongan" onChange={props.handleChange}>
-                        <option value="kosong">Pilih</option>
+                        <option value="0">Pilih</option>
                         {data4.map((akun) => (
                           <option key={akun.id} value={akun.id}>
                             {akun.nama_akun}
