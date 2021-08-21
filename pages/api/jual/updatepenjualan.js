@@ -67,7 +67,7 @@ export default async (req, res) => {
       status: "Active",
     };
 
-    const update_header_penjualan = await prisma.headerPenjualan.update({
+    const update_header = await prisma.headerPenjualan.update({
       where: {
         id: parseInt(req.body.no_transaksi)
       },
@@ -228,7 +228,7 @@ export default async (req, res) => {
       data: list_pajak,
     });
 
-    res.status(201).json([{ message: "Find produk detail success!", add_jurnal_penjualan }]);
+    res.status(201).json([{ message: "Update penjualan success!", add_jurnal_penjualan }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

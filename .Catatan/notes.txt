@@ -384,10 +384,11 @@ New Updates
 - Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
 
 New Updates2
-- Ada Perubahan di edit penjualan
-  Invoice 
-- Ada Perubahan di edit pembelian
-  Invoice
+- Meeting
+- Ada Perubahan di bagian edit penjualan = 100%
+    Ada perubahan di Invoice penjualan = 100%
+- Ada Perubahan di bagian edit pembelian = 50% (API UDAH SISA TESTING)
+    Ada perubahan di Invoice pembelian = 100%
 
 
 

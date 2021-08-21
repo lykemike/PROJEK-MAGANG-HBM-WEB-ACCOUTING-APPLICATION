@@ -15,7 +15,6 @@ import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, header, produk }) {
-  // const url = "http://localhost:3000/api/jual/createpenjualan";
   const url = "http://localhost:3000/api/jual/updatepenjualan"
   const router = useRouter();
   const { id } = router.query;
