@@ -17,8 +17,8 @@ const prisma = new PrismaClient();
 export default function edit_jurnal({data, data2}) {
 
 	const url = "http://localhost:3000/api/jurnal/createJurnal";
+  const formik = useRef(null)
 
-	
     // Redirect
     const router = useRouter();
     const { id } = router.query;
@@ -35,18 +35,20 @@ export default function edit_jurnal({data, data2}) {
     return (
         <Layout>
              <Formik
+              enableReinitialize={true}
+              innerRef={formik}
                 initialValues={{
-                    no_transaksi: id,
-                    tgl_transaksi: "",
-                    total_debit: "",
-                    total_kredit: "",
+                    no_transaksi: data[0].no_transaksi,
+                    tgl_transaksi: data[0].tgl_transaksi,
+                    total_debit: data[0].total_debit,
+                    total_kredit: data[0].total_kredit,
                     fileattachment: [],
                     detail_jurnal: [{
-                      akun_id: "",
-                      deskripsi: "",
-                      tag: "",
-                      debit: "",
-                      kredit: "",
+                      akun_id: data[0].akun_id,
+                      deskripsi: data[0].deskripsi,
+                      tag: data[0].tag,
+                      debit: data[0].debit,
+                      kredit: data[0].kredit,
                     }
                     ]
                 }}
@@ -92,6 +94,7 @@ export default function edit_jurnal({data, data2}) {
                         placeholder={"Auto " + "(" + id + ")"}
                         name="no_transaksi"
                         onChange={props.handleChange}
+                        value={props.values.no_transaksi}
                         disabled
                     />
                     </Col>
@@ -102,6 +105,8 @@ export default function edit_jurnal({data, data2}) {
                         aria-label="date"
                         onChange={props.handleChange}
                         name="tgl_transaksi"
+                        value={props.values.tgl_transaksi}
+                        disabled
                         />
                         {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                     {/* <KeyboardDatePicker disableToolbar variant="inline" format="MM/dd/yyyy" margin="normal" id="date-picker-inline" label="Date picker inline" value={selectedDate} onChange={handleDateChange} KeyboardButtonProps={{'aria-label': 'change date',}}/> */}
@@ -144,6 +149,7 @@ export default function edit_jurnal({data, data2}) {
                     <Form.Control 
                     as="select"
                     name={`detail_jurnal.${index}.akun_id`}
+                    value={props.values.detail_jurnal[index].akun_id}
                     onChange={(e) => {
                       props.setFieldValue(`detail_jurnal.${index}.akun_id`, e.target.value); 
                       let hasil2 = data.filter((i) => {
@@ -159,13 +165,14 @@ export default function edit_jurnal({data, data2}) {
                     </Form.Control>
                     </Col>
                     <Col sm="2">
-                         <Form.Control placeholder="Isi Deskripsi" name="deskripsi"  onChange={(e) => {
+                         <Form.Control placeholder="Isi Deskripsi" name="deskripsi"  value={props.values.detail_jurnal[index].deskripsi} onChange={(e) => {
                                 props.setFieldValue(`detail_jurnal.${index}.deskripsi`, e.target.value);  
                             }} 
                          />  
                     </Col>
                     <Col sm="1">
                          <Form.Control placeholder="" name="tag"  
+                         value={props.values.detail_jurnal[index].tag}
                          onChange={(e) => {
                          props.setFieldValue(`detail_jurnal.${index}.tag`, e.target.value);  
                          }}
@@ -173,7 +180,8 @@ export default function edit_jurnal({data, data2}) {
                     </Col>
                     <Col sm="2">
                          <Form.Control placeholder="Isi Debit" 
-                         name={`detail_jurnal.${index}.debit`}   
+                         name={`detail_jurnal.${index}.debit`}  
+                         value={props.values.detail_jurnal[index].debit} 
                          onChange={(e) =>{
                           props.setFieldValue(`detail_jurnal.${index}.debit`, parseInt(e.target.value))
                           let debit = parseInt(e.target.value)
@@ -187,6 +195,7 @@ export default function edit_jurnal({data, data2}) {
                     <Col sm="2">
                          <Form.Control placeholder="Isi Kredit" 
                          name="kredit" 
+                         value={props.values.detail_jurnal[index].kredit}
                          onChange={(e) =>{
                           props.setFieldValue(`detail_jurnal.${index}.kredit`, parseInt(e.target.value))
                           let kredit = parseInt(e.target.value)
@@ -260,8 +269,9 @@ export default function edit_jurnal({data, data2}) {
     )
 }
 
-export async function getServerSideProps({}) {
- 
+export async function getServerSideProps({context}) {
+  const { id } = context.query;
+
   const akuns = await prisma.akun.findMany({
     orderBy: [
       {
@@ -279,10 +289,22 @@ export async function getServerSideProps({}) {
     },
   });
 
+  let jurnal = []
+  data[0].detail_jurnal.map((i) => {
+    jurnal.push({
+      akun_id: parseInt(i.akun_id),
+      deskripsi: i.deskripsi,
+      tag: i.tag,
+      debit: parseInt(i.debit),
+      kredit: parseInt(i.kredit),
+    })
+  })
+
   return {
     props: {
       data: akuns,
-      data2: jurnalterakhir
+      data2: jurnalterakhir,
+      jurnal: jurnal,
     },
   };
 }

@@ -14,21 +14,13 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, data7, produk }) {
+export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, header, produk }) {
   const url = "http://localhost:3000/api/beli/createpembelian";
   const router = useRouter();
   const { id } = router.query;
 
   const formik = useRef(null)
 
-  // const redirect = data6 != undefined ? parseInt(data6.id) + 1 : 0;
-  // 20
-  // 21 -> hapus
-  // 22
-
-  // const [idInvoice, setIdInvoice] = useState(redirect);
-
-  console.log(produk)
   
   return (
     <Layout>
@@ -36,37 +28,34 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
         enableReinitialize={true}
         innerRef={formik}
         initialValues={{
-          nama_supplier: data7[0].nama_supplier,
-          email: data7[0].email,
-          alamat_supplier: data7[0].alamat_supplier,
-          tgl_transaksi: data7[0].tgl_transaksi,
-          tgl_jatuh_tempo: data7[0].tgl_jatuh_tempo,
-          syarat_pembayaran: data7[0].syarat_pembayaran,
-          no_ref_penagihan: data7[0].no_ref_penagihan,
-          no_transaksi: data7[0].no_transaksi,
-          tag: data7[0].tag,
+          nama_supplier: header[0].nama_supplier,
+          email: header[0].email,
+          alamat_supplier: header[0].alamat_supplier,
+          tgl_transaksi: header[0].tgl_transaksi,
+          tgl_jatuh_tempo: header[0].tgl_transaksi,
+          syarat_pembayaran: header[0].syarat_pembayaran,
+          no_ref_penagihan: header[0].no_ref_penagihan,
+          no_transaksi: header[0].no_transaksi,
+          tag: header[0].tag,
           produks: produk,
-          pesan: "",
-          memo: "",
+          pesan: header[0].pesan,
+          memo: header[0].memo,
           fileattachment: [],
-          subtotal: "",
-          total_diskon_per_baris: "",
-          diskon: "",
-          total_diskon: "",
-          total_pajak_per_baris: "",
-          total: "",
-          pemotongan: "",
-          pemotongan_total: "",
-          akun_pemotongan: "",
-          uang_muka: "",
-          akun_uang_muka: "",
-          sisa_tagihan: "",
-          diskon_jurnal: "",
-          balance: "",
+          subtotal: header[0].subtotal,
+          total_diskon_per_baris: header[0].total_diskon_per_baris,
+          diskon: header[0].diskon,
+          total_diskon: header[0].total_diskon,
+          total_pajak_per_baris: header[0].total_pajak_per_baris,
+          total: header[0].total,
+          pemotongan: header[0].pemotongan,
+          pemotongan_total: header[0].pemotongan_total,
+          akun_pemotongan: header[0].akun_pemotongan,
+          uang_muka: header[0].uang_muka,
+          akun_uang_muka: header[0].akun_uang_muka,
+          sisa_tagihan: header[0].sisa_tagihan,
         }}
         // validationSchema={}
         onSubmit={async (values) => {
-          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "produks") {
@@ -76,19 +65,19 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values.fileattachment);
-          Axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then(function (response) {
-              console.log(response);
-              router.push(`view/${id}`);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          console.log(values);
+          // Axios.post(url, formData, {
+          //   headers: {
+          //     "Content-Type": "multipart/form-data",
+          //   },
+          // })
+          //   .then(function (response) {
+          //     console.log(response);
+          //     router.push(`view/${id}`);
+          //   })
+          //   .catch(function (error) {
+          //     console.log(error);
+          //   });
         }}>
         {(props) => (
           <Forms noValidate>
@@ -210,8 +199,6 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       value={props.values.syarat_pembayaran}
                       disabled={true}
                       onChange={(e) => {
-                        props.setFieldValue("syarat_pembayaran", parseInt(e.target.value));
-                        props.setFieldValue((props.values.syarat_pembayaran = parseInt(e.target.value)));
 
                         // let tgltransaksi = props.values.tgl_transaksi.split("-");
                         // tgltransaksi = new Date(tgltransaksi[0], tgltransaksi[1] - 1, tgltransaksi[2]);
@@ -222,12 +209,9 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                         // props.setFieldValue(props.values.tgl_jatuh_tempo, `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
                       }}
                       onBLur={props.handleBlur}>
-                      <option value='0'>Pilih</option>
-                      <option value='0'>Tunai / Cash</option>
-                      <option value='0'>Kredit / Term of Payment</option>
-                      <option value='10'>10 hari</option>
-                      <option value='15'>15 hari</option>
-                      <option value='30'>30 hari</option>
+                    {header.map((i) => {
+                        <option>{i.syarat_pembayaran}</option>;
+                      })}
                     </Form.Control>
                     <br />
                   </Form.Label>
@@ -682,11 +666,25 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     Pesan
                   </label>
                   <br />
-                  <textarea rows='3' name='pesan' class='px-16 py-2 border border-gray-800  '></textarea> <br />
+                  <textarea 
+                   rows='3' 
+                   name='pesan' 
+                   class='px-16 py-2 border border-gray-800'  
+                   placeholder={props.values.pesan}
+                   onChange={props.handleChange}
+                   ></textarea> <br />
+
                   <label for='memo'>Memo</label>
                   <br />
-                  <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800  '></textarea> <br />
-                  File Attachment <br />
+                  <textarea 
+                  rows='3' 
+                  name='memo' 
+                  class='px-16 py-2 border border-gray-800  '
+                  placeholder={props.values.memo}
+                  onChange={props.handleChange}
+                  ></textarea> <br />
+             
+                 File Attachment <br />
                   <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                 </Col>
                 <Col sm='4' />
@@ -1043,7 +1041,7 @@ export async function getServerSideProps(context) {
       data4: akunPendapatan,
       data5: akunKasBank,
       data6: pembelianTerakhir,
-      data7: header,
+      header: header,
       produk: produk
     },
   };

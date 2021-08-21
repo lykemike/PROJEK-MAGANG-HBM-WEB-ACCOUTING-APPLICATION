@@ -26,7 +26,7 @@ const prisma = new PrismaClient();
 
 	// const url = "http://localhost:3000/api/kasbank/createTerimaUang";
 
-    const id = data5 != undefined ? parseInt(data5.id) + 1 : 1;
+
     // const id = 1;
 
     const [idInvoice, setIdInvoice] = useState(id);
@@ -66,28 +66,29 @@ const prisma = new PrismaClient();
     return (
             <Layout>
                 <Formik
+                enableReinitialize={true}
                 innerRef={formikref}
                     initialValues={{
-                        akun_setor_id: '',
-                        akun_membayar_id: "",
-                        tgl_transaksi: "",
-                        no_transaksi: id,
-                        tag: "",
-                        memo: "",
-                        subtotal: 0,
-                        total: "",
+                        akun_setor_id: data[0].akun_setor_id,
+                        akun_membayar_id: data[0].akun_membayar_id,
+                        tgl_transaksi: data[0].tgl_transaksi,
+                        no_transaksi: data[0].no_transaksi,
+                        tag: data[0].tag,
+                        memo: data[0].memo,
+                        subtotal: data[0].subtotal,
+                        total: data[0].total,
                         fileattachment: [],
-                        hasil_pajak: "",
+                        hasil_pajak: data[0].hasil_pajak,
                         detail_terima_uang: [
                             {
-                                akun_id:"",
-                                nama_akun: "",
-                                deskripsi: "",
-                                pajak_id: "",
-                                pajak_nama: "",
-                                pajak_persen: "",
-                                hasil_pajak: 0,
-                                jumlah: ""
+                                akun_id: data[0].akun_id,
+                                nama_akun: data[0].nama_akun,
+                                deskripsi: data[0].deskripsi,
+                                pajak_id: data[0].pajak_id,
+                                pajak_nama: data[0].pajak_nama,
+                                pajak_persen: data[0].pajak_persen,
+                                hasil_pajak: data[0].hasil_pajak,
+                                jumlah: data[0].jumlah
                             }
                         ]
                     }}
@@ -131,7 +132,7 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Bayar dari
                                     </Form.Label>
-                                        <Form.Control as="select" name="akun_setor_id" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                        <Form.Control as="select" name="akun_setor_id"  value={props.values.akun_setor_id} onChange={props.handleChange} onBlur={props.handleBlur}>
                                         <option value='kosong'>Pilih</option>
                                         {data.map((akun) => (
                                             <option key={akun.id} value={akun.id}>
@@ -157,7 +158,7 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Yang Membayar
                                 </Form.Label>
-                                    <Form.Control as="select" name="akun_membayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                    <Form.Control as="select" name="akun_membayar_id"  value={props.values.akun_membayar_id} onChange={props.handleChange} onBlur={props.handleBlur}>
                                     <option value='kosong'>Pilih</option>
                                     {data2.map((kontaks) => (
                                         <option key={kontaks.kontak.id} value={kontaks.kontak.id}>
@@ -179,6 +180,7 @@ const prisma = new PrismaClient();
                                         aria-label="date"
                                         name="tgl_transaksi"
                                         onChange={props.handleChange}
+                                        value={props.values.tgl_transaksi}
                                         />
                                         {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                                     </InputGroup>
@@ -192,6 +194,8 @@ const prisma = new PrismaClient();
                                     <Form.Control 
                                          placeholder={"Auto " + "(" + id + ")"}
                                         name="no_transaksi"
+                                        value={props.values.no_transaksi}
+                                        onChange={props.handleChange}
                                         disabled
                                     />
                                 </Col>
@@ -204,6 +208,7 @@ const prisma = new PrismaClient();
                                         placeholder="Tag" 
                                         name="tag"
                                         onChange={props.handleChange}
+                                        value={props.values.tag}
                                     />
                                 </Col>
                 
@@ -238,6 +243,7 @@ const prisma = new PrismaClient();
                                                 <Form.Control 
                                                 as="select" 
                                                 name={`detail_terima_uang.${index}.akun_id`}
+                                                value={props.values.detail_terima_uang[index].akun_id}
                                                 onChange={(e) => {
                                                     props.setFieldValue(`detail_terima_uang.${index}.akun_id`, e.target.value);  
                                                     let hasil2 = data3.filter((i) => {
@@ -262,6 +268,7 @@ const prisma = new PrismaClient();
                                                 <Form.Control 
                                                 placeholder="Isi Deskripsi" 
                                                 name={`detail_terima_uang.${index}.deskripsi`}
+                                                value={props.values.detail_terima_uang[index].deskripsi}
                                                 onChange={(e) => {
                                                     props.setFieldValue(`detail_terima_uang.${index}.deskripsi`, e.target.value);  
                                                 }}
@@ -272,6 +279,7 @@ const prisma = new PrismaClient();
                                                 <Form.Control 
                                                 as="select" 
                                                 name={`detail_terima_uang.${index}.pajak_id`}
+                                                value={props.values.detail_terima_uang[index].pajak_id}
                                                 onChange={(e) => {
                                                     props.setFieldValue(`detail_terima_uang.${index}.pajak_id`, e.target.value);  
                                                     let hasil2 = data4.filter((i) => {
@@ -313,6 +321,7 @@ const prisma = new PrismaClient();
                                             <Form.Control 
                                                 placeholder="Jumlah Uang" 
                                                 name={`detail_terima_uang.${index}.jumlah`} 
+                                                value={props.values.detail_terima_uang[index].jumlah}
                                                 onChange={(e) => {
                                                     props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value))
                                                     let jumlah = parseInt(e.target.value)
@@ -509,13 +518,26 @@ export async function getServerSideProps() {
         },
       });
 
+
+      let terimauang = []
+      data[0].terimaUang.map((i) => {
+        terimauang.push({
+          akun_id: parseInt(i.akun_id),
+          deskripsi: i.deskripsi,
+          tag: i.tag,
+          debit: parseInt(i.debit),
+          kredit: parseInt(i.kredit),
+        })
+      })
+
     return {
       props: {
         data: akunKasBank,
         data2: kontaks,
         data3: namaAkun,
         data4: pajaks,
-        data5: terimauangterakhir
+        data5: terimauangterakhir,
+        terimauang: terimauang
       },
     };
   }

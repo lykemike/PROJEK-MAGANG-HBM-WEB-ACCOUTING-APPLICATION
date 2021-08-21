@@ -14,59 +14,46 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, data7, produk }) {
+export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, header, produk }) {
   const url = "http://localhost:3000/api/jual/createpenjualan";
   const router = useRouter();
   const { id } = router.query;
+  const formik = useRef(null);
 
-  const formik = useRef(null)
-
-  // const redirect = data6 != undefined ? parseInt(data6.id) + 1 : 0;
-  // 20
-  // 21 -> hapus
-  // 22
-
-  // const [idInvoice, setIdInvoice] = useState(redirect);
-
-  console.log(produk)
-  
   return (
     <Layout>
       <Formik
         enableReinitialize={true}
         innerRef={formik}
         initialValues={{
-          nama_supplier: data7[0].nama_supplier,
-          email: data7[0].email,
-          alamat_supplier: "",
-          tgl_transaksi: "",
-          tgl_jatuh_tempo: "",
-          syarat_pembayaran: "",
-          no_ref_penagihan: "",
-          no_transaksi: 0,
-          tag: "",
+          nama_supplier: header[0].nama_supplier,
+          email: header[0].email,
+          alamat_supplier: header[0].alamat_supplier,
+          tgl_transaksi: header[0].tgl_transaksi,
+          tgl_jatuh_tempo: header[0].tgl_transaksi,
+          syarat_pembayaran: header[0].syarat_pembayaran,
+          no_ref_penagihan: header[0].no_ref_penagihan,
+          no_transaksi: header[0].no_transaksi,
+          tag: header[0].tag,
           produks: produk,
-          pesan: "",
-          memo: "",
+          pesan: header[0].pesan,
+          memo: header[0].memo,
           fileattachment: [],
-          subtotal: "",
-          total_diskon_per_baris: "",
-          diskon: "",
-          total_diskon: "",
-          total_pajak_per_baris: "",
-          total: "",
-          pemotongan: "",
-          pemotongan_total: "",
-          akun_pemotongan: "",
-          uang_muka: "",
-          akun_uang_muka: "",
-          sisa_tagihan: "",
-          diskon_jurnal: "",
-          balance: "",
+          subtotal: header[0].subtotal,
+          total_diskon_per_baris: header[0].total_diskon_per_baris,
+          diskon: header[0].diskon,
+          total_diskon: header[0].total_diskon,
+          total_pajak_per_baris: header[0].total_pajak_per_baris,
+          total: header[0].total,
+          pemotongan: header[0].pemotongan,
+          pemotongan_total: header[0].pemotongan_total,
+          akun_pemotongan: header[0].akun_pemotongan,
+          uang_muka: header[0].uang_muka,
+          akun_uang_muka: header[0].akun_uang_muka,
+          sisa_tagihan: header[0].sisa_tagihan,
         }}
         // validationSchema={}
         onSubmit={async (values) => {
-          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "produks") {
@@ -76,219 +63,185 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values.fileattachment);
-          Axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then(function (response) {
-              console.log(response);
-              router.push(`view/${id}`);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        }}>
+          console.log(values);
+          //   Axios.post(url, formData, {
+          //     headers: {
+          //       "Content-Type": "multipart/form-data",
+          //     },
+          //   })
+          //     .then(function (response) {
+          //       console.log(response);
+          //       router.push(`view/${id}`);
+          //     })
+          //     .catch(function (error) {
+          //       console.log(error);
+          //     });
+          // }}
+        }}
+      >
         {(props) => (
           <Forms noValidate>
             <h3>Edit Penagihan Penjualan</h3>
-            <div className='border-t border-gray-200'>
+            <div className="border-t border-gray-200">
               <Form>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Form.Label column sm='3'>
+                <Form.Group as={Row} controlId="formPlaintext">
+                  <Form.Label column sm="3">
                     Pelanggan
                   </Form.Label>
-                  <Form.Label column sm='3'>
+                  <Form.Label column sm="3">
                     Email
                   </Form.Label>
                 </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='3'>
-                    <Form.Control
-                      as='select'
-                      name='nama_supplier'
-                      disabled={true}
-                      value={props.values.nama_supplier}
-                      onChange={(e) => {
-                        props.setFieldValue("nama_supplier", e.target.value);
-                        if (e.target.value === "") {
-                          props.setFieldValue("email", ""), props.setFieldValue("alamat_supplier", "");
-                        } else {
-                          let hasil = data.filter((i) => {
-                            return i.kontak.id === parseInt(e.target.value);
-                          });
-                          props.setFieldValue("email", hasil[0].kontak.email),
-                            props.setFieldValue("alamat_supplier", hasil[0].kontak.alamat_pembayaran);
-                        }
-                      }}>
-                      <option value='kosong'>pilih supplier</option>
-                      {data.map((nama_supplier) => (
-                        <option key={nama_supplier.kontak.id} value={nama_supplier.kontak.id}>
-                          {nama_supplier.kontak.nama_panggilan}
-                        </option>
+                <Form.Group as={Row} controlId="formPlaintext">
+                  <Col sm="3">
+                    <Form.Control as="select" name="nama_supplier" disabled={true} value={props.values.nama_supplier} onChange={props.handleChange}>
+                      {header.map((i) => (
+                        <option>{i.kontak.nama_panggilan}</option>
                       ))}
                     </Form.Control>
                   </Col>
-                  <Col sm='3'>
-                    <Form.Control
-                      type='text'
-                      placeholder=''
-                      disabled={true}
-                      name='email'
-                      value={props.values.email}
-                      onChange={(e) => {
-                        props.setFieldValue("email", e.target.value);
-                      }}></Form.Control>
+                  <Col sm="3">
+                    <Form.Control type="text" placeholder="" disabled={true} name="email" value={props.values.email} onChange={props.handleChange} />
                   </Col>
-                  <Col sm='3'></Col>
-                  <Col sm='3'>
-                    <Form.Label column sm='2' name='sisa_tagihan'>
+                  <Col sm="3"></Col>
+                  <Col sm="3">
+                    <Form.Label column sm="2" name="sisa_tagihan">
                       Rp.{props.values.sisa_tagihan}
                     </Form.Label>
                   </Col>
                 </Form.Group>
               </Form>
             </div>
-            <div className='border-t border-gray-200'>
+            <div className="border-t border-gray-200">
               <Form>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Form.Label column sm='3'>
-                    <label for='message'>Alamat Penagihan</label>
+                <Form.Group as={Row} controlId="formPlaintext">
+                  <Form.Label column sm="3">
+                    <label for="message">Alamat Penagihan</label>
                     <br />
                     <textarea
-                      rows='5'
-                      id='message'
+                      rows="5"
+                      id="message"
+                      class="px-10 py-2 border border-gray-800  "
+                      name="alamat_supplier"
                       disabled={true}
-                      class='px-10 py-2 border border-gray-800  '
-                      name='alamat_supplier'
                       value={props.values.alamat_supplier}
-                      onChange={(e) => {
-                        props.setFieldValue("alamat_supplier", e.target.value);
-                      }}></textarea>
+                      onChange={props.handleChange}
+                    />
                   </Form.Label>
-                  <Form.Label column sm='3'>
+                  <Form.Label column sm="3">
                     Tgl Transaksi <br />
                     <Form.Control
-                      type='date'
-                      placeholder='Auto'
-                      name='tgl_transaksi'
+                      type="date"
+                      placeholder="Auto"
+                      name="tgl_transaksi"
                       disabled={true}
-                      onChange={
-                        // props.handleChange
-                        (e) => {
-                          props.setFieldValue("tgl_transaksi", e.target.value);
-                          props.setFieldValue((props.values.tgl_transaksi = e.target.value));
-
-                          let tgltransaksi = e.target.value.split("-");
-                          tgltransaksi = new Date(tgltransaksi[0], tgltransaksi[1] - 1, tgltransaksi[2]);
-                          tgltransaksi.setDate(tgltransaksi.getDate() + props.values.syarat_pembayaran);
-                          let tanggal = tgltransaksi.toLocaleDateString();
-                          let tgl = tanggal.split("/");
-                          props.setFieldValue("tgl_jatuh_tempo", `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                          props.setFieldValue(props.values.tgl_jatuh_tempo, `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                        }
-                      }
+                      value={props.values.tgl_transaksi}
+                      onChange={props.handleChange}
                     />
                     <br />
                     Tgl Jatuh Tempo <br />
                     <Form.Control
-                      type='date'
-                      placeholder='Auto'
-                      name='tgl_jatuh_tempo'
+                      type="date"
+                      placeholder="Auto"
+                      name="tgl_jatuh_tempo"
                       disabled={true}
-                      onChange={props.handleChange}
                       value={props.values.tgl_jatuh_tempo}
-                    />{" "}
+                      onChange={props.handleChange}
+                    />
                     <br />
                     Syarat Pembayaran <br />
                     <Form.Control
-                      as='select'
-                      defaultValue='Choose...'
-                      name='syarat_pembayaran'
+                      as="select"
+                      defaultValue="Choose..."
+                      name="syarat_pembayaran"
                       disabled={true}
-                      onChange={(e) => {
-                        props.setFieldValue("syarat_pembayaran", parseInt(e.target.value));
-                        props.setFieldValue((props.values.syarat_pembayaran = parseInt(e.target.value)));
-
-                        // let tgltransaksi = props.values.tgl_transaksi.split("-");
-                        // tgltransaksi = new Date(tgltransaksi[0], tgltransaksi[1] - 1, tgltransaksi[2]);
-                        // tgltransaksi.setDate(tgltransaksi.getDate() + e.target.value);
-                        // let tanggal = tgltransaksi.toLocaleDateString();
-                        // let tgl = tanggal.split("/");
-                        // props.setFieldValue("tgl_jatuh_tempo", `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                        // props.setFieldValue(props.values.tgl_jatuh_tempo, `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                      }}
-                      onBLur={props.handleBlur}>
-                      <option value='0'>Pilih</option>
-                      <option value='0'>Tunai / Cash</option>
-                      <option value='0'>Kredit / Term of Payment</option>
-                      <option value='10'>10 hari</option>
-                      <option value='15'>15 hari</option>
-                      <option value='30'>30 hari</option>
+                      value={props.values.syarat_pembayaran}
+                      onChange={props.handleChange}
+                      onBLur={props.handleBlur}
+                    >
+                      {header.map((i) => {
+                        <option>{i.syarat_pembayaran}</option>;
+                      })}
                     </Form.Control>
                     <br />
                   </Form.Label>
 
-                  <Form.Label column sm='3'>
+                  <Form.Label column sm="3">
                     No Transaksi <br />
-                    <Form.Control disabled={true} type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
+                    <Form.Control
+                      disabled={true}
+                      type="text"
+                      placeholder="Auto"
+                      name="no_transaksi"
+                      value={props.values.no_transaksi}
+                      onChange={props.handleChange}
+                    />{" "}
+                    <br />
                     No Referensi Penagihan <br />
-                    <Form.Control disabled={true} type='text' placeholder='' name='no_ref_penagihan' onChange={props.handleChange} /> <br />
+                    <Form.Control
+                      disabled={true}
+                      type="text"
+                      placeholder=""
+                      name="no_ref_penagihan"
+                      value={props.values.no_ref_penagihan}
+                      onChange={props.handleChange}
+                    />{" "}
+                    <br />
                     Tag <br />
-                    <Form.Control disabled={true} type='text' placeholder='' name='tag' onChange={props.handleChange} /> <br />
+                    <Form.Control disabled={true} type="text" placeholder="" name="tag" value={props.values.tag} onChange={props.handleChange} />{" "}
+                    <br />
                   </Form.Label>
                 </Form.Group>
               </Form>
-              <div class='flex flex-row-reverse'>
-                <FormControlLabel value='' control={<Switch color='primary' />} label='Harga Termasuk Pajak' labelPlacement='start' />
+              <div class="flex flex-row-reverse">
+                <FormControlLabel value="" control={<Switch color="primary" />} label="Harga Termasuk Pajak" labelPlacement="start" />
               </div>
             </div>
             <Table responsive>
-              <div className='border-t border-gray-200'>
+              <div className="border-t border-gray-200">
                 <Form>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Form.Label column sm='2'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Form.Label column sm="2">
                       Produk
                     </Form.Label>
-                    <Form.Label column sm='1'>
+                    <Form.Label column sm="1">
                       Deskripsi
                     </Form.Label>
-                    <Form.Label column sm='1'>
+                    <Form.Label column sm="1">
                       Kuantitas
                     </Form.Label>
-                    <Form.Label column sm='1'>
+                    <Form.Label column sm="1">
                       Satuan
                     </Form.Label>
-                    <Form.Label column sm='2'>
+                    <Form.Label column sm="2">
                       Harga Satuan
                     </Form.Label>
-                    <Form.Label column sm='1'>
+                    <Form.Label column sm="1">
                       Diskon
                     </Form.Label>
-                    <Form.Label column sm='1'>
+                    <Form.Label column sm="1">
                       Pajak
                     </Form.Label>
-                    <Form.Label column sm='2'>
+                    <Form.Label column sm="2">
                       Jumlah
                     </Form.Label>
-                    <Form.Label column sm='1'></Form.Label>
+                    <Form.Label column sm="1"></Form.Label>
                   </Form.Group>
                 </Form>
               </div>
 
-              <div className='border-t border-gray-200'>
-                <Form className='py-2'>
-                  <FieldArray name='produks'>
+              <div className="border-t border-gray-200">
+                <Form className="py-2">
+                  <FieldArray name="produks">
                     {({ insert, remove, push }) => (
                       <div>
                         {props.values.produks.length > 0 &&
                           props.values.produks.map((i, index) => (
-                            <Row md='20' key={index} name='produk_id'>
-                              <Col sm='2'>
+                            <Row className="mb-2" md="20" key={index} name="produk_id">
+                              <Col sm="2">
                                 <Form.Control
-                                  as='select'
-                                  size=''
+                                  as="select"
+                                  size=""
                                   name={`produks.${index}.produk_id`}
                                   value={props.values.produks[index].produk_id}
                                   onChange={(e) => {
@@ -307,35 +260,38 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                         return i.id === parseInt(e.target.value);
                                       });
                                       props.setFieldValue(`produks.${index}.deskripsi_produk`, hasil1[0].deskripsi),
-                                      props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
+                                        props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
                                       props.setFieldValue(`produks.${index}.satuan`, hasil1[0].satuan.satuan);
                                       props.setFieldValue(
                                         `produks.${index}.nama_produk`,
                                         data3.filter((i) => i.id === parseInt(e.target.value))[0].nama
                                       );
                                     }
-                                  }}>
-                                  <option value='kosong'>pilih produk</option>
-                                  {data3.filter(nama_produk => nama_produk.harga_jual_satuan > 0).map((nama_produk, index) => (
+                                  }}
+                                >
+                                  <option value="kosong">pilih produk</option>
+                                  {data3.map((nama_produk, index) => (
                                     <option key={index} value={nama_produk.id}>
                                       {nama_produk.nama}
                                     </option>
                                   ))}
                                 </Form.Control>
                               </Col>
-                              <Col sm='1'>
+                              <Col sm="1">
                                 <Form.Control
-                                  type='text'
-                                  size=''
-                                  as='textarea'
-                                  rows={2}
+                                  type="text"
+                                  size=""
+                                  as="textarea"
+                                  rows={1}
+                                  disabled
                                   name={`produks.${index}.deskripsi_produk`}
-                                  value={props.values.produks[index].deskripsi_produk}></Form.Control>
+                                  value={props.values.produks[index].deskripsi_produk}
+                                ></Form.Control>
                               </Col>
-                              <Col sm='1'>
+                              <Col sm="1">
                                 <Form.Control
-                                  type='number'
-                                  size=''
+                                  type="number"
+                                  size=""
                                   name={`produks.${index}.kuantitas`}
                                   value={props.values.produks[index].kuantitas}
                                   onChange={(e) => {
@@ -391,23 +347,30 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   }}
                                 />
                               </Col>
-                              <Col sm='1'>
-                                <Form.Control type='text' size='' name={`produks.${index}.satuan`} value={props.values.produks[index].satuan} />
-                              </Col>
-                              <Col sm='2'>
+                              <Col sm="1">
                                 <Form.Control
-                                  type='text'
-                                  size=''
-                                  placeholder=''
+                                  type="text"
+                                  size=""
+                                  disabled
+                                  name={`produks.${index}.satuan`}
+                                  value={props.values.produks[index].satuan}
+                                />
+                              </Col>
+                              <Col sm="2">
+                                <Form.Control
+                                  type="text"
+                                  size=""
+                                  placeholder=""
+                                  disabled
                                   name={`produks.${index}.harga_satuan`}
                                   value={"Rp. " + props.values.produks[index].harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}
                                 />
                               </Col>
-                              <Col sm='1'>
+                              <Col sm="1">
                                 <Form.Control
-                                  type='text'
-                                  size=''
-                                  placeholder='ex:100%'
+                                  type="text"
+                                  size=""
+                                  placeholder="ex:100%"
                                   name={`produks.${index}.diskon`}
                                   value={props.values.produks[index].diskon}
                                   onChange={(e) => {
@@ -458,10 +421,10 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   }}
                                 />
                               </Col>
-                              <Col sm='1'>
+                              <Col sm="1">
                                 <Form.Control
-                                  as='select'
-                                  size=''
+                                  as="select"
+                                  size=""
                                   name={`produks.${index}.pajak_id`}
                                   value={props.values.produks[index].pajak_id}
                                   onChange={(e) => {
@@ -517,7 +480,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     // Rumus diskon jurnal
                                     let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
                                     props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
-                                  }}>
+                                  }}
+                                >
                                   {/* <option value='0'>pilih pajak</option> */}
                                   {data2.map((nama_pajak) => (
                                     <option key={nama_pajak.id} value={nama_pajak.id}>
@@ -526,19 +490,20 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   ))}
                                 </Form.Control>
                               </Col>
-                              <Col sm='1'>
+                              <Col sm="1">
                                 <Form.Control
-                                  type='text'
-                                  size=''
-                                  placeholder=''
+                                  type="text"
+                                  size=""
+                                  placeholder=""
                                   name={`produks.${index}.jumlah`}
                                   value={props.values.produks[index].jumlah}
-                                  onChange={(e) => {}}></Form.Control>
+                                  disabled
+                                ></Form.Control>
                               </Col>
-                              <Col sm='2'>
+                              <Col sm="2">
                                 <button
-                                  type='button'
-                                  className='secondary'
+                                  type="button"
+                                  className="secondary"
                                   onClick={() => remove(index)}
                                   onChange={(e) => {
                                     // Rumus jumlah
@@ -573,16 +538,17 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     // Rumus diskon jurnal
                                     let diskon_jurnal = parseInt(diskon_total + diskon_tambahan);
                                     props.setFieldValue((props.values.diskon_jurnal = diskon_jurnal));
-                                  }}>
-                                  <BackspaceIcon className='mt-2' />
+                                  }}
+                                >
+                                  <BackspaceIcon className="mt-2" />
                                 </button>
                               </Col>
                             </Row>
                           ))}
 
                         <button
-                          type='button'
-                          class='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'
+                          type="button"
+                          class="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mt-4"
                           onClick={() =>
                             push({
                               produk_id: "",
@@ -599,8 +565,9 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                               hasil_diskon: "",
                               hasil_pajak: "",
                             })
-                          }>
-                          <AddIcon fontSize='small' /> Tambah data
+                          }
+                        >
+                          <AddIcon fontSize="small" /> Tambah data
                         </button>
                       </div>
                     )}
@@ -609,51 +576,58 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
               </div>
             </Table>
 
-            <Form className='py-2'>
-              <Form.Group as={Row} controlId='formPlaintext'>
-                <Col sm='4'>
-                  <label for='Pesan' name='pesan'>
+            <Form className="py-2">
+              <Form.Group as={Row} controlId="formPlaintext">
+                <Col sm="4">
+                  <label for="Pesan" name="pesan">
                     Pesan
                   </label>
                   <br />
-                  <textarea rows='3' name='pesan' class='px-16 py-2 border border-gray-800  '></textarea> <br />
-                  <label for='memo'>Memo</label>
+                  <textarea
+                    class="px-16 py-2 border border-gray-800"
+                    rows="3"
+                    placeholder={props.values.pesan}
+                    name="pesan"
+                    onChange={props.handleChange}
+                  ></textarea>
                   <br />
-                  <textarea rows='3' name='memo' class='px-16 py-2 border border-gray-800  '></textarea> <br />
+                  <label for="memo">Memo</label>
+                  <br />
+                  <textarea rows="3" name="memo" class="px-16 py-2 border border-gray-800" />
+                  <br />
                   File Attachment <br />
-                  <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
+                  <Form.File type="file" name="fileattachment" onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                 </Col>
-                <Col sm='4' />
-                <Col sm='4'>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>Sub Total</Col>
-                    <Col sm='4'>
-                      <Form.Label column sm='4' name='subtotal'>
+                <Col sm="4" />
+                <Col sm="4">
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">Sub Total</Col>
+                    <Col sm="4">
+                      <Form.Label column sm="4" name="subtotal">
                         Rp.{props.values.subtotal.toLocaleString({ minimumFractionDigits: 0 })}
                       </Form.Label>
                     </Col>
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>Diskon Per Baris</Col>
-                    <Form.Label column sm='4' name='total_diskon_per_baris'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">Diskon Per Baris</Col>
+                    <Form.Label column sm="4" name="total_diskon_per_baris">
                       Rp.{props.values.total_diskon_per_baris.toLocaleString({ minimumFractionDigits: 0 })}
                     </Form.Label>
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>Diskon</Col>
-                    <Col sm='4'></Col>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">Diskon</Col>
+                    <Col sm="4" />
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>
-                      <InputGroup className='mb-3'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">
+                      <InputGroup className="mb-3">
                         <FormControl
-                          type='text'
-                          sm='4'
-                          placeholder=''
-                          aria-label='Amount (to the nearest dollar)'
-                          name='diskon'
+                          type="text"
+                          sm="4"
+                          placeholder={props.values.diskon}
+                          name="diskon"
                           onChange={(e) => {
-                            props.setFieldValue("diskon", e.target.value);
+                            props.setFieldValue("diskon", parseInt(e.target.value));
                             // Rumus diskon tambahan
                             let diskon_tambahan = (e.target.value / 100) * props.values.subtotal;
                             props.setFieldValue((props.values.total_diskon = diskon_tambahan));
@@ -699,38 +673,37 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                         </InputGroup.Append>
                       </InputGroup>
                     </Col>
-                    <Col sm='4'>
-                      <Form.Label column sm='2' name='total_diskon'>
+                    <Col sm="4">
+                      <Form.Label column sm="2" name="total_diskon">
                         Rp.{props.values.total_diskon.toLocaleString({ minimumFractionDigits: 0 })}
                       </Form.Label>
                     </Col>
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>Pajak</Col>
-                    <Form.Label column sm='4' name='total_pajak_per_baris'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">Pajak</Col>
+                    <Form.Label column sm="4" name="total_pajak_per_baris">
                       Rp.{props.values.total_pajak_per_baris.toLocaleString({ minimumFractionDigits: 0 })}
                     </Form.Label>
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>Total</Col>
-                    <Col sm='4'>
-                      <Form.Label column sm='2' name='total'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">Total</Col>
+                    <Col sm="4">
+                      <Form.Label column sm="2" name="total">
                         Rp.{props.values.total.toLocaleString({ minimumFractionDigits: 0 })}
                       </Form.Label>
                     </Col>
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>Pemotongan</Col>
-                    <Col sm='4'></Col>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">Pemotongan</Col>
+                    <Col sm="4"></Col>
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>
-                      <InputGroup className='mb-3'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">
+                      <InputGroup className="mb-3">
                         <FormControl
-                          type='text'
-                          placeholder=''
-                          aria-label='Amount (to the nearest dollar)'
-                          name='pemotongan'
+                          type="text"
+                          placeholder={props.values.pemotongan}
+                          name="pemotongan"
                           onChange={(e) => {
                             props.setFieldValue("pemotongan", parseInt(e.target.value));
 
@@ -774,16 +747,18 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                         </InputGroup.Append>
                       </InputGroup>
                     </Col>
-                    <Col sm='4'>
-                      <Form.Label column sm='2' name='pemotongan_total'>
+                    <Col sm="4">
+                      <Form.Label column sm="2" name="pemotongan_total">
                         Rp.{props.values.pemotongan_total.toLocaleString({ minimumFractionDigits: 0 })}
                       </Form.Label>
                     </Col>
                   </Form.Group>
-                  <Row className='mb-3'>
+                  <Row className="mb-3">
                     <Col>
-                      <Form.Control as='select' name='akun_pemotongan' onChange={props.handleChange}>
-                        <option value='kosong'>Pilih</option>
+                      <Form.Control as="select" name="akun_pemotongan" onChange={props.handleChange}>
+                        {/* {header.map((i) => {
+                          <option value="">{i.akun_pemotongan}</option>;
+                        })} */}
                         {data4.map((akun) => (
                           <option key={akun.id} value={akun.id}>
                             {akun.nama_akun}
@@ -792,14 +767,13 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       </Form.Control>
                     </Col>
                   </Row>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='8'>Uang Muka</Col>
-                    <Col sm='4'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="8">Uang Muka</Col>
+                    <Col sm="4">
                       <Form.Control
-                        type='text'
-                        placeholder=''
-                        size=''
-                        name='uang_muka'
+                        type="text"
+                        placeholder={props.values.uang_muka}
+                        name="uang_muka"
                         onChange={(e) => {
                           props.setFieldValue("uang_muka", parseInt(e.target.value));
 
@@ -839,10 +813,10 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       />
                     </Col>
                   </Form.Group>
-                  <Row className='mb-3'>
+                  <Row className="mb-3">
                     <Col>
-                      <Form.Control as='select' name='akun_uang_muka' onChange={props.handleChange}>
-                        <option value='kosong'>Pilih</option>
+                      <Form.Control as="select" name="akun_uang_muka" onChange={props.handleChange}>
+                        <option value="kosong">Pilih</option>
                         {data5.map((akun) => (
                           <option key={akun.id} value={akun.id}>
                             {akun.nama_akun}
@@ -852,14 +826,14 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     </Col>
                   </Row>
 
-                  <div className='border-t border-gray-200'>
+                  <div className="border-t border-gray-200">
                     <br />
-                    <Form.Group as={Row} controlId='formPlaintext'>
-                      <Col sm='8'>
+                    <Form.Group as={Row} controlId="formPlaintext">
+                      <Col sm="8">
                         <h5>Sisa Tagihan</h5>
                       </Col>
-                      <Col sm='4'>
-                        <Form.Label column sm='2' name='sisa_tagihan'>
+                      <Col sm="4">
+                        <Form.Label column sm="2" name="sisa_tagihan">
                           Rp.{props.values.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
                         </Form.Label>
                       </Col>
@@ -868,14 +842,14 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                 </Col>
               </Form.Group>
             </Form>
-            <div class='left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3'>
-              <Link href='/jual/penjualan'>
-                <button onclick='openModal(false)' class='bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none'>
+            <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
+              <Link href="/jual/penjualan">
+                <button onclick="openModal(false)" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none">
                   Batal
                 </button>
               </Link>
-              <Link href='/jual/penjualan'>
-                <button class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none' onClick={props.handleSubmit}>
+              <Link href="/jual/penjualan">
+                <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
                   Buat Penjualan
                 </button>
               </Link>
@@ -897,19 +871,6 @@ export async function getServerSideProps(context) {
     include: {
       kontak: true,
       DetailPenjualan: true,
-    },
-  });
-
-  // Get kontak,produk,pajak from API
-  const kontaks = await prisma.kontakDetail.findMany({
-    where: {
-      kontak_type_id: 2,
-    },
-    // orderBy: {
-    //   id: "asc",
-    // },
-    include: {
-      kontak: true,
     },
   });
 
@@ -949,36 +910,35 @@ export async function getServerSideProps(context) {
       id: "desc",
     },
   });
-  
-  let produk = []
+
+  let produk = [];
   header[0].DetailPenjualan.map((i) => {
     produk.push({
-              produk_id: i.produk_id.toString(),
-              nama_produk: i.nama_produk,
-              deskripsi_produk: i.desk_produk,
-              kuantitas: i.kuantitas,
-              satuan: i.satuan,
-              harga_satuan: i.harga_satuan,
-              diskon: i.diskon,
-              hasil_diskon: i.hasil_diskon,
-              pajak_id: i.pajak_id ,
-              pajak_nama: i.pajak_nama,
-              pajak_nama_akun_jual: i.pajak_nama_akun_jual,
-              pajak_persen: i.pajak_persen,
-              hasil_pajak: i.hasil_pajak,
-              jumlah: i.jumlah,
-    })
-  })
+      produk_id: i.produk_id.toString(),
+      nama_produk: i.nama_produk,
+      deskripsi_produk: i.desk_produk,
+      kuantitas: i.kuantitas,
+      satuan: i.satuan,
+      harga_satuan: i.harga_satuan,
+      diskon: i.diskon,
+      hasil_diskon: i.hasil_diskon,
+      pajak_id: i.pajak_id,
+      pajak_nama: i.pajak_nama,
+      pajak_nama_akun_jual: i.pajak_nama_akun_jual,
+      pajak_persen: i.pajak_persen,
+      hasil_pajak: i.hasil_pajak,
+      jumlah: i.jumlah,
+    });
+  });
   return {
     props: {
-      data: kontaks,
       data2: pajaks,
       data3: produks,
       data4: akunPendapatan,
       data5: akunKasBank,
       data6: penjualanTerakhir,
-      data7: header,
-      produk: produk
+      header: header,
+      produk: produk,
     },
   };
 }
