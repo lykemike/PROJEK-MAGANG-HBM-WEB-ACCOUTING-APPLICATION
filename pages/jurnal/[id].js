@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useRef} from 'react'
 import Layout from '../../components/Layout'
 import {Form,Row,Col ,FormControl , Button, FormGroup} from 'react-bootstrap'
 import AddIcon from '@material-ui/icons/Add'
@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 // import 'date-fns';
 // import {KeyboardDatePicker} from '@material-ui/pickers';
 
-export default function edit_jurnal({data, data2}) {
+export default function edit_jurnal({data, data2,header,jurnal}) {
 
 	const url = "http://localhost:3000/api/jurnal/createJurnal";
   const formik = useRef(null)
@@ -28,29 +28,19 @@ export default function edit_jurnal({data, data2}) {
       router.push("");
     }
   
-      useEffect(() => {
-          console.log("THIS IS ID OF PAGE" + id)
-      }, [])
-
     return (
         <Layout>
              <Formik
               enableReinitialize={true}
               innerRef={formik}
                 initialValues={{
-                    no_transaksi: data[0].no_transaksi,
-                    tgl_transaksi: data[0].tgl_transaksi,
-                    total_debit: data[0].total_debit,
-                    total_kredit: data[0].total_kredit,
+                    no_transaksi: header[0].no_transaksi,
+                    tgl_transaksi: header[0].tgl_transaksi,
+                    total_debit: header[0].total_debit,
+                    total_kredit: header[0].total_kredit,
                     fileattachment: [],
-                    detail_jurnal: [{
-                      akun_id: data[0].akun_id,
-                      deskripsi: data[0].deskripsi,
-                      tag: data[0].tag,
-                      debit: data[0].debit,
-                      kredit: data[0].kredit,
-                    }
-                    ]
+                    detail_jurnal: jurnal,
+                    // debit_disable: false,
                 }}
                 onSubmit={async (values) => {
                   let formData = new FormData();
@@ -269,7 +259,7 @@ export default function edit_jurnal({data, data2}) {
     )
 }
 
-export async function getServerSideProps({context}) {
+export async function getServerSideProps(context) {
   const { id } = context.query;
 
   const akuns = await prisma.akun.findMany({
@@ -289,14 +279,27 @@ export async function getServerSideProps({context}) {
     },
   });
 
+  
+  const header = await prisma.headerJurnal.findMany({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      DetailJurnal: true,
+    },
+  });
+
+
   let jurnal = []
-  data[0].detail_jurnal.map((i) => {
+  header[0].DetailJurnal.map((i) => {
     jurnal.push({
-      akun_id: parseInt(i.akun_id),
+      akun_id: i.akun_id.toString(),
       deskripsi: i.deskripsi,
       tag: i.tag,
       debit: parseInt(i.debit),
+      debit_disable: false,
       kredit: parseInt(i.kredit),
+      kredit_disable: false,
     })
   })
 
@@ -305,6 +308,7 @@ export async function getServerSideProps({context}) {
       data: akuns,
       data2: jurnalterakhir,
       jurnal: jurnal,
+      header: header,
     },
   };
 }
