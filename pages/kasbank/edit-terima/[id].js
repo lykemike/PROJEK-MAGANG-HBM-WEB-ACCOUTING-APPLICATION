@@ -1,5 +1,5 @@
-import React,{useState} from 'react'
-import Layout from '../../components/layout'
+import React,{useState, useRef} from 'react'
+import Layout from '../../../components/layout'
 import Link from 'next/link';
 import { Button, Table, DropdownButton , Dropdown , Row , Col, Form, Card, InputGroup,FormControl} from 'react-bootstrap';
 import AttachmentIcon from '@material-ui/icons/Attachment';
@@ -21,17 +21,8 @@ const prisma = new PrismaClient();
 //     penerima : Yup.string().required('Required')
 //   });
 
- export default function terima_uang({data,data2,data3,data4,data5}) {
-	// const router = useRouter();
-
-	// const url = "http://localhost:3000/api/kasbank/createTerimaUang";
-
-    const id = data5 != undefined ? parseInt(data5.id) + 1 : 1;
-    // const id = 1;
-
-    const [idInvoice, setIdInvoice] = useState(id);
-
-      const getTerima = 'http://localhost:3000/api/kasbank/getTerimaUang';
+ export default function terima_uang({data,data2,data3,data4,data5,terimauang,header}) {
+	
       const updateTerimaUang = 'http://localhost:3000/api/kasbank/updateTerimaUang';
   
       // Redirect Function and Take URL Parameter [id]
@@ -40,56 +31,31 @@ const prisma = new PrismaClient();
   
       // Get Existing User data based on [id]
       const formikref = useRef(null)
-      const getdata = async () => {
-          Axios.post(getTerima, {
-  
-              id: id
-  
-          }).then(function (response) {
-              formikref.current.setFieldValue('tgl_transaksi', response.data.data.tgl_transaksi)
-              formikref.current.setFieldValue('tag', response.data.data.tag)
-          }).
-              catch(function (error) {
-                  console.log(error)
-  
-              })
-      };
-      useEffect(() => {
-          getdata()
-      }, [])
-  
+   
       // Batal Button Function
       function cancelButton() {
           router.push('')
       }
 
+      console.log(header)
     return (
             <Layout>
                 <Formik
+                enableReinitialize={true}
                 innerRef={formikref}
                     initialValues={{
-                        akun_setor_id: '',
-                        akun_membayar_id: "",
-                        tgl_transaksi: "",
-                        no_transaksi: id,
-                        tag: "",
-                        memo: "",
-                        subtotal: 0,
-                        total: "",
+                        akun_setor_id: header[0].akun_setor_id,
+                        akun_membayar_id: header[0].akun_membayar_id,
+                        tgl_transaksi: header[0].tgl_transaksi,
+                        no_transaksi: header[0].no_transaksi,
+                        tag: header[0].tag,
+                        memo: header[0].memo,
+                        subtotal: header[0].subtotal,
+                        total: header[0].total,
                         fileattachment: [],
-                        hasil_pajak: "",
-                        detail_terima_uang: [
-                            {
-                                akun_id:"",
-                                nama_akun: "",
-                                deskripsi: "",
-                                pajak_id: "",
-                                pajak_nama: "",
-                                pajak_persen: "",
-                                hasil_pajak: 0,
-                                jumlah: ""
-                            }
-                        ]
+                        hasil_pajak: header[0].pajak,
+                        boolean: false,
+                        detail_terima_uang: terimauang
                     }}
                     onSubmit={async (values) => {
                         let formData = new FormData();
@@ -102,18 +68,18 @@ const prisma = new PrismaClient();
                         }
                         Array.from(values.fileattachment).map((i) => formData.append("file", i));
                         console.log(values);
-                        Axios.post(url, formData, {
-                          headers: {
-                            "Content-Type": "multipart/form-data",
-                          },
-                        })
-                          .then(function (response) {
-                            console.log(response);
-                            // router.push(`view-terima/${idInvoice}`);
-                          })
-                          .catch(function (error) {
-                            console.log(error);
-                          });
+                        // Axios.post(updateTerimaUang, formData, {
+                        //   headers: {
+                        //     "Content-Type": "multipart/form-data",
+                        //   },
+                        // })
+                        //   .then(function (response) {
+                        //     console.log(response);
+                        //     router.push(`view-terima/${idInvoice}`);
+                        //   })
+                        //   .catch(function (error) {
+                        //     console.log(error);
+                        //   });
                       }}>
 
                     {(props) => (
@@ -131,7 +97,7 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Bayar dari
                                     </Form.Label>
-                                        <Form.Control as="select" name="akun_setor_id" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                        <Form.Control as="select" name="akun_setor_id" disabled value={props.values.akun_setor_id} onChange={props.handleChange} onBlur={props.handleBlur}>
                                         <option value='kosong'>Pilih</option>
                                         {data.map((akun) => (
                                             <option key={akun.id} value={akun.id}>
@@ -157,7 +123,7 @@ const prisma = new PrismaClient();
                                 <Form.Label>
                                     Yang Membayar
                                 </Form.Label>
-                                    <Form.Control as="select" name="akun_membayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
+                                    <Form.Control as="select" name="akun_membayar_id"  disabled value={props.values.akun_membayar_id} onChange={props.handleChange} onBlur={props.handleBlur}>
                                     <option value='kosong'>Pilih</option>
                                     {data2.map((kontaks) => (
                                         <option key={kontaks.kontak.id} value={kontaks.kontak.id}>
@@ -177,8 +143,10 @@ const prisma = new PrismaClient();
                                         placeholder="Pick date"
                                         type='date'
                                         aria-label="date"
+                                        disabled
                                         name="tgl_transaksi"
                                         onChange={props.handleChange}
+                                        value={props.values.tgl_transaksi}
                                         />
                                         {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                                     </InputGroup>
@@ -192,6 +160,8 @@ const prisma = new PrismaClient();
                                     <Form.Control 
                                          placeholder={"Auto " + "(" + id + ")"}
                                         name="no_transaksi"
+                                        value={props.values.no_transaksi}
+                                        onChange={props.handleChange}
                                         disabled
                                     />
                                 </Col>
@@ -204,16 +174,51 @@ const prisma = new PrismaClient();
                                         placeholder="Tag" 
                                         name="tag"
                                         onChange={props.handleChange}
+                                        value={props.values.tag}
+                                        disabled
                                     />
                                 </Col>
                 
-                        {/* <div class="float-right mt-2 mb-8">
-                                <Form.Check
-                                    label="Harga Termasuk Pajak" 
-                                    type="switch"
-                                    id="custom-switch"   
-                                />
-                                </div> */}
+                        <div class="float-right mt-2 mb-8">
+                        <Form.Check
+                            label='Harga Termasuk Pajak'
+                            type='switch'
+                            id='custom-switch'
+                            onChange={(e) => {
+                                if (e.target.checked === true) {
+                                props.setFieldValue((props.values.boolean = true));
+                                const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                                let harga_termasuk_pajak = jumlah_total - pajak_total;
+                                props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                props.setFieldValue("subtotal", harga_termasuk_pajak);
+
+                                props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                props.setFieldValue("hasil_pajak", pajak_total);
+
+                                let total = jumlah_total;
+                                props.setFieldValue((props.values.total = total));
+                                props.setFieldValue("total", total);
+                                } else {
+                                props.setFieldValue((props.values.boolean = false));
+                                const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                                let harga_tidak_termasuk_pajak = jumlah_total;
+                                props.setFieldValue((props.values.subtotal = harga_tidak_termasuk_pajak));
+                                props.setFieldValue("subtotal", harga_tidak_termasuk_pajak);
+
+                                props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                props.setFieldValue("hasil_pajak", pajak_total);
+
+                                let total = jumlah_total + pajak_total;
+                                props.setFieldValue((props.values.total = total));
+                                props.setFieldValue("total", total);
+                        }
+                      }}
+                    />
+                                </div>
                             </Row>
                         </div>
         
@@ -238,6 +243,7 @@ const prisma = new PrismaClient();
                                                 <Form.Control 
                                                 as="select" 
                                                 name={`detail_terima_uang.${index}.akun_id`}
+                                                value={props.values.detail_terima_uang[index].akun_id}
                                                 onChange={(e) => {
                                                     props.setFieldValue(`detail_terima_uang.${index}.akun_id`, e.target.value);  
                                                     let hasil2 = data3.filter((i) => {
@@ -262,6 +268,7 @@ const prisma = new PrismaClient();
                                                 <Form.Control 
                                                 placeholder="Isi Deskripsi" 
                                                 name={`detail_terima_uang.${index}.deskripsi`}
+                                                value={props.values.detail_terima_uang[index].deskripsi}
                                                 onChange={(e) => {
                                                     props.setFieldValue(`detail_terima_uang.${index}.deskripsi`, e.target.value);  
                                                 }}
@@ -272,32 +279,62 @@ const prisma = new PrismaClient();
                                                 <Form.Control 
                                                 as="select" 
                                                 name={`detail_terima_uang.${index}.pajak_id`}
+                                                value={props.values.detail_terima_uang[index].pajak_id}
                                                 onChange={(e) => {
-                                                    props.setFieldValue(`detail_terima_uang.${index}.pajak_id`, e.target.value);  
+                                                    props.setFieldValue(`detail_terima_uang.${index}.pajak_id`, e.target.value);
                                                     let hasil2 = data4.filter((i) => {
-                                                    return i.id === parseInt(e.target.value);
+                                                      return i.id === parseInt(e.target.value);
                                                     });
-                                                    props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
-                                                    props.setFieldValue(
-                                                    `detail_terima_uang.${index}.pajak_nama`,
-                                                    hasil2[0].nama
-                                                    );
-                                                    let jumlah = props.values.detail_terima_uang[index].jumlah
-                                                    props.setFieldValue(props.values.detail_terima_uang[index].jumlah = jumlah)
-                                                    const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0)
-                                                    props.setFieldValue((props.values.subtotal = jumlah_total))
-                                                    props.setFieldValue("subtotal", jumlah_total);
-
-                                                    let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
-                                                    props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
-                                                    const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
-                                                    props.setFieldValue((props.values.hasil_pajak = pajak_total));
-                                                    props.setFieldValue("hasil_pajak", pajak_total);
-
-                                                    let total = jumlah_total + pajak_total
-                                                    props.setFieldValue((props.values.total = total))
-                                                    props.setFieldValue("total", total)
-                                                
+              
+                                                    if (props.values.boolean == false) {
+                                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
+              
+                                                      let jumlah = props.values.detail_terima_uang[index].jumlah;
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                                      props.setFieldValue((props.values.subtotal = jumlah_total));
+                                                      props.setFieldValue("subtotal", jumlah_total);
+              
+                                                      let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                      props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                                      props.setFieldValue("hasil_pajak", pajak_total);
+              
+                                                      let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak
+                                                      props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+              
+                                                      let total = jumlah_total + pajak_total;
+                                                      props.setFieldValue((props.values.total = total));
+                                                      props.setFieldValue("total", total);
+                                                    } else {
+                                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                                      props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
+              
+                                                      let jumlah = props.values.detail_terima_uang[index].jumlah;
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+              
+                                                      let pajak = props.values.detail_terima_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                      props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                                      props.setFieldValue("hasil_pajak", pajak_total);
+              
+                                                      let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak
+                                                      props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+              
+                                                      let harga_termasuk_pajak = jumlah_total - pajak_total;
+                                                      props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                                      props.setFieldValue("subtotal", harga_termasuk_pajak);
+              
+                                                      let total = jumlah_total;
+                                                      props.setFieldValue((props.values.total = total));
+                                                      props.setFieldValue("total", total);
+                                                    }
                                                   }}>
                                                 
                                                 <option value="0">Pilih</option>
@@ -313,27 +350,52 @@ const prisma = new PrismaClient();
                                             <Form.Control 
                                                 placeholder="Jumlah Uang" 
                                                 name={`detail_terima_uang.${index}.jumlah`} 
+                                                value={props.values.detail_terima_uang[index].jumlah}
                                                 onChange={(e) => {
-                                                    props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value))
-                                                    let jumlah = parseInt(e.target.value)
-                                                    props.setFieldValue(props.values.detail_terima_uang[index].jumlah = jumlah)
-                                                    const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0)
-                                                    props.setFieldValue((props.values.subtotal = jumlah_total))
-                                                    props.setFieldValue("subtotal", jumlah_total);
-
-                                                    let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
-                                                    props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
-                                                    const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
-                                                    props.setFieldValue((props.values.hasil_pajak = pajak_total));
-                                                    props.setFieldValue("hasil_pajak", pajak_total);
-
-                                                    let total = jumlah_total + pajak_total
-                                                    props.setFieldValue((props.values.total = total))
-                                                    props.setFieldValue("total", total)
-                                                    
-                            
-                                                }}
-                                                >   
+                                                    props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value));
+              
+                                                    if (props.values.boolean == false) {
+                                                      let jumlah = parseInt(e.target.value);
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                                      props.setFieldValue((props.values.subtotal = jumlah_total));
+                                                      props.setFieldValue("subtotal", jumlah_total);
+              
+                                                      let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                      props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                                      props.setFieldValue("hasil_pajak", pajak_total);
+              
+                                                      let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak
+                                                      props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+              
+                                                      let total = jumlah_total + pajak_total;
+                                                      props.setFieldValue((props.values.total = total));
+                                                      props.setFieldValue("total", total);
+                                                    } else {
+                                                      let jumlah = parseInt(e.target.value);
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
+                                                      const jumlah_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+              
+                                                      let pajak = parseInt(e.target.value) * (props.values.detail_terima_uang[index].pajak_persen / 100);
+                                                      props.setFieldValue((props.values.detail_terima_uang[index].hasil_pajak = pajak));
+                                                      const pajak_total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                                      props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                                      props.setFieldValue("hasil_pajak", pajak_total);
+              
+                                                      let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak
+                                                      props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+              
+                                                      let harga_termasuk_pajak = jumlah_total - pajak_total;
+                                                      props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                                      props.setFieldValue("subtotal", harga_termasuk_pajak);
+              
+                                                      let total = jumlah_total;
+                                                      props.setFieldValue((props.values.total = total));
+                                                      props.setFieldValue("total", total);
+                                                    }
+                                                  }}>
 
                                                 </Form.Control>
                                             </td>
@@ -357,13 +419,14 @@ const prisma = new PrismaClient();
                             variant="primary ml-2"
                             onClick={() =>
                                 push({
-                                   nama_akun: "",
-                                   deskripsi: "",
-                                   pajak_id: "",
-                                   pajak_nama: "",
-                                   pajak_persen: "",
-                                   hasil_pajak: "",
-                                   jumlah: ""
+                                    nama_akun: "",
+                                    deskripsi: "",
+                                    pajak_id: "",
+                                    pajak_nama: "",
+                                    pajak_persen: "",
+                                    hasil_pajak: "",
+                                    jumlah: "",
+                                    jumlah2: "",
                                 })
                               }>
                             <PlaylistAddIcon fontSize="medium"/> Tambah Data</Button>
@@ -456,9 +519,9 @@ const prisma = new PrismaClient();
                 
                     <div className="float-right mb-10">
                                 <Button variant="danger mr-2"><HighlightOffIcon fontSize="medium"/> Batal</Button>
-                                <Link href="/kasbank/bankwithdraw">
+                            
                                 <Button variant="success" type="submit" onClick={props.handleSubmit}><CheckCircleIcon fontSize="medium"/> Buat Transferan</Button>
-                                </Link>
+                                
                         </div>
                     </div>
                         </Forms>
@@ -468,7 +531,8 @@ const prisma = new PrismaClient();
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+    const { id } = context.query;
 
 	const akunKasBank = await prisma.akun.findMany({
         where: {
@@ -500,6 +564,9 @@ export async function getServerSideProps() {
             id: "asc",
           },
         ],
+        include: {
+            kategori1: true
+        }
       });
     
 
@@ -509,13 +576,43 @@ export async function getServerSideProps() {
         },
       });
 
+      const header = await prisma.headerTerimaUang.findMany({
+        where: {
+          id: parseInt(id),
+        },
+        include: {
+          akun_setor: true,
+          akun_membayar: true,
+          DetailTerimaUang: true,
+        },
+      });
+
+
+      let terimauang = []
+      header[0].DetailTerimaUang.map((i) => {
+        terimauang.push({
+            akun_id: i.akun_id.toString(),
+            nama_akun: i.nama_akun,
+            deskripsi: i.deskripsi,
+            pajak_id: parseInt(i.pajak_id),
+            pajak_nama: i.pajak_nama,
+            pajak_persen: i.pajak_persen,
+            pajak_nama_akun_jual: i.pajak_nama_akun_jual,
+            hasil_pajak: i.hasil_pajak,
+            jumlah: parseInt(i.jumlah),
+            jumlah2: parseInt(i.jumlah2)
+        })
+      })
+
     return {
       props: {
         data: akunKasBank,
         data2: kontaks,
         data3: namaAkun,
         data4: pajaks,
-        data5: terimauangterakhir
+        data5: terimauangterakhir,
+        terimauang: terimauang,
+        header: header
       },
     };
   }

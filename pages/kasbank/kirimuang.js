@@ -79,7 +79,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
           })
             .then(function (response) {
               console.log(response);
-              // router.push(`view-kirim/${idInvoice}`);
+              router.push(`view-kirim/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -433,7 +433,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                 </Row>
               </div>
 
-              <div class="mb-10">
+              <div className="mb-10">
                 <Row>
                   <Col>
                     <div>

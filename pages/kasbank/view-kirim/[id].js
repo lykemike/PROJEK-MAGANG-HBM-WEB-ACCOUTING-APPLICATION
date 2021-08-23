@@ -16,6 +16,9 @@ export default function bank_transfer({ data ,data2}) {
     const router = useRouter();
     const { id } = router.query;
 
+    function edit() {
+        router.push(`../edit-kirim${id}`);
+      }
 
     return (
 //         <div>
@@ -188,9 +191,8 @@ export default function bank_transfer({ data ,data2}) {
        {data.map((i) => (
             <Row>
                 <Col >
-                <Form.Label>
-                    Bayar dari : {i.akun_bayar.nama_akun}
-                    </Form.Label>
+                 <Form.Label className='font-medium'> Bayar dari: </Form.Label>
+                  <p> {i.akun_bayar.nama_akun} </p>
                 </Col>
                 <Col></Col>
                 <Col>
@@ -206,29 +208,25 @@ export default function bank_transfer({ data ,data2}) {
         <div class="mb-10">
         {data.map((i) => (
         <Row>
-            <Col>
-                <Form.Label>
-                    Penerima: {i.akun_penerima.nama_akun}
-                </Form.Label>
+            <Col >
+                 <Form.Label className='font-medium'> Penerima: </Form.Label>
+                  <p>  {i.akun_penerima.nama_akun} </p>
             </Col>
                 
-            <Col>
-                <Form.Label>
-                Tanggal Transaksi: {i.tgl_transaksi}
-                </Form.Label>
+            <Col >
+                 <Form.Label className='font-medium'> Tanggal Transaksi: </Form.Label>
+                  <p>  {i.tgl_transaksi} </p>
             </Col>
                 
-            <Col> 
-                <Form.Label>
-                    Nomor Transaksi: {i.no_transaksi}
-                </Form.Label>
+            <Col >
+                 <Form.Label className='font-medium'> Nomor Transaksi: </Form.Label>
+                  <p>  {i.no_transaksi} </p>
             </Col>
 
-                <Col>
-                <Form.Label>
-                    Tag: {i.tag}
-                </Form.Label>
-                </Col>
+            <Col >
+                 <Form.Label className='font-medium'> Tag: </Form.Label>
+                  <p>  {i.tag} </p>
+            </Col>
 
             </Row>
         ))}
@@ -238,10 +236,10 @@ export default function bank_transfer({ data ,data2}) {
         <Table class="table mt-4">
                     <thead class="thead-light">
                         <tr>
-                            <th class="text-center" scope="col">Akun</th>
-                            <th class="text-center" scope="col">Deskripsi</th>
-                            <th class="text-center" scope="col">Pajak</th>
-                            <th class="text-center" scope="col">Jumlah</th>
+                            <th scope="col">Akun</th>
+                            <th scope="col">Deskripsi</th>
+                            <th scope="col">Pajak</th>
+                            <th scope="col">Jumlah</th>
                         </tr>
                     </thead>
                     {data2.map((i) => (
@@ -257,46 +255,69 @@ export default function bank_transfer({ data ,data2}) {
                 </Table>
             </div>
 
-        <div class="mb-6">
-        {data.map((i) => (
-            <Row>
-                <Col></Col>
-                <Col></Col> 
-                <Col>
-                <Form.Group as={Row} >
-                        <Form.Label column sm="3">
-                        Subtotal
-                        </Form.Label>
-                        <Col sm="6">Rp. {i.subtotal}</Col>
-                    </Form.Group>
+            <div class="mt-20">
+					<Row sm="12">
+						<Col sm="4" />
 
-                <Form.Group as={Row} >
-                        <Form.Label column sm="3">
-                        Pajak
-                        </Form.Label>
-                        <Col sm="6">Rp. {i.hasil_pajak}</Col>
-                </Form.Group>
+						<Col sm="4" />
 
-                <Form.Group as={Row} >
-                        <Form.Label column sm="3">
-                        Total
-                        </Form.Label>
-                        <Col sm="6">Rp. {i.total}</Col>
-                </Form.Group>
-                </Col>
-            </Row>
-        ))}
-        </div>
+						<Col sm="2">
+							<h6>Subtotal</h6>
+						</Col>
+
+						{data.map((i) => (
+						<Col sm="2">
+							<h6>Rp. {i.subtotal}</h6>
+						</Col>
+					))}
+					</Row>
+				</div>
+
+                <div class="mt-4">
+					<Row sm="12">
+						<Col sm="4" />
+
+						<Col sm="4" />
+
+						<Col sm="2">
+							<h6> Pajak</h6>
+						</Col>
+
+						{data.map((i) => (
+						<Col sm="2">
+							<h6>Rp. {i.hasil_pajak}</h6>
+						</Col>
+					))}
+					</Row>
+				</div>
+
+                <div class="mt-5 mb-10">
+					<Row sm="12">
+						<Col sm="4" />
+
+						<Col sm="4" />
+
+						<Col sm="2">
+							<h6>Total</h6>
+						</Col>
+
+						{data.map((i) => (
+						<Col sm="2">
+							<h6>Rp. {i.total}</h6>
+						</Col>
+					))}
+					</Row>
+				</div>
 
         <Button variant="secondary mr-2"><ArrowBackIosIcon fontSize="medium"/>Kembali</Button>
                  <Button variant="primary"><PrintIcon fontSize="medium"/> Cetak</Button>
 
       <div className="float-right">
-                         <Link key={kasbank.id} href={`${kasbank.id}`}>
+                         {/* <Link key={kasbank.id} href={`${kasbank.id}`}> */}
                                    <a>
-                                     <Button variant="success"><CheckCircleIcon fontSize="medium"/>Ubah</Button>
+                                     <Button variant="success"><CheckCircleIcon fontSize="medium" onClick={edit}/>Ubah</Button>
                                   </a>
-                          </Link>
+                          {/* </Link> */}
                
                    </div>
             </div>

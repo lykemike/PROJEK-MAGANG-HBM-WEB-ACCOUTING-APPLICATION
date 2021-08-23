@@ -192,10 +192,10 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                 <Table class='table mt-4'>
                   <thead class='thead-light'>
                     <tr>
-                      <th>Pembayaran Untuk Akun</th>
-                      <th>Deskripsi</th>
-                      <th>Pajak</th>
-                      <th>Jumlah</th>
+                      <td>Pembayaran Untuk Akun</td>
+                      <td>Deskripsi</td>
+                      <td>Pajak</td>
+                      <td>Jumlah</td>
                     </tr>
                   </thead>
                   <FieldArray name='detail_terima_uang'>

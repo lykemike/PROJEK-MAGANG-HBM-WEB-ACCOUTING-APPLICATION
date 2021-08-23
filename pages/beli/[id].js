@@ -14,12 +14,14 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, header, produk }) {
-  const url = "http://localhost:3000/api/jual/updatepenjualan"
+export default function penagihanpembelian({ data, data2, data3, data4, data5, data6, header, produk }) {
+  const url = "http://localhost:3000/api/beli/updatepembelian";
   const router = useRouter();
   const { id } = router.query;
-  const formik = useRef(null);
 
+  const formik = useRef(null)
+
+  
   return (
     <Layout>
       <Formik
@@ -38,7 +40,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           produks: produk,
           pesan: header[0].pesan,
           memo: header[0].memo,
-          fileattachment: header[0].fileattachment,
+          fileattachment: [],
           subtotal: header[0].subtotal,
           total_diskon_per_baris: header[0].total_diskon_per_baris,
           diskon: header[0].diskon,
@@ -64,30 +66,28 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values);
-            Axios.post(url, formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+          Array.from(values.fileattachment).map((i) => formData.append("file", i)); 
+          Axios.post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+            .then(function (response) {
+              console.log(response);
+              router.push(`view/${id}`);
             })
-              .then(function (response) {
-                console.log(response);
-                // router.push(`view/${id}`);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }}
-      >
-        {(props) => (
+            .catch(function (error) {
+              console.log(error);
+            });
+        }}>
+          {(props) => (
           <Forms noValidate>
-            <h3>Edit Penagihan Penjualan</h3>
+            <h3>Edit Penagihan Pembelian</h3>
             <div className="border-t border-gray-200">
               <Form>
                 <Form.Group as={Row} controlId="formPlaintext">
                   <Form.Label column sm="3">
-                    Pelanggan
+                    Supplier
                   </Form.Label>
                   <Form.Label column sm="3">
                     Email
@@ -324,7 +324,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                         return i.id === parseInt(e.target.value);
                                       });
                                       props.setFieldValue(`produks.${index}.deskripsi_produk`, hasil1[0].deskripsi),
-                                        props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
+                                        props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_beli_satuan);
                                       props.setFieldValue(`produks.${index}.satuan`, hasil1[0].satuan.satuan);
                                       props.setFieldValue(
                                         `produks.${index}.nama_produk`,
@@ -334,7 +334,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                   }}
                                 >
                                   <option value='kosong'>pilih produk</option>
-                                  {data3.filter(nama_produk => nama_produk.harga_jual_satuan > 0).map((nama_produk) => (
+                                  {data3.filter(nama_produk => nama_produk.harga_beli_satuan > 0).map((nama_produk) => (
                                     <option key={nama_produk.id} value={nama_produk.id}>
                                       {nama_produk.nama}
                                     </option>
@@ -627,8 +627,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                           data2.filter((i) => i.id === parseInt(e.target.value))[0].nama
                                         );
                                         props.setFieldValue(
-                                          `produks.${index}.pajak_nama_akun_jual`,
-                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori1.nama_akun
+                                          `produks.${index}.pajak_nama_akun_beli`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori2.nama_akun
                                         );
 
                                         // Rumus total: kuantitas * harga satuan
@@ -720,8 +720,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                           data2.filter((i) => i.id === parseInt(e.target.value))[0].nama
                                         );
                                         props.setFieldValue(
-                                          `produks.${index}.pajak_nama_akun_jual`,
-                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori1.nama_akun
+                                          `produks.${index}.pajak_nama_akun_beli`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori2.nama_akun
                                         );
 
                                         // Rumus total: kuantitas * harga satuan
@@ -847,7 +847,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                               pajak_id: 0,
                               pajak_nama: "kosong",
                               pajak_persen: 0,
-                              pajak_nama_akun_jual: "kosong",
+                              pajak_nama_akun_beli: "kosong",
                               jumlah: "",
                               hasil_diskon: 0,
                               hasil_pajak: 0,
@@ -1234,13 +1234,13 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
               </Form.Group>
             </Form>
             <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
-              <Link href="/jual/penjualan">
+              <Link href="/beli/pembelian">
                 <button onClick="openModal(false)" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none">
                   Batal
                 </button>
               </Link>
                 <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
-                  Buat Penjualan
+                  Buat Pembelian
                 </button>
             </div>
           </Forms>
@@ -1253,7 +1253,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerPenjualan.findMany({
+  const header = await prisma.headerPembelian.findMany({
     where: {
       id: parseInt(id),
     },
@@ -1261,7 +1261,7 @@ export async function getServerSideProps(context) {
       akun1: true,
       akun2: true,
       kontak: true,
-      DetailPenjualan: true,
+      DetailPembelian: true,
     },
   });
 
@@ -1272,8 +1272,8 @@ export async function getServerSideProps(context) {
       },
     ],
     include: {
-      kategori1: true,
-    },
+      kategori2: true,
+    }
   });
 
   const produks = await prisma.produk.findMany({
@@ -1299,40 +1299,40 @@ export async function getServerSideProps(context) {
     },
   });
 
-  const penjualanTerakhir = await prisma.headerPenjualan.findFirst({
+  const pembelianTerakhir = await prisma.headerPembelian.findFirst({
     orderBy: {
       id: "desc",
     },
   });
-
-  let produk = [];
-  header[0].DetailPenjualan.map((i) => {
+  
+  let produk = []
+  header[0].DetailPembelian.map((i) => {
     produk.push({
-      produk_id: i.produk_id.toString(),
-      nama_produk: i.nama_produk,
-      deskripsi_produk: i.desk_produk,
-      kuantitas: i.kuantitas,
-      satuan: i.satuan,
-      harga_satuan: i.harga_satuan,
-      diskon: i.diskon,
-      hasil_diskon: i.hasil_diskon,
-      pajak_id: i.pajak_id,
-      pajak_nama: i.pajak_nama,
-      pajak_nama_akun_jual: i.pajak_nama_akun_jual,
-      pajak_persen: i.pajak_persen,
-      hasil_pajak: i.hasil_pajak,
-      jumlah: i.jumlah,
-    });
-  });
+              produk_id: i.produk_id.toString(),
+              nama_produk: i.nama_produk,
+              deskripsi_produk: i.desk_produk,
+              kuantitas: i.kuantitas,
+              satuan: i.satuan,
+              harga_satuan: i.harga_satuan,
+              diskon: i.diskon,
+              hasil_diskon: i.hasil_diskon,
+              pajak_id: i.pajak_id ,
+              pajak_nama: i.pajak_nama,
+              pajak_nama_akun_beli: i.pajak_nama_akun_beli,
+              pajak_persen: i.pajak_persen,
+              hasil_pajak: i.hasil_pajak,
+              jumlah: i.jumlah,
+    })
+  })
   return {
     props: {
       data2: pajaks,
       data3: produks,
       data4: akunPendapatan,
       data5: akunKasBank,
-      data6: penjualanTerakhir,
+      data6: pembelianTerakhir,
       header: header,
-      produk: produk,
+      produk: produk
     },
   };
 }

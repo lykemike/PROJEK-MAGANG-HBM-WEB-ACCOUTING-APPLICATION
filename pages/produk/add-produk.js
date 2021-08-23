@@ -348,7 +348,7 @@ export async function getServerSideProps() {
   const getAkunPenjualan = await prisma.akun.findMany({
     where: {
       kategoriId: {
-        in: [13, 5],
+        in: [13],
       },
     },
   });

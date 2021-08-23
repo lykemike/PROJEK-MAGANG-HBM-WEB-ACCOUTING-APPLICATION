@@ -19,9 +19,9 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
   const router = useRouter();
   const { id } = router.query;
 
-  const formik = useRef(null)
+  const formik = useRef(null);
 
-    console.log(header)
+  console.log(header);
   return (
     <Layout>
       <Formik
@@ -65,7 +65,7 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) => formData.append("file", i)); 
+          Array.from(values.fileattachment).map((i) => formData.append("file", i));
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -78,8 +78,9 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
             .catch(function (error) {
               console.log(error);
             });
-        }}>
-          {(props) => (
+        }}
+      >
+        {(props) => (
           <Forms noValidate>
             <h3>Edit Penagihan Pembelian</h3>
             <div className="border-t border-gray-200">
@@ -332,12 +333,14 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
                                     }
                                   }}
                                 >
-                                  <option value='kosong'>pilih produk</option>
-                                  {data3.filter(nama_produk => nama_produk.harga_beli_satuan > 0).map((nama_produk) => (
-                                    <option key={nama_produk.id} value={nama_produk.id}>
-                                      {nama_produk.nama}
-                                    </option>
-                                  ))}
+                                  <option value="kosong">pilih produk</option>
+                                  {data3
+                                    .filter((nama_produk) => nama_produk.harga_beli_satuan > 0)
+                                    .map((nama_produk) => (
+                                      <option key={nama_produk.id} value={nama_produk.id}>
+                                        {nama_produk.nama}
+                                      </option>
+                                    ))}
                                 </Form.Control>
                               </Col>
                               <Col sm="1">
@@ -1238,9 +1241,9 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
                   Batal
                 </button>
               </Link>
-                <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
-                  Update Pembelian
-                </button>
+              <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
+                Update Pembelian
+              </button>
             </div>
           </Forms>
         )}
@@ -1272,7 +1275,7 @@ export async function getServerSideProps(context) {
     ],
     include: {
       kategori2: true,
-    }
+    },
   });
 
   const produks = await prisma.produk.findMany({
@@ -1303,26 +1306,26 @@ export async function getServerSideProps(context) {
       id: "desc",
     },
   });
-  
-  let produk = []
+
+  let produk = [];
   header[0].DetailPembelian.map((i) => {
     produk.push({
-              produk_id: i.produk_id.toString(),
-              nama_produk: i.nama_produk,
-              deskripsi_produk: i.desk_produk,
-              kuantitas: i.kuantitas,
-              satuan: i.satuan,
-              harga_satuan: i.harga_satuan,
-              diskon: i.diskon,
-              hasil_diskon: i.hasil_diskon,
-              pajak_id: i.pajak_id ,
-              pajak_nama: i.pajak_nama,
-              pajak_nama_akun_beli: i.pajak_nama_akun_beli,
-              pajak_persen: i.pajak_persen,
-              hasil_pajak: i.hasil_pajak,
-              jumlah: i.jumlah,
-    })
-  })
+      produk_id: i.produk_id.toString(),
+      nama_produk: i.nama_produk,
+      deskripsi_produk: i.desk_produk,
+      kuantitas: i.kuantitas,
+      satuan: i.satuan,
+      harga_satuan: i.harga_satuan,
+      diskon: i.diskon,
+      hasil_diskon: i.hasil_diskon,
+      pajak_id: i.pajak_id,
+      pajak_nama: i.pajak_nama,
+      pajak_nama_akun_beli: i.pajak_nama_akun_beli,
+      pajak_persen: i.pajak_persen,
+      hasil_pajak: i.hasil_pajak,
+      jumlah: i.jumlah,
+    });
+  });
   return {
     props: {
       data2: pajaks,
@@ -1331,7 +1334,7 @@ export async function getServerSideProps(context) {
       data5: akunKasBank,
       data6: pembelianTerakhir,
       header: header,
-      produk: produk
+      produk: produk,
     },
   };
 }

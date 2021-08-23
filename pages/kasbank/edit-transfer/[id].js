@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Layout from "../../components/layout";
+import React, { useState , useRef} from "react";
+import Layout from "../../../components/layout";
 import Link from "next/link";
 import { Button, Table, DropdownButton, FormControl, InputGroup, Dropdown, Row, Col, Form, Card } from "react-bootstrap";
 import AttachmentIcon from "@material-ui/icons/Attachment";
@@ -25,15 +25,10 @@ const prisma = new PrismaClient();
 //     // email: Yup.string().email('Invalid email').required('Required'),
 //   });
 
-export default function tranfer_uang({ data, data2, data3 }) {
+export default function tranfer_uang({ data, data2, transfer }) {
   // const router = useRouter();
   // const url = "http://localhost:3000/api/kasbank/createTransferUang";
 
-  const id = data2 != undefined ? parseInt(data2.id) + 1 : 1;
-
-  const [idInvoice, setIdInvoice] = useState(id);
-
-    const getTransfer = 'http://localhost:3000/api/kasbank/getTransferUang';
     const updateTransferUang = 'http://localhost:3000/api/kasbank/updateTransferUang';
 
     // Redirect Function and Take URL Parameter [id]
@@ -42,25 +37,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
     // Get Existing User data based on [id]
     const formikref = useRef(null)
-    const getdata = async () => {
-        Axios.post(getTransfer, {
-
-            id: id
-
-        }).then(function (response) {
-            formikref.current.setFieldValue('jumlah', response.data.data.jumlah)
-            formikref.current.setFieldValue('tgl_transaksi', response.data.data.tgl_transaksi)
-            formikref.current.setFieldValue('tag', response.data.data.tag)
-        }).
-            catch(function (error) {
-                console.log(error)
-
-            })
-    };
-    useEffect(() => {
-        getdata()
-    }, [])
-
+   
     // Batal Button Function
     function cancelButton() {
         router.push('')
@@ -70,19 +47,20 @@ export default function tranfer_uang({ data, data2, data3 }) {
   return (
     <Layout>
       <Formik
+        enableReinitialize={true}
         innerRef={formikref}
         initialValues={{
-          akun_transfer: "",
-          akun_setor: "",
-          jumlah: "",
-          memo: "",
-          no_transaksi: id,
-          tgl_transaksi: "",
-          tag: "",
+          akun_transfer_id: transfer[0].akun_transfer_id,
+          akun_setor_id: transfer[0].akun_setor_id,
+          jumlah: transfer[0].jumlah,
+          memo: transfer[0].memo,
+          no_transaksi: transfer[0].no_transaksi,
+          tgl_transaksi: transfer[0].tgl_transaksi,
+          tag: transfer[0].tag,
         }}
         onSubmit={async (values) => {
           // alert(JSON.stringify(values, null, 2));
-          Axios.post(createTransferUang, values)
+          Axios.post(updateTransferUang, values)
             .then(function (response) {
               console.log(response);
               router.push("");
@@ -101,7 +79,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
                 <Row>
                   <Col>
                     <Form.Label>Transfer dari</Form.Label>
-                    <Form.Control as='select' name='akun_transfer' onChange={props.handleChange} onBlur={props.handleBlur}>
+                    <Form.Control as='select' name='akun_transfer' value={props.values.akun_transfer_id} onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value='kosong'>Pilih</option>
                       {data.map((akun) => (
                         <option key={akun.id} value={akun.id}>
@@ -114,7 +92,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
                   <Col>
                     <Form.Label>Setor ke</Form.Label>
-                    <Form.Control as='select' name='akun_setor' onChange={props.handleChange} onBlur={props.handleBlur}>
+                    <Form.Control as='select' name='akun_setor'  value={props.values.akun_setor_id} onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value='kosong'>Pilih</option>
                       {data.map((akun) => (
                         <option key={akun.id} value={akun.id}>
@@ -127,7 +105,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
                   <Col>
                     <Form.Label>Jumlah</Form.Label>
-                    <Form.Control placeholder={props.values.jumlah} name='jumlah' onChange={props.handleChange} />
+                    <Form.Control value={props.values.jumlah} placeholder="" name='jumlah' onChange={props.handleChange} />
                   </Col>
                 </Row>
               </div>
@@ -137,27 +115,27 @@ export default function tranfer_uang({ data, data2, data3 }) {
                   <Col>
                     <Form.Group controlId='exampleForm.ControlTextarea1'>
                       <Form.Label>Memo</Form.Label>
-                      <Form.Control as='textarea' rows={3} name='memo' placeholder='Isi Memo' onChange={props.handleChange} />
+                      <Form.Control as='textarea' rows={3} name='memo' placeholder='Isi Memo'  value={props.values.memo} onChange={props.handleChange} />
                       {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
                     </Form.Group>
                   </Col>
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control placeholder={"Auto " + "(" + id + ")"} name='no_transaksi' disabled />
+                    <Form.Control placeholder={"Auto " + "(" + id + ")"} name='no_transaksi' disabled  value={props.values.no_transaksi}/>
                   </Col>
 
                   <Col>
                     <Form.Label>Tanggal Transaksi</Form.Label>
                     <InputGroup className='mb-3'>
-                      <FormControl placeholder={props.values.tgl_transaksi} type='date' aria-label='date' name='tgl_transaksi' onChange={props.handleChange} />
+                      <FormControl placeholder=""  value={props.values.tgl_transaksi}  type='date' aria-label='date' name='tgl_transaksi' onChange={props.handleChange} />
                       {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                     </InputGroup>
                   </Col>
 
                   <Col>
                     <Form.Label>Tag</Form.Label>
-                    <Form.Control placeholder={props.values.tag} name='tag' onChange={props.handleChange} />
+                    <Form.Control placeholder=""  value={props.values.tag} name='tag' onChange={props.handleChange} />
                   </Col>
                 </Row>
               </div>
@@ -204,7 +182,9 @@ export default function tranfer_uang({ data, data2, data3 }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+  
   const akunKasBank = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
@@ -217,10 +197,21 @@ export async function getServerSideProps() {
     },
   });
 
+  const transfer = await prisma.transferUang.findMany({
+    where: {
+      id: parseInt(id)
+    },
+    include: {
+      akun_setor: true,
+      akun_transfer: true,
+    }
+  })
+
   return {
     props: {
       data: akunKasBank,
       data2: transferUang,
+      transfer: transfer,
     },
   };
 }
