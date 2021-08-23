@@ -38,7 +38,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           produks: produk,
           pesan: header[0].pesan,
           memo: header[0].memo,
-          fileattachment: [],
+          fileattachment: header[0].fileattachment,
           subtotal: header[0].subtotal,
           total_diskon_per_baris: header[0].total_diskon_per_baris,
           diskon: header[0].diskon,

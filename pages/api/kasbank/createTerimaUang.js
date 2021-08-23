@@ -48,6 +48,7 @@ export default async (req, res) => {
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.hasil_pajak),
       total: parseInt(req.body.total),
+      status: "Belum terekonsiliasi"
     };
 
     const bool = {

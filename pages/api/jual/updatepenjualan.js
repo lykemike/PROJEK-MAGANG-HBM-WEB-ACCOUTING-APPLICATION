@@ -50,7 +50,7 @@ export default async (req, res) => {
       tag: req.body.tag,
       pesan: req.body.pesan,
       memo: req.body.memo,
-      file_attachment: "req.file.filename",
+      file_attachment: req.file.filename,
       subtotal: parseInt(req.body.subtotal),
       total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
       diskon: parseInt(req.body.diskon),

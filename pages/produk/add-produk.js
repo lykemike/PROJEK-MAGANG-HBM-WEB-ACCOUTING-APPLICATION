@@ -66,18 +66,18 @@ export default function addProduk({ data, data2, data3, data5 }) {
           }
           Array.from(values.file_upload).map((i) => formData.append("file", i));
           console.log(values);
-          // Axios.post(url, formData, {
-          //   headers: {
-          //     "Content-Type": "multipart/form-data",
-          //   },
-          // })
-          //   .then(function (response) {
-          //     console.log(response);
-          //     router.push("../produk/tabel-produk");
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error);
-          //   });
+          Axios.post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+            .then(function (response) {
+              console.log(response);
+              router.push("../produk/tabel-produk");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
         }}>
         {(props) => (
           <Forms noValidate>
