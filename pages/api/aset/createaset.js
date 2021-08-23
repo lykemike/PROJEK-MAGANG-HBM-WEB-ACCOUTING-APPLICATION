@@ -27,43 +27,42 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    // const find_latest = await prisma.aset.findFirst({
-    //   orderBy: {
-    //     id: "desc",
-    //   },
-    // });
+    const find_latest = await prisma.aset.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+    });
 
-    // const find_akun_penyusutan = await prisma.akun.findFirst({
-    //   where: {
-    //     id: parseInt(req.body.akun_penyusutan_id),
-    //   },
-    // });
+    const find_akun_penyusutan = await prisma.akun.findFirst({
+      where: {
+        id: parseInt(req.body.akun_penyusutan),
+      },
+    });
 
-    // const find_akumulasi_akun_penyusutan_id = await prisma.akun.findFirst({
-    //   where: {
-    //     id: parseInt(req.body.akumulasi_akun_penyusutan_id),
-    //   },
-    // });
+    const find_akumulasi_akun_penyusutan_id = await prisma.akun.findFirst({
+      where: {
+        id: parseInt(req.body.akumulasi_akun_penyusutan),
+      },
+    });
 
+    const jurnal_aset = await prisma.jurnalAset.createMany({
+      data: [
+        {
+          header_aset_id: find_latest.id,
+          nama_akun: find_akun_penyusutan.nama_akun,
+          nominal: parseInt(req.body.akumulasi_penyusutan),
+          tipe_saldo: "Debit",
+        },
+        {
+          header_aset_id: find_latest.id,
+          nama_akun: find_akumulasi_akun_penyusutan_id.nama_akun,
+          nominal: parseInt(req.body.akumulasi_penyusutan),
+          tipe_saldo: "Kredit",
+        },
+      ],
+    });
 
-    // const jurnal_aset = await prisma.jurnalAset.createMany({
-    //   data: [
-    //     {
-    //       header_aset_id: find_latest.id,
-    //       nama_penerimaan_akun: find_akun_penyusutan.nama_akun,
-    //       nominal: parseInt(req.body.jumlah),
-    //       tipe_saldo: "Debit",
-    //     },
-    //     {
-    //       header_aset_id: find_latest.id,
-    //       nama_penerimaan_akun: find_akumulasi_akun_penyusutan_id,
-    //       nominal: parseInt(req.body.jumlah),
-    //       tipe_saldo: "Kredit",
-    //     },
-    //   ],
-    // });
-
-    res.status(201).json({ message: "CREATE ASET SUCCESS!", data: createAset });
+    res.status(201).json({ message: "CREATE ASET SUCCESS!", data: jurnal_aset });
   } catch (error) {
     res.status(400).json({ data: "CREATE ASET FAILED!", error });
     console.log(error);

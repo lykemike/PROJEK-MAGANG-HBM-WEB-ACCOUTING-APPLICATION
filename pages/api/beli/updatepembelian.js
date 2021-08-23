@@ -50,7 +50,7 @@ export default async (req, res) => {
       tag: req.body.tag,
       pesan: req.body.pesan,
       memo: req.body.memo,
-      file_attachment: "req.file.filename",
+      file_attachment: req.file.filename,
       subtotal: parseInt(req.body.subtotal),
       total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
       diskon: parseInt(req.body.diskon),
@@ -63,7 +63,6 @@ export default async (req, res) => {
       uang_muka: parseInt(req.body.uang_muka),
       akun_uang_muka: parseInt(req.body.akun_uang_muka),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
-      balance: parseInt(req.body.balance),
       status: "Active",
     };
 
@@ -76,13 +75,13 @@ export default async (req, res) => {
 
     const delete_old_detail = await prisma.detailPembelian.deleteMany({
       where: {
-        header_penjualan_id: parseInt(req.body.no_transaksi)
+        header_pembelian_id: parseInt(req.body.no_transaksi)
       }
     })
 
     const delete_old_jurnal = await prisma.jurnalPembelian.deleteMany({
       where: {
-        header_penjualan_id: parseInt(req.body.no_transaksi)
+        header_pembelian_id: parseInt(req.body.no_transaksi)
       }
     })
 
