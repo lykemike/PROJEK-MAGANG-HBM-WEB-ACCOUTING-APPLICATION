@@ -20,13 +20,13 @@ export default function bank_transfer({ data }) {
         <Layout>
         <div variant="container">
             <div class="text-md font-medium text-gray-900 mb-2">
-            
-                Transaksi 
+            <h4> Transaksi </h4>
+               
                 <Row>
                     <Col>
-                        <h4 class="mt-2 mb-5">
+                        <h3 class="mt-2 mb-5">
                             Bank Transfer #{id}
-                            </h4>
+                            </h3>
                     </Col>
                     <Col>
                         <div class="float-right">
@@ -39,21 +39,24 @@ export default function bank_transfer({ data }) {
             </div>        
 
                 <div class="mb-10">            
-                    <Row>
-                        <Col >
+                    <Row>  
                         {data.map((i) => (
-                            <Form.Label>
-                                Transfer Dari : {i.akun_transfer.nama_akun}
-                            </Form.Label> ))} 
-                        </Col>
-
                         <Col>
-                        {data.map((i) => (
-                            <Form.Label>
-                                Tanggal Transaksi: {i.tgl_transaksi}
-                            </Form.Label>))}
-                        </Col> 
                       
+                            <Form.Label className='font-medium'>Transfer Dari : </Form.Label>
+                            <p> {i.akun_transfer.nama_akun} </p>   
+                        </Col>
+                        ))} 
+
+                             
+                        {data.map((i) => (
+                        <Col>
+                      
+                            <Form.Label className='font-medium'>Tanggal Transaksi: </Form.Label>
+                            <p>   {i.tgl_transaksi} </p>   
+                        </Col>
+                        ))} 
+
                     </Row>  
                   
                 </div>
@@ -61,17 +64,23 @@ export default function bank_transfer({ data }) {
                 <div class="mb-10">
               
                     <Row>
-                        <Col >  {data.map((i) => (
-                            <Form.Label>
-                                Setor ke: {i.akun_setor.nama_akun}
-                            </Form.Label>))}
+                
+                        {data.map((i) => (
+                        <Col>
+                      
+                            <Form.Label className='font-medium'> Setor ke: </Form.Label>
+                            <p>  {i.akun_setor.nama_akun}</p>   
                         </Col>
+                        ))} 
 
-                        <Col>{data.map((i) => (
-                            <Form.Label>
-                                Nomor Transaksi: {i.no_transaksi}
-                            </Form.Label>))}
+                        {data.map((i) => (
+                        <Col>
+                      
+                            <Form.Label className='font-medium'> Nomor Transaksi: </Form.Label>
+                            <p> {i.no_transaksi}</p>   
                         </Col>
+                        ))} 
+
                     </Row>
     
                 </div>
@@ -79,11 +88,13 @@ export default function bank_transfer({ data }) {
                 <div class="mb-10">
                
                     <Row>
-                        <Col > {data.map((i) => (
-                            <Form.Label>
-                                Jumlah: {i.jumlah}
-                            </Form.Label>))}
+                        {data.map((i) => (
+                        <Col>
+                      
+                            <Form.Label className='font-medium'>Jumlah:  </Form.Label>
+                            <p>  {i.jumlah}</p>   
                         </Col>
+                        ))} 
 
                         <Col></Col>
                     </Row>
@@ -94,8 +105,11 @@ export default function bank_transfer({ data }) {
                 <Button variant="primary"><PrintIcon fontSize="medium"/> Cetak</Button>
 
                 <div className="float-right">
-                    <Button variant="danger mr-2"><HighlightOffIcon fontSize="medium"/> Hapus</Button>
-                    <Button variant="success"><CheckCircleIcon fontSize="medium"/>Ubah</Button>
+                     
+                                   <a>
+                                     <Button variant="success"><CheckCircleIcon fontSize="medium"/>Ubah</Button>
+                                  </a>
+                         
                 </div>
           
              </div> 

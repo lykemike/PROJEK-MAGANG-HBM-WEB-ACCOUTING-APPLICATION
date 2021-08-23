@@ -57,7 +57,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
               pajak_persen: "",
               hasil_pajak: 0,
               jumlah: "",
-              jumlah2: 0,
+              jumlah2: "",
             },
           ],
         }}
@@ -79,7 +79,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
           })
             .then(function (response) {
               console.log(response);
-              // router.push(`view-kirim/${idInvoice}`);
+              router.push(`view-kirim/${idInvoice}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -97,8 +97,8 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                     <Form.Label>Bayar dari</Form.Label>
                     <Form.Control as="select" name="akun_bayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value="kosong">Pilih</option>
-                      {data.map((akun) => (
-                        <option key={akun.id} value={akun.id}>
+                      {data.map((akun, index) => (
+                        <option key={index} value={akun.id}>
                           {akun.nama_akun}
                         </option>
                       ))}
@@ -119,8 +119,8 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                     <Form.Label>Penerima</Form.Label>
                     <Form.Control as="select" name="akun_penerima_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value="kosong">Pilih</option>
-                      {data2.map((kontaks) => (
-                        <option key={kontaks.kontak.id} value={kontaks.kontak.id}>
+                      {data2.map((kontaks, index) => (
+                        <option key={index} value={kontaks.kontak.id}>
                           {kontaks.kontak.nama}
                         </option>
                       ))}
@@ -155,7 +155,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                         if (e.target.checked == true) {
                         props.setFieldValue((props.values.boolean = true));
 
-                        const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                          const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0);
                           const pajak_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
                           let harga_termasuk_pajak = jumlah_total - pajak_total;
@@ -220,8 +220,8 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue(`detail_kirim_uang.${index}.nama_akun`, data3.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun);
                                     }}>
                                     <option value="0">Pilih</option>
-                                    {data3.map((namaAkun) => (
-                                      <option key={namaAkun.id} value={namaAkun.id}>
+                                    {data3.map((namaAkun, index) => (
+                                      <option key={index} value={namaAkun.id}>
                                         {namaAkun.nama_akun}
                                       </option>
                                     ))}
@@ -265,6 +265,9 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
+                                      let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak
+                                      props.setFieldValue(props.values.detail_kirim_uang[index].jumlah2 = jumlah2)
+
                                       let total = jumlah_total + pajak_total;
                                       props.setFieldValue((props.values.total = total));
                                       props.setFieldValue("total", total);
@@ -287,12 +290,12 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue(props.values.detail_kirim_uang[index].jumlah2 = jumlah2)
 
                                       let harga_termasuk_pajak = jumlah_total - pajak_total;
-                                        props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
-                                        props.setFieldValue("subtotal", harga_termasuk_pajak);
+                                      props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                      props.setFieldValue("subtotal", harga_termasuk_pajak);
 
-                                        let total = jumlah_total;
-                                        props.setFieldValue((props.values.total = total));
-                                        props.setFieldValue("total", total);
+                                      let total = jumlah_total;
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
                                       }
                                     }}>
                                     <option value="0">Pilih</option>
@@ -324,6 +327,9 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       const pajak_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
+
+                                      let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak
+                                      props.setFieldValue(props.values.detail_kirim_uang[index].jumlah2 = jumlah2)
 
                                       let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
@@ -378,7 +384,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                               pajak_nama_akun_beli: "",
                               hasil_pajak: "",
                               jumlah: "",
-                              jumlah2: 0
+                              jumlah2: ""
                             })
                           }>
                           <PlaylistAddIcon fontSize="medium" /> Tambah Data
@@ -427,7 +433,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                 </Row>
               </div>
 
-              <div class="mb-10">
+              <div className="mb-10">
                 <Row>
                   <Col>
                     <div>

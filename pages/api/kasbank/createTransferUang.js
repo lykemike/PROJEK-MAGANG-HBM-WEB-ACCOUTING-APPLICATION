@@ -11,6 +11,7 @@ export default async (req, res) => {
       no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
+      status: "Belum terekonsiliasi"
     };
 
     const create_transfer_uang = await prisma.transferUang.createMany({

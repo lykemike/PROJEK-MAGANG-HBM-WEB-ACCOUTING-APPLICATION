@@ -48,6 +48,7 @@ export default async (req, res) => {
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.hasil_pajak),
       total: parseInt(req.body.total),
+      status: "Belum terekonsiliasi",
     };
 
     const bool = {
@@ -82,6 +83,10 @@ export default async (req, res) => {
           jumlah2: parseInt(i.jumlah2),
         });
       });
+
+    const bool = {
+      boolean: req.body.boolean,
+    };
 
     const create_detail_kirim_uang = await prisma.detailKirimUang.createMany({
       data: detail,
@@ -130,10 +135,6 @@ export default async (req, res) => {
       });
     });
 
-    const create_akun_bayar = await prisma.jurnalKirimUang.createMany({
-      data: akun_bayar,
-    });
-
     const create_akun_pembayaran = await prisma.jurnalKirimUang.createMany({
       data: akun_pembayaran,
     });
@@ -142,7 +143,11 @@ export default async (req, res) => {
       data: list_pajak,
     });
 
-    res.status(201).json({ message: "Create Kirim Uang Success!", akun_pembayaran, bool, detail });
+    const create_akun_bayar = await prisma.jurnalKirimUang.createMany({
+      data: akun_bayar,
+    });
+
+    res.status(201).json({ message: "Create Kirim Uang Success!", create_kirim_uang, create_detail_kirim_uang, create_akun_bayar, create_akun_pembayaran, create_list_pajak });
   } catch (error) {
     res.status(400).json({ data: "Failed to create kirim uang!", error });
     console.log(error);

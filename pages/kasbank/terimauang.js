@@ -56,7 +56,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
               pajak_persen: "",
               hasil_pajak: 0,
               jumlah: "",
-              jumlah2: 0
+              jumlah2: ""
             },
           ],
         }}
@@ -192,10 +192,10 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                 <Table class='table mt-4'>
                   <thead class='thead-light'>
                     <tr>
-                      <th>Pembayaran Untuk Akun</th>
-                      <th>Deskripsi</th>
-                      <th>Pajak</th>
-                      <th>Jumlah</th>
+                      <td>Pembayaran Untuk Akun</td>
+                      <td>Deskripsi</td>
+                      <td>Pajak</td>
+                      <td>Jumlah</td>
                     </tr>
                   </thead>
                   <FieldArray name='detail_terima_uang'>
@@ -263,6 +263,9 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                         props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                         props.setFieldValue("hasil_pajak", pajak_total);
 
+                                        let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak
+                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+
                                         let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
@@ -322,6 +325,9 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                         props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                         props.setFieldValue("hasil_pajak", pajak_total);
 
+                                        let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak
+                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+
                                         let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
@@ -374,7 +380,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                               pajak_persen: "",
                               hasil_pajak: "",
                               jumlah: "",
-                              jumlah2: 0,
+                              jumlah2: "",
                             })
                           }>
                           <PlaylistAddIcon fontSize='medium' /> Tambah Data

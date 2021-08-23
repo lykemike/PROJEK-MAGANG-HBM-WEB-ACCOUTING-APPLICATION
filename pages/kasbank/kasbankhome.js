@@ -97,7 +97,9 @@ export default function jurnalentry({ data }) {
                                         <div className="text-sm text-gray-900">{kasBank.kode_akun}</div>
                                     </td>
                                     <td className="px-2 py-2 whitespace-nowrap">
+                                    <Link href="/kasbank/akundetail">
                                         <div className="text-sm text-gray-900">{kasBank.nama_akun}</div>
+                                    </Link>
                                     </td>
                                     <td className="px-2 py-2 whitespace-nowrap">
                                         <div className="text-sm text-gray-900">Rp. 0,00</div>

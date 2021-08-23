@@ -7,7 +7,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { useRouter } from "next/router";
 
-export default function sales_invoice({ data, data2 }) {
+export default function sales_invoice({ data, data2, data3 }) {
   const router = useRouter();
   const { id } = router.query;
 
@@ -18,6 +18,9 @@ export default function sales_invoice({ data, data2 }) {
   function edit() {
     router.push(`../${id}`);
   }
+
+  const diskon_total = data2.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+  const jurnal_penerimaan_pembayaran = data3.reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
     <Layout>
@@ -148,7 +151,7 @@ export default function sales_invoice({ data, data2 }) {
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Diskon</Col>
-                  <Col sm='4'>Rp. {(i.total_diskon + i.total_pajak_per_baris).toLocaleString({ minimumFractionDigits: 0 })}</Col>
+                  <Col sm='4'>Rp. {(i.total_diskon + diskon_total).toLocaleString({ minimumFractionDigits: 0 })}</Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Nama Pajak</Col>
@@ -164,7 +167,7 @@ export default function sales_invoice({ data, data2 }) {
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Sudah Dibayar</Col>
-                  <Col sm='4'>Rp. {i.uang_muka.toLocaleString({ minimumFractionDigits: 0 })}</Col>
+                  <Col sm='4'>Rp. {(i.uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}</Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Col sm='6'>Sisa Tagihan</Col>
@@ -178,6 +181,7 @@ export default function sales_invoice({ data, data2 }) {
             <Col className='d-flex justify-content-end mt-10'>
               <Button variant='primary mr-2'> Cetak </Button>
               <Link href='/jual/penerimaan-pembayaran'>
+              <Button variant='secondary mr-2'>Ubah</Button>
                 <Button variant='danger mr-2'>Batal</Button>
               </Link>
               <Button variant='success mr-2' onClick={pembayaran}>
@@ -218,10 +222,18 @@ export async function getServerSideProps(context) {
     },
   });
 
+  const jurnal_penerimaan_pembayaran = await prisma.jurnalPenerimaanPembayaran.findMany({
+    where: {
+      header_penjualan_id: parseInt(id),
+      tipe_saldo: "Debit"
+    }
+  })
+
   return {
     props: {
       data: header,
       data2: detail,
+      data3: jurnal_penerimaan_pembayaran
     },
   };
 }

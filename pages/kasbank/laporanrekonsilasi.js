@@ -54,12 +54,70 @@ const laporanrekonsilasi = () => {
                             <td></td>
 						</tr>
                         <tr>
+							<td>XX-XX-XXXX</td>
+							<td></td>
+                            <td></td>
+							<td></td>
+							<td></td>
+                            <td><div class="text-md font-medium text-gray-900">Rp. 0,00
+                            </div></td>
+						</tr>
+                        <tr>
+							<td>
+								<div class="text-md font-medium text-gray-900">Total Pembayaran Terhutang
+                            	</div>
+							</td>
+							<td></td>
+                            <td></td>
+							<td></td>
+							<td></td>
+                            <td><div class="text-md font-medium text-gray-900">Rp. 0,00
+                            </div></td>
+						</tr>
+						
+						<tr>
 							<td></td>
 							<td></td>
                             <td></td>
 							<td></td>
 							<td></td>
                             <td></td>
+						</tr>
+
+                        <tr>
+							<td>
+                            <div class="text-md font-medium text-gray-900">Dikurangi Pemasukkan Terhutang
+                            </div>
+                            </td>
+							<td></td>
+                            <td></td>
+							<td></td>
+							<td></td>
+                            <td> <div class="text-md font-medium text-gray-900">
+                            </div></td>
+						</tr>
+                        <tr>
+							<td>XXX-XXX-XXX</td>
+							<td></td>
+                            <td></td>
+							<td></td>
+							<td></td>
+                            <td>
+								<div class="text-md font-medium text-gray-900">
+									Rp. 0,00
+                            </div>
+							</td>
+						</tr>
+                        <tr>
+							<td>
+								<div class="text-md font-medium text-gray-900">Total Pemasukan Terhutang
+                            	</div>
+							</td>
+							<td></td>
+                            <td></td>
+							<td></td>
+							<td></td>
+                            <td>Rp. 0.00</td>
 						</tr>
                         <tr>
 							<td></td>
@@ -71,70 +129,42 @@ const laporanrekonsilasi = () => {
 						</tr>
                         <tr>
 							<td>
-                            <div class="text-md font-medium text-gray-900">Total Pembayaran Utang
+                            <div class="text-md font-medium text-gray-900">Ditambah Transaksi Rekening Koran yang Belum Direkonsiliasi	
                             </div>
                             </td>
 							<td></td>
                             <td></td>
 							<td></td>
 							<td></td>
-                            <td> <div class="text-md font-medium text-gray-900">Rp. 0,00
-                            </div></td>
+                            <td> </td>
 						</tr>
                         <tr>
-							<td>Dikurangi Pemasukkan Terhutang</td>
+							<td>XXX-XXX-XXX</td>
 							<td></td>
                             <td></td>
 							<td></td>
 							<td></td>
-                            <td></td>
-						</tr>
-                        <tr>
-							<td></td>
-							<td></td>
-                            <td></td>
-							<td></td>
-							<td></td>
-                            <td></td>
-						</tr>
-                        <tr>
-							<td></td>
-							<td></td>
-                            <td></td>
-							<td></td>
-							<td></td>
-                            <td></td>
+                            <td>
+								<div class="text-md font-medium text-gray-900">Rp. 0,00
+                           		</div>
+							</td>
 						</tr>
                         <tr>
 							<td>
-                            <div class="text-md font-medium text-gray-900">Total Transaksi Rekening Koran yang Belum Direkonsiliasi	
+							<div class="text-md font-medium text-gray-900">Total Transaksi Rekening Koran yang Belum Direkonsiliasi	
                             </div>
-                            </td>
+							</td>
 							<td></td>
                             <td></td>
 							<td></td>
 							<td></td>
-                            <td> <div class="text-md font-medium text-gray-900">Rp. 0,00
-                            </div></td>
+                            <td>
+							<div class="text-md font-medium text-gray-900">Rp. 0,00
+                            </div>
+							</td>
 						</tr>
                         <tr>
 							<td></td>
-							<td></td>
-                            <td></td>
-							<td></td>
-							<td></td>
-                            <td></td>
-						</tr>
-                        <tr>
-							<td></td>
-							<td></td>
-                            <td></td>
-							<td></td>
-							<td></td>
-                            <td></td>
-						</tr>
-                        <tr>
-							<td>1-10001</td>
 							<td>Saldo Rekening Koran</td>
                             <td></td>
 							<td></td>
