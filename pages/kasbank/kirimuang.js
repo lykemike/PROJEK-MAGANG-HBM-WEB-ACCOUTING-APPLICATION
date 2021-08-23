@@ -138,7 +138,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control placeholder={"Auto " + "(" + id + ")"} name="no_transaksi" disabled />
+                    <Form.Control placeholder={"Auto"} name="no_transaksi" disabled />
                   </Col>
 
                   <Col>
@@ -283,6 +283,9 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
+                                      let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak
+                                      props.setFieldValue(props.values.detail_kirim_uang[index].jumlah2 = jumlah2)
+
                                       let harga_termasuk_pajak = jumlah_total - pajak_total;
                                         props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
                                         props.setFieldValue("subtotal", harga_termasuk_pajak);
@@ -336,6 +339,9 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                       props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                       props.setFieldValue("hasil_pajak", pajak_total);
 
+                                      let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak
+                                      props.setFieldValue(props.values.detail_kirim_uang[index].jumlah2 = jumlah2)
+
                                       let harga_termasuk_pajak = jumlah_total - pajak_total;
                                         props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
                                         props.setFieldValue("subtotal", harga_termasuk_pajak);
@@ -372,6 +378,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                               pajak_nama_akun_beli: "",
                               hasil_pajak: "",
                               jumlah: "",
+                              jumlah2: 0
                             })
                           }>
                           <PlaylistAddIcon fontSize="medium" /> Tambah Data

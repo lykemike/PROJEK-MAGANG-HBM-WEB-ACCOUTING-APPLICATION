@@ -48,14 +48,13 @@ export default async (req, res) => {
       tag: req.body.tag,
 
       memo: req.body.memo,
-      lampiran: "req.file.filename",
+      fileattachment: "req.file.filename",
 
       subtotal: parseInt(req.body.subtotal),
-      pajak: parseInt(req.body.pajak),
       total: parseInt(req.body.total),
       akun_pemotongan: parseInt(req.body.akun_pemotongan),
       pemotongan: parseInt(req.body.pemotongan),
-      jumlah_pemotongan: parseInt(req.body.jumlah_pemotongan),
+      pemotongan_total: parseInt(req.body.pemotongan_total),
     };
 
     const bool = {
@@ -94,6 +93,10 @@ export default async (req, res) => {
     const setting_pemotongan = get_setting_biaya.filter((i) => i.nama_setting === "pemotongan");
     const setting_hutang_usaha = get_setting_biaya.filter((i) => i.nama_setting === "hutang_usaha");
 
+    const bool2 = {
+      boolean2: req.body.boolean2,
+    };
+
     let detail = [];
     req.body.detail_biaya &&
       JSON.parse(req.body.detail_biaya).map((i) => {
@@ -103,13 +106,12 @@ export default async (req, res) => {
           nama_akun: i.nama_akun,
           deskripsi: i.deskripsi,
           pajak_id: parseInt(i.pajak_id),
-          pajak: i.pajak,
-          nama_pajak: i.nama_pajak,
-          pajak_persen: parseInt(i.persen_pajak),
+          pajak_nama: i.pajak_nama,
+          pajak_persen: parseInt(i.pajak_persen),
           hasil_pajak: parseInt(i.hasil_pajak),
-          nama_pajak_akun_beli: i.nama_pajak_akun_beli,
+          pajak_nama_akun_beli: i.pajak_nama_akun_beli,
           jumlah: parseInt(i.jumlah),
-          total_per_baris: parseInt(i.total_per_baris),
+          jumlah2: parseInt(i.jumlah2),
         });
       });
 
@@ -130,7 +132,7 @@ export default async (req, res) => {
 
       list_pajak.push({
         header_biaya_id: find_latest.id,
-        nama_akun: i.nama_pajak_akun_beli,
+        nama_akun_biaya: i.pajak_nama_akun_beli,
         nominal: parseInt(i.hasil_pajak),
         tipe_saldo: "Debit",
       });
@@ -139,13 +141,21 @@ export default async (req, res) => {
     let list_akun = [];
     detail.map((i) => {
       // let pajak = get_pajak_id(i.pajak_id);
-
-      list_akun.push({
-        header_biaya_id: find_latest.id,
-        nama_akun: i.nama_akun,
-        nominal: parseInt(i.total_per_baris),
-        tipe_saldo: "Debit",
-      });
+      if (bool.boolean == "true") {
+        list_akun.push({
+          header_biaya_id: find_latest.id,
+          nama_akun_biaya: i.nama_akun,
+          nominal: parseInt(i.jumlah2),
+          tipe_saldo: "Debit",
+        });
+      } else {
+        list_akun.push({
+          header_biaya_id: find_latest.id,
+          nama_akun_biaya: i.nama_akun,
+          nominal: parseInt(i.jumlah),
+          tipe_saldo: "Debit",
+        });
+      }
     });
 
     const akunbayardari = await prisma.akun.findMany({
@@ -162,30 +172,30 @@ export default async (req, res) => {
       data_biaya.push(
         {
           header_biaya_id: find_latest.id,
-          nama_akun: setting_pemotongan[0].akun.nama_akun,
+          nama_akun_biaya: setting_pemotongan[0].akun.nama_akun,
           tipe_saldo: "Kredit",
           nominal: parseInt(req.body.pemotongan),
         },
         {
           header_biaya_id: find_latest.id,
-          nama_akun: "KOSONG",
+          nama_akun_biaya: setting_hutang_usaha[0].akun.nama_akun,
           tipe_saldo: "Kredit",
-          nominal: parseInt(req.body.jumlah_pemotongan),
+          nominal: parseInt(req.body.pemotongan_total),
         }
       );
     } else {
       data_biaya.push(
         {
           header_biaya_id: find_latest.id,
-          nama_akun: setting_pemotongan[0].akun.nama_akun,
+          nama_akun_biaya: setting_pemotongan[0].akun.nama_akun,
           tipe_saldo: "Kredit",
           nominal: parseInt(req.body.pemotongan),
         },
         {
           header_biaya_id: find_latest.id,
-          nama_akun: akunbayardari[0].nama_akun,
+          nama_akun_biaya: akunbayardari[0].nama_akun,
           tipe_saldo: "Kredit",
-          nominal: parseInt(req.body.jumlah_pemotongan),
+          nominal: parseInt(req.body.pemotongan_total),
         }
       );
     }

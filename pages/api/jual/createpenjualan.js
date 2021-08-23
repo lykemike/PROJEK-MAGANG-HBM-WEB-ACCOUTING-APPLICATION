@@ -272,11 +272,6 @@ export default async (req, res) => {
         message: "Create Detail Penjualan Success!",
         data: create_jurnal_penjualan,
         add_jurnal_penjualan,
-        // add_jurnal_penjualan,
-        // create_jurnal_penjualan,
-        // frontend_data,
-        // detail,
-        // list_pajak,
       },
     ]);
   } catch (error) {
