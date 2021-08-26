@@ -14,7 +14,6 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6 }) {
   const url = "http://localhost:3000/api/jual/createpenjualan";
   const router = useRouter();
@@ -376,13 +375,16 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                         data3.filter((i) => i.id === parseInt(e.target.value))[0].nama
                                       );
                                     }
-                                  }}>
-                                  <option value='kosong'>pilih produk</option>
-                                  {data3.filter(nama_produk => nama_produk.harga_jual_satuan > 0).map((nama_produk) => (
-                                    <option key={nama_produk.id} value={nama_produk.id}>
-                                      {nama_produk.nama}
-                                    </option>
-                                  ))}
+                                  }}
+                                >
+                                  <option value="kosong">pilih produk</option>
+                                  {data3
+                                    .filter((nama_produk) => nama_produk.harga_jual_satuan > 0)
+                                    .map((nama_produk) => (
+                                      <option key={nama_produk.id} value={nama_produk.id}>
+                                        {nama_produk.nama}
+                                      </option>
+                                    ))}
                                 </Form.Control>
                               </Col>
                               <Col sm="1">
