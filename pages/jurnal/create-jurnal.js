@@ -35,8 +35,8 @@ export default function create_jurnal({ data, data2 }) {
           detail_jurnal: [
             {
               akun_id: "",
-              deskripsi: "",
-              tag: "",
+              deskripsi: "-",
+              tag: "-",
               debit: 0,
               debit_disable: false,
               kredit: 0,
