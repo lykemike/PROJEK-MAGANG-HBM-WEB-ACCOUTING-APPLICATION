@@ -175,25 +175,25 @@ export default function Expense () {
 	);
 }
 
-export async function getServerSideProps() {
-    // Get biaya from API
-    const biayas = await prisma.headerBiaya.findMany({
-        orderBy:
-            [
-                {
-                    id: 'asc'
-                }
-            ],
-        include: {
-            detail_biaya: true,
-						akun: true,
-						kontak: true,
-        }
-    });
+// export async function getServerSideProps() {
+//     // // Get biaya from API
+//     // const biayas = await prisma.headerBiaya.findMany({
+//     //     orderBy:
+//     //         [
+//     //             {
+//     //                 id: 'asc'
+//     //             }
+//     //         ],
+//     //     include: {
+//     //         detail_biaya: true,
+// 	// 					akun: true,
+// 	// 					kontak: true,
+//     //     }
+//     // });
 
-    return {
-        props: {
-            data: biayas,
-        }
-    }
-}
+//     // return {
+//     //     props: {
+//     //         data: biayas,
+//     //     }
+//     // }
+// }

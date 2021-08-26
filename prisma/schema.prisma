@@ -87,6 +87,7 @@ model Akun {
   HeaderBiaya1 HeaderBiaya[] @relation("akun_kas_bank")
   HeaderBiaya2 HeaderBiaya[] @relation("akun_pendapatan")
   DetailBiaya  DetailBiaya[]
+  PengirimanBiaya PengirimanBiaya[]
 
   HeaderPenjualan1     HeaderPenjualan[]      @relation("akunPemotonganPenjualan")
   HeaderPenjualan2     HeaderPenjualan[]      @relation("akunUangMukaPenjualan")
@@ -461,8 +462,20 @@ model HeaderBiaya {
   pemotongan_total Int
 
   detail_biaya DetailBiaya[]
+  jurnal_biaya JurnalBiaya[]
+  pengirimanbiaya PengirimanBiaya[]
+  jurnalpengirimanbiaya JurnalPengirimanBiaya[]
 }
 
+
+model JurnalBiaya {
+  id                  Int           @id @default(autoincrement())
+  headerbiaya       HeaderBiaya  @relation(fields: [header_biaya_id], references: [id])
+  header_biaya_id    Int
+  nama_akun_biaya    String
+  nominal             Int
+  tipe_saldo          String
+}
 // Detail Biaya Table
 model DetailBiaya {
   id              Int         @id @default(autoincrement())
@@ -481,6 +494,27 @@ model DetailBiaya {
   hasil_pajak          Int
   jumlah               Int
   jumlah2              Int
+}
+model PengirimanBiaya{
+  id              Int @id@default(autoincrement())
+  header_biaya    HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
+  header_biaya_id Int
+  
+  akun                Akun      @relation(fields: [akun_id], references: [id])
+  akun_id             Int
+  cara_pembayaran     String
+  tgl_pembayaran      String
+  tgl_jauth_tempo     String
+
+  jumlah              Int
+}
+model JurnalPengirimanBiaya{
+  id              Int @id@default(autoincrement())
+  header_biaya        HeaderBiaya   @relation(fields: [header_biaya_id], references: [id])
+  header_biaya_id     Int
+  nama_penerimaan_akun    String
+  nominal                 Int
+  tipe_saldo              String
 }
 
 // Setting Penjualan, Pembelian, dan Biaya

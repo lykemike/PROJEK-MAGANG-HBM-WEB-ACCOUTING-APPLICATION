@@ -10,8 +10,8 @@ import * as Yup from 'yup'
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
 import { useRouter } from "next/router";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+// import { PrismaClient } from "@prisma/client";
+// const prisma = new PrismaClient();
 
 
 export default function settingperusahaan() {
