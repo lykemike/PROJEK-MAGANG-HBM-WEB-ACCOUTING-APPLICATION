@@ -11,8 +11,28 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import AddIcon from '@material-ui/icons/Add';
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+import { Formik, Form as Forms, FieldArray } from "formik";
+import Axios from "axios";
 
 export default function listaset({data}) {
+
+    const deleteAset = 'http://localhost:3000/api/aset/deleteAset'
+
+    const handleDelete = async (id) => {
+        Axios.delete(deleteAset, {
+            data: {
+                asetid: id
+            }
+        }).then(function (response) {
+            console.log(response);
+            router.push('list-aset');
+        }).
+            catch(function (error) {
+                console.log(error)
+            })
+    };
+
+
     return (
         <div>
             <Layout>
@@ -73,7 +93,7 @@ export default function listaset({data}) {
                             </th>
                         </tr>
                         </thead> 
-                    {data.map((i) => (    
+                    {data.map((i, index) => (    
                         <tr>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
                             <div class="text-lg text-gray-900">{i.tgl_akuisisi}</div>
@@ -98,9 +118,11 @@ export default function listaset({data}) {
                             </td>    
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
                             <div class="text-lg text-gray-900">
-                                <Button variant="outline-success mr-2">Jual</Button>
+                                 <Link key={index} href={`/aset/jual-aset/${i.id}`}>
+                                     <Button variant="outline-success mr-2">Jual</Button>
+                                </Link>
                                 <Button variant='warning mr-2'>Edit</Button>
-                                <Button variant='danger'>Hapus</Button>
+                                <Button variant='danger' onClick={() => handleDelete(i.id)} >Hapus</Button>
                             </div>
                             </td>                     
                         </tr>                 

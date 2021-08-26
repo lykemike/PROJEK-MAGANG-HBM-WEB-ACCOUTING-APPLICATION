@@ -5,8 +5,9 @@ import { Button, Table, DropdownButton ,Row,Col,Form, FormControl,InputGroup, Dr
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function laporanjurnalumum({ data }) {
+export default function laporanjurnalumum({ data,data2 }) {
 
+	 console.log(data)
     return (
         <Layout>
        	<div variant="container">
@@ -75,53 +76,23 @@ export default function laporanjurnalumum({ data }) {
 							<th scope="col">Kredit</th>
 						</tr>
 					</thead>	
+			
 				{data.map((i,index) => (
-					<tbody key={index}>
+					<tbody>
 
-						<td>Journal Entry #{i.id} || created on {i.tgl_transaksi} </td>
-					
+					<td>Journal Entry #{i.header_jurnal_header_jurnalid} || created on {i.header_jurnal.tgl_transaksi} </td>
 						<tr>
-							<td>{i.DetailJurnal.akun.kode_akun}</td>
+							<td></td>
 							<td></td>
                             <td></td>
 							{/* <td>Rp. {i.debit}</td>
 							<td>Rp. {i.kredit}</td> */}
-						</tr>
-						
-
-						{/* <tr>
-							<td>1-10002</td>
-							<td>Bank Account</td>
-                            <td></td>
-							<td>Rp. 0,00</td>
-							<td class="text-muted">Rp. 0,00</td>
-						</tr>
-						<tr>
-							<td>1-10751</td>
-							<td>Accumalted Depreciation - Building</td>
-                            <td></td>
-							<td class="text-muted">Rp. 0,00</td>
-							<td>Rp. 0,00</td>
-						</tr>
-
-						<tr>
-                            <td></td>
-							<td>
-								<div class="text-md text-gray-900" />
-							</td>
-							<td>
-								<div class="text-md font-medium text-gray-900">Total</div>
-							</td>
-							<td>
-								<div class="text-md font-medium text-gray-900">Rp. 0.00</div>
-							</td>
-							<td>
-								<div class="text-md font-medium text-gray-900">Rp. 0.00</div>
-							</td>
-						</tr> */}
-
+						</tr>	
 					</tbody>
-					))}
+				))}
+
+	
+				
 				</Table>
 			</div>
         </Layout>
@@ -130,20 +101,41 @@ export default function laporanjurnalumum({ data }) {
 
 export async function getServerSideProps() {
 
-    const header = await prisma.headerJurnal.findMany({
+    const detail = await prisma.detailJurnal.findMany({
       orderBy: {
        	id: "asc"
       },
-		  DetailJurnal: {
-			include:{
-				akun: true,
-			}
-      },
+	  include: {
+		  akun: true,
+		  header_jurnal: true,
+	  }
     });
+
+	const header = await prisma.headerJurnal.findMany({
+		orderBy: {
+			 id: "asc"
+		},  
+	  });
+	  
+
+
+
+	// const headerPenjualan = await prisma.headerPenjualan.findMany({
+	// 	orderBy: {
+	// 		id: 'asc'
+	// 	},
+	// 	JurnalPenjualan: {
+	// 		select:{
+	// 			nama_akun: true,
+	// 		}
+	// 	}
+	// })
+
   
     return {
       props: {
-        data: header,
+        data: detail,
+		data2: header
       },
     };
   }

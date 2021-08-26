@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../../components/Layout";
+import Layout from "../../../components/Layout";
 import { Form, Row, Col, Button } from "react-bootstrap";
 
 import * as Yup from 'yup'
@@ -9,25 +9,23 @@ import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function addaset({ data }) {
+export default function addaset({ data,data2 }) {
     const router = useRouter();
-    const url = "http://localhost:3000/api/";
+    const url = "http://localhost:3000/api/aset/createpelepasan";
   
-    const id = data != undefined ? parseInt(data.id) + 1 : 1;
+    // const id = data != undefined ? parseInt(data.id) + 1 : 1;
   
-    const [idInvoice, setIdInvoice] = useState(id);
+    // const [idInvoice, setIdInvoice] = useState(id);
   
    
     return (
         <Layout>
           <Formik
             initialValues={{
-              akun_transfer: "",
-              akun_setor: "",
-              jumlah: "",
-              memo: "",
-              no_transaksi: id,
               tgl_transaksi: "",
+              harga_jual: "",
+              deposit_ke: "",
+              memo: "",
               tag: "",
             }}
             onSubmit={async (values) => {
@@ -64,7 +62,9 @@ export default function addaset({ data }) {
           <Forms noValidate> */}
             <div>
               <h4>Pelepasan Aset</h4>
-              <h5 class="mt-5">Nomor Aset - Nama Aset</h5>
+              {data.map((i) => (    
+              <h5 class="mt-5"> {i.nomor_aset} - {i.nama_aset}</h5>
+              ))}
               <div class='mt-12 container'>
                 <Form>
                   <Row className='mb-2'>
@@ -101,12 +101,14 @@ export default function addaset({ data }) {
                       <Form.Label>Deposit ke</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control
-                        as="select"
-                        placeholder='deposit_ke'
-                        onChange={props.handleChange}
-                      />
-      
+                    <Form.Control as="select" placeholder="" size="sm" name="deposit_ke" onChange={props.handleChange}>
+                          <option value="0">Pilih</option>
+                          {data2.map((akundeposit) => (
+                            <option key={akundeposit.id} value={akundeposit.id}>
+                              {akundeposit.nama_akun}
+                            </option>
+                          ))}
+                  </Form.Control>
                     </Col>
                   </Row>
 
@@ -165,3 +167,26 @@ export default function addaset({ data }) {
   );
 }
 
+export async function getServerSideProps(context) {
+  // Get Akuns from API
+const {id} = context.query
+
+const asets = await prisma.aset.findMany({
+      where : {
+        id: parseInt(id)
+    }
+});
+
+const akundeposit = await prisma.akun.findMany({
+  where: {
+    kategoriId: 3,
+  },
+});
+
+return {
+  props: {
+    data: asets,
+    data2: akundeposit
+  },
+};
+}

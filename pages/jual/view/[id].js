@@ -1,13 +1,12 @@
 import React from "react";
 import Layout from "../../../components/Layout";
-import { Row, Col, Form, Button, FormCheck } from "react-bootstrap";
-import AddIcon from "@material-ui/icons/Add";
+import { Row, Col, Button } from "react-bootstrap";
 import Link from "next/Link";
+import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import { useRouter } from "next/router";
 
-export default function sales_invoice({ data, data2, data3 }) {
+export default function salesInvoice({ header, detail, jurnal }) {
   const router = useRouter();
   const { id } = router.query;
 
@@ -19,181 +18,201 @@ export default function sales_invoice({ data, data2, data3 }) {
     router.push(`../${id}`);
   }
 
-  const diskon_total = data2.reduce((a, b) => (a = a + b.hasil_diskon), 0);
-  const jurnal_penerimaan_pembayaran = data3.reduce((a, b) => (a = a + b.nominal), 0);
+  const jurnal_penerimaan_pembayaran = jurnal.reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
     <Layout>
       <div>
-        <h4>Transaksi</h4>
-        <h4>Sales Invoice # {id}</h4>
+        <Row>
+          <Col>
+            <h5>Transaksi</h5>
+            <h3 className=" text-blue-600">Sales Invoice #{id}</h3>
+          </Col>
+          <Col>
+            <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3>
+          </Col>
+        </Row>
+
         <hr />
-      </div>
-      {data.map((i) => (
-        <Form>
-          <Row sm='12'>
-            <Col sm='3'>
-              <Form.Label className='font-medium'>Pelanggan: {i.kontak.nama} </Form.Label>
-            </Col>
 
-            <Col sm='3'>
-              <Form.Label className='font-medium'>Email: {i.email}</Form.Label>
-            </Col>
-            <Col className='d-flex justify-content-end mr-3'>
-              <Row>
-                <h4 className='mr-2'>Total</h4>
-
-                <h4>Rp. Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</h4>
-              </Row>
-            </Col>
-          </Row>
-
-          <hr />
-
-          <div class='mb-10'>
-            {data.map((i) => (
-              <Row sm='12'>
-                <Col sm='3'>
-                  <Form.Label className='font-medium'>Alamat Penagihan:</Form.Label>
-                  <p>{i.alamat_supplier} </p>
-                </Col>
-
-                <Col sm='3'>
-                  <Form.Label className='font-medium'>Tgl Invoice: </Form.Label>
-                  <p>{i.tgl_transaksi} </p>
-                  <Form.Label className='font-medium'>Tgl Jatuh Tempo: </Form.Label>
-                  <p>{i.tgl_jatuh_tempo} </p>
-                  {/* <Form.Label className='font-medium'>Syarat Pembayaran: {i.syarat_pembayaran}</Form.Label> */}
-                  <Form.Label className='font-medium'>Syarat Pembayaran: Cash</Form.Label>
-                </Col>
-
-                <Col sm='3'>
-                  <Form.Label className='font-medium'>No Invoice: {i.no_transaksi} </Form.Label>
-                  <br />
-                  <Form.Label className='font-medium'>Tag: {i.tag} </Form.Label>
-                  <br />
-                  <Form.Label className='font-medium'>Nomor Kontrak: {i.no_ref_penagihan} </Form.Label>
-                </Col>
-              </Row>
-            ))}
-          </div>
-          <hr />
-
-          <div class='mb-10'>
-            <Row sm='10'>
-              <Col sm='2'>
-                <Form.Label className='font-medium'>Produk</Form.Label>
-              </Col>
-
-              <Col sm='2'>
-                <Form.Label className='font-medium'>Deskripsi</Form.Label>
-              </Col>
-
-              <Col sm='2'>
-                <Form.Label className='font-medium'>Harga Satuan</Form.Label>
-              </Col>
-
-              <Col sm='2'>
-                <Form.Label className='font-medium'>Diskon</Form.Label>
-              </Col>
-
-              <Col sm='2'>
-                <Form.Label className='font-medium'>Pajak</Form.Label>
-              </Col>
-              <Col sm='2'>
-                <Form.Label className='font-medium'>Jumlah</Form.Label>
-              </Col>
-            </Row>
-
-            <hr />
-            {data2.map((i) => (
-              <Row className='mb-12'>
-                <Col sm='2'>
-                  <p>{i.nama_produk}</p>
-                </Col>
-
-                <Col sm='2'>
-                  <p>{i.desk_produk}</p>
-                </Col>
-
-                <Col sm='2'>
-                  <p>Rp. {i.harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                </Col>
-
-                <Col sm='2'>
-                  <p>{i.diskon} %</p>
-                </Col>
-
-                <Col sm='2'>
-                  <p>
-                    {i.pajak_nama} - {i.pajak_persen} %
-                  </p>
-                </Col>
-
-                <Col sm='2'>
-                  <p>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                </Col>
-              </Row>
-            ))}
-          </div>
-
-          <div class='mt-20'>
-            <Row sm='12'>
-              <Col sm='3' />
-
-              <Col sm='3' />
-              <Col sm='3' />
-
-              <Col sm='3'>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='6'>Sub Total</Col>
-                  <Col sm='4'>Rp. {i.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='6'>Diskon</Col>
-                  <Col sm='4'>Rp. {(i.total_diskon + diskon_total).toLocaleString({ minimumFractionDigits: 0 })}</Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='6'>Nama Pajak</Col>
-                  <Col sm='4'>Rp. {i.total_pajak_per_baris.toLocaleString({ minimumFractionDigits: 0 })}</Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='6'>Total</Col>
-                  <Col sm='4'>Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='6'>Jumlah Pemotongan</Col>
-                  <Col sm='4'>Rp. {i.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='6'>Sudah Dibayar</Col>
-                  <Col sm='4'>Rp. {(i.uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}</Col>
-                </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Col sm='6'>Sisa Tagihan</Col>
-                  <Col sm='4'>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</Col>
-                </Form.Group>
-              </Col>
-            </Row>
-          </div>
-
+        {header.map((i) => (
           <Row>
-            <Col className='d-flex justify-content-end mt-10'>
-              <Button variant='primary mr-2'> Cetak </Button>
-              <Link href='/jual/penerimaan-pembayaran'>
-              <Button variant='secondary mr-2'>Ubah</Button>
-                <Button variant='danger mr-2'>Batal</Button>
-              </Link>
-              <Button variant='success mr-2' onClick={pembayaran}>
-                Bayar
-              </Button>
-              <Button variant='success' onClick={edit}>
-                Ubah
-              </Button>
+            <Col sm="4">
+              <Row>
+                <p className="font-medium">Pelanggan: </p>
+                <p className="ml-2">{i.kontak.nama}</p>
+              </Row>
+            </Col>
+            <Col sm="4">
+              <Row>
+                <p className="font-medium">Email: </p>
+                <p className="ml-2">{i.email}</p>
+              </Row>
+            </Col>
+            <Col sm="4">
+              <Row className="mt-2 mb-3 float-right">
+                <h3>Total Amount</h3>
+                <h3 className=" text-blue-600 ml-2">Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+              </Row>
             </Col>
           </Row>
-        </Form>
-      ))}
+        ))}
+
+        <hr />
+
+        {header.map((i) => (
+          <Row>
+            <Col sm="4">
+              <Row>
+                <p className="font-medium">Alamat Penagihan: </p>
+              </Row>
+              <p className="ml-2">{i.alamat_supplier}</p>
+            </Col>
+
+            <Col sm="4">
+              <Row>
+                <p className="font-medium">Tanggal Transaksi: </p>
+                <p className="ml-2">{i.tgl_transaksi}</p>
+              </Row>
+              <Row>
+                <p className="font-medium">Tanggal Jatuh Tempo: </p>
+                <p className="ml-2">{i.tgl_jatuh_tempo}</p>
+              </Row>
+              <Row>
+                <p className="font-medium">Syarat Pembayaran: </p>
+                <p className="ml-2">{i.syarat_pembayaran}</p>
+              </Row>
+            </Col>
+
+            <Col sm="4">
+              <Row>
+                <p className="font-medium">No. Transaksi:</p>
+                <p className="ml-2">Sales Invoice #{i.no_transaksi}</p>
+              </Row>
+              <Row>
+                <p className="font-medium">Tag: </p>
+                <p className="ml-2">{i.tag}</p>
+              </Row>
+              <Row>
+                <p className="font-medium">No. Kontrak: </p>
+                <p className="ml-2">{i.no_ref_penagihan}</p>
+              </Row>
+            </Col>
+          </Row>
+        ))}
+
+        <table class="min-w-full table-auto mt-12">
+          <thead class="justify-between">
+            <tr class="bg-dark">
+              <th class="px-2 py-2">
+                <span class="text-gray-300">Produk</span>
+              </th>
+              <th class="px-2 py-2">
+                <span class="text-gray-300">Deskripsi</span>
+              </th>
+              <th class="px-2 py-2">
+                <span class="text-gray-300">Kuantitas</span>
+              </th>
+              <th class="px-2 py-2">
+                <span class="text-gray-300">Satuan</span>
+              </th>
+              <th class="px-2 py-2">
+                <span class="text-gray-300">Harga Satuan</span>
+              </th>
+              <th class="px-2 py-2">
+                <span class="text-gray-300">Diskon</span>
+              </th>
+              <th class="px-2 py-2">
+                <span class="text-gray-300">Jumlah</span>
+              </th>
+            </tr>
+          </thead>
+
+          {detail.map((i) => (
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-2 py-2 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{i.produk.nama}</div>
+                </td>
+                <td class="px-2 py-2 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{i.deskripsi}</div>
+                </td>
+                <td class="px-2 py-2 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{i.kuantitas}</div>
+                </td>
+                <td class="px-2 py-2 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{i.satuan}</div>
+                </td>
+                <td class="px-2 py-2 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Rp. {i.harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}</div>
+                </td>
+                <td class="px-2 py-2 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{i.diskon}%</div>
+                </td>
+                <td class="px-2 py-2 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</div>
+                </td>
+              </tr>
+            </tbody>
+          ))}
+        </table>
+
+        <hr />
+
+        {header.map((i) => (
+          <Row>
+            <Col sm="4"></Col>
+            <Col sm="4"></Col>
+            <Col sm="4">
+              <Row>
+                <Col>
+                  <p className="font-medium d-flex justify-content-end">Subtotal</p>
+                  <p className="font-medium d-flex justify-content-end">Diskon</p>
+                  <p className="font-medium d-flex justify-content-end">Total</p>
+                  <p className="font-medium d-flex justify-content-end">Jumlah Pemotongan</p>
+                  <p className="font-medium d-flex justify-content-end">Sudah Dibayar</p>
+                  <h3 className="font-medium d-flex justify-content-end mt-12">Sisa Tagihan</h3>
+                </Col>
+                <Col>
+                  <p className="ml-2">Rp. {i.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                  <p className="ml-2">Rp. {(i.total_diskon + i.total_diskon_per_baris).toLocaleString({ minimumFractionDigits: 0 })}</p>
+                  <p className="ml-2">Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                  <p className="ml-2">Rp. {i.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                  <p className="ml-2">Rp. {(i.uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}</p>
+                  <h3 className="ml-2 mt-12">Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        ))}
+
+        <hr />
+        <div>
+          <Row>
+            <Col>
+              <Row className="float-left">
+                <Button variant="secondary">Hapus</Button>
+              </Row>
+            </Col>
+            <Col>
+              <Row>
+                <Button variant="primary" className="mr-6">
+                  Cetak
+                </Button>
+                <Button variant="primary">Terima Pembayaran</Button>
+              </Row>
+            </Col>
+            <Col>
+              <Row className="float-right">
+                <Button variant="danger" className="mr-6">
+                  Kembali
+                </Button>
+                <Button variant="success">Ubah</Button>
+              </Row>
+            </Col>
+          </Row>
+        </div>
+      </div>
     </Layout>
   );
 }
@@ -207,7 +226,6 @@ export async function getServerSideProps(context) {
     },
     include: {
       kontak: true,
-      DetailPenjualan: true,
     },
   });
 
@@ -225,15 +243,15 @@ export async function getServerSideProps(context) {
   const jurnal_penerimaan_pembayaran = await prisma.jurnalPenerimaanPembayaran.findMany({
     where: {
       header_penjualan_id: parseInt(id),
-      tipe_saldo: "Debit"
-    }
-  })
+      tipe_saldo: "Debit",
+    },
+  });
 
   return {
     props: {
-      data: header,
-      data2: detail,
-      data3: jurnal_penerimaan_pembayaran
+      header: header,
+      detail: detail,
+      jurnal: jurnal_penerimaan_pembayaran,
     },
   };
 }
