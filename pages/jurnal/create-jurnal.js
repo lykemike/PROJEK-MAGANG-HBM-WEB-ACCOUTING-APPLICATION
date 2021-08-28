@@ -165,8 +165,6 @@ export default function create_jurnal({ data, data2 }) {
                                     disabled={props.values.detail_jurnal[index].debit_disable}
                                     name={`detail_jurnal.${index}.debit`}
                                     onChange={(e) => {
-                                      
-
                                       if (e.target.value.length > 0) {
                                         props.setFieldValue(`detail_jurnal.${index}.kredit_disable`, true);
                                         props.setFieldValue(`detail_jurnal.${index}.debit`, parseInt(e.target.value));
@@ -194,8 +192,6 @@ export default function create_jurnal({ data, data2 }) {
                                     name='kredit'
                                     disabled={props.values.detail_jurnal[index].kredit_disable}
                                     onChange={(e) => {
-                                      
-
                                       if (e.target.value.length > 0) {
                                         props.setFieldValue(`detail_jurnal.${index}.debit_disable`, true);
                                         props.setFieldValue(`detail_jurnal.${index}.kredit`, parseInt(e.target.value));
@@ -271,9 +267,7 @@ export default function create_jurnal({ data, data2 }) {
                 Batal
               </button>
 
-              <button 
-              class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none' 
-              onClick={props.handleSubmit}>
+              <button class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none' onClick={props.handleSubmit}>
                 Submit
               </button>
             </div>
