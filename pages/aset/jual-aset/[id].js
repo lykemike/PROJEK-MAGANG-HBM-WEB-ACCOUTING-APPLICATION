@@ -24,9 +24,10 @@ export default function addaset({ data,data2 }) {
             initialValues={{
               tgl_transaksi: "",
               harga_jual: "",
-              deposit_ke: "",
+              deposit_id: "",
               memo: "",
               tag: "",
+              boolean: true,
             }}
             onSubmit={async (values) => {
               // alert(JSON.stringify(values, null, 2));
@@ -34,7 +35,7 @@ export default function addaset({ data,data2 }) {
               Axios.post(url, values)
                 .then(function (response) {
                   console.log(response);
-                  router.push(``);
+                  // router.push(``);
                 })
                 .catch(function (error) {
                   console.log(error);
@@ -101,7 +102,7 @@ export default function addaset({ data,data2 }) {
                       <Form.Label>Deposit ke</Form.Label>
                     </Col>
                     <Col sm='4'>
-                    <Form.Control as="select" placeholder="" size="sm" name="deposit_ke" onChange={props.handleChange}>
+                    <Form.Control as="select" placeholder="" size="sm" name="deposit_id" onChange={props.handleChange}>
                           <option value="0">Pilih</option>
                           {data2.map((akundeposit) => (
                             <option key={akundeposit.id} value={akundeposit.id}>
@@ -120,6 +121,7 @@ export default function addaset({ data,data2 }) {
                       <Form.Control
                          as="textarea" 
                          rows={3}
+                         name="memo"
                          onChange={props.handleChange}
                       />
                     </Col>
@@ -149,7 +151,7 @@ export default function addaset({ data,data2 }) {
                       <Button variant='danger mr-2'>
                         Batal
                       </Button>
-                      <Button variant='success'>
+                      <Button variant='success' onClick={props.handleSubmit}>
                         Simpan
                       </Button>
                     </Col>

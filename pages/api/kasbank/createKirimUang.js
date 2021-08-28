@@ -84,9 +84,6 @@ export default async (req, res) => {
         });
       });
 
-    const bool = {
-      boolean: req.body.boolean,
-    };
 
     const create_detail_kirim_uang = await prisma.detailKirimUang.createMany({
       data: detail,

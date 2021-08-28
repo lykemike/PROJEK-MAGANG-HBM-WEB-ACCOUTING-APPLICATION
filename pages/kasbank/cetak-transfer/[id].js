@@ -11,13 +11,12 @@ export default function bank_transfer({ data }) {
   const router = useRouter();
   const { id } = router.query;
 
-  function cetak() {
-    router.push(`../cetak-transfer/${id}`);
-  }
+//   function cetak() {
+//     router.push(`../cetak-transfer/${id}`);
+//   }
 
   return (
-    <Layout>
-      <div variant="container">
+      <div className="container">
         <div class="text-md font-medium text-gray-900 mb-2">
           <h4> Transaksi </h4>
 
@@ -81,17 +80,16 @@ export default function bank_transfer({ data }) {
             <Col></Col>
           </Row>
         </div>
-        <div>
+        {/* <div>
           <Button variant="secondary mr-2">
             <ArrowBackIosIcon fontSize="medium" />
             Kembali
           </Button>
-          <Button variant="primary" onClick={cetak}>
-            <PrintIcon fontSize="medium" /> Cetak
+          <Button variant="primary">
+            <PrintIcon fontSize="medium" onClick={cetak}/> Cetak
           </Button>
-        </div>
+        </div> */}
       </div>
-    </Layout>
   );
 }
 

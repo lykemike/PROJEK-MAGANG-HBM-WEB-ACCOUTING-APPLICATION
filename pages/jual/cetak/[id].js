@@ -12,23 +12,11 @@ export default function salesInvoice({ header, detail, jurnal }) {
   const router = useRouter();
   const { id } = router.query;
 
-  function pembayaran() {
-    router.push(`../pembayaran-jual/${id}`);
-  }
-
-  function edit() {
-    router.push(`../${id}`);
-  }
-
-  function cetak() {
-    router.push(`../cetak/${id}`);
-  }
 
   const jurnal_penerimaan_pembayaran = jurnal.reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
-    <Layout>
-      <div>
+      <div className="container">
         <Row>
           <Col>
             <h5>Transaksi</h5>
@@ -45,7 +33,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Row>
             <Col sm="4">
               <Row>
-                <p className="font-medium ml-2">Pelanggan: </p>
+                <p className="font-medium">Pelanggan: </p>
                 <p className="ml-2">{i.kontak.nama}</p>
               </Row>
             </Col>
@@ -70,7 +58,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Row>
             <Col sm="4">
               <Row>
-                <p className="font-medium ml-2">Alamat Penagihan: </p>
+                <p className="font-medium">Alamat Penagihan: </p>
               </Row>
               <p className="ml-2">{i.alamat_supplier}</p>
             </Col>
@@ -168,8 +156,8 @@ export default function salesInvoice({ header, detail, jurnal }) {
         {header.map((i) => (
           <Row>
             <Col sm="4"></Col>
-            <Col sm="4"></Col>
-            <Col sm="4">
+            <Col sm="2"></Col>
+            <Col sm="6">
               <Row>
                 <Col>
                   <p className="font-medium d-flex justify-content-end">Subtotal</p>
@@ -199,9 +187,9 @@ export default function salesInvoice({ header, detail, jurnal }) {
               <Row className="float-left">
               </Row>
             </Col>
-            <Col>
+            {/* <Col>
               <Row>
-                <Button variant="primary" className="mr-6" onClick={cetak}>
+                <Button variant="primary" className="mr-6">
                   Cetak
                 </Button>
                 <Button variant="primary" onClick={pembayaran}>Terima Pembayaran</Button>
@@ -214,11 +202,10 @@ export default function salesInvoice({ header, detail, jurnal }) {
                 </Button>
                 <Button variant="success"  onClick={edit}>Ubah</Button>
               </Row>
-            </Col>
+            </Col> */}
           </Row>
         </div>
       </div>
-    </Layout>
   );
 }
 

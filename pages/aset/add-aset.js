@@ -42,6 +42,7 @@ export default function addaset({ data, data2, data3, data4 }) {
           akumulasi_akun_penyusutan: "",
           akumulasi_penyusutan: "",
           tgl_penyusutan: "",
+          boolean: false,
         }}
         onSubmit={async (values) => {
           console.log(values);

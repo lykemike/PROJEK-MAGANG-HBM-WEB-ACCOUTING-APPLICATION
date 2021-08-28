@@ -46,8 +46,10 @@ export default function listaset({data}) {
            
                 <Col>
                      <h4 class="mt-2 mb-3 float-right">
+                         <Link  href='/aset/list-aset'>
                         <Button variant='primary mr-2'><AddIcon fontSize="small"/>Simpan Aset</Button>
-                    </h4>
+                   </Link> 
+                   </h4>
                 </Col>
        </Row>
        </div>        
@@ -93,7 +95,7 @@ export default function listaset({data}) {
                             </th>
                         </tr>
                         </thead> 
-                    {data.map((i, index) => (    
+                    {data.filter((j) => j.boolean == false).map((i, index) => (    
                         <tr>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
                             <div class="text-lg text-gray-900">{i.tgl_akuisisi}</div>

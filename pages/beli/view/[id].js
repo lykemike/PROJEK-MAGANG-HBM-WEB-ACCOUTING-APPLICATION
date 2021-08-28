@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function salesInvoice({ header, detail, jurnal }) {
+export default function purchase_invoice({ header, detail, jurnal }) {
   const router = useRouter();
   const { id } = router.query;
 
@@ -17,6 +17,10 @@ export default function salesInvoice({ header, detail, jurnal }) {
   function edit() {
     router.push(`../${id}`);
   }
+  
+  function cetak() {
+    router.push(`../cetak/${id}`);
+  }
 
   const jurnal_pengiriman_pembayaran = jurnal.reduce((a, b) => (a = a + b.nominal), 0);
 
@@ -26,7 +30,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
         <Row>
           <Col>
             <h5>Transaksi</h5>
-            <h3 className=" text-blue-600">Sales Invoice #{id}</h3>
+            <h3 className=" text-blue-600">Purchase Invoice #{id}</h3>
           </Col>
           <Col>
             <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3>
@@ -39,7 +43,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Row>
             <Col sm="4">
               <Row>
-                <p className="font-medium">Pelanggan: </p>
+                <p className="font-medium ml-2">Supplier: </p>
                 <p className="ml-2">{i.kontak.nama}</p>
               </Row>
             </Col>
@@ -64,7 +68,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Row>
             <Col sm="4">
               <Row>
-                <p className="font-medium">Alamat Penagihan: </p>
+                <p className="font-medium ml-2" >Alamat Supplier: </p>
               </Row>
               <p className="ml-2">{i.alamat_supplier}</p>
             </Col>
@@ -87,7 +91,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
             <Col sm="4">
               <Row>
                 <p className="font-medium">No. Transaksi:</p>
-                <p className="ml-2">Sales Invoice #{i.no_transaksi}</p>
+                <p className="ml-2">Purchase Invoice #{i.no_transaksi}</p>
               </Row>
               <Row>
                 <p className="font-medium">Tag: </p>
@@ -240,7 +244,7 @@ export async function getServerSideProps(context) {
     },
   });
 
-  const jurnal_pengiriman_pembayaran = await prisma.jurnalPengirimanPembayaran.findMany({
+  const jurnal_pengiriman_pembayaran = await prisma.jurnalPengirimanBayaran.findMany({
     where: {
       header_pembelian_id: parseInt(id),
       tipe_saldo: "Debit",
@@ -251,7 +255,7 @@ export async function getServerSideProps(context) {
     props: {
       header: header,
       detail: detail,
-      jurnal: jurnal_penerimaan_pembayaran,
+      jurnal: jurnal_pengiriman_pembayaran,
     },
   };
 }

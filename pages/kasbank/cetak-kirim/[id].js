@@ -7,16 +7,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { useRouter } from "next/router";
 
-export default function view_kirim({ data, data2 }) {
+export default function bank_transfer({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
 
-  function cetak() {
-    router.push(`../cetak-kirim/${id}`);
-  }
-
   return (
-    <Layout>
       <div variant="container">
         <div class="text-md font-medium text-gray-900 mb-2">Transaksi</div>
         <h4 class="mt-2 mb-5">Kirim Uang #{id}</h4>
@@ -140,15 +135,14 @@ export default function view_kirim({ data, data2 }) {
           </Row>
         </div>
 
-        <Button variant="secondary mr-2">
+        {/* <Button variant="secondary mr-2">
           <ArrowBackIosIcon fontSize="medium" />
           Kembali
         </Button>
-        <Button variant="primary" onClick={cetak}>
-          <PrintIcon fontSize="medium"/> Cetak
-        </Button>
+        <Button variant="primary">
+          <PrintIcon fontSize="medium" /> Cetak
+        </Button> */}
       </div>
-    </Layout>
   );
 }
 

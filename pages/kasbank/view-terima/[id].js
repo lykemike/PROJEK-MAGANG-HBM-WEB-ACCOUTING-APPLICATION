@@ -11,6 +11,10 @@ export default function bank_deposit({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
 
+  function cetak() {
+    router.push(`../cetak-terima/${id}`);
+  }
+
   return (
     <Layout>
       <div variant="container">
@@ -117,7 +121,7 @@ export default function bank_deposit({ data, data2 }) {
 
             {data.map((i) => (
               <Col sm="2">
-                <h6>Rp. {i.hasil_pajak}</h6>
+                <h6>Rp. {i.pajak}</h6>
               </Col>
             ))}
           </Row>
@@ -146,8 +150,8 @@ export default function bank_deposit({ data, data2 }) {
             <ArrowBackIosIcon fontSize="medium" />
             Kembali
           </Button>
-          <Button variant="primary">
-            <PrintIcon fontSize="medium" /> Cetak
+          <Button variant="primary" onClick={cetak}>
+            <PrintIcon fontSize="medium"/> Cetak
           </Button>
         </div>
       </div>
