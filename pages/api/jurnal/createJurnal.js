@@ -74,7 +74,7 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json([{ message: "Create Jurnal success!", data: create_detail_jurnal }]);
+    res.status(201).json([{ message: "Create Jurnal success!", data: create_detail_jurnal, id: find_latest }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed to create jurnal!", error }]);
     console.log(error);

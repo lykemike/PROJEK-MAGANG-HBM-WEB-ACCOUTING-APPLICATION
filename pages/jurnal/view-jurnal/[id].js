@@ -10,6 +10,10 @@ export default function jurnalentry({data,data2}) {
 	const router = useRouter();
 	const { id } = router.query;
 
+	function edit() {
+		router.push(`../${id}`);
+	  }
+
 	return (
 		<Layout>
 			<h3>Transaksi</h3>
@@ -105,20 +109,14 @@ export default function jurnalentry({data,data2}) {
 				<Form.Group as={Row} controlId="formPlaintext">
 					<Col sm="3">
 						<div class="px-0 py-3">
-							<button type="button" class="focus:outline-none text-white text-sm py-2 px-4 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg">
-								Hapus
+							<button type="button" class="focus:outline-none text-white text-sm py-2 px-4 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg" onClick={edit}>
+								Edit
 							</button>
 						</div>
 					</Col>
 					<Col sm="3"></Col>
 					<Col sm="3"></Col>
 					<Col sm="3">
-						<div class="">
-							<Button onclick="" variant="danger mr-2">
-								<CloseIcon fontSize="small" /> Batal
-							</Button>
-							<Button variant="success">Submit</Button>
-						</div>
 					</Col>
 				</Form.Group>
 			</Form>

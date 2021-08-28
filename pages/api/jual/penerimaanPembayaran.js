@@ -45,12 +45,12 @@ export default async (req, res) => {
 
     const find_default_piutang = await prisma.settingDefault.findFirst({
       where: {
-        id: 4
+        id: 4,
       },
       include: {
-        akun: true
-      }
-    })
+        akun: true,
+      },
+    });
 
     const jurnal_penerimaan_pembayaran = await prisma.jurnalPenerimaanPembayaran.createMany({
       data: [

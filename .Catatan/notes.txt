@@ -325,8 +325,8 @@ Aset
 - Jurnal Penyimpanan Aset Baru Database = 100%
 - Jurnal Peyimpana Aset Baru API = 100% (SISA TESTING)
 - Jurnal Pelepasan Aset Database = 100%
-- Jurnal Pelepasan Aset Api = 100% (SISA TESTING)
-- Jurnal Invoice Untung Rugi Aset Database = 100%
+- Jurnal Pelepasan Aset Api = 90% 
+- Jurnal Invoice Untung Rugi Aset Database = 90%
 - Jurnal Invoice Untung Rugi API = 20%
 
 Kas Bank
@@ -334,6 +334,11 @@ Kas Bank
 - Jurnal Terima Uang API = 100% 
 - Jurnal Kirim Uang Database = 100% (SISA TESTING)
 - Jurnal Kirim Uang API = 100% (SISA TESTING)
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar dari opsional = 100%
 
 Jurnal
 - Ketika isi debit/kredit sebelahnya gabisa diisi dan nilainya otomatis 0 = 100%
@@ -345,15 +350,157 @@ New Updates
 - Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
 - Buat Jurnal Termasuk Pajak Page Penjualan = 100%
 - Buat Jurnal Termasuk Pajak Page Pembelian = 100%
-- Buat Jurnal Termasuk Pajak Page Biaya = 75%
-- Buat Jurnal Termasuk Pajak Page Kirim Uang = 90%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 20%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
+
+🗓️ Tanggal: 20 August 2021, Jumat
+Meeting progress dan perubahan berbrp page
+Aset
+- Buat Aset Baru Depresiasi dan Non-Depresiasi = 100%
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Pelepasan Aset Database = 100%
+- Buat Pelepasan Aset = 50%
+- API Jurnal Pelepasan Aset = 50%
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar Nanti opsional checkbox = 100%
+- Pengiriman Pembayaran Jurnal = 20%
+
+🗓️ Tanggal: 21 August 2021, Senin
+Aset
+- Buat Aset Baru Depresiasi dan Non-Depresiasi = 100%
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Pelepasan Aset Database = 100%
+- Buat Pelepasan Aset = 50%
+- API Jurnal Pelepasan Aset = 50%
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar Nanti opsional checkbox = 100%
+- Pengiriman Pembayaran Jurnal = 20%
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 20%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
+
+New Updates dari MEETING 
+- Akun Uang Muka dan Akun Pemotongan isi atau gadisi, tetap harus pilih akunnya
+    Jadi nanti di setting ada: Pendapatan penjualan, diskon penjualan, piutang blm di tagih, pajak penjualan = 100%
+Harga termasuk pajak, jurnalnya kaya gimana = 100%
+(TIDAK JADI) No. Transaksi lebih ke kode, misalnya buat pembelian BL-5D14F blkgnya huruf dan angka random dengan length 5 = 100%
+Invoice pelepasan aset = 100%
+
+New Updates from MEETING 2
+- Edit di hilangkan dari invoice transfer, kirim, terima = 100%
+
+New Updates dari MEETING 18/8/2021
+- Status awal pas buat terima, kirim, transfer, itu blm terkonsiliasi
+    2 status sudah terkonsiliasi ama blm = 100%
+- Kalo pilih jual/beli di produk, nnti di penjualan pembelian munculin sesuai yg di pilih = 100%
+- Di akun penjualan produk di hapus kategori aktiva tetap = 100%
+- Di invoice pembelian lupa tambahin tombol ubah = 100%
+- Invoice pembelian dan penjualan diskon nampilin hasil yg salah = 100%
+- Invoice pembelian dan penjualan bagian sudah di bayar + jumlah yg sudah dibayar = 100%
+- Jurnal di pembelian di bagian pengerimaan pembayaran, setelah bayar datanya blm masuk ke database jurnal pengerimaan pembayaran = 100%
+
+New Updates2 dari MEETING 20/8/2021
+- Meeting
+- Ada Perubahan di bagian edit penjualan = 100%
+    Ada perubahan di Invoice penjualan = 100%
+- Ada Perubahan di bagian edit pembelian = 100%
+    Ada perubahan di Invoice pembelian = 100%
+- Ada Perubahan di bagian edit Jurnal =  50%
+- Ada Perubahan di bagian edit Biaya = 50%
 
 
-===================================
-- Buat struktur api dan database jurnal pembelian, biaya = 30%
-- Buat struktur database bayar skrg dan bayar nanti buat page biaya = 30%
-- Buat api bayar skrg dan bayar nanti buat page biaya = 30%
+🗓️ Tanggal: 26 August 2021, Rabu
+Aset
+- Buat Aset Baru Depresiasi dan Non-Depresiasi = 100%
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Pelepasan Aset Database = 100%
+- Buat Pelepasan Aset = 50%
+- API Jurnal Pelepasan Aset = 50%
 
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar Nanti opsional checkbox = 100%
+- Pengiriman Pembayaran Jurnal = 100% 
+- Edit Biaya = 50%
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 20%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
+
+New Updates2 dari MEETING 20/8/2021
+- Meeting
+- Ada Perubahan di bagian edit penjualan = 100%
+    Ada perubahan di Invoice penjualan = 100%
+- Ada Perubahan di bagian edit pembelian = 100%
+    Ada perubahan di Invoice pembelian = 100%
+- Ada Perubahan di bagian edit Jurnal =  50%
+- Ada Perubahan di bagian edit Biaya = 50%
+
+Daftar Akun 
+- Saldo Awal = 40%
+
+Setting
+- Setting Default Perushaan = 100%
+- Update Setting Perushaan = 100%
+
+- Cetak invoice = 100%
+
+🗓️ Tanggal: 27 August 2021, Jumat
+Aset
+- Buat Aset Baru Depresiasi dan Non-Depresiasi = 100%
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Pelepasan Aset Database = 100%
+- Buat Pelepasan Aset = 100% (SUDAH TESTING)
+- API Jurnal Pelepasan Aset = 100% (SUDAH TESTING)
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar Nanti opsional checkbox = 100%
+- Pengiriman Pembayaran Jurnal = 100% 
+- Edit Biaya = 100% (SISA TESTING)
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 100 (SISA TESTING)
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
+
+New Updates2 dari MEETING 20/8/2021
+- Meeting
+- Ada Perubahan di bagian edit penjualan = 100%
+    Ada perubahan di Invoice penjualan = 100%
+- Ada Perubahan di bagian edit pembelian = 100%
+    Ada perubahan di Invoice pembelian = 100%
+- Ada Perubahan di bagian edit Jurnal =  50%
+- Ada Perubahan di bagian edit Biaya = 100% (sisa testing)
+
+Daftar Akun 
+- Saldo Awal = 40%
+
+Setting
+- Setting Default Perushaan = 100%
+- Update Setting Perushaan = 100%
+- Cetak invoice = 100%
 
 ----------------
 || ON PROCESS ||
@@ -366,7 +513,7 @@ Syarat pembayaran masih error: misalnya 10 hari dari bulan juli tanggal 29 jadi
   - tanggal 9 augustus, error di konversi seharusnya jadi 09 augustus => 09/08/2021
 Ganti semua select option jadi select2, dimana kita bisa searching
 Harga berkurang/reset ketika kita remove data dari produk
-Cara masukin data ke jurnal
+(DONE) Cara masukin data ke jurnal
 Cara ketika buat penjualan jumlah update sesuai kuantitas produk di kategori produk
 Cetak Invoice
 Ketika buat pembayaran jumlah pembayaran di cocokan dengan sisa tagihan
@@ -374,25 +521,19 @@ Ketika buat pembayaran jumlah pembayaran di cocokan dengan sisa tagihan
   - Ketika udah bayar separuh status: Partial
   - Ketika lewat jatuh tempo status: Jatuh Tempo
 
-HARGA TERMASUK PAJAK Pembelian, Penjualan, Biaya, Kirim Uang -> subtotal - pajak
-
-
-
 == Produk page ==
 (DONE) Update Produk API 
-Checkbox enable/disable di jual/beli produk
+(DONE) Checkbox enable/disable di jual/beli produk
 (DONE) Ketika buat produk baru, jumlah kategorinya nambah/update (jumlah + 1): misalnya buat produk jasa service database
   - Kategori jasa bakal nambah 0 + 1
   - Kategori produk bertambah ketika buat produk
 
-(PROCESS) Harga termasuk pajak ikut setting pas buat produk
-(PROCESS) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
+(DONE) Harga termasuk pajak ikut setting pas buat produk
+(DONE) Kalau di produk tidak ada setting pajak, bisa pilih di penjualan/ ikutin setting default
 (DONE) Request untuk hapus option pajak dari produk ui, api
 
-
-
 == Jurnal ==
-- Kalau isi debit atau kredit sebelahnya auto 0 dan di disable
+(DONE) Kalau isi debit atau kredit sebelahnya auto 0 dan di disable
 
 == Kas Bank ==
 (DONE) Terima Uang -> Jurnal (Pajak ambil dari Pajak Penjualan)
@@ -406,7 +547,7 @@ Checkbox enable/disable di jual/beli produk
     Baya Dari                   KREDIT
 
 == Biaya ==
-- Biaya -> Jurnal (Pajak ambil dari Pajak Pembelian)
+(DONE) Biaya -> Jurnal (Pajak ambil dari Pajak Pembelian)
     Akun Biaya    DEBIT			            KATEGORI (16, 17)
     Pajak         DEBIT			
     Pemotongan    DEBIT			            KATEGORI (13)
@@ -423,8 +564,8 @@ Tambah kalkulasi ketika ganti produk otomatis kehitung
 -------------
 || UPDATES ||
 -------------
-Batas Minimum dihapus.
-(DONE?) Quantity field di produk: opsional
+(DONE) Batas Minimum dihapus.
+(DONE) Quantity field di produk: opsional
 Pembelian tambah quantity
 Penjualan kurang quantity
 (DONE) Penjualan kontak pelanggan
@@ -495,17 +636,9 @@ kuantitas   pajak   harga_satuan  rate     jumlah(USD) 		          jumlah (idr)
 pajak * jumlah (usd) * rate pajak  = hasil_pajak_dlm_idr_hasil_konversi
 0.10  * 1,33         * 14500       = IDR 1.928,50
 
-PERTANYAAN MEETING
-(DONE) Akun Uang Muka dan Akun Pemotongan isi atau gadisi, tetap harus pilih akunnya
-    Jadi nanti di setting ada: Pendapatan penjualan, diskon penjualan, piutang blm di tagih, pajak penjualan
-(DONE) Harga termasuk pajak, jurnalnya kaya gimana
-(TIDAK JADI) No. Transaksi lebih ke kode, misalnya buat pembelian JL-5D14F blkgnya huruf dan angka random dengan length 5
-(DONE) Invoice pelepasan aset
-
 PERTANYAAN MEETING TEKNIKAL 8/14/2021
 (DONE) Masih error ketika blm pilih pajak, tdk semua data masuk ke detail
 (DONE) ketika isi debit/kredit sebelahnya disable
 - cara import data dan query ke database  
+- nampilin setting yg kepake dan update
 - Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
-
-

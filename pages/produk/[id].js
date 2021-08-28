@@ -49,7 +49,7 @@ export default function updateProduk({ data, data2, data3, data4, data5 }) {
       <Formik
         initialValues={{
           id: id,
-            file_upload: [],
+          file_upload: [],
           nama: "",
           kode_sku: "",
           kategori_produk: "",

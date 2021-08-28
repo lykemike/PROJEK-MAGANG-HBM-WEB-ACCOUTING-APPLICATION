@@ -11,6 +11,7 @@ export default async (req, res) => {
       no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
+      status: "Belum terekonsiliasi",
     };
 
     const create_transfer_uang = await prisma.transferUang.createMany({
@@ -38,12 +39,12 @@ export default async (req, res) => {
 
     const update_no_transaksi = await prisma.transferUang.update({
       where: {
-        id: find_latest.id
+        id: find_latest.id,
       },
       data: {
-        no_transaksi: find_latest.id
-      }
-    })
+        no_transaksi: find_latest.id,
+      },
+    });
 
     const jurnal_transfer_uang = await prisma.jurnalTransferUang.createMany({
       data: [
@@ -62,12 +63,11 @@ export default async (req, res) => {
       ],
     });
 
-    res
-      .status(201)
-      .json(
-        { message: "Create Transfer dan Jurnal Uang Success!", data: create_transfer_uang },
-        { message: "Create Transfer dan Jurnal Uang Success!", data: jurnal_transfer_uang }
-      );
+    res.status(201).json({
+      message: "Create Transfer dan Jurnal Uang Success!",
+      data: create_transfer_uang,
+      id: find_latest,
+    });
   } catch (error) {
     res.status(400).json({ data: "Failed to create transfer uang!", error });
     console.log(error);
