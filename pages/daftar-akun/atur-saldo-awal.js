@@ -7,7 +7,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function AturSaldoAwal({ data }) {
-  console.log(data)
+  console.log(data);
   return (
     <Layout>
       <Formik
