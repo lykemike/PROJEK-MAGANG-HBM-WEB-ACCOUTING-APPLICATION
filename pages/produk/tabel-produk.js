@@ -206,10 +206,10 @@ export default function tabelProduk({ data }) {
                         <div className='text-sm text-gray-900'>{produk.satuan.satuan}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan}</div>
+                        <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan.toLocaleString({ minimumFractionDigits: 0 })}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>Rp. {produk.harga_jual_satuan}</div>
+                        <div className='text-sm text-gray-900'>Rp. {produk.harga_jual_satuan.toLocaleString({ minimumFractionDigits: 0 })}</div>
                       </td>
                       <td className='px-2 py-2 whitespace-nowrap'>
                         <div className='text-sm text-gray-900'>

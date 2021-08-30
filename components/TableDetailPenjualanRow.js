@@ -22,9 +22,9 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
           </p>
         </td>
       </tr>
-      <tr>
+      {/* <tr>
         <td class={`py-2 text-sm text-gray-500 text-uppercase font-bold ${open ? "block" : "hidden"}`}>Detail #{index + 1}</td>
-      </tr>
+      </tr> */}
       <tr class='ml-4'>
         <td colSpan='3' class={open ? "block" : "hidden"}>
           <table class='w-full'>
@@ -45,8 +45,8 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
               {detail.map((i) => (
                 <tr>
                   <td class='px-2 py-2'>{i.nama_akun}</td>
-                  <td class='px-2 py-2'>Rp. {i.tipe_saldo === "Debit" ? i.nominal : 0}</td>
-                  <td class='px-2 py-2'>Rp. {i.tipe_saldo === "Kredit" ? i.nominal : 0}</td>
+                  <td class='px-2 py-2'>Rp. {i.tipe_saldo === "Debit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</td>
+                  <td class='px-2 py-2'>Rp. {i.tipe_saldo === "Kredit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</td>
                 </tr>
               ))}
             </tbody>

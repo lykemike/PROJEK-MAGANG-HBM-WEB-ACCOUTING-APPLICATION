@@ -13,6 +13,7 @@ export default function laporanjurnalumum({ header, header2, header3 }) {
   const onClick = () => {
     // Axios.get()
   };
+  console.log(header2);
 
   return (
     <Layout>

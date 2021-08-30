@@ -16,6 +16,9 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import Layout from "../../components/layout";
 
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
 const useRowStyles = makeStyles({
   root: {
     "& > *": {
@@ -129,4 +132,45 @@ export default function CollapsibleTable() {
       </TableContainer>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  const header = await prisma.headerJurnal.findMany({
+    orderBy: {
+      id: "asc",
+    },
+    include: {
+      DetailJurnal: {
+        include: {
+          akun: true,
+        },
+      },
+    },
+  });
+
+  const getPenjualan = await prisma.headerPenjualan.findMany({
+    orderBy: {
+      id: "asc",
+    },
+    include: {
+      JurnalPenjualan: true,
+    },
+  });
+
+  const getPembelian = await prisma.headerPembelian.findMany({
+    orderBy: {
+      id: "asc",
+    },
+    include: {
+      JurnalPembelian: true,
+    },
+  });
+
+  return {
+    props: {
+      header: header,
+      header2: getPenjualan,
+      header3: getPembelian,
+    },
+  };
 }
