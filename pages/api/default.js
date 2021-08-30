@@ -1879,28 +1879,32 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json(
-      // { message: "Create Admin Role Success!", data: createRole },
-      // { message: "Create User Admin Success!", data: createUser },
-      // { message: "Create Menu Success!", data: createMenu },
-      // { message: "Create Role Privellege Success!", data: createRolePrivellege },
-      // { message: "Create Kategori Kontak Success!", data: createKategoriKontak },
-      // { message: "Create Kategori Akun Success!", data: createKategoriAkun },
-      // { message: "Create Tipe Akun Success!", data: createTipeAkun },
-      // { message: "Create Daftar Akun Success!", data: createDaftarAkun },
-      // { message: "Create Daftar Akun Success!", data: createSatuanProduk },
-      { message: "Create Default Setting Success!", data: createSettings }
-    );
+    const settingPerusahaan = await prisma.settingPerusahaan.createMany({
+      data: [
+        {
+          logo: "-",
+          tampilkan_logo: false,
+          nama_perushaan: "-",
+          alamat: "-",
+          alamat_pengiriman: "-",
+          telepon: "-",
+          fax: "-",
+          npwp: "-",
+          website: "-",
+          email: "-",
+          nama_bank: "-",
+          cabang_bank: "-",
+          alamat_bank: "-",
+          nomor_rekening: "-",
+          atas_nama: "-",
+          swift_code: "-",
+        },
+      ],
+    });
+
+    res.status(201).json({ message: "Create Default API Success!", data: settingPerusahaan });
   } catch (error) {
-    res
-      .status(400)
-      .json(
-        { roleType: "Create Admin Role Failed!", error },
-        { firstName: "Create User Admin Failed!", error },
-        { menu_name: "Create Menu Failed!", error },
-        { role_id: "Create Privellege Failed!", error },
-        { nama: "Create Kategori Kontak Failed!", error }
-      );
+    res.status(400).json({ roleType: "Create Admin Role Failed!", error });
     console.log(error);
   }
 };

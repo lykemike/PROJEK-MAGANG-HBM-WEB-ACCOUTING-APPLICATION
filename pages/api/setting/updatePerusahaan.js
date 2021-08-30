@@ -38,45 +38,38 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      no_transaksi: parseInt(req.body.no_transaksi),
-      tgl_transaksi: req.body.tgl_transaksi,
-      total_debit: parseInt(req.body.total_debit),
-      total_kredit: parseInt(req.body.total_kredit),
-      lampiran: req.file.filename,
+      logo: req.bodyParser.filename,
+      tampilkan_logo: req.body.boolean,
+      nama_perushaan: req.body.nama_perushaaan,
+      alamat: req.body.alamat,
+      alamat_pengiriman: req.body.alamat_pengiriman,
+      telepon: req.body.telepon,
+      fax: req.body.fax,
+      npwp: req.body.npwp,
+      website: req.body.website,
+      email: req.body.email,
+      nama_bank: req.body.nama_bank,
+      cabang_bank: req.body.cabang_bank,
+      alamat_bank: req.body.alamat_bank,
+      nomor_rekening: req.body.nomor_rekening,
+      atas_nama: req.body.atas_nama,
+      swift_code: req.body.swift_code,
     };
-
-    const create_header_jurnal = await prisma.headerJurnal.createMany({
-      data: [frontend_data],
-      skipDuplicates: true,
-    });
-
-    const find_latest = await prisma.headerJurnal.findFirst({
-      orderBy: {
-        id: "desc",
+    const settingPerusahaan = await prisma.settingPerusahaan.update({
+      where: {
+        id: 1,
       },
+      data: frontend_data,
     });
 
-    let detail = [];
-    req.body.detail_jurnal &&
-      JSON.parse(req.body.detail_jurnal).map((i) => {
-        detail.push({
-          header_jurnal_id: find_latest.id,
-          akun_id: parseInt(i.akun_id),
-          deskripsi: i.deskripsi,
-          tag: i.tag,
-          debit: parseInt(i.debit),
-          kredit: parseInt(i.kredit),
-        });
-      });
-
-    const create_detail_jurnal = await prisma.detailJurnal.createMany({
-      data: detail,
-      skipDuplicates: true,
-    });
-
-    res.status(201).json([{ message: "Create Jurnal success!", data: create_detail_jurnal, id: find_latest }]);
+    res.status(201).json([
+      {
+        message: "Create Detail Penjualan Success!",
+        data: settingPerusahaan,
+      },
+    ]);
   } catch (error) {
-    res.status(400).json([{ data: "Failed to create jurnal!", error }]);
+    res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);
   }
 };

@@ -369,6 +369,20 @@ Biaya
 - Bayar Nanti opsional checkbox = 100%
 - Pengiriman Pembayaran Jurnal = 20%
 
+🗓️ Tanggal: 21 August 2021, Senin
+Aset
+- Buat Aset Baru Depresiasi dan Non-Depresiasi = 100%
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Pelepasan Aset Database = 100%
+- Buat Pelepasan Aset = 50%
+- API Jurnal Pelepasan Aset = 50%
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar Nanti opsional checkbox = 100%
+- Pengiriman Pembayaran Jurnal = 20%
+
 New Updates
 - Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
 - Buat Jurnal Termasuk Pajak Page Penjualan = 100%
@@ -384,9 +398,8 @@ Harga termasuk pajak, jurnalnya kaya gimana = 100%
 (TIDAK JADI) No. Transaksi lebih ke kode, misalnya buat pembelian BL-5D14F blkgnya huruf dan angka random dengan length 5 = 100%
 Invoice pelepasan aset = 100%
 
-
-
-
+New Updates from MEETING 2
+- Edit di hilangkan dari invoice transfer, kirim, terima = 100%
 
 New Updates dari MEETING 18/8/2021
 - Status awal pas buat terima, kirim, transfer, itu blm terkonsiliasi
@@ -404,11 +417,90 @@ New Updates2 dari MEETING 20/8/2021
     Ada perubahan di Invoice penjualan = 100%
 - Ada Perubahan di bagian edit pembelian = 100%
     Ada perubahan di Invoice pembelian = 100%
-- Ada Perubahan di bagian edit Transfer Uang = 
-- Ada Perubahan di bagian edit Terima Uang = 
-- Ada Perubahan di bagian edit Kirim Uang = 
-- Ada Perubahan di bagian edit Jurnal = 
-- Ada Perubahan di bagian edit Biaya = 
+- Ada Perubahan di bagian edit Jurnal =  50%
+- Ada Perubahan di bagian edit Biaya = 50%
+
+
+🗓️ Tanggal: 26 August 2021, Rabu
+Aset
+- Buat Aset Baru Depresiasi dan Non-Depresiasi = 100%
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Pelepasan Aset Database = 100%
+- Buat Pelepasan Aset = 50%
+- API Jurnal Pelepasan Aset = 50%
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar Nanti opsional checkbox = 100%
+- Pengiriman Pembayaran Jurnal = 100% 
+- Edit Biaya = 50%
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 20%
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
+
+New Updates2 dari MEETING 20/8/2021
+- Meeting
+- Ada Perubahan di bagian edit penjualan = 100%
+    Ada perubahan di Invoice penjualan = 100%
+- Ada Perubahan di bagian edit pembelian = 100%
+    Ada perubahan di Invoice pembelian = 100%
+- Ada Perubahan di bagian edit Jurnal =  50%
+- Ada Perubahan di bagian edit Biaya = 50%
+
+Daftar Akun 
+- Saldo Awal = 40%
+
+Setting
+- Setting Default Perushaan = 100%
+- Update Setting Perushaan = 100%
+
+- Cetak invoice = 100%
+
+🗓️ Tanggal: 27 August 2021, Jumat
+Aset
+- Buat Aset Baru Depresiasi dan Non-Depresiasi = 100%
+- Jurnal Penyimpanan Aset Baru Database = 100%
+- Jurnal Pelepasan Aset Database = 100%
+- Buat Pelepasan Aset = 100% (SUDAH TESTING)
+- API Jurnal Pelepasan Aset = 100% (SUDAH TESTING)
+
+Biaya
+- Database Header Detail Biaya = 100%
+- Database Jurnal Biaya =  100%
+- Bayar Nanti opsional checkbox = 100%
+- Pengiriman Pembayaran Jurnal = 100% 
+- Edit Biaya = 100% (SISA TESTING)
+
+New Updates
+- Buat Jurnal Harga Termasuk Pajak Page Terima Uang = 100%
+- Buat Jurnal Termasuk Pajak Page Penjualan = 100%
+- Buat Jurnal Termasuk Pajak Page Pembelian = 100%
+- Buat Jurnal Termasuk Pajak Page Biaya = 100%
+- Buat Jurnal Pengiriman Pembayaran = 100 (SISA TESTING)
+- Buat Jurnal Termasuk Pajak Page Kirim Uang = 100%
+
+New Updates2 dari MEETING 20/8/2021
+- Meeting
+- Ada Perubahan di bagian edit penjualan = 100%
+    Ada perubahan di Invoice penjualan = 100%
+- Ada Perubahan di bagian edit pembelian = 100%
+    Ada perubahan di Invoice pembelian = 100%
+- Ada Perubahan di bagian edit Jurnal =  50%
+- Ada Perubahan di bagian edit Biaya = 100% (sisa testing)
+
+Daftar Akun 
+- Saldo Awal = 40%
+
+Setting
+- Setting Default Perushaan = 100%
+- Update Setting Perushaan = 100%
+- Cetak invoice = 100%
 
 ----------------
 || ON PROCESS ||

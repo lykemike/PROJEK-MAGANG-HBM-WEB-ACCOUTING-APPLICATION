@@ -15,7 +15,7 @@ import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6, header, produk }) {
-  const url = "http://localhost:3000/api/jual/updatepenjualan"
+  const url = "http://localhost:3000/api/jual/updatepenjualan";
   const router = useRouter();
   const { id } = router.query;
   const formik = useRef(null);
@@ -66,19 +66,19 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
           console.log(values);
-            Axios.post(url, formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+          Axios.post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+            .then(function (response) {
+              console.log(response);
+              // router.push(`view/${id}`);
             })
-              .then(function (response) {
-                console.log(response);
-                // router.push(`view/${id}`);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }}
+            .catch(function (error) {
+              console.log(error);
+            });
+        }}
       >
         {(props) => (
           <Forms noValidate>
@@ -333,12 +333,14 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                     }
                                   }}
                                 >
-                                  <option value='kosong'>pilih produk</option>
-                                  {data3.filter(nama_produk => nama_produk.harga_jual_satuan > 0).map((nama_produk) => (
-                                    <option key={nama_produk.id} value={nama_produk.id}>
-                                      {nama_produk.nama}
-                                    </option>
-                                  ))}
+                                  <option value="kosong">pilih produk</option>
+                                  {data3
+                                    .filter((nama_produk) => nama_produk.harga_jual_satuan > 0)
+                                    .map((nama_produk) => (
+                                      <option key={nama_produk.id} value={nama_produk.id}>
+                                        {nama_produk.nama}
+                                      </option>
+                                    ))}
                                 </Form.Control>
                               </Col>
                               <Col sm="1">
@@ -1239,9 +1241,9 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   Batal
                 </button>
               </Link>
-                <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
-                  Buat Penjualan
-                </button>
+              <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
+                Buat Penjualan
+              </button>
             </div>
           </Forms>
         )}
