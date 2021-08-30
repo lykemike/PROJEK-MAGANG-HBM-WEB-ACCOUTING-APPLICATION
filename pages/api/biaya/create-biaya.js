@@ -212,7 +212,7 @@ export default async (req, res) => {
       data: data_biaya,
     });
 
-    res.status(201).json([{ message: "Create biaya success!", data: create_jurnal_biaya }]);
+    res.status(201).json([{ message: "Create biaya success!", data: create_jurnal_biaya, id: find_latest }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed to create detail biaya!", error }]);
     console.log(error);

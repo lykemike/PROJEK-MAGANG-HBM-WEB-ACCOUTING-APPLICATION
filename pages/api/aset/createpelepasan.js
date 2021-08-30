@@ -22,6 +22,15 @@ export default async (req, res) => {
       },
     });
 
+    const updateaset = await prisma.Aset.update({
+      where: {
+        id: parseInt(req.body.id),
+      },
+      data: {
+        terjual: true,
+      },
+    });
+
     const find_akun_deposit_ke = await prisma.akun.findFirst({
       where: {
         id: parseInt(req.body.deposit_id),

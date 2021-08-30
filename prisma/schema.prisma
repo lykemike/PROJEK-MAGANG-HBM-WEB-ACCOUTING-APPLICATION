@@ -703,7 +703,7 @@ model Aset {
   akumulasi_akun_penyusutan_id Int
   akumulasi_penyusutan         Int
   tgl_penyusutan               String
-
+  terjual                      Boolean
   JurnalAset JurnalAset[]
 }
 
@@ -715,6 +715,7 @@ model PelepasanAset {
   deposit_id    Int
   memo          String
   tag           String
+  
 
   JurnalPelepasanAset JurnalPelepasanAset[]
 }

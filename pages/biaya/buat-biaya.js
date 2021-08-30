@@ -6,10 +6,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import Link from "next/Link";
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
+import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
+  const router = useRouter();
   const url = "http://localhost:3000/api/biaya/create-biaya";
 
   return (
@@ -64,8 +66,8 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
             },
           })
             .then(function (response) {
-              console.log(response);
-              // router.push(`view/${idInvoice}`);
+              // console.log(response)
+              router.push(`view/${response.data[0].id.id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -144,7 +146,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                     <option value="kosong">Pilih</option>
                     {data3.map((kontak) => (
                       <option key={kontak.id} value={kontak.id}>
-                        {kontak.nama}
+                        {kontak.nama_panggilan}
                       </option>
                     ))}
                   </Form.Control>
