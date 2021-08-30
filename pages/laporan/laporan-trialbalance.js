@@ -15,29 +15,29 @@ const laporantrialbalance = () => {
                  <Row>
                 <Col sm='3'>
                 <Form.Label>
-                                    Tanggal Mulai
-                                </Form.Label>
-                                <InputGroup className="mb-3">
-                                        <FormControl
+                Tanggal Mulai
+            </Form.Label>
+            <InputGroup className="mb-3">
+                    <FormControl
 
-                                        placeholder="Pick date"
-                                        type='date'
-                                        aria-label="date"
-                                        />
-                                    </InputGroup>
+                    placeholder="Pick date"
+                    type='date'
+                    aria-label="date"
+                    />
+                </InputGroup>
               
                 </Col>
 				<Col sm="3">
                 <Form.Label>
-                                    Tanggal Selesai
-                                </Form.Label>
-                                <InputGroup className="mb-3">
-                                        <FormControl
-                                        placeholder="Pick date"
-                                        type='date'
-                                        aria-label="date"
-                                        />
-                                    </InputGroup>
+                Tanggal Selesai
+            </Form.Label>
+            <InputGroup className="mb-3">
+                    <FormControl
+                    placeholder="Pick date"
+                    type='date'
+                    aria-label="date"
+                    />
+                </InputGroup>
               
                 </Col>
 
@@ -62,108 +62,58 @@ const laporantrialbalance = () => {
                  <thead>
                      <tr>
                        <th colspan="3">Daftar Akun</th>
-                       <th colspan="3" classnName="text-center">Saldo Awal</th>
-                       <th colspan="3" classnName="text-center">Penyesuaian Saldo</th>
-                       <th colspan="3" classnName="text-center">Saldo Akhir</th>
+                       <th colspan="3" className="text-left ml-3">Saldo Awal</th>
+                       <th colspan="3" className="text-left">Penyesuaian Saldo</th>
+                       <th colspan="3" className="text-left">Saldo Akhir</th>
                      </tr>
                  </thead>
 
                  <tbody>
                      <tr>
-                            <td></td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Debit</td> 
-                            <td>Kredit</td> 
-                            <td></td>
-                            <td>Debit</td> 
-                            <td>Kredit</td> 
-                            <td></td>
-                            <td>Debit</td> 
-                            <td>Kredit</td> 
-                            <td></td>
-
+                            <th colspan="3"></th>
+                            <td colspan="1">Debit</td> 
+                            <td colspan="2">Kredit</td> 
+                            <td colspan="1">Debit</td> 
+                            <td colspan="2">Kredit</td> 
+                            <td colspan="1">Debit</td> 
+                            <td colspan="2">Kredit</td> 
                      </tr>
                 </tbody>
 
                 <tbody>
                      <tr>
                          <td colspan="12">
-                            <div class="text-md font-medium text-gray-900">Kategori Akun</div>
+                            <div class="text-md font-medium text-gray-900">Aset</div>
                          </td>
                      </tr>
-
                      <tr>
-                            <td>1-003</td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td>Rp, 0.00</td> 
-                            <td></td>
-                            <td></td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td></td> 
-                            <td></td>
+                            <th colspan="3">Nomor Akun</th>
+                            <td colspan="1">Rp. 0,00</td> 
+                            <td colspan="2">Rp. 0,00</td> 
+                            <td colspan="1">Rp. 0,00</td> 
+                            <td colspan="2">Rp. 0,00</td> 
+                            <td colspan="1">Rp. 0,00</td> 
+                            <td colspan="2">Rp. 0,00</td> 
                      </tr>
-
-                     <tr>
-                            <td>1-003</td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td>Rp, 0.00</td> 
-                            <td></td>
-                            <td></td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td></td> 
-                            <td></td>
-
-                     </tr>
-
                  </tbody>
 
                  <tbody>
                      <tr>
                          <td colspan="12">
-                            <div class="text-md font-medium text-gray-900">Kategori Akun</div>
+                            <div class="text-md font-medium text-gray-900">Kewajiban</div>
                          </td>
                      </tr>
-
                      <tr>
-                            <td>1-003</td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td>Rp, 0.00</td> 
-                            <td></td>
-                            <td></td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td></td> 
-                            <td></td>
+                            <th colspan="3">Nomor Akun</th>
+                            <td colspan="1">Rp. 0,00</td> 
+                            <td colspan="2">Rp. 0,00</td> 
+                            <td colspan="1">Rp. 0,00</td> 
+                            <td colspan="2">Rp. 0,00</td> 
+                            <td colspan="1">Rp. 0,00</td> 
+                            <td colspan="2">Rp. 0,00</td> 
                      </tr>
-
-                     <tr>
-                            <td>1-003</td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td>Rp, 0.00</td> 
-                            <td></td>
-                            <td></td> 
-                            <td></td> 
-                            <td></td>
-                            <td>Rp, 0.00</td> 
-                            <td></td> 
-                            <td></td>
-                     </tr>
-
-                     <tr>
+                
+                    <tr>
                          <td colspan="12"></td>
                     </tr>
 
@@ -183,20 +133,7 @@ const laporantrialbalance = () => {
                             <td>XXX</td> 
                             <td></td>
                      </tr>
-
-
                  </tbody>
-
-
-
-
-
-
-
-
-
-
-
              </Table>
          </div>
      </Layout>
