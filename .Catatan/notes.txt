@@ -529,9 +529,8 @@ Setting
 - Perbaikan Database dan API Kirim Uang = 100% 
 - Perbaikan Database dan API Biaya = 20% 
 - Perbaikan Database dan API Aset = 20%
-- Atur Saldo Awal = 30%
+- Atur Saldo Awal = 35%
 - Edit Biaya = 100% 
-
 
 ----------------
 || ON PROCESS ||

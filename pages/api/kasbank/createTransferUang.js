@@ -19,18 +19,6 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_akun_setor = await prisma.akun.findFirst({
-      where: {
-        id: parseInt(req.body.akun_setor),
-      },
-    });
-
-    const find_akun_transfer = await prisma.akun.findFirst({
-      where: {
-        id: parseInt(req.body.akun_transfer),
-      },
-    });
-
     const find_latest = await prisma.transferUang.findFirst({
       orderBy: {
         id: "desc",
@@ -50,13 +38,13 @@ export default async (req, res) => {
       data: [
         {
           transfer_uang_id: find_latest.id,
-          nama_transfer_akun: find_akun_setor.nama_akun,
+          akun_id: parseInt(req.body.akun_setor),
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Debit",
         },
         {
           transfer_uang_id: find_latest.id,
-          nama_transfer_akun: find_akun_transfer.nama_akun,
+          akun_id: parseInt(req.body.akun_transfer),
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Kredit",
         },
