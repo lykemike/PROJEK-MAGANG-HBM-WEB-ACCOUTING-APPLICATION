@@ -123,7 +123,7 @@ export default async (req, res) => {
             pajak_persen: 0,
             hasil_pajak: 0,
             jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_jual: setting_pajak_penjualan[0].akun.nama_akun,
+            pajak_jual_id: setting_pajak_penjualan[0].akun.id,
           });
         } else {
           detail.push({
@@ -141,11 +141,10 @@ export default async (req, res) => {
             pajak_persen: parseInt(i.pajak_persen),
             hasil_pajak: parseInt(i.hasil_pajak),
             jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_jual: i.pajak_nama_akun_jual,
+            pajak_jual_id: parseInt(i.pajak_jual_id),
           });
         }
       });
-
 
     const create_detail_penjualan = await prisma.detailPenjualan.createMany({
       data: detail,
@@ -163,7 +162,7 @@ export default async (req, res) => {
       } else {
         list_pajak.push({
           header_penjualan_id: find_latest.id,
-          akun_id: i.pajak_id,
+          akun_id: parseInt(i.pajak_jual_id),
           nominal: parseInt(i.hasil_pajak),
           tipe_saldo: "Kredit",
         });
@@ -183,13 +182,10 @@ export default async (req, res) => {
     });
 
     const pembayaran_di_muka = parseInt(req.body.uang_muka) >= 0 ? akunUangMuka[0].id : akunUangMuka[0].id;
-    const piutang_blm_ditagih =
-      parseInt(req.body.sisa_tagihan) >= 0 ? setting_piutang_blm_ditagih[0].akun_id : setting_piutang_blm_ditagih[0].akun_id;
-    const nilai_diskon_penjualan =
-      parseInt(total_diskon) >= 0 ? setting_diskon_penjualan[0].akun_id : setting_diskon_penjualan[0].akun_id;
+    const piutang_blm_ditagih = parseInt(req.body.sisa_tagihan) >= 0 ? setting_piutang_blm_ditagih[0].akun_id : setting_piutang_blm_ditagih[0].akun_id;
+    const nilai_diskon_penjualan = parseInt(total_diskon) >= 0 ? setting_diskon_penjualan[0].akun_id : setting_diskon_penjualan[0].akun_id;
     const pemotongan = parseInt(req.body.pemotongan) >= 0 ? akunPemotongan[0].id : akunPemotongan[0].id;
-    const pendapatan_penjualan =
-      parseInt(req.body.subtotal) >= 0 ? setting_pendapatan_penjualan[0].akun_id : setting_pendapatan_penjualan[0].akun_id;
+    const pendapatan_penjualan = parseInt(req.body.subtotal) >= 0 ? setting_pendapatan_penjualan[0].akun_id : setting_pendapatan_penjualan[0].akun_id;
 
     const create_jurnal_penjualan = await prisma.jurnalPenjualan.createMany({
       data: [
@@ -230,10 +226,7 @@ export default async (req, res) => {
       data: list_pajak,
     });
 
-    res.status(201).json([
-         { message: "Create Penerimaan Pembayaran Success!", data: list_pajak, id: find_latest },
-      
-    ]);
+    res.status(201).json([{ message: "Create Penerimaan Pembayaran Success!", data: list_pajak, id: find_latest }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

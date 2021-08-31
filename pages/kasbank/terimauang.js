@@ -52,11 +52,11 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
               deskripsi: "",
               pajak_id: "",
               pajak_nama: "",
-              pajak_nama_akun_jual: "",
+              pajak_jual_id: "",
               pajak_persen: "",
               hasil_pajak: 0,
               jumlah: "",
-              jumlah2: ""
+              jumlah2: "",
             },
           ],
         }}
@@ -249,7 +249,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       if (props.values.boolean == false) {
                                         props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
                                         props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
-                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_jual_id`, hasil2[0].kategori1.id);
 
                                         let jumlah = props.values.detail_terima_uang[index].jumlah;
                                         props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
@@ -263,8 +263,8 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                         props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                         props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak
-                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+                                        let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak;
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah2 = jumlah2));
 
                                         let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
@@ -272,7 +272,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                       } else {
                                         props.setFieldValue(`detail_terima_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
                                         props.setFieldValue(`detail_terima_uang.${index}.pajak_nama`, hasil2[0].nama);
-                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_nama_akun_jual`, hasil2[0].kategori1.nama_akun);
+                                        props.setFieldValue(`detail_terima_uang.${index}.pajak_jual_id`, hasil2[0].kategori1.id);
 
                                         let jumlah = props.values.detail_terima_uang[index].jumlah;
                                         props.setFieldValue((props.values.detail_terima_uang[index].jumlah = jumlah));
@@ -284,8 +284,8 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                         props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                         props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak
-                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+                                        let jumlah2 = props.values.detail_terima_uang[index].jumlah - pajak;
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah2 = jumlah2));
 
                                         let harga_termasuk_pajak = jumlah_total - pajak_total;
                                         props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
@@ -325,8 +325,8 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                         props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                         props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak
-                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+                                        let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak;
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah2 = jumlah2));
 
                                         let total = jumlah_total + pajak_total;
                                         props.setFieldValue((props.values.total = total));
@@ -342,8 +342,8 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                         props.setFieldValue((props.values.hasil_pajak = pajak_total));
                                         props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak
-                                        props.setFieldValue(props.values.detail_terima_uang[index].jumlah2 = jumlah2)
+                                        let jumlah2 = jumlah - props.values.detail_terima_uang[index].hasil_pajak;
+                                        props.setFieldValue((props.values.detail_terima_uang[index].jumlah2 = jumlah2));
 
                                         let harga_termasuk_pajak = jumlah_total - pajak_total;
                                         props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
@@ -357,11 +357,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                                 </td>
 
                                 <td>
-                                  <Button
-                                    variant='primary'
-                                    onClick={() => remove(index)}
-                                    onChange={(e) => {
-                                    }}>
+                                  <Button variant='primary' onClick={() => remove(index)} onChange={(e) => {}}>
                                     Remove
                                   </Button>
                                 </td>
@@ -377,6 +373,7 @@ export default function terima_uang({ data, data2, data3, data4, data5 }) {
                               deskripsi: "",
                               pajak_id: "",
                               pajak_nama: "",
+                              pajak_jual_id: "",
                               pajak_persen: "",
                               hasil_pajak: "",
                               jumlah: "",
