@@ -14,48 +14,40 @@ export default function templateemailpenjualan() {
                 </Col>
                 <Divider orientation="vertical" flexItem />
                 <Col sm="8">
-                    <h2>Template Email Penjualan</h2>
-                    <Row className="mb-2">
-                        <Col sm="2">
-                            <br/>
-                        Subject
-                        </Col>
-                        <Col sm="10">
-                        <div className="card">
-                            <div className="card-body">
-                            Faktur Penjualan #[NomorTransaksi]
-                            </div>
-                        </div>
-                        </Col>
-                    </Row>
-                    <Row className="mb-2">
-                        <Col sm="2">
-                            <br/>
-                        Pesan
-                        </Col>
-                        <Col sm="10">
-                        <div className="card">
-                            <div className="card-body">
-                            Yth. [NamaCustomer], <br/>
-                            Terima kasih atas bisnis Anda. <br/><br/>
-                            Berikut adalah Faktur #[NomorTransaksi] sebesar [SisaTagihan]. <br/> <br/>
-                            Terimakasih atas kerjasamanya. <br/>
-                            [NamaPerusahaan]        
-                            </div>
-                        </div>
-                        </Col>
-                    </Row>
-                    <Row className="mb-2">
-                        <Col sm="2">
-                            <br/>
-                        Variable
-                        </Col>
-                        <Col sm="10">
-                        [NamaCustomer] [PerusahaanCustomer] [NomorTransaksi] [TanggalTransaksi] [TanggalJatuhTempo] [NamaPerusahaan] [EmailPerusahaan] 
-                        [SisaTagihan] [TanggalHariIni]
+                    <h3>Template Email Penjualan</h3>
 
-                        </Col>
-                    </Row>
+                    <Row className="mb-2 mt-6">
+                                <Col sm="3">
+                                Subject
+                                </Col>
+                                <Col sm="6">
+                                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                                        <Form.Control as="textarea" rows={3} name="subject"  />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row className="mb-2 mt-6">
+                                <Col sm="3">
+                                Pesan
+                                </Col>
+                                <Col sm="6">
+                                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                                        <Form.Control as="textarea" rows={3} name="pesan"  />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row className="mb-2 mt-6">
+                                <Col sm="3">
+                                Variable
+                                </Col>
+                                <Col sm="6">
+                                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                                        <Form.Control as="textarea" rows={3} name="variable"  />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
                 </Col>
             </Row>
             <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-center items-center gap-3">  

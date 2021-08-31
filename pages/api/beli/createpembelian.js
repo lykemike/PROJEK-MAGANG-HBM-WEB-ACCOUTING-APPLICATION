@@ -223,7 +223,7 @@ export default async (req, res) => {
       {
         message: "Create Detail Pembelian Success!",
         data: add_jurnal_pembelian, 
-        id: findlatest
+          id: find_latest
       },
     ]);
   } catch (error) {

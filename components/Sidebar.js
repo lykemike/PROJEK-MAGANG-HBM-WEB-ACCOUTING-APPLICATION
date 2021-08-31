@@ -14,6 +14,7 @@ import PaymentIcon from "@material-ui/icons/Payment";
 import SettingsIcon from "@material-ui/icons/Settings";
 import FaceIcon from "@material-ui/icons/Face";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import BusinessIcon from '@material-ui/icons/Business';
 
 const Sidebar = () => {
   const [previlleges, setPrevilleges] = useState([]);
@@ -41,6 +42,12 @@ const Sidebar = () => {
       menu: "Role",
       href: "/role/tabel-role",
       icon: <SupervisorAccountIcon />,
+    },
+    {
+      id: 4,
+      menu: "Aset",
+      href: "/aset/list-aset",
+      icon: <BusinessIcon />,
     },
     {
       id: 5,

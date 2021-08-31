@@ -1,8 +1,6 @@
 import React from "react";
 import Layout from "../../../components/Layout";
-
 import { Row, Col, Button } from "react-bootstrap";
-import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
@@ -12,22 +10,21 @@ export default function salesInvoice({ header, detail, jurnal }) {
   const router = useRouter();
   const { id } = router.query;
 
-  function pembayaran() {
-    router.push(`../pembayaran-jual/${id}`);
-  }
+//   function pembayaran() {
+//     router.push(`../pembayaran/${id}`);
+//   }
 
-  function edit() {
-    router.push(`../${id}`);
-  }
+//   function edit() {
+//     router.push(`../${id}`);
+//   }
+  
+//   function cetak() {
+//     router.push(`../cetak/${id}`);
+//   }
 
-  function cetak() {
-    router.push(`../cetak/${id}`);
-  }
-
-  const jurnal_penerimaan_pembayaran = jurnal.reduce((a, b) => (a = a + b.nominal), 0);
+  const jurnal_pengiriman_pembayaran = jurnal.reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
-    <Layout>
       <div>
         <Row>
           <Col>
@@ -45,7 +42,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Row>
             <Col sm="4">
               <Row>
-                <p className="font-medium ml-2">Pelanggan: </p>
+                <p className="font-medium">Pelanggan: </p>
                 <p className="ml-2">{i.kontak.nama}</p>
               </Row>
             </Col>
@@ -70,7 +67,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Row>
             <Col sm="4">
               <Row>
-                <p className="font-medium ml-2">Alamat Penagihan: </p>
+                <p className="font-medium">Alamat Penagihan: </p>
               </Row>
               <p className="ml-2">{i.alamat_supplier}</p>
             </Col>
@@ -184,7 +181,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
                   <p className="ml-2">Rp. {(i.total_diskon + i.total_diskon_per_baris).toLocaleString({ minimumFractionDigits: 0 })}</p>
                   <p className="ml-2">Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
                   <p className="ml-2">Rp. {i.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                  <p className="ml-2">Rp. {(i.uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}</p>
+                  <p className="ml-2">Rp. {(i.uang_muka + jurnal_pengiriman_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}</p>
                   <h3 className="ml-2 mt-12">Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
                 </Col>
               </Row>
@@ -197,14 +194,15 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Row>
             <Col>
               <Row className="float-left">
+                <Button variant="secondary">Hapus</Button>
               </Row>
             </Col>
-            <Col>
+            {/* <Col>
               <Row>
-                <Button variant="primary" className="mr-6" onClick={cetak}>
+                <Button variant="primary" className="mr-6">
                   Cetak
                 </Button>
-                <Button variant="primary" onClick={pembayaran}>Terima Pembayaran</Button>
+                <Button variant="primary">Terima Pembayaran</Button>
               </Row>
             </Col>
             <Col>
@@ -212,20 +210,19 @@ export default function salesInvoice({ header, detail, jurnal }) {
                 <Button variant="danger" className="mr-6">
                   Kembali
                 </Button>
-                <Button variant="success"  onClick={edit}>Ubah</Button>
+                <Button variant="success">Ubah</Button>
               </Row>
-            </Col>
+            </Col> */}
           </Row>
         </div>
       </div>
-    </Layout>
   );
 }
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerPenjualan.findMany({
+  const header = await prisma.headerPembelian.findMany({
     where: {
       id: parseInt(id),
     },
@@ -234,20 +231,20 @@ export async function getServerSideProps(context) {
     },
   });
 
-  const detail = await prisma.detailPenjualan.findMany({
+  const detail = await prisma.detailPembelian.findMany({
     where: {
-      header_penjualan_id: parseInt(id),
+      header_pembelian_id: parseInt(id),
     },
     include: {
-      header_penjualan: true,
+      header_pembelian: true,
       produk: true,
       pajak: true,
     },
   });
 
-  const jurnal_penerimaan_pembayaran = await prisma.jurnalPenerimaanPembayaran.findMany({
+  const jurnal_pengiriman_pembayaran = await prisma.jurnalPengirimanPembayaran.findMany({
     where: {
-      header_penjualan_id: parseInt(id),
+      header_pembelian_id: parseInt(id),
       tipe_saldo: "Debit",
     },
   });
