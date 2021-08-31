@@ -1,40 +1,72 @@
 import React from "react";
 import { PrismaClient } from "@prisma/client";
+import Layout from "../../components/Layout";
+import Table from "@material-ui/core/Table";
+import TableContainer from "@material-ui/core/TableContainer";
+import Paper from "@material-ui/core/Paper";
+
+import Test from "../../components/Test";
+import Test2 from "../../components/Test2";
 const prisma = new PrismaClient();
 
-export default function laporanbukubesar({ header}) {
-
-  console.log(header)
+export default function laporanbukubesar({ header, header2 }) {
   return (
-    <div>
-    </div>
+    <Layout>
+      <TableContainer component={Paper}>
+        <Table aria-label='collapsible table'>
+          {header.map((data, index) => (
+            <Test data={data} key={index} />
+          ))}
+          {header2.map((data, index) => (
+            <Test2 key={index} data={data} index={index} />
+          ))}
+        </Table>
+      </TableContainer>
+    </Layout>
   );
 }
 
 export async function getServerSideProps() {
-  const header = await prisma.akun.findMany({
+  const header = await prisma.headerJurnal.findMany({
     orderBy: {
-      kategoriId: "asc",
+      id: "asc",
+    },
+    include: {
+      DetailJurnal: {
+        include: {
+          akun: true,
+        },
+      },
+    },
+  });
+
+  const getPenjualan = await prisma.headerPenjualan.findMany({
+    orderBy: {
+      id: "asc",
     },
     include: {
       JurnalPenjualan: {
         include: {
-          header_penjualan: true
-        }
+          akun: true,
+        },
       },
-      DetailJurnal: {
-        include: {
-          header_jurnal: true
-        }
-      },
-    }
+    },
   });
 
+  // const getPembelian = await prisma.headerPembelian.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalPembelian: true,
+  //   },
+  // });
 
   return {
     props: {
       header: header,
-
+      header2: getPenjualan,
+      // header3: getPembelian,
     },
   };
 }
