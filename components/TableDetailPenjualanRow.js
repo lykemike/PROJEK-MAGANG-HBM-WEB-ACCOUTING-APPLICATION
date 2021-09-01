@@ -9,11 +9,13 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
     if (tipe == "pembelian") {
       return data.JurnalPembelian;
     } else {
-      return data.JurnalPenjualan;
+      return data.JurnalPenjualan
     }
   }, [tipe]);
 
+
   console.log(data)
+
   return (
     <>
       <tr>

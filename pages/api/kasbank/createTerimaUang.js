@@ -48,12 +48,12 @@ export default async (req, res) => {
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.hasil_pajak),
       total: parseInt(req.body.total),
-      status: "Belum terekonsiliasi"
+      status: "Belum terekonsiliasi",
     };
 
     const bool = {
-      boolean: req.body.boolean
-    }
+      boolean: req.body.boolean,
+    };
 
     const create_terima_uang = await prisma.headerTerimaUang.createMany({
       data: [frontend_data],
@@ -77,10 +77,10 @@ export default async (req, res) => {
           pajak_id: parseInt(i.pajak_id),
           pajak_nama: i.pajak_nama,
           pajak_persen: i.pajak_persen,
-          pajak_nama_akun_jual: i.pajak_nama_akun_jual,
+          pajak_jual_id: parseInt(i.pajak_jual_id),
           hasil_pajak: parseInt(i.hasil_pajak),
           jumlah: parseInt(i.jumlah),
-          jumlah2: parseInt(i.jumlah2)
+          jumlah2: parseInt(i.jumlah2),
         });
       });
 
@@ -89,64 +89,55 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_nama_akun = await prisma.akun.findFirst({
-      where: {
-        id: parseInt(req.body.akun_setor_id)
-      }
-    })
-
     const akun_setor = {
       header_terima_uang_id: find_latest.id,
-      nama_akun: find_nama_akun.nama_akun,
+      akun_id: parseInt(req.body.akun_setor_id),
       nominal: parseInt(req.body.total),
       tipe_saldo: "Debit",
-    }
+    };
 
     let akun_terima = [];
     detail.map((i) => {
-      if(bool.boolean == "true"){
+      if (bool.boolean == "true") {
         akun_terima.push({
-        header_terima_uang_id: find_latest.id,
-          nama_akun: i.nama_akun,
+          header_terima_uang_id: find_latest.id,
+          akun_id: parseInt(i.akun_id),
           nominal: parseInt(i.jumlah2),
           tipe_saldo: "Kredit",
-      })
+        });
       } else {
         akun_terima.push({
-        header_terima_uang_id: find_latest.id,
-          nama_akun: i.nama_akun,
+          header_terima_uang_id: find_latest.id,
+          akun_id: parseInt(i.akun_id),
           nominal: parseInt(i.jumlah),
           tipe_saldo: "Kredit",
-      })
+        });
       }
-      
-    })
+    });
 
     let list_pajak = [];
     detail.map((i) => {
-        list_pajak.push({
-          header_terima_uang_id: find_latest.id,
-          nama_akun: i.pajak_nama_akun_jual,
-          nominal: parseInt(i.hasil_pajak),
-          tipe_saldo: "Kredit",
-        });
+      list_pajak.push({
+        header_terima_uang_id: find_latest.id,
+        akun_id: parseInt(i.pajak_jual_id),
+        nominal: parseInt(i.hasil_pajak),
+        tipe_saldo: "Kredit",
+      });
     });
 
     const create_akun_setor = await prisma.jurnalTerimaUang.createMany({
-      data: akun_setor
-    })
+      data: akun_setor,
+    });
 
     const create_akun_terima = await prisma.jurnalTerimaUang.createMany({
-      data: akun_terima
-    })
+      data: akun_terima,
+    });
 
     const create_list_pajak = await prisma.jurnalTerimaUang.createMany({
-      data: list_pajak
-    })
-
-    res.status(201).json({ message: "Create Header, Detail, Jurnal Terima Uang Sucess!", 
-      akun_terima, bool, detail
+      data: list_pajak,
     });
+
+    res.status(201).json({ message: "Create Header, Detail, Jurnal Terima Uang Sucess!", akun_terima, bool, detail });
   } catch (error) {
     res.status(400).json({ data: "Failed Header, Detail, Jurnal Terima Uang!", error });
     console.log(error);

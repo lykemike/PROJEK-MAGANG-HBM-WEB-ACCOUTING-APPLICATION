@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -16,13 +16,19 @@ import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-export default function CollapsibleTable({ data, index }) {
+export default function Test2({ data, index, label = "Sales Invoice", tipe = "penjualan" }) {
   const [open, setOpen] = useState(false);
   const onClick = () => {
     setOpen(!open);
   };
+  const detail = useMemo(() => {
+    if (tipe == "pembelian") {
+      return data.JurnalPembelian;
+    } else {
+      return data.JurnalPenjualan;
+    }
+  }, [tipe]);
 
-  console.log(data);
   return (
     <>
       <TableBody>
@@ -34,7 +40,7 @@ export default function CollapsibleTable({ data, index }) {
           </TableCell>
           <TableCell component='th' scope='row'>
             <p className='text-blue-700'>
-              Journal Entry #{data.id} || created on {data.tgl_transaksi}
+              {label} #{data.id} || created on {data.tgl_transaksi}
             </p>
           </TableCell>
         </TableRow>
@@ -57,21 +63,33 @@ export default function CollapsibleTable({ data, index }) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.DetailJurnal.map((i) => (
+                    {detail.map((i) => (
                       <TableRow>
                         <TableCell component='th' scope='row'>
                           {i.akun.kode_akun} - {i.akun.nama_akun}
                         </TableCell>
-                        <TableCell align='right'>Rp. {i.debit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                        <TableCell align='right'>Rp. {i.kredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                        <TableCell align='right'>Rp. {i.tipe_saldo === "Debit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</TableCell>
+                        <TableCell align='right'>Rp. {i.tipe_saldo === "Kredit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                   <TableFooter>
                     <TableRow>
                       <TableCell align='right'>Total</TableCell>
-                      <TableCell align='right'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                      <TableCell align='right'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell align='right'>
+                        Rp.{" "}
+                        {detail
+                          .filter((i) => i.tipe_saldo === "Debit")
+                          .reduce((a, b) => (a = a + b.nominal), 0)
+                          .toLocaleString({ minimumFractionDigits: 0 })}
+                      </TableCell>
+                      <TableCell align='right'>
+                        Rp.{" "}
+                        {detail
+                          .filter((i) => i.tipe_saldo === "Kredit")
+                          .reduce((a, b) => (a = a + b.nominal), 0)
+                          .toLocaleString({ minimumFractionDigits: 0 })}
+                      </TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>

@@ -5,7 +5,7 @@ export default function TableDetailRow({ data, index }) {
   const onClick = () => {
     setOpen(!open);
   };
-
+  console.log(data);
   return (
     <>
       <tr>

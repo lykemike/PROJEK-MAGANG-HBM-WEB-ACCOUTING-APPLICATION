@@ -502,6 +502,36 @@ Setting
 - Update Setting Perushaan = 100%
 - Cetak invoice = 100%
 
+🗓️ Tanggal: 30 August 2021, Senin
+- Tampilkan semua data Jurnal Umum = 60%
+- Tampilkan semua data Buku Besar = 60%
+- Perbaikan Database dan API Penjualan, PenerimaanPembayaran = 100%
+    Edit API Penjualan = 90%
+- Perbaikan Database dan API Pembelian, PengirimanBayaran = 100%
+    Edit API Pembelian = 90%
+- Perbaikan Database dan API Terima Uang = 20%
+- Perbaikan Database dan API Transfer Uang = 20%
+- Perbaikan Database dan API Kirim Uang = 20%
+- Perbaikan Database dan API Biaya = 20% 
+- Perbaikan Database dan API Aset = 20%
+- Atur Saldo Awal = 30%
+- Edit Biaya = 100% (Sisa Testing)
+
+🗓️ Tanggal: 31 August 2021, Selasa
+- Tampilkan semua data Jurnal Umum (Baru ketampil Jurnal, Penjualan) = 60%
+- Tampilkan semua data Buku Besar (Baru ketampil Jurnal, Penjualan) = 60%
+- Perbaikan Database dan API Penjualan, PenerimaanPembayaran = 100% (ID PAJAK JUAL SALAH MASUK)
+    Edit API Penjualan = 100%
+- Perbaikan Database dan API Pembelian, PengirimanBayaran = 95% (ID PAJAK BELI SALAH MASUK)
+    Edit API Pembelian = 90%
+- Perbaikan Database dan API Terima Uang = 100%
+- Perbaikan Database dan API Transfer Uang = 100% 
+- Perbaikan Database dan API Kirim Uang = 100% 
+- Perbaikan Database dan API Biaya = 20% 
+- Perbaikan Database dan API Aset = 20%
+- Atur Saldo Awal = 35%
+- Edit Biaya = 100% 
+
 ----------------
 || ON PROCESS ||
 ----------------
