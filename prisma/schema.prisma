@@ -120,6 +120,9 @@ model Akun {
   Aset4 Aset[] @relation("AkumulasiAkunPenyusutan")
 
   PelepasanAset PelepasanAset[]
+
+  JurnalPembelian JurnalPembelian[]
+  JurnalPengirimanBayaran JurnalPengirimanBayaran[]
 }
 
 // Kategori Kontak
@@ -408,7 +411,8 @@ model JurnalPembelian {
   id                  Int             @id @default(autoincrement())
   header_pembelian    HeaderPembelian @relation(fields: [header_pembelian_id], references: [id])
   header_pembelian_id Int
-  nama_akun           String
+  akun                 Akun@relation(fields: [akun_id], references: [id])
+  akun_id             Int
   tipe_saldo          String
   nominal             Int
 }
@@ -433,7 +437,8 @@ model JurnalPengirimanBayaran {
   id                   Int             @id @default(autoincrement())
   header_pembelian     HeaderPembelian @relation(fields: [header_pembelian_id], references: [id])
   header_pembelian_id  Int
-  nama_penerimaan_akun String
+  akun                 Akun @relation(fields: [akun_id], references: [id])
+  akun_id             Int
   nominal              Int
   tipe_saldo           String
 }
