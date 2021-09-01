@@ -77,31 +77,21 @@ export default async (req, res) => {
           pajak_id: parseInt(i.pajak_id),
           pajak_nama: i.pajak_nama,
           pajak_persen: i.pajak_persen,
-          pajak_nama_akun_beli: i.pajak_nama_akun_beli,
+          pajak_beli_id: parseInt(i.pajak_beli_id),
           hasil_pajak: parseInt(i.hasil_pajak),
           jumlah: parseInt(i.jumlah),
           jumlah2: parseInt(i.jumlah2),
         });
       });
 
-    const bool = {
-      boolean: req.body.boolean,
-    };
-
     const create_detail_kirim_uang = await prisma.detailKirimUang.createMany({
       data: detail,
       skipDuplicates: true,
     });
 
-    const find_nama_akun = await prisma.akun.findFirst({
-      where: {
-        id: parseInt(req.body.akun_bayar_id),
-      },
-    });
-
     const akun_bayar = {
       header_kirim_uang_id: find_latest.id,
-      nama_akun: find_nama_akun.nama_akun,
+      akun_id: parseInt(req.body.akun_bayar_id),
       nominal: parseInt(req.body.total),
       tipe_saldo: "Kredit",
     };
@@ -111,14 +101,14 @@ export default async (req, res) => {
       if (bool.boolean == "true") {
         akun_pembayaran.push({
           header_kirim_uang_id: find_latest.id,
-          nama_akun: i.nama_akun,
+          akun_id: parseInt(i.akun_id),
           nominal: parseInt(i.jumlah2),
           tipe_saldo: "Debit",
         });
       } else {
         akun_pembayaran.push({
           header_kirim_uang_id: find_latest.id,
-          nama_akun: i.nama_akun,
+          akun_id: parseInt(i.akun_id),
           nominal: parseInt(i.jumlah),
           tipe_saldo: "Debit",
         });
@@ -129,7 +119,7 @@ export default async (req, res) => {
     detail.map((i) => {
       list_pajak.push({
         header_kirim_uang_id: find_latest.id,
-        nama_akun: i.pajak_nama_akun_beli,
+        akun_id: parseInt(i.pajak_beli_id),
         nominal: parseInt(i.hasil_pajak),
         tipe_saldo: "Debit",
       });
@@ -147,7 +137,7 @@ export default async (req, res) => {
       data: akun_bayar,
     });
 
-    res.status(201).json({ message: "Create Kirim Uang Success!", create_kirim_uang, create_detail_kirim_uang, create_akun_bayar, create_akun_pembayaran, create_list_pajak });
+    res.status(201).json({ message: "Create Kirim Uang Success!", id: find_latest, create_akun_bayar, create_list_pajak, create_akun_pembayaran });
   } catch (error) {
     res.status(400).json({ data: "Failed to create kirim uang!", error });
     console.log(error);

@@ -8,6 +8,9 @@ import { Formik, Form as Forms } from "formik";
 const prisma = new PrismaClient();
 
 export default function penjualan({ data }) {
+
+  const total_tagihan = data.reduce((a, b) => (a = a + b.sisa_tagihan), 0);
+
   return (
     <Layout>
       <Formik>
@@ -34,13 +37,14 @@ export default function penjualan({ data }) {
                 </Col>
               </Row>
             </Container>
-            <div className='border-t border-gray-200'>
-              <Form>
+
+            <div className="mt-4">
+              {/* <Form>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Form.Label column sm='4'>
                     Penjualan Belum Dibayar(dalam IDR)
                     <br />
-                    Rp.0,00
+                    Rp. {total_tagihan}
                   </Form.Label>
                   <Form.Label column sm='4'>
                     Penjualan Jatuh Tempo(dalam IDR)
@@ -48,8 +52,32 @@ export default function penjualan({ data }) {
                     Rp.0,00
                   </Form.Label>
                 </Form.Group>
-              </Form>
-            </div>
+              </Form> */}
+         <Row sm='12'>
+          <Col sm='4'>
+            <hr className='bg-black ' />
+            <p className='font-medium'>Penjualan Belum Dibayar</p>
+            <hr className='bg-black' />
+            <p style={{ fontSize: 25 }}>
+              Rp. {total_tagihan}
+            </p>
+            <hr className='bg-black' />
+          </Col>
+          <Col sm='4'>
+            <hr className='bg-black' />
+            <p className='font-medium'>Penjualan Jatuh Tempo</p>
+            <hr className='bg-black' />
+            <p style={{ fontSize: 25 }} class='text-gray-500'>
+              Rp.
+            </p>
+            <hr className='bg-black' />
+          </Col>
+        </Row>
+        </div>
+
+        
+
+
             <div className='border-t border-gray-200'>
               <Row sm='12' className='mt-2 mb-2'>
                 <Col sm='8'>

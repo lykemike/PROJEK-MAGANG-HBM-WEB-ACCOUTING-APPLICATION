@@ -49,13 +49,13 @@ export default async (req, res) => {
       data: [
         {
           header_aset_id: find_latest.id,
-          nama_akun: find_akun_penyusutan.nama_akun,
+          akun_id: parseInt(find_akun_penyusutan.id),
           nominal: parseInt(req.body.akumulasi_penyusutan),
           tipe_saldo: "Debit",
         },
         {
           header_aset_id: find_latest.id,
-          nama_akun: find_akumulasi_akun_penyusutan_id.nama_akun,
+          akun_id: parseInt(find_akumulasi_akun_penyusutan_id.id),
           nominal: parseInt(req.body.akumulasi_penyusutan),
           tipe_saldo: "Kredit",
         },

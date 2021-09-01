@@ -8,6 +8,9 @@ import { Formik, Form as Forms } from "formik";
 const prisma = new PrismaClient();
 
 export default function pembelian({ data }) {
+
+  const total_tagihan = data.reduce((a, b) => (a = a + b.sisa_tagihan), 0);
+
   return (
     <Layout>
       <Formik>
@@ -34,13 +37,13 @@ export default function pembelian({ data }) {
                 </Col>
               </Row>
             </Container>
-            <div className='border-t border-gray-200'>
-              <Form>
+            <div className="mt-4">
+              {/* <Form>
                 <Form.Group as={Row} controlId='formPlaintext'>
                   <Form.Label column sm='4'>
                     Penjualan Belum Dibayar(dalam IDR)
                     <br />
-                    Rp.0,00
+                    Rp. {total_tagihan}
                   </Form.Label>
                   <Form.Label column sm='4'>
                     Penjualan Jatuh Tempo(dalam IDR)
@@ -48,8 +51,28 @@ export default function pembelian({ data }) {
                     Rp.0,00
                   </Form.Label>
                 </Form.Group>
-              </Form>
-            </div>
+              </Form> */}
+         <Row sm='12'>
+          <Col sm='4'>
+            <hr className='bg-black ' />
+            <p className='font-medium'>Penjualan Belum Dibayar</p>
+            <hr className='bg-black' />
+            <p style={{ fontSize: 25 }}>
+              Rp. {total_tagihan}
+            </p>
+            <hr className='bg-black' />
+          </Col>
+          <Col sm='4'>
+            <hr className='bg-black' />
+            <p className='font-medium'>Penjualan Jatuh Tempo</p>
+            <hr className='bg-black' />
+            <p style={{ fontSize: 25 }} class='text-gray-500'>
+              Rp.
+            </p>
+            <hr className='bg-black' />
+          </Col>
+        </Row>
+        </div>
             <div className='border-t border-gray-200'>
               <Container>
                 <Row>
@@ -124,8 +147,12 @@ export default function pembelian({ data }) {
                     <td class='px-2 py-2 whitespace-nowrap font-large'>
                       <div class='text-lg text-gray-900'>{i.tag}</div>
                     </td>
-                    <td class='px-2 py-2 whitespace-nowrap font-large'>
-                      <div class='text-lg text-gray-900'>aktif</div>
+                   <td class='px-2 py-2 whitespace-nowrap font-large'>                 
+                      {i.status == "Complete" ? 
+                      <span class='bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs'>{i.status}</span> :   
+                      <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{i.status}</span>}
+                      
+                      {/* <div class='text-lg text-gray-900'>{i.sisa_tagihan == 0 ? "Selasai" : "Aktif"}</div> */}
                     </td>
                     <td class='px-2 py-2 whitespace-nowrap font-large'>
                       <div class='text-lg text-gray-900'>Rp.{i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</div>

@@ -149,139 +149,9 @@ export default function Pengeluaran({ data }) {
             </tr>
           </thead>
           <tbody class='bg-white divide-y divide-gray-200'>
-            <tr>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>08/8/99</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>5</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>-</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>-</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>
-                  <span class='bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs'>-</span>
-                </div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp.-</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp.-</div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>3/25/2021</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>001</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Hutang</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Jennie Kim</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>
-                  <span class='bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs'>Pending</span>
-                </div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 3,500,000</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 10,000,000</div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>3/25/2021</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>002</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Hutang</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Lisa Manoban</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>
-                  <span class='bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs'>Scheduled</span>
-                </div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 5,678,833</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 5,678,833</div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>3/25/2021</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>003</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Hutang</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Roseanne Park</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>
-                  <span class='bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs'>Completed</span>
-                </div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 0,00</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 18,339,212</div>
-              </td>
-            </tr>
-
-            <tr>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>3/25/2021</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>004</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>-</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Jisoo</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>
-                  <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>Active</span>
-                </div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 0,00</div>
-              </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. 0,00</div>
-              </td>
-            </tr>
-
             {data.slice(firstIndex, lastIndex).map((biaya) => (
-              <tr>
-                <Link key={biaya.id} href={`${biaya.id}`}>
+              <tr key={biaya.id}>
+                <Link key={biaya.id} href={`/biaya/view/${biaya.id}`}>
                   <a>
                     <td class='px-2 py-2 whitespace-nowrap'>
                       <div class='text-sm text-gray-900'>{biaya.tgl_transaksi}</div>
@@ -303,10 +173,10 @@ export default function Pengeluaran({ data }) {
                   </div>
                 </td>
                 <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>Rp. 0,00</div>
+                  <div class='text-sm text-gray-900'>Rp. {biaya.pemotongan_total.toLocaleString({ minimumFractionDigits: 0 })}</div>
                 </td>
                 <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm font-bold text-gray-900'>Rp. {biaya.total.toLocaleString({ minimumFractionDigits: 0 })}</div>
+                  <div class='text-sm text-gray-900'>Rp. {biaya.total.toLocaleString({ minimumFractionDigits: 0 })}</div>
                 </td>
               </tr>
             ))}

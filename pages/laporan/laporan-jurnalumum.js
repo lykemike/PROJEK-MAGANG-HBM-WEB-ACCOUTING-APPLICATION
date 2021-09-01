@@ -7,12 +7,13 @@ import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup,
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function laporanjurnalumum({ header, header2, header3 }) {
+export default function laporanjurnalumum({ header, header2}) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
   const onClick = () => {
     // Axios.get()
   };
+  console.log(header2);
 
   return (
     <Layout>
@@ -69,9 +70,9 @@ export default function laporanjurnalumum({ header, header2, header3 }) {
             {header2.map((data, index) => {
               return <TableDetailPenjualanRow key={index} data={data} index={index} />;
             })}
-            {header3.map((data, index) => {
+            {/* {header3.map((data, index) => {
               return <TableDetailPenjualanRow tipe='pembelian' label='Purchase Invoice' key={index} data={data} index={index} />;
-            })}
+            })} */}
           </tbody>
           <tfoot>
             {/* <tr>
@@ -107,24 +108,28 @@ export async function getServerSideProps() {
       id: "asc",
     },
     include: {
-      JurnalPenjualan: true,
+      JurnalPenjualan: {
+        include: {
+          akun: true
+        }
+      },
     },
   });
 
-  const getPembelian = await prisma.headerPembelian.findMany({
-    orderBy: {
-      id: "asc",
-    },
-    include: {
-      JurnalPembelian: true,
-    },
-  });
+  // const getPembelian = await prisma.headerPembelian.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalPembelian: true,
+  //   },
+  // });
 
   return {
     props: {
       header: header,
       header2: getPenjualan,
-      header3: getPembelian,
+      // header3: getPembelian,
     },
   };
 }

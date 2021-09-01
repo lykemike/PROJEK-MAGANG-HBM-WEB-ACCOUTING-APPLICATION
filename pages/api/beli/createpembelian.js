@@ -122,7 +122,7 @@ export default async (req, res) => {
             pajak_persen: 0,
             hasil_pajak: 0,
             jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_beli: setting_pajak_pembelian[0].akun.nama_akun,
+            pajak_beli_id: setting_pajak_pembelian[0].akun.id,
           });
         } else {
           detail.push({
@@ -140,7 +140,7 @@ export default async (req, res) => {
             pajak_persen: parseInt(i.pajak_persen),
             hasil_pajak: parseInt(i.hasil_pajak),
             jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_beli: i.pajak_nama_akun_beli,
+            pajak_beli_id: parseInt(i.pajak_beli_id),
           });
         }
       });
@@ -155,14 +155,14 @@ export default async (req, res) => {
       if (i.nama_pajak == "" || i.hasil_pajak == 0) {
         list_pajak.push({
           header_pembelian_id: find_latest.id,
-          akun_id: setting_pajak_pembelian[0].akun_id,
+          akun_id: setting_pajak_pembelian[0].id,
           nominal: 0,
           tipe_saldo: "Debit",
         });
       } else {
         list_pajak.push({
           header_pembelian_id: find_latest.id,
-          akun_id: i.pajak_id,
+          akun_id: parseInt(i.pajak_beli_id),
           nominal: parseInt(i.hasil_pajak),
           tipe_saldo: "Debit",
         });
@@ -229,8 +229,8 @@ export default async (req, res) => {
     res.status(201).json([
       {
         message: "Create Detail Pembelian Success!",
-
-        create_kredit_jurnal,
+        data: add_jurnal_pembelian,
+        id: find_latest,
       },
     ]);
   } catch (error) {

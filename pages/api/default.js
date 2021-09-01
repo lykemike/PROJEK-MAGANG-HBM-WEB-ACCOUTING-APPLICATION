@@ -1876,6 +1876,16 @@ export default async (req, res) => {
           tipe: "biaya",
           nama_setting: "hutang_usaha",
         },
+        {
+          akun_id: 116,
+          tipe: "aset",
+          nama_setting: "ekuitas_saldo_awal",
+        },
+        {
+          akun_id: 63,
+          tipe: "aset",
+          nama_setting: "aset_tetap",
+        },
       ],
     });
 

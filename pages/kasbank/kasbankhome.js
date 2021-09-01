@@ -83,26 +83,20 @@ export default function jurnalentry({ data }) {
                                     <span className="text-gray-300">Nama Akun</span>
                                 </th>
                                 <th className="px-2 py-2">
-                                    <span className="text-gray-300">Saldo Bank</span>
-                                </th>
-                                <th className="px-2 py-2">
-                                    <span className="text-gray-300">Saldo di Jurnal</span>
+                                    <span className="text-gray-300">Saldo</span>
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {data.slice(firstIndex, lastIndex).map((kasBank) => (
+                            {data.slice(firstIndex, lastIndex).map((kasBank, index) => (
                                 <tr>
                                     <td className="px-2 py-2 whitespace-nowrap font-medium">
                                         <div className="text-sm text-gray-900">{kasBank.kode_akun}</div>
                                     </td>
                                     <td className="px-2 py-2 whitespace-nowrap">
-                                    <Link href="/kasbank/akundetail">
+                                    <Link key={index} href={`/kasbank/${kasBank.id}`}>
                                         <div className="text-sm text-gray-900">{kasBank.nama_akun}</div>
                                     </Link>
-                                    </td>
-                                    <td className="px-2 py-2 whitespace-nowrap">
-                                        <div className="text-sm text-gray-900">Rp. 0,00</div>
                                     </td>
                                     <td className="px-2 py-2 whitespace-nowrap">
                                         <div className="text-sm text-gray-900">Rp. 0,00</div>

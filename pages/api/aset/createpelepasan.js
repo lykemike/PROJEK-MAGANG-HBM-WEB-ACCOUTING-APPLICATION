@@ -39,32 +39,31 @@ export default async (req, res) => {
 
     const get_setting_aset_tetap = await prisma.settingDefault.findMany({
       where: {
-        tipe: "Aset",
+        tipe: "aset",
       },
       include: {
         akun: true,
       },
     });
-    const setting_aset_tetap = get_setting_aset_tetap.filter((i) => i.nama_setting === "Aset");
 
-    const jurnal_aset = await prisma.jurnalAset.createMany({
+    const jurnal_aset = await prisma.jurnalPelepasanAset.createMany({
       data: [
         {
-          header_aset_id: find_latest.id,
-          nama_penerimaan_akun: find_akun_deposit_ke.nama_akun,
-          nominal: parseInt(req.body.jumlah),
+          header_pelepasan_aset_id: find_latest.id,
+          akun_id: parseInt(find_akun_deposit_ke[0].id),
+          nominal: parseInt(req.body.harga_jual),
           tipe_saldo: "Debit",
         },
         {
-          header_aset_id: find_latest.id,
-          nama_penerimaan_akun: setting_aset_tetap[0].akun.nama_akun,
-          nominal: parseInt(req.body.jumlah),
+          header_pelepasan_aset_id: find_latest.id,
+          akun_id: parseInt(get_setting_aset_tetap[0].id),
+          nominal: parseInt(req.body.harga_jual),
           tipe_saldo: "Kredit",
         },
       ],
     });
 
-    res.status(201).json({ message: "CREATE PELEPASAN ASET SUCCESS!", data: jurnal_aset });
+    res.status(201).json({ message: "CREATE PELEPASAN ASET SUCCESS!", jurnal_aset });
   } catch (error) {
     res.status(400).json({ data: "CREATE PELEPASAN ASET FAILED!", error });
     console.log(error);

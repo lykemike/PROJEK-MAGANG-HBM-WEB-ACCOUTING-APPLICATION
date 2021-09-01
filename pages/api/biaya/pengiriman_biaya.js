@@ -5,9 +5,9 @@ export default async (req, res) => {
   try {
     const frontend_data = {
       header_biaya_id: parseInt(req.body.id),
-      akun_id: parseInt(req.body.setor_ke),
-      cara_pembayaran: req.body.carapembayaran,
-      tgl_pembayaran: req.body.tgl_pembayaran,
+      akun_id: parseInt(req.body.bayar_dari),
+      cara_pembayaran: req.body.cara_pembayaran,
+      tgl_pembayaran: req.body.tgl_transaksi,
       tgl_jauth_tempo: req.body.tgl_jatuh_tempo,
       jumlah: parseInt(req.body.jumlah),
     };
@@ -56,13 +56,13 @@ export default async (req, res) => {
       data: [
         {
           header_biaya_id: parseInt(req.body.id),
-          nama_penerimaan_akun: find_akun_bayar_dari.nama_akun,
+          akun_id: parseInt(find_akun_bayar_dari.id),
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Debit",
         },
         {
-          header_penjualan_id: parseInt(req.body.id),
-          nama_penerimaan_akun: find_default_piutang.akun.nama_akun,
+          header_biaya_id: parseInt(req.body.id),
+          akun_id: parseInt(find_default_piutang.akun.id),
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Kredit",
         },

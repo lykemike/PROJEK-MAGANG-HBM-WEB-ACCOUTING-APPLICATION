@@ -6,22 +6,13 @@ import { Formik, Form as Forms, FieldArray } from "formik";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function AturSaldoAwal({ data }) {
-  console.log(data);
+export default function AturSaldoAwal({ list }) {
   return (
     <Layout>
       <Formik
         initialValues={{
           tgl_transaksi: "",
-          saldo_awal: [
-            {
-              akun_id: "",
-              kode_akun: "",
-              nama_akun: "",
-              debit: "",
-              kredit: "",
-            },
-          ],
+          saldo_awal: list,
         }}
         onSubmit={async (values) => {
           console.log(values);
@@ -38,7 +29,6 @@ export default function AturSaldoAwal({ data }) {
           <Forms noValidate>
             <div variant='container'>
               <h1>Saldo Awal</h1>
-
               <div class='mt-12'>
                 <h4>Tanggal Konversi</h4>
                 <input type='date' name='tgl_transaksi' class='border rounded-lg px-3 py-2 mt-1 mb-4 text-sm grid-cols-12 ' />
@@ -64,49 +54,51 @@ export default function AturSaldoAwal({ data }) {
                     <FieldArray name='saldo_awal'>
                       {({ insert, remove, push }) => (
                         <div>
-                          {props.values.saldo_awal.length > 0 &&
-                            props.values.saldo_awal.map((i, index) => (
-                              <tbody class='bg-white divide-y divide-gray-200'>
-                                <tr>
-                                  <td class='px-2 py-2 whitespace-nowrap'>
-                                    <div class='flex items-center'>
-                                      <div>
-                                        <div class='text-sm font-medium text-gray-900 '></div>
+                          {console.log(props.values.saldo_awal)}
+                          {props.values.saldo_awal.map((i, index) => (
+                            <tbody class='bg-white divide-y divide-gray-200'>
+                              <tr>
+                                <td class='px-2 py-2 whitespace-nowrap'>
+                                  <div class='flex items-center'>
+                                    <div>
+                                      <div class='text-sm font-medium text-gray-900' name='akun_id'>
+                                        {props.values.saldo_awal[index].kode_akun}
                                       </div>
                                     </div>
-                                  </td>
-                                  <td class='px-2 py-2 whitespace-nowrap'>
-                                    <div class='text-sm text-gray-900'></div>
-                                  </td>
+                                  </div>
+                                </td>
+                                <td class='px-2 py-2 whitespace-nowrap'>
+                                  <div class='text-sm text-gray-900'></div>
+                                </td>
 
-                                  <td class='px-2 py-2 whitespace-nowrap'>
-                                    <div class='text-sm text-gray-900'>
-                                      <Row>
-                                        <Col sm='1'>
-                                          <p>Rp.</p>
-                                        </Col>
-                                        <Col sm='8'>
-                                          <Form.Control type='text' placeholder='' />
-                                        </Col>
-                                      </Row>
-                                    </div>
-                                  </td>
+                                <td class='px-2 py-2 whitespace-nowrap'>
+                                  <div class='text-sm text-gray-900'>
+                                    <Row>
+                                      <Col sm='1'>
+                                        <p>Rp.</p>
+                                      </Col>
+                                      <Col sm='8'>
+                                        <Form.Control name='debit' type='text' placeholder='' />
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                </td>
 
-                                  <td class='px-2 py-2 whitespace-nowrap'>
-                                    <div class='text-sm text-gray-900'>
-                                      <Row>
-                                        <Col sm='1'>
-                                          <p>Rp.</p>
-                                        </Col>
-                                        <Col sm='8'>
-                                          <Form.Control type='text' placeholder='' />
-                                        </Col>
-                                      </Row>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            ))}
+                                <td class='px-2 py-2 whitespace-nowrap'>
+                                  <div class='text-sm text-gray-900'>
+                                    <Row>
+                                      <Col sm='1'>
+                                        <p>Rp.</p>
+                                      </Col>
+                                      <Col sm='8'>
+                                        <Form.Control type='text' name='kredit' placeholder='' />
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          ))}
                         </div>
                       )}
                     </FieldArray>
@@ -148,6 +140,8 @@ export async function getServerSideProps() {
       id: i.id,
       kode_akun: i.kode_akun,
       nama_akun: i.nama_akun,
+      debit: 0,
+      kredit: 0,
     });
   });
 

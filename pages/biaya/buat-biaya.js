@@ -34,7 +34,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
               deskripsi: "kosong",
               pajak_id: 0,
               pajak_nama: "kosong",
-              pajak_nama_akun_beli: "",
+              pajak_akun_beli_id: "",
               pajak_persen: 0,
               hasil_pajak: 0,
               jumlah: "",
@@ -96,7 +96,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                 </Col>
                 <Col sm="3">
                   <Form.Label />
-                  <Row className="ml-1 mt-3">
+                  {/* <Row className="ml-1 mt-3">
                     <FormCheck
                       onChange={(e) => {
                         if (e.target.checked == true) {
@@ -109,7 +109,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                       }}
                     />
                     <p className="font-medium">Bayar Nanti</p>
-                  </Row>
+                  </Row> */}
                 </Col>
                 <Col sm="3" />
                 <Col sm="2" className="justify-content-end">
@@ -329,7 +329,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                                       });
                                       props.setFieldValue(`detail_biaya.${index}.pajak_persen`, result[0].presentasaAktif);
                                       props.setFieldValue(`detail_biaya.${index}.pajak_nama`, result[0].nama);
-                                      props.setFieldValue(`detail_biaya.${index}.pajak_nama_akun_beli`, result[0].kategori2.nama_akun);
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_akun_beli_id`, result[0].kategori2.id);
 
                                       // Rumus akumulasi subtotal
                                       let jumlah = props.values.detail_biaya[index].jumlah;
@@ -393,7 +393,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                                       });
                                       props.setFieldValue(`detail_biaya.${index}.pajak_persen`, result[0].presentasaAktif);
                                       props.setFieldValue(`detail_biaya.${index}.pajak_nama`, result[0].nama);
-                                      props.setFieldValue(`detail_biaya.${index}.pajak_nama_akun_beli`, result[0].kategori2.nama_akun);
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_akun_beli_id`, result[0].kategori2.id);
 
                                       // Rumus akumulasi subtotal
                                       let jumlah = props.values.detail_biaya[index].jumlah;
@@ -523,7 +523,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                             deskripsi: "kosong",
                             pajak_id: 0,
                             pajak_nama: "kosong",
-                            pajak_nama_akun_beli: "",
+                            pajak_akun_beli_id: "",
                             pajak_persen: 0,
                             hasil_pajak: 0,
                             jumlah: "",
@@ -643,7 +643,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                 <Col sm="3" />
                 <Col sm="2" className="justify-content-end">
                   <Row>
-                    <h4 className="mr-2 ">Total</h4>
+                    <h4 className="mr-2 ">Sisa Tagihan</h4>
                     <h4 class="text-blue-600" name="pemotongan_total">
                       Rp. {props.values.pemotongan_total}
                     </h4>

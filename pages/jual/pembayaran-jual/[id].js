@@ -40,7 +40,7 @@ export default function pembayaran_jual({ data, data2, data3 }) {
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-              router.push("../penjualan");
+              // router.push("../penjualan");
             })
             .catch(function (error) {
               console.log(error);
