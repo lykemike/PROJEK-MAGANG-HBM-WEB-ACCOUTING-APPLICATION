@@ -9,7 +9,7 @@ const menulaporan = () => {
         <Layout>
        	<div variant="container">
 				<h4 class="mb-8 mt-2">
-                <AssessmentIcon fontSize="large" class="mr-5"/> 
+               
                       Laporan
                     </h4>
                     

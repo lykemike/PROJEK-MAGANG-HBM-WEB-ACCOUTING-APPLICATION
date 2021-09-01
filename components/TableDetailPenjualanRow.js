@@ -13,6 +13,7 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
     }
   }, [tipe]);
 
+  console.log(data)
   return (
     <>
       <tr>
@@ -44,7 +45,7 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
             <tbody>
               {detail.map((i) => (
                 <tr>
-                  <td class='px-2 py-2'>{i.nama_akun}</td>
+                  <td class='px-2 py-2'>{i.akun.kode_akun} - {i.akun.nama_akun}</td>
                   <td class='px-2 py-2'>Rp. {i.tipe_saldo === "Debit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</td>
                   <td class='px-2 py-2'>Rp. {i.tipe_saldo === "Kredit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</td>
                 </tr>
