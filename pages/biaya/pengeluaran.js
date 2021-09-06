@@ -1,7 +1,11 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import { Row, Col, Button, InputGroup, FormControl, FormCheck } from "react-bootstrap";
 import Link from "next/link";
+
+import TableJualBeli from "../../components/PenjualanPembelianBiaya/Table";
+import Typography from "@material-ui/core/Typography";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import TablePagination from "../../components/TablePagination";
@@ -17,7 +21,7 @@ export default function Pengeluaran({ data }) {
 
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
-  
+
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
@@ -54,145 +58,114 @@ export default function Pengeluaran({ data }) {
     setPage(parseInt(data.length / rowsPerPage));
   };
 
-
-
   return (
     <Layout>
-      <div>
-        <h4 class='text-gray-500'>Biaya</h4>
-        <Row>
-          <Col>
-            <h3 class='text-blue-600'>Pengeluaran</h3>
-          </Col>
-          <Col className='d-flex justify-content-end'>
+      <Breadcrumbs aria-label='breadcrumb'>
+        <Typography color='textPrimary'>Biaya</Typography>
+      </Breadcrumbs>
+
+      <Row>
+        <Col sm='8'>
+          <h2 className='text-blue-600'>Pengeluaran</h2>
+        </Col>
+        <Col sm='4'>
+          <div className='d-flex justify-content-end'>
             <Link href='/biaya/buat-biaya'>
-              <Button variant='primary'>
-                <AddIcon fontSize='small' />
-                Buat Biaya Baru
-              </Button>
+              <a>
+                <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
+                  <AddIcon fontSize='small' /> Buat Biaya Baru
+                </button>
+              </a>
             </Link>
-          </Col>
-        </Row>
+          </div>
+        </Col>
+      </Row>
+      <hr />
 
-        <hr />
-
+      <div className='mt-4 mb-8'>
         <Row sm='12'>
           <Col sm='4'>
-            <hr className='bg-black ' />
-            <p className='font-medium'>Total Biaya Bulan ini (dalam IDR)</p>
-            <hr className='bg-black' />
-            <p style={{ fontSize: 25 }} class='text-gray-500'>
-              Rp.
-            </p>
-            <hr className='bg-black' />
+            <div class='bg-white rounded-sm overflow-hidden shadow-md hover:shadow-lg transform transition duration-500 hover:scale-105'>
+              <div class='px-4 py-2 bg-blue-300 flex items-center justify-between'>
+                <h3 class='text-xl font-gray-700 font-bold'>Total Biaya Bulan Ini</h3>
+              </div>
+              <div class='px-4 py-2 flex space-x-2 mt-2'>
+                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. -</h3>
+              </div>
+            </div>
           </Col>
           <Col sm='4'>
-            <hr className='bg-black' />
-            <p className='font-medium'>Biaya Belum Dibayar (dalam IDR)</p>
-            <hr className='bg-black' />
-            <p style={{ fontSize: 25 }} class='text-gray-500'>
-              Rp.
-            </p>
-            <hr className='bg-black' />
+            <div class='bg-white rounded-sm overflow-hidden shadow-md hover:shadow-lg transform transition duration-500 hover:scale-105'>
+              <div class='px-4 py-2 bg-red-300 flex items-center justify-between'>
+                <h1 class='text-xl font-gray-700 font-bold'>Biaya Belum Dibayar</h1>
+              </div>
+              <div class='px-4 py-2 flex space-x-2 mt-2'>
+                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. -</h3>
+              </div>
+            </div>
           </Col>
         </Row>
+      </div>
 
-        <hr />
-
-        <Row>
-          <Col>
-            <h4>Daftar Biaya</h4>
+      <div className='border-t border-gray-200 justify-end'>
+        <Row className='mt-2 mb-2'>
+          <Col sm='9'>
+            <h3>Daftar Biaya</h3>
           </Col>
-          <Col sm='3'>
-            <InputGroup>
-              <InputGroup.Prepend>
-                <InputGroup.Text id='basic-addon1'>
-                  <SearchIcon />
-                </InputGroup.Text>
-              </InputGroup.Prepend>
-              <FormControl 
-                placeholder='Cari' 
-                aria-label='cari' 
-                aria-describedby='basic-addon1' 
-                onChange={(e) => handleChange(e)}
-                />
-            </InputGroup>
+          <Col sm='3' className='d-flex justify-content-end'>
+            <FormControl placeholder='Search . . . .' aria-label='cari' aria-describedby='basic-addon1' onChange={(e) => handleChange(e)} />
           </Col>
         </Row>
+      </div>
 
-        <hr />
-
-        <table class='min-w-full table-auto'>
-          <thead class='justify-between'>
-            <tr class='bg-dark'>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Tanggal</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Nomor</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Kategori</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Penerima</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Status</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Sisa Tagihan (dalam IDR)</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Total (dalam IDR)</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody class='bg-white divide-y divide-gray-200'>
-            {data.slice(firstIndex, lastIndex).map((biaya) => (
-              <tr key={biaya.id}>
-                <Link key={biaya.id} href={`/biaya/view/${biaya.id}`}>
-                  <a>
-                    <td class='px-2 py-2 whitespace-nowrap'>
-                      <div class='text-sm text-gray-900'>{biaya.tgl_transaksi}</div>
-                    </td>
-                  </a>
-                </Link>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>{biaya.id}</div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>{biaya.akun1.nama_akun}</div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>{biaya.kontak.nama}</div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>
-                    <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>Active</span>
-                  </div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>Rp. {biaya.pemotongan_total.toLocaleString({ minimumFractionDigits: 0 })}</div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>Rp. {biaya.total.toLocaleString({ minimumFractionDigits: 0 })}</div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div class='flex items-center justify-center mt-4'>
-            <TablePagination
-              onPrevChange={handlePrevChange}
-              onNextChange={handleNextChange}
-              onFirstPage={handleFirstPage}
-              onLastPage={handleLastPage}
-              onClickPage={handleClickPage}
-              lastIndex={parseInt(data.length / rowsPerPage)}
-              currentPage={page}
-            />
-          </div>
+      <table className='min-w-full table-auto'>
+        <thead className='justify-between'>
+          <tr className='bg-dark'>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Tgl Transaksi</span>
+            </th>
+            <th className='px-8 py-2'>
+              <span className='text-white text-base'>Nomor</span>
+            </th>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Kategori</span>
+            </th>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Penerima</span>
+            </th>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Tag</span>
+            </th>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Status</span>
+            </th>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Sisa Tagihan</span>
+            </th>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Total</span>
+            </th>
+            <th className='px-2 py-2'>
+              <span className='text-white text-base'>Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody className='bg-white divide-y divide-gray-200'>
+          {data.slice(firstIndex, lastIndex).map((data, index) => (
+            <TableJualBeli data={data} index={index} label='Expense' view='biaya' />
+          ))}
+        </tbody>
+      </table>
+      <div class='flex items-center justify-center mt-4'>
+        <TablePagination
+          onPrevChange={handlePrevChange}
+          onNextChange={handleNextChange}
+          onFirstPage={handleFirstPage}
+          onLastPage={handleLastPage}
+          onClickPage={handleClickPage}
+          lastIndex={parseInt(data.length / rowsPerPage)}
+          currentPage={page}
+        />
       </div>
     </Layout>
   );
