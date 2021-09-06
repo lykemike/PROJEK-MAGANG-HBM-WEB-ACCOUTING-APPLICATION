@@ -45,24 +45,24 @@ export default async (req, res) => {
 
     const find_default_hutang_blm_ditagih = await prisma.settingDefault.findFirst({
       where: {
-        id: 10
+        id: 10,
       },
       include: {
-        akun: true
-      }
-    })
+        akun: true,
+      },
+    });
 
     const jurnal_pengiriman_pembayaran = await prisma.jurnalPengirimanBayaran.createMany({
       data: [
         {
           header_pembelian_id: parseInt(req.body.id),
-          nama_penerimaan_akun: find_default_hutang_blm_ditagih.akun.nama_akun,
+          akun_id: find_default_hutang_blm_ditagih.akun.id,
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Debit",
         },
         {
           header_pembelian_id: parseInt(req.body.id),
-          nama_penerimaan_akun: find_akun_bayar.nama_akun,
+          akun_id: find_akun_bayar.id,
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Kredit",
         },

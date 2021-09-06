@@ -100,9 +100,9 @@ export default async (req, res) => {
     const setting_uang_muka_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "uang_muka_pembelian");
     const setting_hutang_blm_ditagih = get_setting_pembelian.filter((i) => i.nama_setting === "hutang_blm_ditagih");
     const setting_pajak_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "pajak_pembelian");
-    const diskon_penjualan = get_setting_pembelian.filter((i) => i.nama_setting === "diskon_penjualan");
+    const diskon_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "diskon_pembelian");
     const total_diskon = parseInt(req.body.total_diskon_per_baris) + parseInt(req.body.total_diskon);
-    
+
     let detail = [];
     req.body.produks &&
       JSON.parse(req.body.produks).map((i) => {
@@ -122,7 +122,7 @@ export default async (req, res) => {
             pajak_persen: 0,
             hasil_pajak: 0,
             jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_beli: setting_pajak_pembelian[0].akun.nama_akun,
+            pajak_beli_id: setting_pajak_pembelian[0].akun.id,
           });
         } else {
           detail.push({
@@ -140,7 +140,7 @@ export default async (req, res) => {
             pajak_persen: parseInt(i.pajak_persen),
             hasil_pajak: parseInt(i.hasil_pajak),
             jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_beli: i.pajak_nama_akun_beli,
+            pajak_beli_id: parseInt(i.pajak_beli_id),
           });
         }
       });
@@ -155,14 +155,14 @@ export default async (req, res) => {
       if (i.nama_pajak == "" || i.hasil_pajak == 0) {
         list_pajak.push({
           header_pembelian_id: find_latest.id,
-          nama_akun: setting_pajak_pembelian[0].akun.nama_akun,
+          akun_id: setting_pajak_pembelian[0].id,
           nominal: 0,
           tipe_saldo: "Debit",
         });
       } else {
         list_pajak.push({
           header_pembelian_id: find_latest.id,
-          nama_akun: i.pajak_nama_akun_beli,
+          akun_id: parseInt(i.pajak_beli_id),
           nominal: parseInt(i.hasil_pajak),
           tipe_saldo: "Debit",
         });
@@ -182,48 +182,55 @@ export default async (req, res) => {
     });
 
     const add_jurnal_pembelian = await prisma.jurnalPembelian.createMany({
-     data: list_pajak,
-    })
+      data: list_pajak,
+    });
+
+    const pembayaran_di_muka = parseInt(req.body.uang_muka) >= 0 ? akunUangMuka[0].id : akunUangMuka[0].id;
+    const hutang_blm_ditagih = parseInt(req.body.sisa_tagihan) >= 0 ? setting_hutang_blm_ditagih[0].akun_id : setting_hutang_blm_ditagih[0].akun_id;
+    const nilai_diskon_penjualan = parseInt(total_diskon) >= 0 ? diskon_pembelian[0].akun_id : diskon_pembelian[0].akun_id;
+    const pemotongan = parseInt(req.body.pemotongan) >= 0 ? akunPemotongan[0].id : akunPemotongan[0].id;
+    const pendapatan_pembelian = parseInt(req.body.subtotal) >= 0 ? setting_pembelian_cogs[0].akun_id : setting_pembelian_cogs[0].akun_id;
 
     const create_kredit_jurnal = await prisma.jurnalPembelian.createMany({
       data: [
-      {
-        header_pembelian_id: find_latest.id,
-        nama_akun: setting_pembelian_cogs[0].akun.nama_akun,
-        nominal: parseInt(req.body.subtotal),
-        tipe_saldo: "Debit",
-      },  
-      {
-        header_pembelian_id: find_latest.id,
-        nama_akun: setting_pemotongan[0].akun.nama_akun,
-        nominal: parseInt(req.body.pemotongan),
-        tipe_saldo: "Kredit",
-      },
-      {
-        header_pembelian_id: find_latest.id,
-        nama_akun: diskon_penjualan[0].akun.nama_akun,
-        nominal: parseInt(total_diskon),
-        tipe_saldo: "Kredit",
-      },
-      {
-        header_pembelian_id: find_latest.id,
-        nama_akun: setting_uang_muka_pembelian[0].akun.nama_akun,
-        nominal: parseInt(req.body.uang_muka),
-        tipe_saldo: "Kredit",
-      },
-      {
-        header_pembelian_id: find_latest.id,
-        nama_akun: setting_hutang_blm_ditagih[0].akun.nama_akun,
-        nominal: parseInt(req.body.sisa_tagihan),
-        tipe_saldo: "Kredit",
-      },
+        {
+          header_pembelian_id: find_latest.id,
+          akun_id: pembayaran_di_muka,
+          nominal: parseInt(req.body.subtotal),
+          tipe_saldo: "Debit",
+        },
+        {
+          header_pembelian_id: find_latest.id,
+          akun_id: hutang_blm_ditagih,
+          nominal: parseInt(req.body.pemotongan),
+          tipe_saldo: "Kredit",
+        },
+        {
+          header_pembelian_id: find_latest.id,
+          akun_id: nilai_diskon_penjualan,
+          nominal: parseInt(total_diskon),
+          tipe_saldo: "Kredit",
+        },
+        {
+          header_pembelian_id: find_latest.id,
+          akun_id: pemotongan,
+          nominal: parseInt(req.body.uang_muka),
+          tipe_saldo: "Kredit",
+        },
+        {
+          header_pembelian_id: find_latest.id,
+          akun_id: pendapatan_pembelian,
+          nominal: parseInt(req.body.sisa_tagihan),
+          tipe_saldo: "Kredit",
+        },
       ],
     });
+
     res.status(201).json([
       {
         message: "Create Detail Pembelian Success!",
-        data: add_jurnal_pembelian, 
-          id: find_latest
+        data: add_jurnal_pembelian,
+        id: find_latest,
       },
     ]);
   } catch (error) {

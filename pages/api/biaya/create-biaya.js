@@ -109,7 +109,7 @@ export default async (req, res) => {
           pajak_nama: i.pajak_nama,
           pajak_persen: parseInt(i.pajak_persen),
           hasil_pajak: parseInt(i.hasil_pajak),
-          pajak_nama_akun_beli: i.pajak_nama_akun_beli,
+          pajak_akun_beli_id: i.pajak_akun_beli_id,
           jumlah: parseInt(i.jumlah),
           jumlah2: parseInt(i.jumlah2),
         });
@@ -132,7 +132,7 @@ export default async (req, res) => {
 
       list_pajak.push({
         header_biaya_id: find_latest.id,
-        nama_akun_biaya: i.pajak_nama_akun_beli,
+        akun_biaya_id: i.pajak_akun_beli_id,
         nominal: parseInt(i.hasil_pajak),
         tipe_saldo: "Debit",
       });
@@ -144,14 +144,14 @@ export default async (req, res) => {
       if (bool.boolean == "true") {
         list_akun.push({
           header_biaya_id: find_latest.id,
-          nama_akun_biaya: i.nama_akun,
+          akun_biaya_id: parseInt(i.akun_biaya_id),
           nominal: parseInt(i.jumlah2),
           tipe_saldo: "Debit",
         });
       } else {
         list_akun.push({
           header_biaya_id: find_latest.id,
-          nama_akun_biaya: i.nama_akun,
+          akun_biaya_id: parseInt(i.akun_biaya_id),
           nominal: parseInt(i.jumlah),
           tipe_saldo: "Debit",
         });
@@ -172,13 +172,13 @@ export default async (req, res) => {
       data_biaya.push(
         {
           header_biaya_id: find_latest.id,
-          nama_akun_biaya: setting_pemotongan[0].akun.nama_akun,
+          akun_biaya_id: setting_pemotongan[0].akun.id,
           tipe_saldo: "Kredit",
           nominal: parseInt(req.body.pemotongan),
         },
         {
           header_biaya_id: find_latest.id,
-          nama_akun_biaya: setting_hutang_usaha[0].akun.nama_akun,
+          akun_biaya_id: setting_hutang_usaha[0].akun.id,
           tipe_saldo: "Kredit",
           nominal: parseInt(req.body.pemotongan_total),
         }
@@ -187,13 +187,13 @@ export default async (req, res) => {
       data_biaya.push(
         {
           header_biaya_id: find_latest.id,
-          nama_akun_biaya: setting_pemotongan[0].akun.nama_akun,
+          akun_biaya_id: setting_pemotongan[0].akun.id,
           tipe_saldo: "Kredit",
           nominal: parseInt(req.body.pemotongan),
         },
         {
           header_biaya_id: find_latest.id,
-          nama_akun_biaya: akunbayardari[0].nama_akun,
+          akun_biaya_id: akunbayardari[0].id,
           tipe_saldo: "Kredit",
           nominal: parseInt(req.body.pemotongan_total),
         }
@@ -212,7 +212,7 @@ export default async (req, res) => {
       data: data_biaya,
     });
 
-    res.status(201).json([{ message: "Create biaya success!", data: create_jurnal_biaya }]);
+    res.status(201).json([{ message: "Create biaya success!", data: create_jurnal_biaya, id: find_latest }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed to create detail biaya!", error }]);
     console.log(error);

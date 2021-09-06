@@ -86,7 +86,8 @@ model Akun {
 
   HeaderBiaya1    HeaderBiaya[]     @relation("akun_kas_bank")
   HeaderBiaya2    HeaderBiaya[]     @relation("akun_pendapatan")
-  DetailBiaya     DetailBiaya[]
+  DetailBiaya1     DetailBiaya[]    @relation("Akun_Biaya")
+  DetailBiaya2     DetailBiaya[]    @relation("pajak_akun_beli")
   PengirimanBiaya PengirimanBiaya[]
 
   HeaderPenjualan1     HeaderPenjualan[]      @relation("akunPemotonganPenjualan")
@@ -96,6 +97,7 @@ model Akun {
 
   HeaderPembelian1  HeaderPembelian[]   @relation("akunPemotonganPembelian")
   HeaderPembelian2  HeaderPembelian[]   @relation("akunUangMukaPembelian")
+  DetailPembelian   DetailPembelian[]   @relation("PembelianPajakBeli")
   PengirimanBayaran PengirimanBayaran[]
 
   SettingDefault SettingDefault[]
@@ -120,13 +122,27 @@ model Akun {
   Aset3 Aset[] @relation("AkunPenyusutan")
   Aset4 Aset[] @relation("AkumulasiAkunPenyusutan")
 
+  PelepasanAset               PelepasanAset[]
+  InvoicePelepasanAset        InvoicePelepasanAset[]
+
+  
+
+  
   // Jurnal
   JurnalPenjualan             JurnalPenjualan[]
   JurnalPenerimaanPembayaran  JurnalPenerimaanPembayaran[]
   JurnalTransferUang          JurnalTransferUang[]
   JurnalTerimaUang            JurnalTerimaUang[]
   JurnalKirimUang             JurnalKirimUang[]
-  PelepasanAset               PelepasanAset[]
+  JurnalAset                  JurnalAset[]
+  JurnalPelepasanAset         JurnalPelepasanAset[]
+  JurnalInvoicePelepasanAset  JurnalInvoicePelepasanAset[]
+  JurnalPembelian             JurnalPembelian[]
+  JurnalPengirimanBayaran     JurnalPengirimanBayaran[]
+  JurnalBiaya                 JurnalBiaya[]
+  JurnalPengirimanBiaya       JurnalPengirimanBiaya[]
+
+  
 }
 
 // Kategori Kontak
@@ -406,7 +422,8 @@ model DetailPembelian {
   pajak                Pajak  @relation(fields: [pajak_id], references: [id])
   pajak_id             Int
   pajak_nama           String
-  pajak_nama_akun_beli String
+  pajak_beli           Akun @relation("PembelianPajakBeli", fields: [pajak_beli_id], references: [id])
+  pajak_beli_id        Int
   pajak_persen         Int
   hasil_pajak          Int
 
@@ -418,7 +435,8 @@ model JurnalPembelian {
   id                  Int             @id @default(autoincrement())
   header_pembelian    HeaderPembelian @relation(fields: [header_pembelian_id], references: [id])
   header_pembelian_id Int
-  nama_akun           String
+  akun                 Akun@relation(fields: [akun_id], references: [id])
+  akun_id             Int
   tipe_saldo          String
   nominal             Int
 }
@@ -443,7 +461,8 @@ model JurnalPengirimanBayaran {
   id                   Int             @id @default(autoincrement())
   header_pembelian     HeaderPembelian @relation(fields: [header_pembelian_id], references: [id])
   header_pembelian_id  Int
-  nama_penerimaan_akun String
+  akun                 Akun @relation(fields: [akun_id], references: [id])
+  akun_id             Int
   nominal              Int
   tipe_saldo           String
 }
@@ -481,7 +500,8 @@ model JurnalBiaya {
   id              Int         @id @default(autoincrement())
   headerbiaya     HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
   header_biaya_id Int
-  nama_akun_biaya String
+  akun_biaya      Akun @relation(fields: [akun_biaya_id], references:[id])
+  akun_biaya_id   Int
   nominal         Int
   tipe_saldo      String
 }
@@ -492,14 +512,15 @@ model DetailBiaya {
   header_biaya    HeaderBiaya @relation(fields: [header_biaya_id], references: [no_transaksi])
   header_biaya_id Int
 
-  akun_biaya           Akun   @relation(fields: [akun_biaya_id], references: [id])
+  akun_biaya           Akun   @relation("Akun_Biaya",fields: [akun_biaya_id], references: [id])
   akun_biaya_id        Int
   nama_akun            String
   deskripsi            String
   pajak                Pajak  @relation(fields: [pajak_id], references: [id])
   pajak_id             Int
   pajak_nama           String
-  pajak_nama_akun_beli String
+  pajak_akun_beli      Akun   @relation("pajak_akun_beli",fields: [pajak_akun_beli_id], references: [id])
+  pajak_akun_beli_id   Int
   pajak_persen         Int
   hasil_pajak          Int
   jumlah               Int
@@ -524,7 +545,8 @@ model JurnalPengirimanBiaya {
   id                   Int         @id @default(autoincrement())
   header_biaya         HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
   header_biaya_id      Int
-  nama_penerimaan_akun String
+  akun                 Akun   @relation(fields: [akun_id], references: [id])
+  akun_id              Int
   nominal              Int
   tipe_saldo           String
 }
@@ -722,7 +744,7 @@ model Aset {
   akumulasi_akun_penyusutan_id Int
   akumulasi_penyusutan         Int
   tgl_penyusutan               String
-
+  terjual                      Boolean
   JurnalAset JurnalAset[]
 }
 
@@ -734,13 +756,15 @@ model PelepasanAset {
   deposit_id    Int
   memo          String
   tag           String
+  
 
   JurnalPelepasanAset JurnalPelepasanAset[]
 }
 
 model InvoicePelepasanAset {
   id             Int    @id @default(autoincrement())
-  nama_akun      String
+  akun           Akun @relation(fields: [akun_id], references:[id])
+  akun_id        Int
   nominal        Int
   tipe_saldo     String
   untungrugi     Int
@@ -753,7 +777,8 @@ model JurnalAset {
   id             Int    @id @default(autoincrement())
   header_aset    Aset   @relation(fields: [header_aset_id], references: [id])
   header_aset_id Int
-  nama_akun      String
+  akun           Akun @relation(fields: [akun_id], references:[id])
+  akun_id        Int
   nominal        Int
   tipe_saldo     String
 }
@@ -762,7 +787,8 @@ model JurnalPelepasanAset {
   id                       Int           @id @default(autoincrement())
   header_pelepasan_aset    PelepasanAset @relation(fields: [header_pelepasan_aset_id], references: [id])
   header_pelepasan_aset_id Int
-  nama_akun                String
+  akun                     Akun @relation(fields: [akun_id], references:[id])
+  akun_id                  Int
   nominal                  Int
   tipe_saldo               String
 }
@@ -771,7 +797,8 @@ model JurnalInvoicePelepasanAset {
   id                        Int                  @id @default(autoincrement())
   invoice_pelepasan_aset    InvoicePelepasanAset @relation(fields: [invoice_pelepasan_aset_id], references: [id])
   invoice_pelepasan_aset_id Int
-  nama_akun                 String
+  akun                     Akun @relation(fields: [akun_id], references:[id])
+  akun_id                  Int
   nominal                   Int
   tipe_saldo                String
 }

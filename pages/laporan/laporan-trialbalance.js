@@ -4,14 +4,12 @@ import TableDetailTBRow from "../../components/TrialBalance/TableDetailTBRow";
 import Kewajiban from "../../components/TrialBalance/Kewajiban";
 import Ekuitas from "../../components/TrialBalance/Ekuitas";
 
-
-
 import Link from "next/link";
 import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function laporantrialbalance({ header, header2,header3}) {
+export default function laporantrialbalance({ header, header2, header3 }) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
   const onClick = () => {
@@ -68,13 +66,13 @@ export default function laporantrialbalance({ header, header2,header3}) {
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-               <TableDetailTBRow label="Aset" data={header} />
-               <Kewajiban label="Kewajiban" data={header2} />
-               <Ekuitas label="Ekuitas" data={header3} />
+            <TableDetailTBRow label="Aset" data={header} />
+            <TableDetailTBRow label="Kewajiban" data={header2} />
+            <TableDetailTBRow label="Ekuitas" data={header3} />
           </tbody>
           <tfoot>
             <tr>
-              <td class='px-2 py-1' align='right'>
+              <td class="px-2 py-1" align="right">
                 Grand Total
               </td>
               {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
@@ -88,33 +86,38 @@ export default function laporantrialbalance({ header, header2,header3}) {
 }
 
 export async function getServerSideProps() {
-
   const aset = await prisma.akun.findMany({
     where: {
-     kategoriId :{
-         in: [3,1,2,4,5,6,7,15],
-     }
+      kategoriId: {
+        in: [3, 1, 2, 4, 5, 6, 7, 15],
+      },
+    },
+    include: {
+      JurnalPembelian: true,
     },
   });
 
   const kewajiban = await prisma.akun.findMany({
     where: {
-    kategoriId : {
-        in: [8,10,11],
-    }
-    
+      kategoriId: {
+        in: [8, 10, 11],
+      },
+    },
+    include: {
+      JurnalPembelian: true,
     },
   });
 
   const ekuitas = await prisma.akun.findMany({
     where: {
-    kategoriId: {
-         in: [12,13,14,16,17],
-    }
+      kategoriId: {
+        in: [12, 13, 14, 16, 17],
+      },
+    },
+    include: {
+      JurnalPembelian: true,
     },
   });
-
-
 
   // const getPembelian = await prisma.headerPembelian.findMany({
   //   orderBy: {
@@ -129,7 +132,7 @@ export async function getServerSideProps() {
     props: {
       header: aset,
       header2: kewajiban,
-      header3: ekuitas
+      header3: ekuitas,
     },
   };
 }
