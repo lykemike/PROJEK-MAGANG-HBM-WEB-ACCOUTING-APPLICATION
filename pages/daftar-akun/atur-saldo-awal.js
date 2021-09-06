@@ -1,20 +1,10 @@
-import React from 'react';
-import Layout from '../../components/Layout';
-import { Button, Table, Row, Input, Form, Col } from 'react-bootstrap';
-import Link from 'next/link';
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
-
-// export async function getServerSideProps() {
-// 	// Fetch data from external API
-// 	const res = await fetch('http://localhost:3000/api/api-daftar-akun/saldo-awal');
-// 	const data = await res.json();
-
-// 	// Pass data to the page via props
-// 	return { props: { data } }
-// }
-
-
+import React from "react";
+import Layout from "../../components/Layout";
+import { Button, Table, Row, Input, Form, Col } from "react-bootstrap";
+import Link from "next/link";
+import { Formik, Form as Forms, FieldArray } from "formik";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 export default function AturSaldoAwal({ list }) {
   return (

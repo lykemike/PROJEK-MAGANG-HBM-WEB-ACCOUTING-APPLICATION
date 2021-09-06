@@ -1,14 +1,13 @@
 import React, { useRef, useState } from "react";
 import Layout from "../../components/layout";
 import TableDetailBBRow from "../../components/BukuBesar/TableDetailBBRow";
-import TableDetailPenjualanRow from "../../components/TableDetailPenjualanRow";
-import TablePagination from "../../components/TablePagination";
 import Link from "next/link";
+import TablePagination from "../../components/TablePagination";
 import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function laporanbukubesar({ header, header2, header3 }) {
+export default function laporanbukubesar({ header }) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
   const onClick = () => {
@@ -48,7 +47,6 @@ export default function laporanbukubesar({ header, header2, header3 }) {
   const handleLastPage = () => {
     setPage(parseInt(header.length / rowsPerPage));
   };
-
 
   console.log(header)
   return (
@@ -100,7 +98,7 @@ export default function laporanbukubesar({ header, header2, header3 }) {
             </tr>
           </thead>
           <tbody class='bg-white divide-y divide-gray-200'>
-            {header.slice(firstIndex, lastIndex).map((data, index) => {
+          {header.slice(firstIndex, lastIndex).map((data, index) => {
               return <TableDetailBBRow key={index} data={data} index={index} />;
             })}
             {/* {header2.map((data, index) => {
@@ -151,38 +149,31 @@ export async function getServerSideProps() {
         include: {
           header_jurnal: true
         }
-      }
-    },
-  });
-
-  const getPenjualan = await prisma.headerPenjualan.findMany({
-    orderBy: {
-      id: "asc",
-    },
-    include: {
-      JurnalPenjualan: {
+      },
+      JurnalKirimUang: {
         include: {
-          header_penjualan: true
+          header_kirim_uang: true,
         }
       },
-    },
-  
-  });
+      JurnalTerimaUang: {
+        include: {
+          header_terima_uang: true,
+        }
+      },
+      JurnalTransferUang: {
+        include: {
+          transfer_uang: true,
+        }
+      }
+    }
+  })
 
-  const getPembelian = await prisma.headerPembelian.findMany({
-    orderBy: {
-      id: "asc",
-    },
-    include: {
-      JurnalPembelian: true,
-    },
-  });
 
   return {
     props: {
       header: header,
-      header2: getPenjualan,
-      header3: getPembelian,
+      // header2: getPenjualan,
+      // header3: getPembelian,
     },
   };
 }

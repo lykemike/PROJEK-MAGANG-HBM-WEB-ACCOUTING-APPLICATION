@@ -27,8 +27,20 @@ export default function laporanbukubesar({ header, header2 }) {
 }
 
 export async function getServerSideProps() {
+  const header = await prisma.headerJurnal.findMany({
+    orderBy: {
+      id: "asc",
+    },
+    include: {
+      DetailJurnal: {
+        include: {
+          akun: true,
+        },
+      },
+    },
+  });
 
-  const header = await prisma.headerPenjualan.findMany({
+  const getPenjualan = await prisma.headerPenjualan.findMany({
     orderBy: {
       id: "asc",
     },

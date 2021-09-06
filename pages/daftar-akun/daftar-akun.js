@@ -153,7 +153,7 @@ export default function DaftarAkun({ data }) {
                   </td>
                   <td class='px-2 py-2 whitespace-nowrap'>
                     <div class='text-sm text-gray-900'>
-                      {/* <Button variant='warning mr-2'>Edit</Button> */}
+                      <Button variant='warning mr-2'>Edit</Button>
                       <Button
                         variant='danger'
                         onClick={() => {
