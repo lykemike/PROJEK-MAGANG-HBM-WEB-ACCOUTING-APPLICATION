@@ -27,9 +27,9 @@ export default function Expense ({data, data2}) {
 					<Col>
 						<h3 class="text-blue-600">Expense #{id}</h3>
 					</Col>
-					<Col className="d-flex justify-content-end">
-						<h3 class="text-black">Belum Dibayar</h3>
-					</Col>
+					 <Col>
+          {data[0].sisa_tagihan > 0 ? <h3 className="mt-2 mb-3 float-right">Belum Dibayar</h3> : <h3 className="mt-2 mb-3 float-right text-green-500">Lunas</h3>}
+          </Col>
 				</Row>
 
 				<hr />
@@ -130,7 +130,7 @@ export default function Expense ({data, data2}) {
 								<div class="text-sm text-gray-900">{i.pajak.nama} - {i.pajak.presentasaAktif}% </div>
 							</td>
 							<td class="px-2 py-2 whitespace-nowrap d-flex justify-content-end">
-								<div class="text-sm text-gray-900">{i.jumlah}</div>
+								<div class="text-sm text-gray-900">Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</div>
 							</td>
 						</tr>
 					</tbody>
@@ -155,11 +155,11 @@ export default function Expense ({data, data2}) {
 
 					<Col>
 						<Col>
-							<p>{i.subtotal}</p>
-							<p>{totalPajak}</p>
-							<p>{i.total}</p>
-							<p>{i.pemotongan}</p>
-							<h6>{i.pemotongan_total}</h6>
+							<p>Rp. {i.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</p>
+							<p>Rp. {totalPajak.toLocaleString({ minimumFractionDigits: 0 })}</p>
+							<p>Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
+							<p>Rp. {i.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</p>
+							<h6>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h6>
 						</Col>
 					</Col>
 				</Row>

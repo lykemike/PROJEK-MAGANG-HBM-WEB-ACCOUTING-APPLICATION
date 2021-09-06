@@ -177,16 +177,17 @@ export default function pengirimanBayaran ({data,data2,data3}) {
 					</Col>
 
 					<Col sm="3">
-						<p>Rp. {i.pemotongan_total.toLocaleString({ minimumFractionDigits: 0 })}</p>
+						<p>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</p>
 					</Col>
 
 					<Col sm="3">
 					<Form.Control 
 						placeholder="" 
 						name="jumlah"
+						type="number"
 						onChange={(e) => {
 							props.setFieldValue('jumlah', e.target.value)
-							const totalbayar = i.pemotongan_total - e.target.value 
+							const totalbayar = i.sisa_tagihan - e.target.value 
 							
 							props.setFieldValue('totalbayar', parseInt(totalbayar))
 						}}

@@ -1864,7 +1864,7 @@ export default async (req, res) => {
         {
           akun_id: 116,
           tipe: "pembelian",
-          nama_setting: "diskon_penjualan",
+          nama_setting: "diskon_pembelian",
         },
         {
           akun_id: 116,

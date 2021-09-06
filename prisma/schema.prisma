@@ -125,9 +125,6 @@ model Akun {
   PelepasanAset               PelepasanAset[]
   InvoicePelepasanAset        InvoicePelepasanAset[]
 
-  
-
-  
   // Jurnal
   JurnalPenjualan             JurnalPenjualan[]
   JurnalPenerimaanPembayaran  JurnalPenerimaanPembayaran[]
@@ -142,7 +139,23 @@ model Akun {
   JurnalBiaya                 JurnalBiaya[]
   JurnalPengirimanBiaya       JurnalPengirimanBiaya[]
 
-  
+  DetailSaldoAwal DetailSaldoAwal[]
+}
+
+model HeaderSaldoAwal {
+   id               Int     @id @default(autoincrement())
+   tgl_konversi     String
+   DetailSaldoAwal  DetailSaldoAwal[]
+}
+
+model DetailSaldoAwal {
+  id                    Int     @id @default(autoincrement())
+  header_saldo_awal     HeaderSaldoAwal @relation(fields: [header_saldo_awal_id], references: [id])
+  header_saldo_awal_id  Int
+  akun                  Akun    @relation(fields: [akun_id], references: [id])
+  akun_id               Int
+  debit                 Int
+  kredit                Int
 }
 
 // Kategori Kontak
@@ -488,7 +501,8 @@ model HeaderBiaya {
   akun_pemotongan  Int
   total            Int
   pemotongan       Int
-  pemotongan_total Int
+  sisa_tagihan      Int
+  status            String
 
   detail_biaya          DetailBiaya[]
   jurnal_biaya          JurnalBiaya[]

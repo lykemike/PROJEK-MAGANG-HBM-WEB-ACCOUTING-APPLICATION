@@ -54,7 +54,8 @@ export default async (req, res) => {
       total: parseInt(req.body.total),
       akun_pemotongan: parseInt(req.body.akun_pemotongan),
       pemotongan: parseInt(req.body.pemotongan),
-      pemotongan_total: parseInt(req.body.pemotongan_total),
+      sisa_tagihan: parseInt(req.body.sisa_tagihan),
+      status: "Active",
     };
 
     const bool = {
@@ -180,7 +181,7 @@ export default async (req, res) => {
           header_biaya_id: find_latest.id,
           akun_biaya_id: setting_hutang_usaha[0].akun.id,
           tipe_saldo: "Kredit",
-          nominal: parseInt(req.body.pemotongan_total),
+          nominal: parseInt(req.body.sisa_tagihan),
         }
       );
     } else {
@@ -195,7 +196,7 @@ export default async (req, res) => {
           header_biaya_id: find_latest.id,
           akun_biaya_id: akunbayardari[0].id,
           tipe_saldo: "Kredit",
-          nominal: parseInt(req.body.pemotongan_total),
+          nominal: parseInt(req.body.sisa_tagihan),
         }
       );
     }

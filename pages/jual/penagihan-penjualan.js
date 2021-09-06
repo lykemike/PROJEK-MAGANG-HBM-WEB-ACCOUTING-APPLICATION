@@ -12,6 +12,9 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
+
+import Typography from "@material-ui/core/Typography";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 const prisma = new PrismaClient();
 
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6 }) {
@@ -93,7 +96,14 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
         }}>
         {(props) => (
           <Forms noValidate>
-            <h3>Buat Penagihan Penjualan</h3>
+            <Breadcrumbs aria-label='breadcrumb'>
+              <Link color='inherit' href='../jual/penjualan'>
+                Transaksi
+              </Link>
+              <Typography color='textPrimary'>Penagihan Penjualan</Typography>
+            </Breadcrumbs>
+
+            <h2>Buat Penagihan Penjualan</h2>
             <div className='border-t border-gray-200'>
               <Form>
                 {/* <Select name='colors' className='basic-multi-select' classNamePrefix='select' options={restructure(data)} /> */}

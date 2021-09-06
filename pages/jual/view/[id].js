@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 export default function salesInvoice({ header, detail, jurnal }) {
   const router = useRouter();
   const { id } = router.query;
+  
 
   function pembayaran() {
     router.push(`../pembayaran-jual/${id}`);
@@ -32,10 +33,10 @@ export default function salesInvoice({ header, detail, jurnal }) {
         <Row>
           <Col>
             <h5>Transaksi</h5>
-            <h3 className=" text-blue-600">Sales Invoice #{id}</h3>
+            <h3 className="text-blue-600">Sales Invoice #{id}</h3>
           </Col>
           <Col>
-            <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3>
+          {header[0].sisa_tagihan > 0 ? <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3> : <h3 className="mt-2 mb-3 float-right text-green-500">Lunas</h3>}
           </Col>
         </Row>
 

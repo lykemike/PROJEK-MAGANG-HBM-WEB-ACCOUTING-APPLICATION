@@ -28,14 +28,28 @@ export default async (req, res) => {
 
     const sisa = parseInt(find_header_penjualan.sisa_tagihan) - parseInt(req.body.jumlah);
 
-    const update_sisa_tagihan = await prisma.headerPenjualan.update({
-      where: {
-        id: parseInt(req.body.id),
-      },
-      data: {
-        sisa_tagihan: sisa,
-      },
-    });
+    if(sisa == 0) {
+      const update_sisa_tagihan = await prisma.headerPenjualan.update({
+        where: {
+          id: parseInt(req.body.id),
+        },
+        data: {
+          sisa_tagihan: sisa,
+          status: "Complete"
+        },
+      });
+    } else {
+      const update_sisa_tagihan = await prisma.headerPenjualan.update({
+        where: {
+          id: parseInt(req.body.id),
+        },
+        data: {
+          sisa_tagihan: sisa,
+          status: "Partial"
+        },
+      });
+    }
+
 
     const find_akun_setor = await prisma.akun.findFirst({
       where: {

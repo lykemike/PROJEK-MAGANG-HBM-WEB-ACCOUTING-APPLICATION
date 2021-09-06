@@ -627,8 +627,8 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
                                           data2.filter((i) => i.id === parseInt(e.target.value))[0].nama
                                         );
                                         props.setFieldValue(
-                                          `produks.${index}.pajak_nama_akun_beli`,
-                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori2.nama_akun
+                                          `produks.${index}.pajak_beli_id`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori2.id
                                         );
 
                                         // Rumus total: kuantitas * harga satuan
@@ -720,8 +720,8 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
                                           data2.filter((i) => i.id === parseInt(e.target.value))[0].nama
                                         );
                                         props.setFieldValue(
-                                          `produks.${index}.pajak_nama_akun_beli`,
-                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori2.nama_akun
+                                          `produks.${index}.pajak_beli_id`,
+                                          data2.filter((i) => i.id === parseInt(e.target.value))[0].kategori2.id
                                         );
 
                                         // Rumus total: kuantitas * harga satuan
@@ -847,7 +847,7 @@ export default function penagihanpembelian({ data, data2, data3, data4, data5, d
                               pajak_id: 0,
                               pajak_nama: "kosong",
                               pajak_persen: 0,
-                              pajak_nama_akun_beli: "kosong",
+                              pajak_beli_id: "kosong",
                               jumlah: "",
                               hasil_diskon: 0,
                               hasil_pajak: 0,
@@ -1318,7 +1318,7 @@ export async function getServerSideProps(context) {
               hasil_diskon: i.hasil_diskon,
               pajak_id: i.pajak_id ,
               pajak_nama: i.pajak_nama,
-              pajak_nama_akun_beli: i.pajak_nama_akun_beli,
+              pajak_beli_id: i.pajak_beli_id,
               pajak_persen: i.pajak_persen,
               hasil_pajak: i.hasil_pajak,
               jumlah: i.jumlah,
