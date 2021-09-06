@@ -95,7 +95,7 @@ export default function listaset({data}) {
                             </th>
                         </tr>
                         </thead> 
-                    {data.filter((j) => j.boolean == false).map((i, index) => (    
+                    {data.map((i, index) => (    
                         <tr>
                             <td class="px-2 py-2 whitespace-nowrap font-medium">
                             <div class="text-lg text-gray-900">{i.tgl_akuisisi}</div>

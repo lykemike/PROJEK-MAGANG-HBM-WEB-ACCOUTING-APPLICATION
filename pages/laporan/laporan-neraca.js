@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useRef} from 'react'
 import Layout from '../../components/layout'
 import Link from 'next/link';
 import AsetTetap from "../../components/Neraca/AsetTetap";
@@ -9,6 +9,10 @@ import LiabilitasJangkaPanjang from "../../components/Neraca/LiabilitasJangkaPan
 import Modal from "../../components/Neraca/Modal";
 import { Button, Table, DropdownButton,Row,Col,Form,FormControl,InputGroup, Dropdown } from 'react-bootstrap';
 
+
+
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 export default function laporan_neraca({ header, header2,header3,header4,header5,header6}) {
     const tgl_mulai = useRef(null);
@@ -21,7 +25,7 @@ export default function laporan_neraca({ header, header2,header3,header4,header5
         <Layout>
         <div variant="container">
         <div></div>
-        <h4 class="mb-6 mt-2">Trial Balance</h4>
+        <h4 class="mb-6 mt-2">Neraca</h4>
         <div class="mb-10">
           <Row>
             <Col sm="3">

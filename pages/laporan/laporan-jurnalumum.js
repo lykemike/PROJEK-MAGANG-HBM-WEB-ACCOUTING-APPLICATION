@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import Layout from "../../components/layout";
-import TableDetailRow from "../../components/TableDetailRow";
-import TableDetailPenjualanRow from "../../components/TableDetailPenjualanRow";
+import TableDetailRow from "../../components/JurnalUmum/TableDetailRow";
+import TableDetailPenjualanRow from "../../components/JurnalUmum/TableDetailPenjualanRow";
 import Link from "next/link";
 import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
