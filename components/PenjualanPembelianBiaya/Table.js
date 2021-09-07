@@ -45,7 +45,7 @@ export default function TableJualBeli({ data, index, label, view }) {
                 <VisibilityOutlinedIcon color='primary' fontSize='small' className='mr-2' />
               </a>
             </Link>
-            <Link href={`../../${view}/${data.id}`}> 
+            <Link href={`../../${view}/${data.id}`}>
               <a>
                 <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
               </a>
@@ -91,7 +91,7 @@ export default function TableJualBeli({ data, index, label, view }) {
                 <VisibilityOutlinedIcon color='primary' fontSize='small' className='mr-2' />
               </a>
             </Link>
-            <Link href={`../../${view}/${data.id}`}> 
+            <Link href={`../../${view}/${data.id}`}>
               <a>
                 <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
               </a>

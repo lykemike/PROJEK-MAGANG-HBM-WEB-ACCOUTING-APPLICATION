@@ -271,6 +271,12 @@ model Pajak {
   DetailKirimUang DetailKirimUang[]
 }
 
+model SyaratPembayaran {
+   id               Int    @id @default(autoincrement())
+   value            Int
+   nama_pembayaran  String
+}
+
 // Header Penjualan Table
 model HeaderPenjualan {
   id                     Int    @id @default(autoincrement())
@@ -502,6 +508,8 @@ model HeaderBiaya {
   total            Int
   pemotongan       Int
   sisa_tagihan      Int
+  change_view       Boolean
+  total_pajak_per_baris   Int
   status            String
 
   detail_biaya          DetailBiaya[]

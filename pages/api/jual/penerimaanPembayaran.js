@@ -28,14 +28,14 @@ export default async (req, res) => {
 
     const sisa = parseInt(find_header_penjualan.sisa_tagihan) - parseInt(req.body.jumlah);
 
-    if(sisa == 0) {
+    if (sisa == 0) {
       const update_sisa_tagihan = await prisma.headerPenjualan.update({
         where: {
           id: parseInt(req.body.id),
         },
         data: {
           sisa_tagihan: sisa,
-          status: "Complete"
+          status: "Complete",
         },
       });
     } else {
@@ -45,11 +45,10 @@ export default async (req, res) => {
         },
         data: {
           sisa_tagihan: sisa,
-          status: "Partial"
+          status: "Partial",
         },
       });
     }
-
 
     const find_akun_setor = await prisma.akun.findFirst({
       where: {
@@ -83,11 +82,7 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json([
-      { message: "Create Penerimaan Pembayaran Success!", data: create_penerimaan_pembayaran },
-      { message: "Update Sisa Tagihan Success!", data: update_sisa_tagihan },
-      { message: "Create Jurnal Penerimaan Pembayaran!", data: jurnal_penerimaan_pembayaran },
-    ]);
+    res.status(201).json([{ message: "Penerimaan Pembayaran Penjualan Success!", data: create_penerimaan_pembayaran }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

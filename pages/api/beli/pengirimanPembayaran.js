@@ -83,9 +83,7 @@ export default async (req, res) => {
     });
 
     res.status(201).json([
-      { message: "Create Penerimaan Pembayaran Success!", data: create_penerimaan_pembayaran },
-      { message: "Update Sisa Tagihan Success!", data: update_sisa_tagihan },
-      { message: "Create Jurnal Pengiriman Pembayaran!", data: jurnal_pengiriman_pembayaran },
+      { message: "Pengerimaan Pembayaran Success!", data: create_penerimaan_pembayaran },
     ]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);

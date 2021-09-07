@@ -14,7 +14,7 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 
 const prisma = new PrismaClient();
 
-export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
+export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
   const router = useRouter();
   const url = "http://localhost:3000/api/biaya/create-biaya";
 
@@ -28,9 +28,9 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
           cara_pembayaran: "",
           no_transaksi: 0,
           alamat_penagihan: "",
-          tag: "",
+          tag: "-",
           boolean: false,
-          boolean2: false,
+          change_view: false,
           detail_biaya: [
             {
               akun_biaya_id: "",
@@ -45,7 +45,8 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
               jumlah2: 0,
             },
           ],
-          memo: "",
+          total_pajak_per_baris: "",
+          memo: "-",
           fileattachment: [],
           subtotal: "",
           akun_pemotongan: "",
@@ -91,32 +92,32 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
               {/* bayar dari, bayar nanti, and total */}
               <Row sm='12'>
                 <Col sm='4'>
-                  <Form.Label className='font-medium'>Bayar Dari</Form.Label>
-                  <Form.Control disabled={props.values.boolean2} as='select' defaultValue='Choose...' name='akun_kas_bank' onChange={props.handleChange}>
-                    <option value='0'>Pilih</option>
-                    {data.map((akun) => (
-                      <option key={akun.id} value={akun.id}>
-                        {akun.nama_akun}
-                      </option>
-                    ))}
-                  </Form.Control>
+                  {props.values.change_view == false ? (
+                    <div>
+                      <Form.Label className='font-medium'>Bayar Dari</Form.Label>
+                      <Form.Control as='select' defaultValue='Choose...' name='akun_kas_bank' onChange={props.handleChange}>
+                        <option value='0'>Pilih</option>
+                        {data.map((akun) => (
+                          <option key={akun.id} value={akun.id}>
+                            {akun.nama_akun}
+                          </option>
+                        ))}
+                      </Form.Control>
+                    </div>
+                  ) : (
+                    <Col />
+                  )}
                 </Col>
                 <Col sm='3'>
-                  <Form.Label />
-                  {/* <Row className="ml-1 mt-3">
-                    <FormCheck
+                  <div className='mt-10'>
+                    <Form.Check
+                      label='Bayar nanti'
                       onChange={(e) => {
-                        if (e.target.checked == true) {
-                          props.setFieldValue("boolean2", true);
-                          props.setFieldValue((props.values.akun_kas_bank = "0"));
-                        } else {
-                          props.setFieldValue("boolean2", false);
-                          props.setFieldValue((props.values.akun_kas_bank = props.values.akun_kas_bank));
-                        }
+                        props.setFieldValue((props.values.change_view = e.target.checked));
+                        props.setFieldValue((props.values.akun_kas_bank = 1));
                       }}
                     />
-                    <p className="font-medium">Bayar Nanti</p>
-                  </Row> */}
+                  </div>
                 </Col>
                 <Col sm='3' />
                 <Col sm='2' className='justify-content-end'>
@@ -166,8 +167,11 @@ export default function BuatBiaya({ data, data2, data3, data4, data5 }) {
                   <Form.Label className='font-medium'>Cara Pembayaran</Form.Label>
                   <Form.Control as='select' defaultValue='Choose...' name='cara_pembayaran' onChange={props.handleChange}>
                     <option>Pilih</option>
-                    <option value='Cash'>Tunai / Cash</option>
-                    <option value='Credit'>Credit / Term of Payment</option>
+                    {data6.map((i, index) => (
+                      <option key={index} value={i.value}>
+                        {i.nama_pembayaran}
+                      </option>
+                    ))}
                   </Form.Control>
                 </Col>
                 <Col sm='2'>
@@ -721,6 +725,12 @@ export async function getServerSideProps() {
     },
   });
 
+  const get_syarat_pembayaran = await prisma.syaratPembayaran.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
+
   return {
     props: {
       data: getAkun,
@@ -728,6 +738,7 @@ export async function getServerSideProps() {
       data3: getKontak,
       data4: getPajak,
       data5: getAkun3,
+      data6: get_syarat_pembayaran,
     },
   };
 }
