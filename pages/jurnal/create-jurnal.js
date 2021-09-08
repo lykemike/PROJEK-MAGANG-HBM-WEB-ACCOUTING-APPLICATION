@@ -8,11 +8,12 @@ import Link from "next/link";
 import * as Yup from "yup";
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
+
+import Typography from "@material-ui/core/Typography";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-// import 'date-fns';
-// import {KeyboardDatePicker} from '@material-ui/pickers';
 
 export default function create_jurnal({ data, data2 }) {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function create_jurnal({ data, data2 }) {
           total_debit: "",
           total_kredit: "",
           fileattachment: [],
+          balance: "",
           detail_jurnal: [
             {
               akun_id: "",
@@ -70,51 +72,66 @@ export default function create_jurnal({ data, data2 }) {
         }}>
         {(props) => (
           <Forms noValidate>
-            <h1>Jurnal</h1>
-            <Form>
-              <Form.Group as={Row} controlId='formPlaintext'>
-                <Form.Label column sm='2'>
-                  No. Transaksi
-                </Form.Label>
-                <Form.Label column sm='2'>
-                  Tgl.Transaksi
-                </Form.Label>
-              </Form.Group>
-              <Form.Group as={Row} controlId='formPlaintext'>
-                <Col sm='2'>
-                  <Form.Control placeholder={"Auto"} name='no_transaksi' onChange={props.handleChange} disabled />
-                </Col>
-                <Col sm='2'>
-                  <FormControl placeholder='Pick date' type='date' aria-label='date' onChange={props.handleChange} name='tgl_transaksi' />
-                  {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
-                  {/* <KeyboardDatePicker disableToolbar variant="inline" format="MM/dd/yyyy" margin="normal" id="date-picker-inline" label="Date picker inline" value={selectedDate} onChange={handleDateChange} KeyboardButtonProps={{'aria-label': 'change date',}}/> */}
-                </Col>
-              </Form.Group>
-            </Form>
+            <Breadcrumbs aria-label='breadcrumb'>
+              <Typography color='textPrimary'>Jurnal</Typography>
+            </Breadcrumbs>
+            <Row>
+              <Col sm='8'>
+                <h2 className='text-blue-600'>Jurnal</h2>
+              </Col>
+              <Col sm='4'></Col>
+            </Row>
 
-            <div className='card'>
+            <hr />
+            <Row>
+              <Col sm='3'>
+                <p className='font-semibold'>No. Transaksi</p>
+              </Col>
+              <Col sm='3'>
+                <p className='font-semibold'>Tanggal Transaksi</p>
+              </Col>
+
+              <Col sm='6'>
+                <div className='flex justify-end items-center'>
+                  {props.values.balance == "Balance" ? <h1 className='text-green-500'>Balance</h1> : <h2 className='text-red-500'>{props.values.balance}</h2>}
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col sm='2'>
+                <Form.Control placeholder={"Auto"} name='no_transaksi' onChange={props.handleChange} disabled />
+              </Col>
+              <Col sm='1' />
+              <Col sm='2'>
+                <FormControl placeholder='Pick date' type='date' aria-label='date' onChange={props.handleChange} name='tgl_transaksi' />
+                {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
+              </Col>
+            </Row>
+
+            <div className='card mt-8'>
               <div className='card-body'>
                 <Form>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Form.Label column sm='2'>
-                      Akun
-                    </Form.Label>
-                    <Form.Label column sm='2'>
-                      Deskripsi
-                    </Form.Label>
-                    <Form.Label column sm='1'>
-                      Tag
-                    </Form.Label>
-                    <Form.Label column sm='2'>
-                      Debit
-                    </Form.Label>
-                    <Form.Label column sm='2'>
-                      Kredit
-                    </Form.Label>
-                    <Form.Label column sm='2'>
-                      Action
-                    </Form.Label>
-                  </Form.Group>
+                  <Row>
+                    <Col sm='3'>
+                      <p className='font-semibold'>Akun</p>
+                    </Col>
+                    <Col sm='2'>
+                      <p className='font-semibold'>Deskripsi</p>
+                    </Col>
+                    <Col sm='1'>
+                      <p className='font-semibold'>Tag</p>
+                    </Col>
+                    <Col sm='2'>
+                      <p className='font-semibold'>Debit</p>
+                    </Col>
+                    <Col m='2'>
+                      <p className='font-semibold'>Kredit</p>
+                    </Col>
+                    <Col sm='2'>
+                      <p className='font-semibold'>Action</p>
+                    </Col>
+                  </Row>
 
                   <FieldArray name='detail_jurnal'>
                     {({ insert, remove, push }) => (
@@ -123,7 +140,7 @@ export default function create_jurnal({ data, data2 }) {
                           props.values.detail_jurnal.map((i, index) => (
                             <div key={index} name='detail_jurnal'>
                               <Form.Group as={Row} controlId='formPlaintext'>
-                                <Col sm='2'>
+                                <Col sm='3'>
                                   <Form.Control
                                     as='select'
                                     name={`detail_jurnal.${index}.akun_id`}
@@ -143,7 +160,7 @@ export default function create_jurnal({ data, data2 }) {
                                 </Col>
                                 <Col sm='2'>
                                   <Form.Control
-                                    placeholder='Isi Deskripsi'
+                                    placeholder='-'
                                     name='deskripsi'
                                     onChange={(e) => {
                                       props.setFieldValue(`detail_jurnal.${index}.deskripsi`, e.target.value);
@@ -152,7 +169,7 @@ export default function create_jurnal({ data, data2 }) {
                                 </Col>
                                 <Col sm='1'>
                                   <Form.Control
-                                    placeholder=''
+                                    placeholder='-'
                                     name='tag'
                                     onChange={(e) => {
                                       props.setFieldValue(`detail_jurnal.${index}.tag`, e.target.value);
@@ -161,24 +178,43 @@ export default function create_jurnal({ data, data2 }) {
                                 </Col>
                                 <Col sm='2'>
                                   <Form.Control
-                                    placeholder='Isi Debit'
+                                    type='number'
+                                    placeholder='Rp. 0,00'
                                     disabled={props.values.detail_jurnal[index].debit_disable}
                                     name={`detail_jurnal.${index}.debit`}
                                     onChange={(e) => {
                                       if (e.target.value.length > 0) {
                                         props.setFieldValue(`detail_jurnal.${index}.kredit_disable`, true);
                                         props.setFieldValue(`detail_jurnal.${index}.debit`, parseInt(e.target.value));
+
                                         let debit = parseInt(e.target.value);
                                         props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+
                                         const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
                                         props.setFieldValue((props.values.total_debit = total_debit));
                                         props.setFieldValue("total_debit", total_debit);
+
+                                        if ((props.values.total_debit / props.values.total_kredit) % 0) {
+                                          let balance = props.values.total_debit - props.values.total_kredit;
+                                          props.setFieldValue((balance = "Balance"));
+                                          props.setFieldValue("balance", balance);
+                                        } else if (props.values.total_kredit > props.values.total_debit) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue((balance = "Debit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue("balance", balance);
+                                        } else {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue((balance = "Kredit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue("balance", balance);
+                                        }
                                       } else {
                                         props.setFieldValue(`detail_jurnal.${index}.kredit_disable`, false);
                                         props.setFieldValue(`detail_jurnal.${index}.kredit`, 0);
                                         props.setFieldValue(`detail_jurnal.${index}.debit`, 0);
+
                                         let debit = 0;
                                         props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+
                                         const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
                                         props.setFieldValue((props.values.total_debit = total_debit));
                                         props.setFieldValue("total_debit", total_debit);
@@ -188,24 +224,43 @@ export default function create_jurnal({ data, data2 }) {
                                 </Col>
                                 <Col sm='2'>
                                   <Form.Control
-                                    placeholder='Isi Kredit'
+                                    type='number'
+                                    placeholder='Rp. 0,00'
                                     name='kredit'
                                     disabled={props.values.detail_jurnal[index].kredit_disable}
                                     onChange={(e) => {
                                       if (e.target.value.length > 0) {
                                         props.setFieldValue(`detail_jurnal.${index}.debit_disable`, true);
                                         props.setFieldValue(`detail_jurnal.${index}.kredit`, parseInt(e.target.value));
+
                                         let kredit = parseInt(e.target.value);
                                         props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+
                                         const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
                                         props.setFieldValue((props.values.total_kredit = total_kredit));
                                         props.setFieldValue("total_kredit", total_kredit);
+
+                                        if (props.values.total_kredit / props.values.total_debit == 1) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue((balance = "Balance"));
+                                          props.setFieldValue("balance", balance);
+                                        } else if (props.values.total_debit > props.values.total_kredit) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue((balance = "Kredit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue("balance", balance);
+                                        } else {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue((balance = "Debit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue("balance", balance);
+                                        }
                                       } else {
                                         props.setFieldValue(`detail_jurnal.${index}.debit_disable`, false);
                                         props.setFieldValue(`detail_jurnal.${index}.debit`, 0);
                                         props.setFieldValue(`detail_jurnal.${index}.kredit`, 0);
+
                                         let kredit = 0;
                                         props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+
                                         const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
                                         props.setFieldValue((props.values.total_kredit = total_kredit));
                                         props.setFieldValue("total_kredit", total_kredit);
@@ -223,7 +278,7 @@ export default function create_jurnal({ data, data2 }) {
                           ))}
 
                         <Button
-                          variant='primary ml-2'
+                          variant='primary mt-4'
                           onClick={() =>
                             push({
                               akun_id: "",
@@ -242,16 +297,24 @@ export default function create_jurnal({ data, data2 }) {
                   </FieldArray>
 
                   <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='3'></Col>
-                    <Col sm='3'></Col>
-                    <Col sm='3' name='total_debit'>
-                      Total Debit <br />
-                      Rp. {props.values.total_debit}
+                    <Col sm='3' />
+                    <Col sm='2' />
+                    <Col sm='1' />
+
+                    <Col sm='2' name='total_debit'>
+                      <h4>
+                        {" "}
+                        Total Debit <br />
+                        Rp. {props.values.total_debit.toLocaleString({ minimumFractionDigits: 0 })}
+                      </h4>
                     </Col>
-                    <Col sm='3' name='total_kredit'>
-                      Total Kredit <br />
-                      Rp. {props.values.total_kredit}
+                    <Col sm='2' name='total_kredit'>
+                      <h4>
+                        Total Kredit <br />
+                        Rp. {props.values.total_kredit.toLocaleString({ minimumFractionDigits: 0 })}
+                      </h4>
                     </Col>
+                    <Col sm='2' />
                   </Form.Group>
                   <Form.Group as={Row} controlId='formPlaintext'>
                     <Col sm='3'>

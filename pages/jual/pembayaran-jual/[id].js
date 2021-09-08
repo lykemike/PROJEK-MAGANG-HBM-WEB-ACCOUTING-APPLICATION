@@ -11,7 +11,7 @@ import { PrismaClient } from "@prisma/client";
 import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-export default function pembayaran_jual({ data, data2, data3 }) {
+export default function pembayaran_jual({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
 
@@ -20,7 +20,6 @@ export default function pembayaran_jual({ data, data2, data3 }) {
   function pembayaran() {
     router.push(`../pembayaran-jual/view/${id}`);
   }
-
 
   return (
     <Layout>
@@ -35,12 +34,11 @@ export default function pembayaran_jual({ data, data2, data3 }) {
         }}
         // validationSchema={UserSchema}
         onSubmit={async (values) => {
-          // alert(JSON.stringify(values, null, 2));
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-              // router.push("../penjualan");
+              router.push(`../../jual/view/${id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -48,11 +46,13 @@ export default function pembayaran_jual({ data, data2, data3 }) {
         }}>
         {(props) => (
           <Forms noValidate>
-            <div>
-              <h4>Transaksi</h4>
-              <h4>Penerimaan Pembayaran</h4>
-              <hr />
-            </div>
+            <Row>
+              <Col>
+                <h5>Transaksi</h5>
+                <h3 className='text-blue-600'>Penerimaan Pembayaran</h3>
+              </Col>
+            </Row>
+            <hr />
             <Form>
               <Row sm='12'>
                 {data.map((i) => (
@@ -66,7 +66,7 @@ export default function pembayaran_jual({ data, data2, data3 }) {
                   <Form.Label className='font-medium'>Setor Ke</Form.Label>
                   <Form.Control as='select' name='setor_ke' onChange={props.handleChange}>
                     <option value='kosong'>Pilih</option>
-                    {data3.map((akun) => (
+                    {data2.map((akun) => (
                       <option key={akun.id} value={akun.id}>
                         {akun.nama_akun}
                       </option>
@@ -114,9 +114,9 @@ export default function pembayaran_jual({ data, data2, data3 }) {
               </Row>
 
               <Row sm='12'>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
+                <Col />
+                <Col />
+                <Col />
 
                 {data.map((i) => (
                   <Col sm='3'>
@@ -179,6 +179,7 @@ export default function pembayaran_jual({ data, data2, data3 }) {
 
                   <Col sm='2'>
                     <Form.Control
+                      type='number'
                       placeholder=''
                       name='jumlah'
                       onChange={(e) => {
@@ -191,24 +192,6 @@ export default function pembayaran_jual({ data, data2, data3 }) {
                   </Col>
                 </Row>
               ))}
-              {/* <Button variant="primary">
-					<AddIcon fontSize="small" />Tambah data
-				</Button> */}
-
-              {/* <Row sm="12" className="mt-3">
-					<Col sm="3">
-						<Form.Label className="font-medium">Memo</Form.Label>
-						<Form.Control as="textarea" rows={4} />
-					</Col>
-				</Row>
-				<Row sm="12">
-				<Col sm="3">
-						<Form.Label className="font-medium">Lampiran</Form.Label>
-						<Form>
-							<Form.File id="custom-file-translate-scss" label="ukuran maksimal 10MB/File" lang="en" custom />
-						</Form>
-					</Col>
-				</Row> */}
 
               <Row sm='12' className='mt-7'>
                 <Col sm='3' />
@@ -226,16 +209,15 @@ export default function pembayaran_jual({ data, data2, data3 }) {
 
               <Row>
                 <Col className='d-flex justify-content-end mt-10'>
-                <Button variant='primary mr-2' onClick={pembayaran}>Invoice</Button>
+                  {/* <Button variant='primary mr-2' onClick={pembayaran}>
+                    Invoice
+                  </Button> */}
                   <Link href='/jual/penjualan'>
                     <Button variant='danger mr-2'>Batal</Button>
                   </Link>
-                  {/* <Link href='/jual/penjualan'> */}
                   <Button variant='success' onClick={props.handleSubmit}>
                     Bayar
                   </Button>
-                  {/* </Link> */}
-                  {/* <Button variant='primary mr-2' onClick={pembayaran}>Invoice</Button> */}
                 </Col>
               </Row>
             </Form>
@@ -259,17 +241,6 @@ export async function getServerSideProps(context) {
     },
   });
 
-  const detail = await prisma.detailPenjualan.findMany({
-    where: {
-      header_penjualan_id: parseInt(id),
-    },
-    include: {
-      header_penjualan: true,
-      produk: true,
-      pajak: true,
-    },
-  });
-
   const akunKasBank = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
@@ -279,8 +250,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       data: header,
-      data2: detail,
-      data3: akunKasBank,
+      data2: akunKasBank,
     },
   };
 }

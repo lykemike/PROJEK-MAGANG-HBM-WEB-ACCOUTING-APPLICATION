@@ -3,16 +3,16 @@ import Layout from "../../components/Layout";
 import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-
+import Select from "react-select";
 import { useRouter } from "next/router";
 import * as Yup from "yup";
-import { Formik, Form as Forms } from "formik";
+import { Formik, Form as Forms, Field } from "formik";
 import Axios from "axios";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function addProduk({ data, data2, data3, data5 }) {
+export default function addProduk({ data, data2, data3, data5, data6 }) {
   // Form Validation
   const ProdukSchema = Yup.object().shape({
     file_upload: Yup.string().required("required"),
@@ -39,6 +39,16 @@ export default function addProduk({ data, data2, data3, data5 }) {
   function cancelButton() {
     router.push("../produk/tabel-produk");
   }
+
+  function SelectField(FieldProps) {
+  return (
+    <Select
+      options={data6}    
+      isClearable={true}
+      onChange={option => FieldProps.form.setFieldValue(FieldProps.field.name, option)}
+    />
+  )
+}
 
   return (
     <Layout>
@@ -151,21 +161,25 @@ export default function addProduk({ data, data2, data3, data5 }) {
                       <Form.Label>Kategori</Form.Label>
                     </Col>
                     <Col sm='4'>
-                      <Form.Control className='mb-2' as='select' name='kategori_produk' onChange={props.handleChange}>
-                        {/* loop over kategori and show them */}
+                      {/* <Select options={data6} name='kategori_produk' isClearable={true} component={SelectField} /> */}
+                      <Forms> 
+                      <Field options={data6} name='kategori_produk' component={SelectField}/>
+                      </Forms>
+                      {/* <Form.Control className='mb-2' as='select' name='kategori_produk' onChange={props.handleChange}>
+                   
                         <option value='0'>Pilih</option>
                         {data3.map((kategoriProduk) => (
                           <option key={kategoriProduk.id} value={kategoriProduk.id}>
                             {kategoriProduk.nama}
                           </option>
                         ))}
-                      </Form.Control>
-                      {props.errors.kategori_produk && props.touched.kategori_produk ? (
+                      </Form.Control> */}
+                      {/* {props.errors.kategori_produk && props.touched.kategori_produk ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />
                           {props.errors.kategori_produk}
                         </div>
-                      ) : null}
+                      ) : null} */}
                     </Col>
                   </Row>
 
@@ -225,7 +239,6 @@ export default function addProduk({ data, data2, data3, data5 }) {
                       onChange={(e) => {
                         if (e.target.checked == true) {
                           props.setFieldValue(`beli_disable`, false);
-                          
                         } else {
                           props.setFieldValue(`beli_disable`, true);
                         }
@@ -293,12 +306,7 @@ export default function addProduk({ data, data2, data3, data5 }) {
                     </Col>
                     <Col>
                       <Form.Label>Akun Penjualan</Form.Label>
-                      <Form.Control 
-                      disabled={props.values.jual_disable} 
-                      className='mb-2' 
-                      as='select' 
-                      name='akun_penjualan' 
-                      onChange={props.handleChange}>
+                      <Form.Control disabled={props.values.jual_disable} className='mb-2' as='select' name='akun_penjualan' onChange={props.handleChange}>
                         <option value='0'>Pilih</option>
                         {data2.map((akunPenjualan) => (
                           <option key={akunPenjualan.id} value={akunPenjualan.id}>
@@ -361,12 +369,20 @@ export async function getServerSideProps() {
 
   const getKategoriProduk = await prisma.kategoriProduk.findMany();
 
+  let kategori = [];
+  getKategoriProduk.map((i) => {
+    kategori.push({
+      value: i.id,
+      label: i.nama,
+    });
+  });
   return {
     props: {
       data: getAkunPembelian,
       data2: getAkunPenjualan,
       data3: getKategoriProduk,
       data5: getSatuan,
+      data6: kategori,
     },
   };
 }

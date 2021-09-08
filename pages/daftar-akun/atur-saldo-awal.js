@@ -4,16 +4,21 @@ import { Button, Table, Row, Input, Form, Col } from "react-bootstrap";
 import Link from "next/link";
 import Axios from "axios";
 import { Formik, Form as Forms, FieldArray } from "formik";
+import TextField from "@material-ui/core/TextField";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function test({ list }) {
   const url = "http://localhost:3000/api/daftar-akun/createSaldoAwal";
+
+  var today = new Date(),
+    date = today.toISOString().slice(0, 10);
+
   return (
     <Layout>
       <Formik
         initialValues={{
-          tgl_konversi: "",
+          tgl_konversi: date,
           saldo_awal: list,
         }}
         onSubmit={async (values) => {
@@ -31,9 +36,10 @@ export default function test({ list }) {
             <div>
               {" "}
               <h1>Saldo Awal</h1>
-              <div class='mt-12'>
+              <div class='mt-12 mb-8'>
                 <h4>Tanggal Konversi</h4>
-                <input type='date' name='tgl_konversi' class='border rounded-lg px-3 py-2 mt-1 mb-4 text-sm grid-cols-12 '  onChange={props.handleChange}/>
+                {/* <input type='date' name='tgl_konversi' class='border rounded-lg px-3 py-2 mt-1 mb-4 text-sm grid-cols-12 ' onChange={props.handleChange} /> */}
+                <TextField id='date' type='date' defaultValue={date} name='tgl_konversi' onChange={props.handleChange} />
               </div>
             </div>
             <table class='min-w-full table-auto'>
@@ -56,8 +62,7 @@ export default function test({ list }) {
               <tbody class='bg-white divide-y divide-gray-200'>
                 <FieldArray name='saldo_awal'>
                   {({ insert, remove, push }) => (
-                    <div>
-                      {/* {console.log(props.values.saldo_awal)} */}
+                    <>
                       {props.values.saldo_awal.map((i, index) => (
                         <tr key={index}>
                           <td class='px-2 py-2 whitespace-nowrap font-large'>
@@ -69,18 +74,14 @@ export default function test({ list }) {
                             <div class='text-lg text-gray-900'>{props.values.saldo_awal[index].nama_akun}</div>
                           </td>
                           <td class='px-2 py-2 whitespace-nowrap font-large'>
-                            <div class='text-lg text-gray-900'>
-                              <Form.Control disabled={props.values.saldo_awal[index].tipe_saldo === "Kredit"} type='number' name={`saldo_awal.${index}.debit`} onChange={props.handleChange} />
-                            </div>
+                            <Form.Control disabled={props.values.saldo_awal[index].tipe_saldo === "Kredit"} type='number' name={`saldo_awal.${index}.debit`} onChange={props.handleChange} />
                           </td>
                           <td class='px-2 py-2 whitespace-nowrap font-large'>
-                            <div class='text-lg text-gray-900'>
-                              <Form.Control disabled={props.values.saldo_awal[index].tipe_saldo === "Debit"} type='number' name={`saldo_awal.${index}.kredit`} onChange={props.handleChange} />
-                            </div>
+                            <Form.Control disabled={props.values.saldo_awal[index].tipe_saldo === "Debit"} type='number' name={`saldo_awal.${index}.kredit`} onChange={props.handleChange} />
                           </td>
                         </tr>
                       ))}
-                    </div>
+                    </>
                   )}
                 </FieldArray>
               </tbody>

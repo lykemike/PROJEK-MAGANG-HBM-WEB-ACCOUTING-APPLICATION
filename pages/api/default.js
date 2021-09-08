@@ -1912,7 +1912,41 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json({ message: "Create Default API Success!", data: settingPerusahaan });
+    const create_syarat_pembayaran = await prisma.syaratPembayaran.createMany({
+      data: [
+        {
+          value: 0,
+          nama_pembayaran: "Tunai/Cash",
+        },
+        {
+          value: 0,
+          nama_pembayaran: "Kredit/Term of Payment",
+        },
+        {
+          value: 7,
+          nama_pembayaran: "1 Minggu",
+        },
+        {
+          value: 10,
+          nama_pembayaran: "10 Hari",
+        },
+        {
+          value: 15,
+          nama_pembayaran: "15 Hari",
+        },
+        {
+          value: 30,
+          nama_pembayaran: "30 Hari",
+        },
+        {
+          value: 60,
+          nama_pembayaran: "60 Hari",
+        },
+      ],
+      skipDuplicates: true,
+    });
+
+    res.status(201).json({ message: "Create Default API Success!", data: create_syarat_pembayaran });
   } catch (error) {
     res.status(400).json({ roleType: "Create Admin Role Failed!", error });
     console.log(error);

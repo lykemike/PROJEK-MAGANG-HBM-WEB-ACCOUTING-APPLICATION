@@ -3,11 +3,16 @@ import Layout from "../../components/Layout";
 import { Row, Col, Button, InputGroup, FormControl, FormCheck } from "react-bootstrap";
 import Link from "next/link";
 
-import TableJualBeli from "../../components/PenjualanPembelianBiaya/Table";
+import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
+import Table from "@material-ui/core/Table";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
-import SearchIcon from "@material-ui/icons/Search";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import TablePagination from "../../components/TablePagination";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -90,7 +95,7 @@ export default function Pengeluaran({ data }) {
                 <h3 class='text-xl font-gray-700 font-bold'>Total Biaya Bulan Ini</h3>
               </div>
               <div class='px-4 py-2 flex space-x-2 mt-2'>
-                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. -</h3>
+                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. {data.reduce((a, b) => (a = a + b.total), 0).toLocaleString({ minimumFractionDigits: 0 })}</h3>
               </div>
             </div>
           </Col>
@@ -100,7 +105,7 @@ export default function Pengeluaran({ data }) {
                 <h1 class='text-xl font-gray-700 font-bold'>Biaya Belum Dibayar</h1>
               </div>
               <div class='px-4 py-2 flex space-x-2 mt-2'>
-                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. -</h3>
+                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. {data.reduce((a, b) => (a = a + b.sisa_tagihan), 0).toLocaleString({ minimumFractionDigits: 0 })}</h3>
               </div>
             </div>
           </Col>
@@ -118,44 +123,45 @@ export default function Pengeluaran({ data }) {
         </Row>
       </div>
 
-      <table className='min-w-full table-auto'>
-        <thead className='justify-between'>
-          <tr className='bg-dark'>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Tgl Transaksi</span>
-            </th>
-            <th className='px-8 py-2'>
-              <span className='text-white text-base'>Nomor</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Kategori</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Penerima</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Tag</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Status</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Sisa Tagihan</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Total</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Actions</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody className='bg-white divide-y divide-gray-200'>
+      <TableContainer component={Paper}>
+        <Table aria-label='collapsible table'>
+          <TableHead className='bg-dark'>
+            <TableRow>
+              <TableCell />
+              <TableCell>
+                <Typography className='text-white font-bold'>Tanggal Transaksi</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Nomor</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Akun Pembayaran</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Penerima</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Tag</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Status</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Sisa Tagihan</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Total</Typography>
+              </TableCell>
+              <TableCell align='center'>
+                <Typography className='text-white font-bold'>Actions</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
           {data.slice(firstIndex, lastIndex).map((data, index) => (
-            <TableJualBeli data={data} index={index} label='Expense' view='biaya' />
+            <TableReusable data={data} index={index} label='Expense' label2='Pengiriman Biaya' view='biaya' />
           ))}
-        </tbody>
-      </table>
+        </Table>
+      </TableContainer>
       <div class='flex items-center justify-center mt-4'>
         <TablePagination
           onPrevChange={handlePrevChange}
@@ -184,6 +190,7 @@ export async function getServerSideProps() {
       akun1: true,
       akun2: true,
       kontak: true,
+      pengirimanbiaya: true,
     },
   });
 

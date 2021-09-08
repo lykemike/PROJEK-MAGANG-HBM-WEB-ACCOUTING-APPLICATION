@@ -29,8 +29,8 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           alamat_supplier: "",
           tgl_transaksi: "",
           tgl_jatuh_tempo: "",
-          syarat_pembayaran: "",
-          no_ref_penagihan: "",
+          syarat_pembayaran: 0,
+          no_ref_penagihan: "-",
           no_transaksi: 0,
           tag: "-",
           boolean: false,
@@ -179,21 +179,18 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       type='date'
                       placeholder='Auto'
                       name='tgl_transaksi'
-                      onChange={
-                        // props.handleChange
-                        (e) => {
-                          props.setFieldValue("tgl_transaksi", e.target.value);
-                          props.setFieldValue((props.values.tgl_transaksi = e.target.value));
+                      onChange={(e) => {
+                        props.setFieldValue("tgl_transaksi", e.target.value);
+                        props.setFieldValue((props.values.tgl_transaksi = e.target.value));
 
-                          let tgltransaksi = e.target.value.split("-");
-                          tgltransaksi = new Date(tgltransaksi[0], tgltransaksi[1] - 1, tgltransaksi[2]);
-                          tgltransaksi.setDate(tgltransaksi.getDate() + props.values.syarat_pembayaran);
-                          let tanggal = tgltransaksi.toLocaleDateString();
-                          let tgl = tanggal.split("/");
-                          props.setFieldValue("tgl_jatuh_tempo", `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                          props.setFieldValue(props.values.tgl_jatuh_tempo, `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                        }
-                      }
+                        let tanggal = e.target.value;
+                        let tanggal2 = new Date(tanggal);
+                        tanggal2.setDate(tanggal2.getDate() + parseInt(props.values.syarat_pembayaran));
+
+                        let convert_to_iso = tanggal2.toISOString().slice(0, 10);
+                        props.setFieldValue("tgl_jatuh_tempo", convert_to_iso);
+                        props.setFieldValue((props.values.tgl_jatuh_tempo = convert_to_iso));
+                      }}
                     />
                     <br />
                     Tgl Jatuh Tempo <br />
@@ -207,21 +204,20 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                         props.setFieldValue("syarat_pembayaran", parseInt(e.target.value));
                         props.setFieldValue((props.values.syarat_pembayaran = parseInt(e.target.value)));
 
-                        // let tgltransaksi = props.values.tgl_transaksi.split("-");
-                        // tgltransaksi = new Date(tgltransaksi[0], tgltransaksi[1] - 1, tgltransaksi[2]);
-                        // tgltransaksi.setDate(tgltransaksi.getDate() + e.target.value);
-                        // let tanggal = tgltransaksi.toLocaleDateString();
-                        // let tgl = tanggal.split("/");
-                        // props.setFieldValue("tgl_jatuh_tempo", `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                        // props.setFieldValue(props.values.tgl_jatuh_tempo, `${tgl[2]}-${tgl[0].length > 1 ? tgl[0] : "0" + tgl[0]}-${tgl[1]}`);
-                      }}
-                      onBLur={props.handleBlur}>
-                      <option value='0'>Pilih</option>
-                      <option value='0'>Tunai / Cash</option>
-                      <option value='0'>Kredit / Term of Payment</option>
-                      <option value='10'>10 hari</option>
-                      <option value='15'>15 hari</option>
-                      <option value='30'>30 hari</option>
+                        let tanggal = props.values.tgl_transaksi;
+                        let tanggal2 = new Date(tanggal);
+                        tanggal2.setDate(tanggal2.getDate() + parseInt(e.target.value));
+
+                        let convert_to_iso = tanggal2.toISOString().slice(0, 10);
+                        props.setFieldValue("tgl_jatuh_tempo", convert_to_iso);
+                        props.setFieldValue((props.values.tgl_jatuh_tempo = convert_to_iso));
+                      }}>
+                      <option>Pilih</option>
+                      {data6.map((i, index) => (
+                        <option key={index} value={i.value}>
+                          {i.nama_pembayaran}
+                        </option>
+                      ))}
                     </Form.Control>
                     <br />
                   </Form.Label>
@@ -1269,9 +1265,9 @@ export async function getServerSideProps() {
     },
   });
 
-  const pembelianTerakhir = await prisma.headerPembelian.findFirst({
+  const get_syarat_pembayaran = await prisma.syaratPembayaran.findMany({
     orderBy: {
-      id: "desc",
+      id: "asc",
     },
   });
 
@@ -1282,7 +1278,7 @@ export async function getServerSideProps() {
       data3: produks,
       data4: akunPendapatan,
       data5: akunKasBank,
-      data6: pembelianTerakhir,
+      data6: get_syarat_pembayaran,
     },
   };
 }

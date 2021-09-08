@@ -55,6 +55,8 @@ export default async (req, res) => {
       akun_pemotongan: parseInt(req.body.akun_pemotongan),
       pemotongan: parseInt(req.body.pemotongan),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
+      total_pajak_per_baris: parseInt(req.body.total_pajak_per_baris),
+      change_view: true,
       status: "Active",
     };
 
@@ -93,10 +95,6 @@ export default async (req, res) => {
 
     const setting_pemotongan = get_setting_biaya.filter((i) => i.nama_setting === "pemotongan");
     const setting_hutang_usaha = get_setting_biaya.filter((i) => i.nama_setting === "hutang_usaha");
-
-    const bool2 = {
-      boolean2: req.body.boolean2,
-    };
 
     let detail = [];
     req.body.detail_biaya &&
