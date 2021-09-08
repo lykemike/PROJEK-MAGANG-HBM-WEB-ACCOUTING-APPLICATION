@@ -56,7 +56,7 @@ export default async (req, res) => {
       pemotongan: parseInt(req.body.pemotongan),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
       total_pajak_per_baris: parseInt(req.body.total_pajak_per_baris),
-      change_view: req.body.change_view,
+      change_view: true,
       status: "Active",
     };
 

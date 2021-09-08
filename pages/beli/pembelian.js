@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
-import TableJualBeli from "../../components/PenjualanPembelianBiaya/Table";
+import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
 import { Row, Col, FormControl } from "react-bootstrap";
 
-import AddIcon from "@material-ui/icons/Add";
+import Table from "@material-ui/core/Table";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import AddIcon from "@material-ui/icons/Add";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 
 import Link from "next/Link";
@@ -12,6 +18,10 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function pembelian({ data }) {
+  const [open, setOpen] = useState(false);
+  const onClick = () => {
+    setOpen(!open);
+  };
   const total_tagihan = data.reduce((a, b) => (a = a + b.sisa_tagihan), 0);
 
   return (
@@ -74,49 +84,49 @@ export default function pembelian({ data }) {
         </Row>
       </div>
 
-      <table className='min-w-full table-auto'>
-        <thead className='justify-between'>
-          <tr className='bg-dark'>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Tgl Transaksi</span>
-            </th>
-            <th className='px-8 py-2'>
-              <span className='text-white text-base'>Nomor</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Pelanggan</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Tgl Jatuh Tempo</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Tag</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Status</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Sisa Tagihan</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Total</span>
-            </th>
-            <th className='px-2 py-2'>
-              <span className='text-white text-base'>Actions</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody className='bg-white divide-y divide-gray-200'>
+      <TableContainer component={Paper}>
+        <Table aria-label='collapsible table'>
+          <TableHead className='bg-dark'>
+            <TableRow>
+              <TableCell />
+              <TableCell>
+                <Typography className='text-white font-bold'>Tanggal Transaksi</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Nomor</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Pelanggan</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Tanggal Jatuh Tempo</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Tag</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Status</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Sisa Tagihan</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Total</Typography>
+              </TableCell>
+              <TableCell align='center'>
+                <Typography className='text-white font-bold'>Actions</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
           {data.map((data, index) => (
-            <TableJualBeli data={data} index={index} label='Purchase Invoice' view='beli' />
+            <TableReusable data={data} index={index} label='Sales Invoice' label2='Pengiriman Bayaran' view='beli' />
           ))}
-        </tbody>
-      </table>
+        </Table>
+      </TableContainer>
     </Layout>
   );
 }
 export async function getServerSideProps() {
-  // Get kontak,produk,pajak from API
   const pembelians = await prisma.headerPembelian.findMany({
     orderBy: [
       {
@@ -127,6 +137,7 @@ export async function getServerSideProps() {
       kontak: true,
       akun1: true,
       akun2: true,
+      PengirimanBayaran: true,
     },
   });
 

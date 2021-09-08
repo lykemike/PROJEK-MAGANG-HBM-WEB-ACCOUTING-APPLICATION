@@ -14,7 +14,7 @@ export default function laporanbukubesar({ header, header2, header3 }) {
     // Axios.get()
   };
 
-  console.log(header)
+  console.log(header);
   return (
     <Layout>
       <div variant='container'>
@@ -93,7 +93,7 @@ export async function getServerSideProps() {
   const header = await prisma.akun.findMany({
     orderBy: {
       kategoriId: "asc",
-    }
+    },
   });
 
   const getPenjualan = await prisma.headerPenjualan.findMany({

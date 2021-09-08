@@ -35,7 +35,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
             {
               akun_biaya_id: "",
               nama_akun: "",
-              deskripsi: "kosong",
+              deskripsi: "-",
               pajak_id: 0,
               pajak_nama: "kosong",
               pajak_akun_beli_id: "",
@@ -168,7 +168,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
                   <Form.Control as='select' defaultValue='Choose...' name='cara_pembayaran' onChange={props.handleChange}>
                     <option>Pilih</option>
                     {data6.map((i, index) => (
-                      <option key={index} value={i.value}>
+                      <option key={index} value={i.nama_pembayaran}>
                         {i.nama_pembayaran}
                       </option>
                     ))}

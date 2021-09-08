@@ -167,8 +167,8 @@ export default function Kontak({ data, data2 }) {
                               <td class='px-2 py-2 whitespace-nowrap'>
                                 <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
                               </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman}</div>
+                              <td class='px-2 py-2 whitespace-nowrap' style={{ fontStyle: "italic", fontWeight: "400" }}>
+                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman.length > 20 ? j.kontak.alamat_pengiriman.slice(0, 20) +("...") : j.kontak.alamat_pengiriman }</div>
                               </td>
                               <td class='px-2 py-2 whitespace-nowrap'>
                                 <div class='text-sm text-gray-900'>{j.kontak.email}</div>
@@ -288,8 +288,8 @@ export default function Kontak({ data, data2 }) {
                               <td class='px-2 py-2 whitespace-nowrap'>
                                 <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
                               </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman}</div>
+                              <td class='px-2 py-2 whitespace-nowrap' style={{ fontStyle: "italic", fontWeight: "400" }}>
+                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman.length > 30 ? j.kontak.alamat_pengiriman.slice(0, 30) +("...") : j.kontak.alamat_pengiriman }</div>
                               </td>
                               <td class='px-2 py-2 whitespace-nowrap'>
                                 <div class='text-sm text-gray-900'>{j.kontak.email}</div>
@@ -404,8 +404,8 @@ export default function Kontak({ data, data2 }) {
                               <td class='px-2 py-2 whitespace-nowrap'>
                                 <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
                               </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman}</div>
+                              <td class='px-2 py-2 whitespace-nowrap' style={{ fontStyle: "italic", fontWeight: "400" }}>
+                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman.length > 30 ? j.kontak.alamat_pengiriman.slice(0, 30) +("...") : j.kontak.alamat_pengiriman }</div>
                               </td>
                               <td class='px-2 py-2 whitespace-nowrap'>
                                 <div class='text-sm text-gray-900'>{j.kontak.email}</div>
@@ -521,8 +521,8 @@ export default function Kontak({ data, data2 }) {
                                 <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
                               </td>
                               <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900' style={{ fontStyle: "italic", fontWeight: "500" }}>
-                                  {j.kontak.alamat_pengiriman}
+                                <div class='text-sm text-gray-900' style={{ fontStyle: "italic", fontWeight: "400" }}>
+                                  {j.kontak.alamat_pengiriman.length > 30 ? j.kontak.alamat_pengiriman.slice(0, 30) +("...") : j.kontak.alamat_pengiriman }
                                 </div>
                               </td>
                               <td class='px-2 py-2 whitespace-nowrap'>
