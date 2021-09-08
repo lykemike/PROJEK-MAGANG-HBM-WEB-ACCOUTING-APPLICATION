@@ -15,6 +15,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import FaceIcon from "@material-ui/icons/Face";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import BusinessIcon from '@material-ui/icons/Business';
+import MoneyIcon from '@material-ui/icons/Money';
 
 const Sidebar = () => {
   const [previlleges, setPrevilleges] = useState([]);
@@ -42,12 +43,6 @@ const Sidebar = () => {
       menu: "Role",
       href: "/role/tabel-role",
       icon: <SupervisorAccountIcon />,
-    },
-    {
-      id: 4,
-      menu: "Aset",
-      href: "/aset/list-aset",
-      icon: <BusinessIcon />,
     },
     {
       id: 5,
@@ -108,6 +103,18 @@ const Sidebar = () => {
       menu: "Pengaturan",
       href: "/setting/setting-perusahaan",
       icon: <SettingsIcon />,
+    },
+    {
+      id: 14,
+      menu: "Aset",
+      href: "/aset/list-aset",
+      icon: <BusinessIcon />,
+    },
+    {
+      id: 14,
+      menu: "Reimbursement",
+      href: "/reimbursement/tabel-reimbursement",
+      icon: <MoneyIcon />,
     },
   ];
 

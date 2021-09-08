@@ -70,14 +70,24 @@ export default function laporan_neraca({ header, header2,header3,header4,header5
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-              <th>Aset</th>
+            <div>
+              <th >Aset</th>
               <AsetLancar label="Aset Lancar" data={header} />
+              <td>Total Aset Lancar</td>
               <AsetTetap label="Aset Tetap" data={header2} />
+              <td>Total Aset Tetap</td>
               <AsetLainnya label="Aset Lainnya" data={header3} />
-              <th>Liabilitas dan Modal</th>
+              <td>Total Aset Lainnya</td>
+            </div>
+            <div className="mt-4">
+              <th className="mt-2">Liabilitas dan Modal</th>
               <LiabilitasJangkaPendek label="Liabilitas Jangka Pendek" data={header4} />
+              <td>Total Liabilitas Jangka Pendek</td>
               <LiabilitasJangkaPanjang label="Liabilitas Jangka Panjang" data={header5} />
+              <td>Total Liabilitas Jangka Panjang</td>
               <Modal label="Modal" data={header6} />
+              <td>Total Modal</td>
+            </div>
           </tbody>
           <tfoot>
             <tr>

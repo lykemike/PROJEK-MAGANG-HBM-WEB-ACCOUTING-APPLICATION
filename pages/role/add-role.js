@@ -133,6 +133,12 @@ export default function addRole() {
                             Laporan
                           </label>
                         </Row>
+                        <Row>
+                          <label>
+                            <Field type='checkbox' name='menu' value='15' />
+                            Reimbursement
+                          </label>
+                        </Row>
                       </div>
                     </Col>
 
@@ -183,6 +189,12 @@ export default function addRole() {
                           <label>
                             <Field type='checkbox' name='menu' value='14' />
                             Pengaturan
+                          </label>
+                        </Row>
+                        <Row>
+                          <label>
+                            <Field type='checkbox' name='menu' value='15' />
+                            Aset
                           </label>
                         </Row>
                       </div>

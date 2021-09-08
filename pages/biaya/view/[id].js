@@ -46,7 +46,7 @@ export default function Expense ({data, data2}) {
 					<Col className="d-flex justify-content-end mr-3">
 						<Row>
 							<h4 className="mr-2">Total Amount</h4>
-							<h4 class="text-blue-600">Rp. {i.pemotongan_total}</h4>
+							<h4 class="text-blue-600">Rp. {i.sisa_tagihan}</h4>
 						</Row>
 					</Col>
 				</Row>

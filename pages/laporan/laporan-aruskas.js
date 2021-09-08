@@ -59,7 +59,7 @@ const laporanaruskas = () => {
                                 <Dropdown.Item href="#/action-2">XLS</Dropdown.Item>
                                 <Dropdown.Item href="#/action-2">CSV</Dropdown.Item>
                             </DropdownButton>
-                <SettingsIcon fontSize="large" class="mr-2"/>
+              
                         </div>
 
                 <Table class="table mt-4">                        

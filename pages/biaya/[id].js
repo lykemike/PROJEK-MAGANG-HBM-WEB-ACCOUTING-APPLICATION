@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import Layout from "../../components/Layout";
 import { Row, Col, Form, Button, FormCheck, InputGroup } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
@@ -14,44 +14,47 @@ import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 
 const prisma = new PrismaClient();
 
-export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
+export default function UpdateBiaya({ data, data2, data3, data4, data5,header, biaya }) {
   const router = useRouter();
-  const url = "http://localhost:3000/api/biaya/create-biaya";
+  const { id } = router.query;
+
+  const formik = useRef(null)
+
+  const url = "http://localhost:3000/api/biaya/updateBiaya";
+
+  const totalPajak = data2.reduce((a,b) => (a = a+b.hasil_pajak),0)
 
   return (
     <Layout>
       <Formik
+        enableReinitialize={true}
+        innerRef={formik}
         initialValues={{
-          akun_kas_bank: "",
-          nama_penerima: "",
-          tgl_transaksi: "",
-          cara_pembayaran: "",
-          no_transaksi: 0,
-          alamat_penagihan: "",
-          tag: "",
-          boolean: false,
-          boolean2: false,
-          detail_biaya: [
-            {
-              akun_biaya_id: "",
-              nama_akun: "",
-              deskripsi: "kosong",
-              pajak_id: 0,
-              pajak_nama: "kosong",
-              pajak_akun_beli_id: "",
-              pajak_persen: 0,
-              hasil_pajak: 0,
-              jumlah: "",
-              jumlah2: 0,
-            },
-          ],
-          memo: "",
+          akun_kas_bank: header[0].akun_kas_bank,
+          nama_penerima: header[0].nama_penerima,
+          tgl_transaksi: header[0].tgl_transaksi,
+          cara_pembayaran: header[0].cara_pembayaran,
+          no_transaksi: header[0].no_transaksi,
+          alamat_penagihan: header[0].alamat_penagihan,
+          tag: header[0].tag,
+          memo: header[0].memo,
           fileattachment: [],
-          subtotal: "",
-          akun_pemotongan: "",
-          total: "",
-          pemotongan: 0,
-          sisa_tagihan: 0,
+          subtotal: header[0].subtotal,
+          akun_pemotongan: header[0].akun_pemotongan,
+          total: header[0].total,
+          pemotongan: header[0].pemotongan,
+          sisa_tagihan: header[0].sisa_tagihan,
+          detail_biaya: biaya,
+          akun_biaya_id: header[0].akun_biaya_id,
+          nama_akun: header[0].nama_akun,
+          deskripsi: header[0].deskripsi,
+          pajak_id: header[0].pajak_id,
+          pajak_nama: header[0].pajak_nama,
+          pajak_akun_beli_id: header[0].pajak_akun_beli_id,
+          pajak_persen: header[0].pajak_persen,
+          hasil_pajak: header[0].hasil_pajak,
+          jumlah: header[0].jumlah,
+          jumlah2: header[0].jumlah2,
         }}
         onSubmit={async (values) => {
           let formData = new FormData();
@@ -71,7 +74,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
           })
             .then(function (response) {
               // console.log(response)
-              router.push(`view/${response.data[0].id.id}`);
+              router.push(`view/${id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -83,7 +86,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
               <Link color='inherit' href='../biaya/pengeluaran'>
                 Biaya
               </Link>
-              <Typography color='textPrimary'>Edit Biaya</Typography>
+              <Typography color='textPrimary' class="mb-2">Edit Biaya</Typography>
             </Breadcrumbs>
             <h2>Edit Biaya</h2>
 
@@ -92,7 +95,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
               <Row sm='12'>
                 <Col sm='4'>
                   <Form.Label className='font-medium'>Bayar Dari</Form.Label>
-                  <Form.Control disabled={props.values.boolean2} as='select' defaultValue='Choose...' name='akun_kas_bank' onChange={props.handleChange}>
+                  <Form.Control disabled={props.values.boolean2}  value={props.values.akun_kas_bank} as='select' defaultValue='Choose...' name='akun_kas_bank' onChange={props.handleChange}>
                     <option value='0'>Pilih</option>
                     {data.map((akun) => (
                       <option key={akun.id} value={akun.id}>
@@ -138,6 +141,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                   <Form.Control
                     as='select'
                     defaultValue='Choose...'
+                    value={props.values.nama_penerima}
                     name='nama_penerima'
                     onChange={(e) => {
                       props.setFieldValue(`nama_penerima`, e.target.value);
@@ -160,11 +164,11 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                 </Col>
                 <Col sm='3'>
                   <Form.Label className='font-medium'>Tanggal Transaksi</Form.Label>
-                  <Form.Control placeholder='Auto' type='date' name='tgl_transaksi' onChange={props.handleChange} />
-                </Col>
+                  <Form.Control placeholder='Auto' type='date' name='tgl_transaksi' value={props.values.tgl_transaksi} onChange={props.handleChange} />
+                </Col> 
                 <Col sm='3'>
                   <Form.Label className='font-medium'>Cara Pembayaran</Form.Label>
-                  <Form.Control as='select' defaultValue='Choose...' name='cara_pembayaran' onChange={props.handleChange}>
+                  <Form.Control as='select' defaultValue='Choose...' name='cara_pembayaran' value={props.values.cara_pembayaran} onChange={props.handleChange}>
                     <option>Pilih</option>
                     <option value='Cash'>Tunai / Cash</option>
                     <option value='Credit'>Credit / Term of Payment</option>
@@ -172,7 +176,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                 </Col>
                 <Col sm='2'>
                   <Form.Label className='font-medium'>No. Transaksi</Form.Label>
-                  <Form.Control type='text' disabled placeholder='Auto' name='no_transaksi' onChange={props.handleChange} />
+                  <Form.Control type='text' disabled placeholder='Auto' name='no_transaksi' value={props.values.no_transaksi} onChange={props.handleChange} />
                 </Col>
               </Row>
 
@@ -186,7 +190,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                 <Col sm='3' />
                 <Col sm='2' className='mt-3'>
                   <Form.Label className='font-medium'>Tag</Form.Label>
-                  <Form.Control placeholder='Tag' name='tag' onChange={props.handleChange} />
+                  <Form.Control placeholder='Tag' name='tag' value={props.values.tag} onChange={props.handleChange} />
                 </Col>
               </Row>
 
@@ -276,6 +280,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                                 as='select'
                                 //   defaultValue='Choose...'
                                 //   name='akun_biaya_id'
+                                value={props.values.detail_biaya[index].akun_biaya_id}
                                 name={`detail_biaya.${index}.akun_biaya_id`}
                                 onChange={(e) => {
                                   props.setFieldValue(`detail_biaya.${index}.akun_biaya_id`, e.target.value);
@@ -297,12 +302,13 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                               </Form.Control>
                             </Col>
                             <Col sm='3'>
-                              <Form.Control placeholder='' type='text' name={`detail_biaya.${index}.deskripsi`} onChange={props.handleChange} />
+                              <Form.Control placeholder=''  value={props.values.detail_biaya[index].deskripsi} type='text' name={`detail_biaya.${index}.deskripsi`} onChange={props.handleChange} />
                             </Col>
                             <Col sm='2'>
                               <Form.Control
                                 as='select'
                                 name={`detail_biaya.${index}.pajak_id`}
+                                value={props.values.detail_biaya[index].pajak_id}
                                 onChange={(e) => {
                                   props.setFieldValue(`detail_biaya.${index}.pajak_id`, parseInt(e.target.value));
                                   if (props.values.boolean == false) {
@@ -447,7 +453,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                               <Form.Control
                                 placeholder=''
                                 name={`detail_biaya.${index}.jumlah`}
-                                value={props.values.jumlah}
+                                value={props.values.detail_biaya[0].jumlah}
                                 onChange={(e) => {
                                   props.setFieldValue(`detail_biaya.${index}.jumlah`, parseInt(e.target.value));
                                   if (props.values.boolean == false) {
@@ -548,7 +554,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
               <Row sm='12' className='mt-3'>
                 <Col sm='4'>
                   <Form.Label className='font-medium'>Memo</Form.Label>
-                  <Form.Control as='textarea' rows={4} name='memo' onChange={props.handleChange} />
+                  <Form.Control as='textarea' rows={4} value={props.values.memo} name='memo' onChange={props.handleChange} />
                 </Col>
                 <Col sm='3' />
                 <Col sm='2' className='mt-3'>
@@ -562,7 +568,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                 <Col sm='3' className='mt-3'>
                   <Col>
                     <p name='subtotal'>Rp. {props.values.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                    <p name='total_pajak_per_baris'>Rp. {props.values.total_pajak_per_baris}</p>
+                    <p name='hasil_pajak'>Rp. {props.values.totalPajak}</p>
                     <p name='total'>Rp. {props.values.total}</p>
                     <InputGroup.Append>
                       <InputGroup className='mb-3'>
@@ -574,6 +580,7 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
                           placeholder=''
                           aria-label='Amount (to the nearest dollar)'
                           name='pemotongan'
+                          value={props.values.pemotongan}
                           onChange={(e) => {
                             props.setFieldValue(`pemotongan`, parseInt(e.target.value));
                             if (props.values.boolean == false) {
@@ -675,7 +682,21 @@ export default function UpdateBiaya({ data, data2, data3, data4, data5 }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+
+  const header = await prisma.headerBiaya.findMany({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      akun1: true,
+      akun2: true,
+      kontak: true,
+      detail_biaya: true,
+    },
+  });
+
   // Get kategori akun from akun model
   const getAkun = await prisma.akun.findMany({
     where: {
@@ -721,6 +742,22 @@ export async function getServerSideProps() {
     },
   });
 
+    let biaya = []
+    header[0].detail_biaya.map((i) => {
+      biaya.push({
+        akun_biaya_id: parseInt(i.akun_biaya_id),
+        nama_akun: i.nama_akun,
+        deskripsi: i.deskripsi,
+        pajak_id: parseInt(i.pajak_id),
+        pajak_nama: i.pajak_nama,
+        pajak_persen: parseInt(i.pajak_persen),
+        hasil_pajak: parseInt(i.hasil_pajak),
+        pajak_akun_beli_id: i.pajak_akun_beli_id,
+        jumlah: parseInt(i.jumlah),
+        jumlah2: parseInt(i.jumlah2),
+      })
+    })
+
   return {
     props: {
       data: getAkun,
@@ -728,6 +765,8 @@ export async function getServerSideProps() {
       data3: getKontak,
       data4: getPajak,
       data5: getAkun3,
+      header: header,
+      biaya: biaya,
     },
   };
 }
