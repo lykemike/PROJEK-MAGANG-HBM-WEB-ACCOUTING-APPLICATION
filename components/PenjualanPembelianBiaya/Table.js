@@ -50,7 +50,7 @@ export default function Table2({ data, index, label, label2, view }) {
             <TableCell>
               {label} #{data.id}
             </TableCell>
-            <TableCell>{data.akun1.nama_akun.length > 28 ? data.akun1.nama_akun.slice(0, 28)+("...") : data.akun1.nama_akun }</TableCell>
+            <TableCell>{data.akun1.nama_akun.length > 28 ? data.akun1.nama_akun.slice(0, 28) + "..." : data.akun1.nama_akun}</TableCell>
             <TableCell>{data.kontak.nama}</TableCell>
             <TableCell>{data.tag}</TableCell>
             <TableCell>
@@ -99,7 +99,11 @@ export default function Table2({ data, index, label, label2, view }) {
                           <TableCell component='th' scope='row' align='center'>
                             {autoIncrement++}
                           </TableCell>
-                          <TableCell>{i.cara_pembayaran}</TableCell>
+                          <Link href={`../../${view}/pembayaran/view/${data.id}`}>
+                            <a>
+                              <TableCell>{i.cara_pembayaran}</TableCell>
+                            </a>
+                          </Link>
                           <TableCell>{i.tgl_pembayaran}</TableCell>
                           <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                         </TableRow>
@@ -182,7 +186,9 @@ export default function Table2({ data, index, label, label2, view }) {
                           <TableCell component='th' scope='row' align='center'>
                             {autoIncrement++}
                           </TableCell>
-                          <TableCell>{i.cara_pembayaran}</TableCell>
+                          <Link href={`../../${view}/pembayaran/view/${data.id}`}>
+                            <TableCell className='cursor-pointer hover:text-blue-600'>{i.cara_pembayaran}</TableCell>
+                          </Link>
                           <TableCell>{i.tgl_pembayaran}</TableCell>
                           <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                         </TableRow>

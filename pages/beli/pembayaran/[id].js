@@ -18,7 +18,7 @@ export default function pembayaran_beli({ data, data2 }) {
   const url = "http://localhost:3000/api/beli/pengirimanPembayaran";
 
   function pembayaran() {
-    router.push(`../pembayaran-jual/view/${id}`);
+    router.push(`../pembayaran/view/${id}`);
   }
 
   return (

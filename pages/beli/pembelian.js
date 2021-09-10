@@ -26,27 +26,28 @@ export default function pembelian({ data }) {
 
   return (
     <Layout>
-      <Breadcrumbs aria-label='breadcrumb'>
-        <Typography color='textPrimary'>Transaksi</Typography>
-      </Breadcrumbs>
+      <div className='border-b border-gray-200'>
+        <Breadcrumbs aria-label='breadcrumb'>
+          <Typography color='textPrimary'>Transaksi</Typography>
+        </Breadcrumbs>
 
-      <Row>
-        <Col sm='8'>
-          <h2 className='text-blue-600'>Pembelian</h2>
-        </Col>
-        <Col sm='4'>
-          <div className='d-flex justify-content-end'>
-            <Link href='/beli/penagihan-pembelian '>
-              <a>
-                <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
-                  <AddIcon fontSize='small' /> Buat Pembelian Baru
-                </button>
-              </a>
-            </Link>
-          </div>
-        </Col>
-      </Row>
-      <hr />
+        <Row>
+          <Col sm='8'>
+            <h2 className='text-blue-600'>Pembelian</h2>
+          </Col>
+          <Col sm='4'>
+            <div className='d-flex justify-content-end'>
+              <Link href='/beli/penagihan-pembelian '>
+                <a>
+                  <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
+                    <AddIcon fontSize='small' /> Buat Pembelian Baru
+                  </button>
+                </a>
+              </Link>
+            </div>
+          </Col>
+        </Row>
+      </div>
 
       <div className='mt-4 mb-8'>
         <Row sm='12'>

@@ -1,25 +1,28 @@
-import { React, useEffect, useState, Component, Fragment } from "react";
-import Layout from "../../components/Layout";
-import { Form, Row, Col, InputGroup, FormControl, Table } from "react-bootstrap";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import AddIcon from "@material-ui/icons/Add";
-import Link from "next/Link";
-import BackspaceIcon from "@material-ui/icons/Backspace";
-
-import { Formik, Form as Forms, FieldArray } from "formik";
-import Axios from "axios";
+import { React } from "react";
 import { useRouter } from "next/router";
-import { PrismaClient } from "@prisma/client";
-import { PeopleSharp } from "@material-ui/icons";
+import Layout from "../../components/Layout";
 
+import AddIcon from "@material-ui/icons/Add";
+import Switch from "@material-ui/core/Switch";
 import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import BackspaceIcon from "@material-ui/icons/Backspace";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Link from "next/Link";
+
+import { Formik, Form as Forms, FieldArray } from "formik";
+import { Form, Row, Col, InputGroup, FormControl, Table } from "react-bootstrap";
+
+import Axios from "axios";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function penagihanpenjualan({ data, data2, data3, data4, data5, data6 }) {
   const url = "http://localhost:3000/api/jual/createpenjualan";
   const router = useRouter();
+
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
 
   return (
     <Layout>
@@ -28,13 +31,14 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           nama_supplier: "",
           email: "",
           alamat_supplier: "",
-          tgl_transaksi: "",
+          tgl_transaksi: current,
           tgl_jatuh_tempo: "",
           syarat_pembayaran: 0,
           no_ref_penagihan: "-",
           no_transaksi: 0,
           tag: "-",
           boolean: false,
+          tgl_kontrak: "",
           produks: [
             {
               produk_id: "",
@@ -106,16 +110,16 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             <h2>Buat Penagihan Penjualan</h2>
             <div className='border-t border-gray-200'>
               <Form>
-                {/* <Select name='colors' className='basic-multi-select' classNamePrefix='select' options={restructure(data)} /> */}
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Form.Label column sm='3'>
-                    Pelanggan
-                  </Form.Label>
-                  <Form.Label column sm='3'>
-                    Email
-                  </Form.Label>
-                </Form.Group>
-                <Form.Group as={Row} controlId='formPlaintext'>
+                <Row className='mt-2'>
+                  <Col sm='3'>
+                    <label>Pelanggan</label>
+                  </Col>
+                  <Col sm='3'>
+                    <label>Email</label>
+                  </Col>
+                </Row>
+
+                <Row className='mb-2'>
                   <Col sm='3'>
                     <Form.Control
                       as='select'
@@ -132,7 +136,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                           props.setFieldValue("email", hasil[0].kontak.email), props.setFieldValue("alamat_supplier", hasil[0].kontak.alamat_pembayaran);
                         }
                       }}>
-                      <option value='kosong'>pilih supplier</option>
+                      <option value='kosong'>pilih pelanggan</option>
                       {data.map((nama_supplier, index) => (
                         <option key={index} value={nama_supplier.kontak.id}>
                           {nama_supplier.kontak.nama_panggilan}
@@ -142,8 +146,9 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                   </Col>
                   <Col sm='3'>
                     <Form.Control
+                      disabled
                       type='text'
-                      placeholder=''
+                      placeholder='-'
                       name='email'
                       value={props.values.email}
                       onChange={(e) => {
@@ -151,54 +156,40 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                       }}
                     />
                   </Col>
-                  <Col sm='3'></Col>
+                  <Col sm='3' />
                   <Col sm='3'>
-                    <Form.Label column sm='2' name='sisa_tagihan'>
-                      Rp.{props.values.sisa_tagihan}
-                    </Form.Label>
+                    <h3 name='sisa_tagihan'>Rp. {props.values.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
                   </Col>
-                </Form.Group>
+                </Row>
               </Form>
             </div>
+
             <div className='border-t border-gray-200'>
-              <Form>
-                <Form.Group as={Row} controlId='formPlaintext'>
-                  <Form.Label column sm='3'>
-                    <label for='message'>Alamat Penagihan</label>
-                    <br />
+              <Row className='mt-2'>
+                <Col sm='3'>
+                  <div className='mb-2'>
+                    <label>Alamat Penagihan</label>
                     <textarea
-                      rows='5'
+                      disabled
+                      rows='4'
                       id='message'
                       class='px-10 py-2 border border-gray-800  '
                       name='alamat_supplier'
                       value={props.values.alamat_supplier}
                       onChange={(e) => {
                         props.setFieldValue("alamat_supplier", e.target.value);
-                      }}></textarea>
-                  </Form.Label>
-                  <Form.Label column sm='3'>
-                    Tgl Invoice <br />
-                    <Form.Control
-                      type='date'
-                      placeholder='Auto'
-                      name='tgl_transaksi'
-                      onChange={(e) => {
-                        props.setFieldValue("tgl_transaksi", e.target.value);
-                        props.setFieldValue((props.values.tgl_transaksi = e.target.value));
-
-                        let tanggal = e.target.value;
-                        let tanggal2 = new Date(tanggal);
-                        tanggal2.setDate(tanggal2.getDate() + parseInt(props.values.syarat_pembayaran));
-
-                        let convert_to_iso = tanggal2.toISOString().slice(0, 10);
-                        props.setFieldValue("tgl_jatuh_tempo", convert_to_iso);
-                        props.setFieldValue((props.values.tgl_jatuh_tempo = convert_to_iso));
                       }}
                     />
-                    <br />
-                    Tgl Jatuh Tempo <br />
-                    <Form.Control type='date' placeholder='Auto' name='tgl_jatuh_tempo' onChange={props.handleChange} value={props.values.tgl_jatuh_tempo} /> <br />
-                    Syarat Pembayaran <br />
+                  </div>
+                </Col>
+
+                <Col sm='3'>
+                  <div className='mb-2'>
+                    <label>Nomor Invoice</label>
+                    <Form.Control disabled type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} />
+                  </div>
+                  <div className='mb-2'>
+                    <label>Syarat Pembayaran</label>
                     <Form.Control
                       as='select'
                       name='syarat_pembayaran'
@@ -221,86 +212,124 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                         </option>
                       ))}
                     </Form.Control>
-                    <br />
-                  </Form.Label>
+                  </div>
+                  <div className='mb-2'>
+                    <label>Tanggal Kontrak</label>
+                    <Form.Control type='date' placeholder='Auto' name='tgl_kontrak' onChange={props.handleChange} />
+                  </div>
+                </Col>
 
-                  <Form.Label column sm='3'>
-                    No Invoice <br />
-                    <Form.Control disabled type='text' placeholder='Auto' name='no_transaksi' onChange={props.handleChange} /> <br />
-                    Nomor Kontrak <br />
-                    <Form.Control type='text' placeholder='' name='no_ref_penagihan' onChange={props.handleChange} /> <br />
-                    Tag <br />
-                    <Form.Control type='text' placeholder='' name='tag' onChange={props.handleChange} /> <br />
-                  </Form.Label>
-                </Form.Group>
-              </Form>
+                <Col sm='3'>
+                  <div className='mb-2'>
+                    <label>Tanggal Invoice</label>
+                    <Form.Control
+                      type='date'
+                      placeholder='Auto'
+                      name='tgl_transaksi'
+                      onChange={(e) => {
+                        props.setFieldValue("tgl_transaksi", e.target.value);
+                        props.setFieldValue((props.values.tgl_transaksi = e.target.value));
+
+                        let tanggal = e.target.value;
+                        let tanggal2 = new Date(tanggal);
+                        tanggal2.setDate(tanggal2.getDate() + parseInt(props.values.syarat_pembayaran));
+
+                        let convert_to_iso = tanggal2.toISOString().slice(0, 10);
+                        props.setFieldValue("tgl_jatuh_tempo", convert_to_iso);
+                        props.setFieldValue((props.values.tgl_jatuh_tempo = convert_to_iso));
+                      }}
+                    />
+                  </div>
+                  <div className='mb-2'>
+                    <label>Tag</label>
+                    <Form.Control type='text' placeholder='-' name='tag' onChange={props.handleChange} />
+                  </div>
+                  <div className='mb-2'>
+                    <label>Nomor Kontrak</label>
+                    <Form.Control type='text' placeholder='-' name='no_ref_penagihan' onChange={props.handleChange} />
+                  </div>
+                </Col>
+
+                <Col sm='3'>
+                  <div className='mb-2'>
+                    <label>Tanggal Jatuh Tempo</label>
+                    <Form.Control type='date' placeholder='Auto' name='tgl_jatuh_tempo' onChange={props.handleChange} value={props.values.tgl_jatuh_tempo} />
+                  </div>
+                </Col>
+              </Row>
             </div>
-            <div>
-              <Form.Check
+
+            <div class='flex flex-row-reverse'>
+              <FormControlLabel
                 label='Harga Termasuk Pajak'
-                type='switch'
-                id='custom-switch'
-                onChange={(e) => {
-                  if (e.target.checked === true) {
-                    props.setFieldValue((props.values.boolean = true));
-                    const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
-                    const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
-                    const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                labelPlacement='end'
+                control={
+                  <Switch
+                    color='primary'
+                    onChange={(e) => {
+                      if (e.target.checked === true) {
+                        props.setFieldValue((props.values.boolean = true));
+                        const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                        const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                        const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-                    let new_subtotal = subtotal - pajak_total;
-                    props.setFieldValue((props.values.subtotal = new_subtotal));
-                    props.setFieldValue("subtotal", new_subtotal);
+                        let new_subtotal = subtotal - pajak_total;
+                        props.setFieldValue((props.values.subtotal = new_subtotal));
+                        props.setFieldValue("subtotal", new_subtotal);
 
-                    props.setFieldValue("total_diskon_per_baris", diskon_total);
+                        props.setFieldValue("total_diskon_per_baris", diskon_total);
 
-                    let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
-                    props.setFieldValue((props.values.total_diskon = diskon_tambahan));
-                    props.setFieldValue("total_diskon", diskon_tambahan);
+                        let diskon_tambahan = (props.values.diskon / 100) * new_subtotal;
+                        props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                        props.setFieldValue("total_diskon", diskon_tambahan);
 
-                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+                        props.setFieldValue("total_pajak_per_baris", pajak_total);
 
-                    let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
-                    props.setFieldValue((props.values.total = total));
-                    props.setFieldValue("total", total);
+                        let total = new_subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                        props.setFieldValue((props.values.total = total));
+                        props.setFieldValue("total", total);
 
-                    let pemotongan = total - props.values.pemotongan;
-                    props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                    props.setFieldValue("pemotongan_total", pemotongan);
+                        let pemotongan = total - props.values.pemotongan;
+                        props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                        props.setFieldValue("pemotongan_total", pemotongan);
 
-                    let sisa_tagihan = pemotongan - props.values.uang_muka;
-                    props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                    props.setFieldValue("sisa_tagihan", sisa_tagihan);
-                  } else {
-                    props.setFieldValue((props.values.boolean = false));
-                    const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
-                    const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
-                    const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                        let sisa_tagihan = pemotongan - props.values.uang_muka;
+                        props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                        props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                      } else {
+                        props.setFieldValue((props.values.boolean = false));
+                        const subtotal = props.values.produks.reduce((a, b) => (a = a + b.jumlah), 0);
+                        const diskon_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_diskon), 0);
+                        const pajak_total = props.values.produks.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-                    props.setFieldValue("subtotal", subtotal);
+                        props.setFieldValue("subtotal", subtotal);
 
-                    props.setFieldValue("total_diskon_per_baris", diskon_total);
+                        props.setFieldValue("total_diskon_per_baris", diskon_total);
 
-                    let diskon_tambahan = (props.values.diskon / 100) * subtotal;
-                    props.setFieldValue((props.values.total_diskon = diskon_tambahan));
-                    props.setFieldValue("total_diskon", diskon_tambahan);
+                        let diskon_tambahan = (props.values.diskon / 100) * subtotal;
+                        props.setFieldValue((props.values.total_diskon = diskon_tambahan));
+                        props.setFieldValue("total_diskon", diskon_tambahan);
 
-                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+                        props.setFieldValue("total_pajak_per_baris", pajak_total);
 
-                    let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
-                    props.setFieldValue((props.values.total = total));
-                    props.setFieldValue("total", total);
+                        let total = subtotal + pajak_total - (diskon_total + diskon_tambahan);
+                        props.setFieldValue((props.values.total = total));
+                        props.setFieldValue("total", total);
 
-                    let pemotongan = total - props.values.pemotongan;
-                    props.setFieldValue((props.values.pemotongan_total = pemotongan));
-                    props.setFieldValue("pemotongan_total", pemotongan);
+                        let pemotongan = total - props.values.pemotongan;
+                        props.setFieldValue((props.values.pemotongan_total = pemotongan));
+                        props.setFieldValue("pemotongan_total", pemotongan);
 
-                    let sisa_tagihan = pemotongan - props.values.uang_muka;
-                    props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
-                    props.setFieldValue("sisa_tagihan", sisa_tagihan);
-                  }
-                }}
+                        let sisa_tagihan = pemotongan - props.values.uang_muka;
+                        props.setFieldValue((props.values.sisa_tagihan = sisa_tagihan));
+                        props.setFieldValue("sisa_tagihan", sisa_tagihan);
+                      }
+                    }}
+                  />
+                }
               />
             </div>
+
             <Table responsive>
               <div className='border-t border-gray-200'>
                 <Form>

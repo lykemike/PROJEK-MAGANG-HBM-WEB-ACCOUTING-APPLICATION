@@ -10,7 +10,7 @@ export default function salesInvoice({ data, header }) {
   const { id } = router.query;
 
   function pembayaran() {
-    router.push(`../pembayaran-jual/${id}`);
+    router.push(`../pembayaran/${id}`);
   }
 
   function edit() {

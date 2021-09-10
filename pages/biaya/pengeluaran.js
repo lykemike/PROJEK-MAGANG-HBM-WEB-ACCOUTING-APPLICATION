@@ -30,7 +30,7 @@ export default function Pengeluaran({ data }) {
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
-      setSearch(product.filter((biaya) => biaya.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+      setSearch(product.filter((biaya) => biaya.penerima.toLowerCase().includes(e.target.value.toLowerCase())));
     } else {
       setSearch([]);
     }
@@ -65,27 +65,28 @@ export default function Pengeluaran({ data }) {
 
   return (
     <Layout>
-      <Breadcrumbs aria-label='breadcrumb'>
-        <Typography color='textPrimary'>Biaya</Typography>
-      </Breadcrumbs>
+      <div className='border-b border-gray-200'>
+        <Breadcrumbs aria-label='breadcrumb'>
+          <Typography color='textPrimary'>Biaya</Typography>
+        </Breadcrumbs>
 
-      <Row>
-        <Col sm='8'>
-          <h2 className='text-blue-600'>Pengeluaran</h2>
-        </Col>
-        <Col sm='4'>
-          <div className='d-flex justify-content-end'>
-            <Link href='/biaya/buat-biaya'>
-              <a>
-                <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
-                  <AddIcon fontSize='small' /> Buat Biaya Baru
-                </button>
-              </a>
-            </Link>
-          </div>
-        </Col>
-      </Row>
-      <hr />
+        <Row>
+          <Col sm='8'>
+            <h2 className='text-blue-600'>Pengeluaran</h2>
+          </Col>
+          <Col sm='4'>
+            <div className='d-flex justify-content-end'>
+              <Link href='/biaya/buat-biaya'>
+                <a>
+                  <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
+                    <AddIcon fontSize='small' /> Buat Biaya Baru
+                  </button>
+                </a>
+              </Link>
+            </div>
+          </Col>
+        </Row>
+      </div>
 
       <div className='mt-4 mb-8'>
         <Row sm='12'>

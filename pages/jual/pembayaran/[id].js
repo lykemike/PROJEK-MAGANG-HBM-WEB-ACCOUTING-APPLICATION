@@ -18,7 +18,7 @@ export default function pembayaran_jual({ data, data2 }) {
   const url = "http://localhost:3000/api/jual/penerimaanPembayaran";
 
   function pembayaran() {
-    router.push(`../pembayaran-jual/view/${id}`);
+    router.push(`../pembayaran/view/${id}`);
   }
 
   return (

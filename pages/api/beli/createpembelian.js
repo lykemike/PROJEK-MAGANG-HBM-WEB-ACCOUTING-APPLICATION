@@ -63,6 +63,7 @@ export default async (req, res) => {
       uang_muka: parseInt(req.body.uang_muka),
       akun_uang_muka: parseInt(req.body.akun_uang_muka),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
+      tgl_kontrak: req.body.tgl_kontrak,
       status: "Active",
     };
 

@@ -586,6 +586,65 @@ Setting
 - API Syarat pembayaran = 100%
 - Bug fix syarat pembayaran di pembelian dan penjualan convert tanggal ke format ISO = 100%
 
+🗓️ Tanggal 7 September 2021, Selasa
+- New Updates dari meeting
+    tampilkan selisih yang kurang di debit/kredit di halaman jurnal, dan balance = 100%
+- Tampilkan semua data Jurnal Umum (Sisa Aset, Biaya, Pembelian) = 80%
+- Tampilkan semua data Buku Besar (Sisa Aset, Biaya, Pembelian) = 80%
+- Tampilkan semua data di Trial Balance = 60%
+- Atur Saldo Awal = 60%
+- Catatan Pelepasan Aset, Frontend, Backend, Database, Jurnal = 65%
+- Perbaikan Edit Biaya untuk bagian bayar nanti = 90%
+- Pembuatan database untuk syarat pembayaran = 100%
+- API Syarat pembayaran = 100%
+- Bug fix syarat pembayaran di pembelian dan penjualan convert tanggal ke format ISO = 100%
+
+🗓️ Tanggal 8 September 2021, Rabu
+- Meeting
+- New Updates dari meeting
+    tampilkan selisih yang kurang di debit/kredit di halaman jurnal, dan balance = 100%
+    menampilkan jumlah transaksi penerimaan/pengiriman pembayaran pada tabel penjualan, pembelian dan biaya = 100%
+- Perbaikan UI pada pembelian, penjualan, dan biaya
+- Revisi dan perubahan kas bank bagian rekonsiliasi = 50%
+- Backend reimbursement = 50%
+- Atur Saldo Awal = 60%
+- Catatan Pelepasan Aset, Frontend, Backend, Database, Jurnal = 65%
+- Perbaikan Edit Biaya untuk bagian bayar nanti = 90%
+- Pembuatan database untuk syarat pembayaran = 100%
+- API Syarat pembayaran = 100%
+- Bug fix syarat pembayaran di pembelian dan penjualan convert tanggal ke format ISO = 100%
+
+🗓️ Tanggal 9 September 2021, Kamis
+- Module Tambahan ke Sidebar Aset dan Reimbursement = 100%
+- Menu Tambahan ke Role Aset dan Reimbursement = 100%
+- Backend Reimbursement = 100%
+- Perbaikan Edit Biaya untuk bagian bayar nanti = 100%
+- Tambah Menu Role dan Reimbursment ke Database dan API = 100%
+- Data reimbursement sudah masuk ke database = 100% (Sisa Frontend Nampilin Data)
+- Baru testing pakai select2 di halaman jurnal = 100%
+- Di halaman jurnal tambahin kode-akun = 100%
+- Tambah Tanggal Kontrak di penjualan, database dan API = 100%
+- Tiap jumlah pembayaran di penjualan, pembelian, dan biaya bisa di buka invoicenya = 100%
+- Perbaikan backend Kirim uang dan Terima Uang = 100%
+- Atur Saldo Awal = 60%
+- Catatan Pelepasan Aset, Frontend, Backend, Database, Jurnal = 75%
+- Revisi dan perubahan kas bank bagian rekonsiliasi = 60%
+
+🗓️ Tanggal 10 September 2021, Jumt
+- Module Tambahan ke Sidebar Aset dan Reimbursement = 100%
+- Menu Tambahan ke Role Aset dan Reimbursement = 100%
+- Backend Reimbursement = 100%
+- Perbaikan Edit Biaya untuk bagian bayar nanti = 100%
+- Tambah Menu Role dan Reimbursment ke Database dan API = 100%
+- Data reimbursement sudah masuk ke database = 100% (Sisa Frontend Nampilin Data)
+- Baru testing pakai select2 di halaman jurnal = 100%
+- Di halaman jurnal tambahin kode-akun = 100%
+- Tambah Tanggal Kontrak di penjualan, database dan API = 100%
+- Tiap jumlah pembayaran di penjualan, pembelian, dan biaya bisa di buka invoicenya = 100%
+- Perbaikan backend Kirim uang dan Terima Uang = 100%
+- Atur Saldo Awal = 100%
+- Catatan Pelepasan Aset, Frontend, Backend, Database, Jurnal = 75%
+- Revisi dan perubahan kas bank bagian rekonsiliasi = 60%
 
 ----------------
 || ON PROCESS ||
@@ -594,16 +653,16 @@ Setting
 (DONE) Ketika data blm dibuat id buat redirect tidak ditemukan error: null
 (DONE) Create/Update sales invoice udah bisa error: ketika upload file attachment
 (DONE) Database dan api settings default buat penjualan, pembelian dan biaya
-Syarat pembayaran masih error: misalnya 10 hari dari bulan juli tanggal 29 jadi 
+(DONE) Syarat pembayaran masih error: misalnya 10 hari dari bulan juli tanggal 29 jadi 
   - tanggal 9 augustus, error di konversi seharusnya jadi 09 augustus => 09/08/2021
 Ganti semua select option jadi select2, dimana kita bisa searching
 Harga berkurang/reset ketika kita remove data dari produk
 (DONE) Cara masukin data ke jurnal
 Cara ketika buat penjualan jumlah update sesuai kuantitas produk di kategori produk
-Cetak Invoice
+(DONE) Cetak Invoice
 Ketika buat pembayaran jumlah pembayaran di cocokan dengan sisa tagihan
-  - Kalau balance status: Completed/Done/Paid
-  - Ketika udah bayar separuh status: Partial
+(DONE)  - Kalau balance status: Completed/Done/Paid
+(DONE)  - Ketika udah bayar separuh status: Partial
   - Ketika lewat jatuh tempo status: Jatuh Tempo
 
 == Produk page ==
@@ -655,7 +714,7 @@ Pembelian tambah quantity
 Penjualan kurang quantity
 (DONE) Penjualan kontak pelanggan
 (DONE) Pembelian kontak supplier
-Pembelian yg di tampil harga belinya
+(DONE) Pembelian yg di tampil harga belinya
 (DONE) Label tgl transaksi di ganti -> tgl invoice
 (DONE) Label no transaksi -> nomor invoice
 (DONE) Database Tag di ganti -> varchar, contoh tag 1/4 bearti bayar 1/4 january, february, march

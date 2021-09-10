@@ -6,9 +6,9 @@ import PlaylistAddIcon from "@material-ui/icons/Add";
 import Link from "next/link";
 
 import * as Yup from "yup";
-import { Formik, Form as Forms, FieldArray } from "formik";
+import { Formik, Form as Forms, FieldArray, Field } from "formik";
 import Axios from "axios";
-
+import Select from "react-select";
 import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import { useRouter } from "next/router";
@@ -23,6 +23,10 @@ export default function create_jurnal({ data, data2 }) {
   // const id = 1;
 
   const [idInvoice, setIdInvoice] = useState(id);
+
+  function SelectField(FieldProps) {
+    return <Select options={data} isClearable={false} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
+  }
 
   return (
     <Layout>
@@ -141,7 +145,8 @@ export default function create_jurnal({ data, data2 }) {
                             <div key={index} name='detail_jurnal'>
                               <Form.Group as={Row} controlId='formPlaintext'>
                                 <Col sm='3'>
-                                  <Form.Control
+                                  <Field options={data} name={`detail_jurnal.${index}.akun_id`} component={SelectField} />
+                                  {/* <Form.Control
                                     as='select'
                                     name={`detail_jurnal.${index}.akun_id`}
                                     onChange={(e) => {
@@ -156,7 +161,7 @@ export default function create_jurnal({ data, data2 }) {
                                         {namaAkun.nama_akun}
                                       </option>
                                     ))}
-                                  </Form.Control>
+                                  </Form.Control> */}
                                 </Col>
                                 <Col sm='2'>
                                   <Form.Control
@@ -359,9 +364,17 @@ export async function getServerSideProps({}) {
     },
   });
 
+  let detail = [];
+  akuns.map((i) => {
+    detail.push({
+      value: i.id,
+      label: i.kode_akun + " - " + i.nama_akun,
+    });
+  });
+
   return {
     props: {
-      data: akuns,
+      data: detail,
       data2: jurnalterakhir,
     },
   };

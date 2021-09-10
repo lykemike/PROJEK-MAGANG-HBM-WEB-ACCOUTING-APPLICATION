@@ -6,7 +6,7 @@ export default async (req, res) => {
     const frontend_data = {
       akun_transfer_id: parseInt(req.body.akun_transfer),
       akun_setor_id: parseInt(req.body.akun_setor),
-      jumlah: parseInt(req.body.jumlah),
+      total: parseInt(req.body.total),
       memo: req.body.memo,
       no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
@@ -39,13 +39,13 @@ export default async (req, res) => {
         {
           transfer_uang_id: find_latest.id,
           akun_id: parseInt(req.body.akun_setor),
-          nominal: parseInt(req.body.jumlah),
+          nominal: parseInt(req.body.total),
           tipe_saldo: "Debit",
         },
         {
           transfer_uang_id: find_latest.id,
           akun_id: parseInt(req.body.akun_transfer),
-          nominal: parseInt(req.body.jumlah),
+          nominal: parseInt(req.body.total),
           tipe_saldo: "Kredit",
         },
       ],

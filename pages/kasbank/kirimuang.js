@@ -35,7 +35,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
       <Formik
         initialValues={{
           akun_bayar_id: "",
-          akun_penerima_id: "",
+          kontak_id: "",
           tgl_transaksi: "",
           no_transaksi: id,
           tag: "",
@@ -116,15 +116,15 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                 <Row>
                   <Col>
                     <Form.Label>Penerima</Form.Label>
-                    <Form.Control as='select' name='akun_penerima_id' onChange={props.handleChange} onBlur={props.handleBlur}>
+                    <Form.Control as='select' name='kontak_id' onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value='kosong'>Pilih</option>
-                      {data2.map((kontaks, index) => (
-                        <option key={index} value={kontaks.kontak.id}>
-                          {kontaks.kontak.nama}
+                      {data2.map((i, index) => (
+                        <option key={index} value={i.id}>
+                          {i.nama}
                         </option>
                       ))}
                     </Form.Control>
-                    {props.errors.akun_penerima_id && props.touched.akun_penerima_id ? <div>{props.errors.akun_penerima_id}</div> : null}
+                    {props.errors.kontak_id && props.touched.kontak_id ? <div>{props.errors.kontak_id}</div> : null}
                   </Col>
 
                   <Col>
@@ -483,13 +483,10 @@ export async function getServerSideProps() {
     },
   });
 
-  const kontaks = await prisma.kontakDetail.findMany({
+  const kontaks = await prisma.kontak.findMany({
     orderBy: {
       id: "asc",
-    },
-    include: {
-      kontak: true,
-    },
+    }
   });
 
   const namaAkun = await prisma.akun.findMany({

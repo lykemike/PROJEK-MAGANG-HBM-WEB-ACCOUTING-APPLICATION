@@ -71,6 +71,12 @@ export default async (req, res) => {
         {
           menu_name: "Pengaturan",
         },
+        {
+          menu_name: "Reimbursement",
+        },
+        {
+          menu_name: "Aset",
+        },
       ],
     });
 
@@ -144,6 +150,16 @@ export default async (req, res) => {
         {
           role_id: 1,
           menu_id: 14,
+          value: true,
+        },
+        {
+          role_id: 1,
+          menu_id: 15,
+          value: true,
+        },
+        {
+          role_id: 1,
+          menu_id: 16,
           value: true,
         },
       ],
