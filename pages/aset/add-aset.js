@@ -35,6 +35,7 @@ export default function addaset({ data, data2, data3, data4 }) {
           metode: "0",
           masa_manfaat: 0,
           nilai_tahun: 0,
+          nama_pic: "",
           tgl_akuisisi: "",
           biaya_akuisisi: "",
           akun_dikreditkan: "",
@@ -49,13 +50,12 @@ export default function addaset({ data, data2, data3, data4 }) {
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-              //   router.push(`../aset/list-aset`);
+              router.push(`../aset/list-aset`);
             })
             .catch(function (error) {
               console.log(error);
             });
-        }}
-      >
+        }}>
         {(props) => (
           <Forms noValidate>
             <h3>Penyimpanan Aset Baru</h3>
@@ -74,6 +74,12 @@ export default function addaset({ data, data2, data3, data4 }) {
                       <Col>Nomor Aset</Col>
                       <Col>
                         <Form.Control type="text" placeholder="" name="nomor_aset" size="sm" onChange={props.handleChange} />
+                      </Col>
+                    </Row>
+                    <Row className="mb-2">
+                      <Col>PIC</Col>
+                      <Col>
+                        <Form.Control type="text" placeholder="" name="nama_pic" size="sm" onChange={props.handleChange} />
                       </Col>
                     </Row>
                     <Row className="mb-2">
@@ -201,8 +207,7 @@ export default function addaset({ data, data2, data3, data4 }) {
                               props.setFieldValue((props.values.nilai_tahun = reducing_balance));
                               props.setFieldValue("nilai_tahun", reducing_balance);
                             }
-                          }}
-                        >
+                          }}>
                           <option value="0">Pilih</option>
                           <option value="1">Straight Line</option>
                           <option value="2">Reducing Balance</option>
@@ -230,8 +235,7 @@ export default function addaset({ data, data2, data3, data4 }) {
                                   props.setFieldValue((props.values.nilai_tahun = reducing_balance));
                                   props.setFieldValue("nilai_tahun", reducing_balance);
                                 }
-                              }}
-                            ></Form.Control>
+                              }}></Form.Control>
                           </Col>
                           <h7 class="mt-2">Tahun</h7>
                         </Row>
@@ -255,14 +259,7 @@ export default function addaset({ data, data2, data3, data4 }) {
                     <Row className="mb-2">
                       <Col>Akun Penyusutan</Col>
                       <Col>
-                        <Form.Control
-                          as="select"
-                          disabled={props.values.aset_non_depresiasi}
-                          placeholder=""
-                          name="akun_penyusutan"
-                          onChange={props.handleChange}
-                          size="sm"
-                        >
+                        <Form.Control as="select" disabled={props.values.aset_non_depresiasi} placeholder="" name="akun_penyusutan" onChange={props.handleChange} size="sm">
                           <option value="0">Pilih</option>
                           {data3.map((akunPenyusutan) => (
                             <option key={akunPenyusutan.id} value={akunPenyusutan.id}>
@@ -275,14 +272,7 @@ export default function addaset({ data, data2, data3, data4 }) {
                     <Row className="mb-2">
                       <Col>Akumulasi Akun Penyusutan</Col>
                       <Col>
-                        <Form.Control
-                          as="select"
-                          disabled={props.values.aset_non_depresiasi}
-                          placeholder=""
-                          name="akumulasi_akun_penyusutan"
-                          size="sm"
-                          onChange={props.handleChange}
-                        >
+                        <Form.Control as="select" disabled={props.values.aset_non_depresiasi} placeholder="" name="akumulasi_akun_penyusutan" size="sm" onChange={props.handleChange}>
                           <option value="0">Pilih</option>
                           {data4.map((AkumulasiAkunPenyusutan) => (
                             <option key={AkumulasiAkunPenyusutan.id} value={AkumulasiAkunPenyusutan.id}>
@@ -295,27 +285,13 @@ export default function addaset({ data, data2, data3, data4 }) {
                     <Row className="mb-2">
                       <Col>Akumulasi Penyusutan</Col>
                       <Col>
-                        <Form.Control
-                          type="text"
-                          disabled={props.values.aset_non_depresiasi}
-                          placeholder="Rp. 00,-"
-                          size="sm"
-                          name="akumulasi_penyusutan"
-                          onChange={props.handleChange}
-                        />
+                        <Form.Control type="text" disabled={props.values.aset_non_depresiasi} placeholder="Rp. 00,-" size="sm" name="akumulasi_penyusutan" onChange={props.handleChange} />
                       </Col>
                     </Row>
                     <Row className="mb-2">
                       <Col>Pada Tanggal</Col>
                       <Col>
-                        <Form.Control
-                          type="date"
-                          disabled={props.values.aset_non_depresiasi}
-                          placeholder=""
-                          size="sm"
-                          name="tgl_penyusutan"
-                          onChange={props.handleChange}
-                        />
+                        <Form.Control type="date" disabled={props.values.aset_non_depresiasi} placeholder="" size="sm" name="tgl_penyusutan" onChange={props.handleChange} />
                       </Col>
                     </Row>
                   </Col>
