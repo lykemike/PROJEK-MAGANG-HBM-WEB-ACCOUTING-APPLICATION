@@ -48,16 +48,23 @@ export default function reimbursement() {
           }}>
           {(props) => (
             <Forms noValidate>
-              <Breadcrumbs aria-label='breadcrumb'>
-                <Link color='inherit' href='/'>
-                  Tabel Reimbursement
-                </Link>
-                <Typography color='textPrimary'>Pembuatan Reimbursement</Typography>
-              </Breadcrumbs>
+              <div className='border-b border-gray-200'>
+                <Breadcrumbs aria-label='breadcrumb'>
+                  <Link color='inherit' href='../reimbursement/tabel-reimbursement'>
+                    Reimbursement
+                  </Link>
+                  <Typography color='textPrimary'>Pembuatan Reimbursement</Typography>
+                </Breadcrumbs>
+                <Row>
+                  <Col sm='8'>
+                    <h2 className='text-blue-600'>Pembuatan Reimbursement</h2>
+                  </Col>
+                  <Col sm='4' />
+                </Row>
+              </div>
+
               <div variant='container'>
-                <h2>Pembuatan Reimbursement</h2>
-                <hr />
-                <div class='mb-10'>
+                <div class='mb-10 mt-2'>
                   <Row>
                     <Col sm='3'>
                       <Form.Label>Nama Pegawai</Form.Label>

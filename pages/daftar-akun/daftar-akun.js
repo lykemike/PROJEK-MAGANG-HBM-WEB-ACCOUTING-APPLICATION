@@ -17,6 +17,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -126,7 +129,9 @@ export default function DaftarAkun({ data }) {
                 <Typography className='text-white font-bold'>Saldo</Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Action</Typography>
+                <Typography className='text-white font-bold' align='right'>
+                  Action
+                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -138,16 +143,21 @@ export default function DaftarAkun({ data }) {
                 </TableCell>
                 <TableCell>{i.nama_akun}</TableCell>
                 <TableCell>{i.kategori_akun.name}</TableCell>
-                <TableCell></TableCell>
                 <TableCell>
-                  <Button variant='warning mr-2'>Edit</Button>
+                  Rp.{" "}
+                  {i.DetailSaldoAwal[0].debit > 0 ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 }) : i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 })}
+                </TableCell>
+                <TableCell align='right'>
+                  <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
+                  <DeleteOutlineIcon color='secondary' fontSize='small' />
+                  {/* <Button variant='warning mr-2'>Edit</Button>
                   <Button
                     variant='danger'
                     onClick={() => {
                       deletedata(i.id);
                     }}>
                     Delete
-                  </Button>
+                  </Button> */}
                 </TableCell>
               </TableRow>
             ))}
@@ -178,6 +188,7 @@ export async function getServerSideProps() {
     ],
     include: {
       kategori_akun: true,
+      DetailSaldoAwal: true,
     },
   });
 
