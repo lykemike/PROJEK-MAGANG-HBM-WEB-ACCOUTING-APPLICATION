@@ -63,7 +63,6 @@ export default function Table2({ data, index, label, label2, view }) {
             <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell align='center'>
-              {" "}
               <Link href={`../../${view}/view/${data.id}`}>
                 <a>
                   <VisibilityOutlinedIcon color='primary' fontSize='small' className='mr-2' />
@@ -150,7 +149,6 @@ export default function Table2({ data, index, label, label2, view }) {
             <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell align='center'>
-              {" "}
               <Link href={`../../${view}/view/${data.id}`}>
                 <a>
                   <VisibilityOutlinedIcon color='primary' fontSize='small' className='mr-2' />

@@ -18,6 +18,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
 import { PrismaClient } from "@prisma/client";
+import { TableFooter } from "@material-ui/core";
 const prisma = new PrismaClient();
 export default function test({ list }) {
   const url = "http://localhost:3000/api/daftar-akun/createSaldoAwal";
@@ -62,6 +63,8 @@ export default function test({ list }) {
         initialValues={{
           tgl_konversi: date,
           saldo_awal: list,
+          total_debit: 0,
+          total_kredit: 0,
         }}
         onSubmit={async (values) => {
           console.log(values);
@@ -77,7 +80,7 @@ export default function test({ list }) {
           <Forms noValidate>
             <div className='border-b border-gray-200'>
               <Breadcrumbs aria-label='breadcrumb'>
-                <Link color='inherit' href='../daftar-akun'>
+                <Link color='inherit' href='../daftar-akun/daftar-akun'>
                   Daftar Akun
                 </Link>
                 <Typography color='textPrimary'>Atur Saldo Awal</Typography>
@@ -125,40 +128,67 @@ export default function test({ list }) {
                   <FieldArray name='saldo_awal'>
                     {({ insert, remove, push }) => (
                       <>
-                        {props.values.saldo_awal
-                          .map((i, index) => (
-                            <TableRow>
-                              <TableCell component='th' scope='row' align='left'>
-                                {props.values.saldo_awal[index].kode_akun}
-                              </TableCell>
-                              <TableCell align='left'>{props.values.saldo_awal[index].nama_akun}</TableCell>
-                              <TableCell align='center'>
-                                <Form.Control
-                                  size='sm'
-                                  disabled={props.values.saldo_awal[index].tipe_saldo === "Kredit"}
-                                  type='number'
-                                  min='0'
-                                  name={`saldo_awal.${index}.debit`}
-                                  onChange={props.handleChange}
-                                />
-                              </TableCell>
-                              <TableCell align='center'>
-                                <Form.Control
-                                  size='sm'
-                                  disabled={props.values.saldo_awal[index].tipe_saldo === "Debit"}
-                                  type='number'
-                                  min='0'
-                                  name={`saldo_awal.${index}.kredit`}
-                                  onChange={props.handleChange}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))
-                          .slice(firstIndex, lastIndex)}
+                        {props.values.saldo_awal.map((i, index) => (
+                          <TableRow>
+                            <TableCell component='th' scope='row' align='left'>
+                              {props.values.saldo_awal[index].kode_akun}
+                            </TableCell>
+                            <TableCell align='left'>{props.values.saldo_awal[index].nama_akun}</TableCell>
+                            <TableCell align='center'>
+                              <Form.Control
+                                size='sm'
+                                disabled={props.values.saldo_awal[index].tipe_saldo === "Kredit"}
+                                type='number'
+                                min='0'
+                                name={`saldo_awal.${index}.debit`}
+                                onChange={(e) => {
+                                  props.setFieldValue(`saldo_awal.${index}.debit`, parseInt(e.target.value));
+                                  props.setFieldValue((props.values.saldo_awal[index].debit = parseInt(e.target.value)));
+
+                                  const total_debit = props.values.saldo_awal.reduce((a, b) => (a = a + b.debit), 0);
+                                  props.setFieldValue((props.values.total_debit = total_debit));
+                                  props.setFieldValue("total_debit", total_debit);
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell align='center'>
+                              <Form.Control
+                                size='sm'
+                                disabled={props.values.saldo_awal[index].tipe_saldo === "Debit"}
+                                type='number'
+                                min='0'
+                                name={`saldo_awal.${index}.kredit`}
+                                onChange={(e) => {
+                                  props.setFieldValue(`saldo_awal.${index}.kredit`, parseInt(e.target.value));
+                                  props.setFieldValue((props.values.saldo_awal[index].kredit = parseInt(e.target.value)));
+
+                                  const total_kredit = props.values.saldo_awal.reduce((a, b) => (a = a + b.kredit), 0);
+                                  props.setFieldValue((props.values.total_kredit = total_kredit));
+                                  props.setFieldValue("total_kredit", total_kredit);
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {/* // .slice(firstIndex, lastIndex)} */}
                       </>
                     )}
                   </FieldArray>
                 </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell align='right'>
+                      <h4 className='text-black font-semibold'>Total</h4>
+                    </TableCell>
+                    <TableCell>
+                      <h4 className='text-black font-semibold'>Rp. {props.values.total_debit}</h4>
+                    </TableCell>
+                    <TableCell>
+                      <h4 className='text-black font-semibold'>Rp. {props.values.total_kredit}</h4>
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
               </Tables>
             </TableContainer>
             <div class='flex items-center justify-center mt-4'>
