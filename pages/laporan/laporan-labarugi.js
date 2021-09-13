@@ -1,42 +1,53 @@
-import React from 'react'
+import React,{useRef} from 'react'
 import Layout from '../../components/layout'
 import Link from 'next/link';
-import { Button, Table, DropdownButton, Row,Col,InputGroup,FormControl,Form , Dropdown } from 'react-bootstrap';
+import bebanLainnya from '../../components/LabaRugi/bebanLainnya';
+import { Button, Table, DropdownButton,Row,Col,Form,FormControl,InputGroup, Dropdown } from 'react-bootstrap';
 
-const laporanlabarugi = () => {
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+export default function laporan_neraca({ header}) {
+    const tgl_mulai = useRef(null);
+    const tgl_akhir = useRef(null);
+    const onClick = () => {
+      // Axios.get()
+    };
+
+    console.log(header)
+
     return (
         <Layout>
        	<div variant="container">
-               <div></div>
 				<h4 class="mb-8 mt-2">
                    Laba Rugi
                     </h4>
 					<Row>
                 <Col sm='3'>
                 <Form.Label>
-                                    Tanggal Mulai
-                                </Form.Label>
-                                <InputGroup className="mb-3">
-                                        <FormControl
+                    Tanggal Mulai
+                </Form.Label>
+                <InputGroup className="mb-3">
+                        <FormControl
 
-                                        placeholder="Pick date"
-                                        type='date'
-                                        aria-label="date"
-                                        />
-                                    </InputGroup>
+                        placeholder="Pick date"
+                        type='date'
+                        aria-label="date"
+                        />
+                    </InputGroup>
               
                 </Col>
 				<Col sm="3">
                 <Form.Label>
-                                    Tanggal Selesai
-                                </Form.Label>
-                                <InputGroup className="mb-3">
-                                        <FormControl
-                                        placeholder="Pick date"
-                                        type='date'
-                                        aria-label="date"
-                                        />
-                                    </InputGroup>
+                    Tanggal Selesai
+                </Form.Label>
+                <InputGroup className="mb-3">
+                        <FormControl
+                        placeholder="Pick date"
+                        type='date'
+                        aria-label="date"
+                        />
+                    </InputGroup>
               
                 </Col>
 
@@ -64,15 +75,11 @@ const laporanlabarugi = () => {
                             <td>Pendapatan dari Penjualan</td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
                             <td>Rp. XXX</td>
 						</tr>
 
 						<tr>
                             <td>Harga Pokok Penjualan</td>
-                            <td></td>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td>Rp. XXX</td>
@@ -85,8 +92,6 @@ const laporanlabarugi = () => {
 							<td>
 								<div class="text-md text-gray-900" />
 							</td>
-                            <td></td>
-                            <td></td>
 							<td>
 								<div class="text-md font-medium text-gray-900"></div>
 							</td>
@@ -99,65 +104,48 @@ const laporanlabarugi = () => {
 
                 <Table class="table">                        
                   <tbody>
-						<tr>
-                            <td>Beban Operasional</td>
+                         <tr>
+                            <td><div class="text-md font-medium text-gray-900">Beban Operasional</div></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Rp xxx</td>
                             <td></td>
                             <td></td>
 						</tr>
 
-						<tr>
-                            <td>Name</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                  {header.map((i) => (        
+						<tr>    
+                            <td className="pl-5">{i.kode_akun}-{i.nama_akun}</td>
                             <td>Rp. XXX</td>
                             <td></td>
-                            
+                            <td></td>
 						</tr>
+                      ))}
 
-						<tr>
+                      <tr> 
 							<td>
 								<div class="text-md font-medium text-gray-900">Pendapatan Bersih Operasional</div>
 							</td>
-							<td>
-								<div class="text-md text-gray-900" />
-							</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-							<td>
-								<div class="text-md font-medium text-gray-900"></div>
-							</td>
-							<td>
+							<td className="pr-5">
 								<div class="text-md font-medium text-gray-900">Rp. 0.00</div>
-							</td>
+							</td> 
+                            <td></td>
 						</tr>
 					</tbody>
 				</Table>
                 
                
 
-                      <Table class="table">                        
+             <Table class="table">                        
                   <tbody>
 						<tr>
                             <td>Pendapatan lainnya</td>
-                            <td></td>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td>Rp. XXX</td>
 						</tr>
 
 						<tr>
-                            <td>Bebab lainnya</td>
-                            <td></td>
-                            <td></td>
+                            <td>Beban lainnya</td>
                             <td></td>
                             <td></td>
                             <td>Rp. XXX</td>
@@ -170,8 +158,6 @@ const laporanlabarugi = () => {
 							<td>
 								<div class="text-md text-gray-900" />
 							</td>
-                            <td></td>
-                            <td></td>
 							<td>
 								<div class="text-md font-medium text-gray-900"></div>
 							</td>
@@ -181,12 +167,11 @@ const laporanlabarugi = () => {
 						</tr>
 					</tbody>
 				</Table>
+
                 <Table class="table">                        
                   <tbody>
 						<tr>
                             <td>Beban Pajak</td>
-                            <td></td>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td>Rp. XXX</td>
@@ -199,8 +184,6 @@ const laporanlabarugi = () => {
 							<td>
 								<div class="text-md text-gray-900" />
 							</td>
-                            <td></td>
-                            <td></td>
 							<td>
 								<div class="text-md font-medium text-gray-900"></div>
 							</td>
@@ -219,4 +202,21 @@ const laporanlabarugi = () => {
     )
 }
 
-export default laporanlabarugi
+export async function getServerSideProps() {
+
+    const bebanLainnya = await prisma.akun.findMany({
+      where: {
+       kategoriId :{
+           in: [17],
+       }
+      },
+    });
+
+ 
+    return {
+      props: {
+        header: bebanLainnya,
+      },
+    };
+  }
+  

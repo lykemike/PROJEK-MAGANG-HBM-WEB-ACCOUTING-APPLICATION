@@ -1,198 +1,683 @@
-import React from "react";
-import { Row, Col, FormCheck, Button } from "react-bootstrap";
-import Link from "next/link";
+import React, {useRef} from "react";
 import Layout from "../../components/Layout";
-
+import { Row, Col, Form, Button, FormCheck, InputGroup } from "react-bootstrap";
+import AddIcon from "@material-ui/icons/Add";
+import CloseIcon from "@material-ui/icons/Close";
+import Link from "next/Link";
+import { Formik, Form as Forms, FieldArray } from "formik";
+import Axios from "axios";
 import { useRouter } from "next/router";
-
 import { PrismaClient } from "@prisma/client";
+
+import Typography from "@material-ui/core/Typography";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+
 const prisma = new PrismaClient();
 
-export default function ViewBiaya({ data, data2 }) {
-  // Redirect Function and Take URL Parameter [id]
+export default function UpdateBiaya({ data, data2, data3, data4, data5,header, biaya }) {
   const router = useRouter();
   const { id } = router.query;
+
+  const formik = useRef(null)
+
+  const url = "http://localhost:3000/api/biaya/updateBiaya";
+
+  const totalPajak = data2.reduce((a,b) => (a = a+b.hasil_pajak),0)
+
   return (
     <Layout>
-      <div>
-        <h4 class='text-gray-500'>Biaya</h4>
-        <Row>
-          <Col>
-            <h3 class='text-blue-600'>Pengeluaran #EXP001</h3>
-          </Col>
-          <Col className='d-flex justify-content-end'>
-            <h3 class='text-black'>LUNAS</h3>
-          </Col>
-        </Row>
+      <Formik
+        enableReinitialize={true}
+        innerRef={formik}
+        initialValues={{
+          akun_kas_bank: header[0].akun_kas_bank,
+          nama_penerima: header[0].nama_penerima,
+          tgl_transaksi: header[0].tgl_transaksi,
+          cara_pembayaran: header[0].cara_pembayaran,
+          no_transaksi: header[0].no_transaksi,
+          alamat_penagihan: header[0].alamat_penagihan,
+          tag: header[0].tag,
+          memo: header[0].memo,
+          fileattachment: [],
+          subtotal: header[0].subtotal,
+          akun_pemotongan: header[0].akun_pemotongan,
+          total: header[0].total,
+          pemotongan: header[0].pemotongan,
+          sisa_tagihan: header[0].sisa_tagihan,
+          detail_biaya: biaya,
+          akun_biaya_id: header[0].akun_biaya_id,
+          nama_akun: header[0].nama_akun,
+          deskripsi: header[0].deskripsi,
+          pajak_id: header[0].pajak_id,
+          pajak_nama: header[0].pajak_nama,
+          pajak_akun_beli_id: header[0].pajak_akun_beli_id,
+          pajak_persen: header[0].pajak_persen,
+          hasil_pajak: header[0].hasil_pajak,
+          jumlah: header[0].jumlah,
+          jumlah2: header[0].jumlah2,
+        }}
+        onSubmit={async (values) => {
+          let formData = new FormData();
+          for (var key in values) {
+            if (key == "detail_biaya") {
+              formData.append(`${key}`, JSON.stringify(values[key]));
+            } else {
+              formData.append(`${key}`, `${values[key]}`);
+            }
+          }
+          Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          console.log(values);
+          Axios.post(url, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+            .then(function (response) {
+              // console.log(response)
+              router.push(`view/${id}`);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }}>
+        {(props) => (
+          <Forms noValidate>
+            <Breadcrumbs aria-label='breadcrumb'>
+              <Link color='inherit' href='../biaya/pengeluaran'>
+                Biaya
+              </Link>
+              <Typography color='textPrimary' class="mb-2">Edit Biaya</Typography>
+            </Breadcrumbs>
+            <h2>Edit Biaya</h2>
 
-        <hr />
+            <Form className='border-t border-gray-200'>
+              {/* bayar dari, bayar nanti, and total */}
+              <Row sm='12'>
+                <Col sm='4'>
+                  <Form.Label className='font-medium'>Bayar Dari</Form.Label>
+                  <Form.Control disabled={props.values.boolean2}  value={props.values.akun_kas_bank} as='select' defaultValue='Choose...' name='akun_kas_bank' onChange={props.handleChange}>
+                    <option value='0'>Pilih</option>
+                    {data.map((akun) => (
+                      <option key={akun.id} value={akun.id}>
+                        {akun.nama_akun}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Col>
+                <Col sm='3'>
+                  <Form.Label />
+                  {/* <Row className="ml-1 mt-3">
+                    <FormCheck
+                      onChange={(e) => {
+                        if (e.target.checked == true) {
+                          props.setFieldValue("boolean2", true);
+                          props.setFieldValue((props.values.akun_kas_bank = "0"));
+                        } else {
+                          props.setFieldValue("boolean2", false);
+                          props.setFieldValue((props.values.akun_kas_bank = props.values.akun_kas_bank));
+                        }
+                      }}
+                    />
+                    <p className="font-medium">Bayar Nanti</p>
+                  </Row> */}
+                </Col>
+                <Col sm='3' />
+                <Col sm='2' className='justify-content-end'>
+                  <Row>
+                    <h4 className='mr-2 '>Total</h4>
+                    <h4 class='text-blue-600' name='sisa_tagihan'>
+                      Rp. {props.values.sisa_tagihan}
+                    </h4>
+                  </Row>
+                </Col>
+              </Row>
 
-        <Row>
-          <Col sm='2'>
-            <h5 className='mr-2'>Bayar Dari</h5>
-          </Col>
-          <Col sm='4'>
-            {data.map((biaya) => (
-              <h5 class='text-blue-600'>{biaya.akun1.nama_akun}</h5>
-            ))}
-          </Col>
-          <Col sm='2' />
-          <Col sm='2'>
-            <h5 className='mr-2'>Total Amount</h5>
-          </Col>
-          <Col sm='2'>
-            {data.map((biaya) => (
-              <h5 class='text-blue-600'>Rp. {biaya.total.toLocaleString({ minimumFractionDigits: 0 })}</h5>
-            ))}
-          </Col>
-        </Row>
+              <hr />
 
-        <hr />
+              {/* nama_penerima, tanggal transaksi, cara pembayaran and no transaksi */}
+              <Row sm='12'>
+                <Col sm='4'>
+                  <Form.Label className='font-medium'>Penerima</Form.Label>
+                  <Form.Control
+                    as='select'
+                    defaultValue='Choose...'
+                    value={props.values.nama_penerima}
+                    name='nama_penerima'
+                    onChange={(e) => {
+                      props.setFieldValue(`nama_penerima`, e.target.value);
+                      if (e.target.value === "kosong" || e.target.value === "" || e.target.value === undefined) {
+                        props.setFieldValue(`alamat_penagihan`, "");
+                      } else {
+                        let result = data3.filter((i) => {
+                          return i.id === parseInt(e.target.value);
+                        });
+                        props.setFieldValue(`alamat_penagihan`, result[0].alamat_pembayaran);
+                      }
+                    }}>
+                    <option value='kosong'>Pilih</option>
+                    {data3.map((kontak) => (
+                      <option key={kontak.id} value={kontak.id}>
+                        {kontak.nama_panggilan}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Col>
+                <Col sm='3'>
+                  <Form.Label className='font-medium'>Tanggal Transaksi</Form.Label>
+                  <Form.Control placeholder='Auto' type='date' name='tgl_transaksi' value={props.values.tgl_transaksi} onChange={props.handleChange} />
+                </Col> 
+                <Col sm='3'>
+                  <Form.Label className='font-medium'>Cara Pembayaran</Form.Label>
+                  <Form.Control as='select' defaultValue='Choose...' name='cara_pembayaran' value={props.values.cara_pembayaran} onChange={props.handleChange}>
+                    <option>Pilih</option>
+                    <option value='Cash'>Tunai / Cash</option>
+                    <option value='Credit'>Credit / Term of Payment</option>
+                  </Form.Control>
+                </Col>
+                <Col sm='2'>
+                  <Form.Label className='font-medium'>No. Transaksi</Form.Label>
+                  <Form.Control type='text' disabled placeholder='Auto' name='no_transaksi' value={props.values.no_transaksi} onChange={props.handleChange} />
+                </Col>
+              </Row>
 
-        <Row>
-          <Col sm='2'>
-            <p className='font-medium'>Penerima:</p>
-          </Col>
-          <Col sm='2'>
-            {data.map((biaya) => (
-              <p>{biaya.kontak.nama}</p>
-            ))}
-          </Col>
+              {/* alamat penagihan and tag */}
+              <Row sm='12'>
+                <Col sm='4' className='mt-3'>
+                  <Form.Label className='font-medium'>Alamat Penagihan</Form.Label>
+                  <Form.Control as='textarea' rows={4} name='alamat_penagihan' value={props.values.alamat_penagihan} />
+                </Col>
+                <Col sm='3' />
+                <Col sm='3' />
+                <Col sm='2' className='mt-3'>
+                  <Form.Label className='font-medium'>Tag</Form.Label>
+                  <Form.Control placeholder='Tag' name='tag' value={props.values.tag} onChange={props.handleChange} />
+                </Col>
+              </Row>
 
-          <Col sm='2'>
-            <p className='font-medium'>Tanggal Transaksi:</p>
-          </Col>
-          <Col sm='2'>
-            {data.map((biaya) => (
-              <p>{biaya.tgl_transaksi}</p>
-            ))}
-          </Col>
+              <Row className='d-flex justify-content-end mr-3 mt-12'>
+                <div class='float-right mt-2 '>
+                  <Form.Check
+                    label='Harga Termasuk Pajak'
+                    type='switch'
+                    id='custom-switch'
+                    onChange={(e) => {
+                      if (e.target.checked === true) {
+                        props.setFieldValue((props.values.boolean = true));
+                        // Rumus subtotal dan pajak total
+                        const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+                        const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-          <Col sm='2'>
-            <p className='font-medium'>No Transaksi:</p>
-          </Col>
-          <Col sm='2'>
-            {data.map((biaya) => (
-              <p>{biaya.no_transaksi}</p>
-            ))}
-          </Col>
+                        // Rumus new subtotal
+                        let new_subtotal = subtotal - pajak_total;
+                        props.setFieldValue((props.values.subtotal = new_subtotal));
+                        props.setFieldValue("subtotal", new_subtotal);
 
-          <Col sm='2'>
-            <p className='font-medium'>Alamat Penagihan:</p>
-          </Col>
-          <Col sm='2'>
-            {data.map((biaya) => (
-              <p>{biaya.alamat_penagihan}</p>
-            ))}
-          </Col>
+                        // Rumus total
+                        let total = new_subtotal + pajak_total;
+                        props.setFieldValue((props.values.total = total));
+                        props.setFieldValue("total", total);
 
-          <Col sm='2'>
-            <p className='font-medium'>Cara Pembayaran:</p>
-          </Col>
-          <Col sm='2'>
-            {data.map((biaya) => (
-              <p>{biaya.cara_pembayaran}</p>
-            ))}
-          </Col>
+                        // Rumus pemotongan
+                        let pemotongan = total - props.values.pemotongan;
+                        props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                        props.setFieldValue("sisa_tagihan", pemotongan);
+                      } else {
+                        props.setFieldValue((props.values.boolean = false));
+                        // Rumus subtotal dan pajak total
+                        const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+                        const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
-          <Col sm='2'>
-            <p className='font-medium'>Tag:</p>
-          </Col>
-          <Col sm='2'>
-            {data.map((biaya) => (
-              <p>{biaya.tag}</p>
-            ))}
-          </Col>
+                        // Rumus new subtotal
+                        props.setFieldValue((props.values.subtotal = subtotal));
+                        props.setFieldValue("subtotal", subtotal);
 
-          <Col sm='4' />
-        </Row>
+                        // Rumus total
+                        let total = subtotal + pajak_total;
+                        props.setFieldValue((props.values.total = total));
+                        props.setFieldValue("total", total);
 
-        <table class='min-w-full table-auto mt-12'>
-          <thead class='justify-between'>
-            <tr class='bg-dark'>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Akun Biaya</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Deskripsi</span>
-              </th>
-              <th class='px-2 py-2'>
-                <span class='text-gray-300'>Pajak</span>
-              </th>
-              <th class='px-2 py-2 '>
-                <span class='text-gray-300'>Jumlah (dalam IDR)</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody class='bg-white divide-y divide-gray-200'>
-            {data2.map((biaya) => (
-              <tr>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>{biaya.akun_biaya.nama_akun}</div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>{biaya.deskripsi}</div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>{biaya.pajak.presentasaAktif} %</div>
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900'>Rp. {biaya.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                        // Rumus pemotongan
+                        let pemotongan = total - props.values.pemotongan;
+                        props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                        props.setFieldValue("sisa_tagihan", pemotongan);
+                      }
+                    }}
+                  />
+                </div>
+              </Row>
 
-        <hr />
+              <hr />
 
-        <Row sm='12'>
-          <Col sm='4' />
-          <Col sm='4' />
-          <Col sm='2'>
-            <p>Subtotal</p>
-            <p>Pajak</p>
-            <p>Jumlah Pemotongan</p>
-            <p>Total</p>
-            <p>Sudah Dibayar</p>
-            <h4>Sisa Tagihan</h4>
-          </Col>
+              {/* akun biaya, deskripsi, pajak, jumlah and empty col for delete button */}
+              <Row sm='12'>
+                <Col sm='3'>
+                  <Form.Label className='font-medium'>Akun Biaya</Form.Label>
+                </Col>
+                <Col sm='3'>
+                  <Form.Label className='font-medium'>Deskripsi</Form.Label>
+                </Col>
+                <Col sm='2'>
+                  <Form.Label className='font-medium'>Pajak</Form.Label>
+                </Col>
+                <Col sm='3'>
+                  <Form.Label className='font-medium'>Jumlah</Form.Label>
+                </Col>
+                <Col sm='1'>
+                  <Form.Label className='font-medium' />
+                </Col>
+              </Row>
 
-          {data.map((biaya) => (
-            <Col sm='2'>
-              <p>Rp. {biaya.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</p>
-              <p>Rp. {biaya.pajak.toLocaleString({ minimumFractionDigits: 0 })}</p>
-              <p>Rp. {biaya.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</p>
-              <p>Rp. {biaya.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
-              <p>Rp. {biaya.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
-              <h4>Rp. 0,00</h4>
-            </Col>
-          ))}
-        </Row>
+              <hr />
+              <Form>
+                <FieldArray name='detail_biaya'>
+                  {({ insert, remove, push }) => (
+                    <div>
+                      {props.values.detail_biaya.length > 0 &&
+                        props.values.detail_biaya.map((i, index) => (
+                          <Row className='mb-3' key={index}>
+                            <Col sm='3'>
+                              <Form.Control
+                                as='select'
+                                //   defaultValue='Choose...'
+                                //   name='akun_biaya_id'
+                                value={props.values.detail_biaya[index].akun_biaya_id}
+                                name={`detail_biaya.${index}.akun_biaya_id`}
+                                onChange={(e) => {
+                                  props.setFieldValue(`detail_biaya.${index}.akun_biaya_id`, e.target.value);
+                                  if (e.target.value === "") {
+                                    props.setFieldValue(`detail_biaya.${index}.akun_biaya_id`);
+                                  } else {
+                                    let result = data2.filter((i) => {
+                                      return i.id === parseInt(e.target.value);
+                                    });
+                                  }
+                                  props.setFieldValue(`detail_biaya.${index}.nama_akun`, data2.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun);
+                                }}>
+                                <option value='0'>Pilih</option>
+                                {data2.map((akun, index) => (
+                                  <option key={index} value={akun.id}>
+                                    {akun.nama_akun}
+                                  </option>
+                                ))}
+                              </Form.Control>
+                            </Col>
+                            <Col sm='3'>
+                              <Form.Control placeholder=''  value={props.values.detail_biaya[index].deskripsi} type='text' name={`detail_biaya.${index}.deskripsi`} onChange={props.handleChange} />
+                            </Col>
+                            <Col sm='2'>
+                              <Form.Control
+                                as='select'
+                                name={`detail_biaya.${index}.pajak_id`}
+                                value={props.values.detail_biaya[index].pajak_id}
+                                onChange={(e) => {
+                                  props.setFieldValue(`detail_biaya.${index}.pajak_id`, parseInt(e.target.value));
+                                  if (props.values.boolean == false) {
+                                    if (e.target.value == undefined || e.target.value == "" || e.target.value == 0) {
+                                      // Rumus subtotal
+                                      let jumlah = props.values.detail_biaya[index].jumlah;
+                                      props.setFieldValue((props.values.detail_biaya[index].jumlah = jumlah));
+                                      const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+                                      props.setFieldValue((props.values.subtotal = subtotal));
+                                      props.setFieldValue("subtotal", subtotal);
 
-        <hr />
+                                      // Rumus akumlasi pajak
+                                      let pajak = jumlah * (0 / 100);
+                                      props.setFieldValue((props.values.detail_biaya[index].hasil_pajak = pajak));
+                                      const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                      props.setFieldValue("total_pajak_per_baris", pajak_total);
 
-        <Row className='mt-32'>
-          <Col>
-            <Button variant='secondary'>Hapus</Button>
-          </Col>
+                                      // Rumus total
+                                      let total = subtotal + pajak_total;
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
 
-          <Col>
-            <Button variant='primary'>Cetak</Button>
-          </Col>
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                                      props.setFieldValue("sisa_tagihan", pemotongan);
+                                    } else {
+                                      let result = data4.filter((i) => {
+                                        return i.id === parseInt(e.target.value);
+                                      });
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_persen`, result[0].presentasaAktif);
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_nama`, result[0].nama);
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_akun_beli_id`, result[0].kategori2.id);
 
-          <Col className='d-flex justify-content-end'>
-            <Button variant='danger' className='mr-4'>
-              Kembali
-            </Button>
+                                      // Rumus akumulasi subtotal
+                                      let jumlah = props.values.detail_biaya[index].jumlah;
+                                      props.setFieldValue((props.values.detail_biaya[index].jumlah = jumlah));
+                                      const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+                                      props.setFieldValue((props.values.subtotal = subtotal));
+                                      props.setFieldValue("subtotal", subtotal);
 
-            <Button variant='success'>Ubah</Button>
-          </Col>
-        </Row>
-        {data.map((i) => (
-          <p>{i.no_transaksi}</p> // OUTPUT OF THIS IS 44
-        ))}
-      </div>
+                                      // Rumus pajak total
+                                      let pajak = jumlah * (result[0].presentasaAktif / 100);
+                                      props.setFieldValue((props.values.detail_biaya[index].hasil_pajak = pajak));
+                                      const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                      props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                      // Rumus total
+                                      let total = subtotal + pajak_total;
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
+
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                                      props.setFieldValue("sisa_tagihan", pemotongan);
+                                    }
+                                  } else {
+                                    if (e.target.value == undefined || e.target.value == "" || e.target.value == 0) {
+                                      // Rumus akumulasi subtotal
+                                      let jumlah = props.values.detail_biaya[index].jumlah;
+                                      props.setFieldValue((props.values.detail_biaya[index].jumlah = jumlah));
+                                      const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                                      // Rumus pajak total
+                                      let pajak = jumlah * (0 / 100);
+                                      props.setFieldValue((props.values.detail_biaya[index].hasil_pajak = pajak));
+                                      const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                      props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                      // Rumus jumlah - pajak
+                                      let new_jumlah = jumlah - pajak;
+                                      props.setFieldValue((props.values.detail_biaya[index].jumlah2 = new_jumlah));
+
+                                      // Rumus new subtotal
+                                      let new_subtotal = subtotal - pajak_total;
+                                      props.setFieldValue((props.values.subtotal = new_subtotal));
+                                      props.setFieldValue("subtotal", new_subtotal);
+
+                                      // Rumus total
+                                      let total = new_subtotal + pajak_total;
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
+
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                                      props.setFieldValue("sisa_tagihan", pemotongan);
+                                    } else {
+                                      let result = data4.filter((i) => {
+                                        return i.id === parseInt(e.target.value);
+                                      });
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_persen`, result[0].presentasaAktif);
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_nama`, result[0].nama);
+                                      props.setFieldValue(`detail_biaya.${index}.pajak_akun_beli_id`, result[0].kategori2.id);
+
+                                      // Rumus akumulasi subtotal
+                                      let jumlah = props.values.detail_biaya[index].jumlah;
+                                      props.setFieldValue((props.values.detail_biaya[index].jumlah = jumlah));
+                                      const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                                      // Rumus pajak total
+                                      let pajak = jumlah * (result[0].presentasaAktif / 100);
+                                      props.setFieldValue((props.values.detail_biaya[index].hasil_pajak = pajak));
+                                      const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                      props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                      props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                      // Rumus jumlah - pajak
+                                      let new_jumlah = jumlah - pajak;
+                                      props.setFieldValue((props.values.detail_biaya[index].jumlah2 = new_jumlah));
+
+                                      // Rumus new subtotal
+                                      let new_subtotal = subtotal - pajak_total;
+                                      props.setFieldValue((props.values.subtotal = new_subtotal));
+                                      props.setFieldValue("subtotal", new_subtotal);
+
+                                      // Rumus total
+                                      let total = new_subtotal + pajak_total;
+                                      props.setFieldValue((props.values.total = total));
+                                      props.setFieldValue("total", total);
+
+                                      // Rumus pemotongan
+                                      let pemotongan = total - props.values.pemotongan;
+                                      props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                                      props.setFieldValue("sisa_tagihan", pemotongan);
+                                    }
+                                  }
+                                }}>
+                                <option value='0'>Pilih</option>
+                                {data4.map((pajak, index) => (
+                                  <option key={index} value={pajak.id}>
+                                    {pajak.nama}
+                                  </option>
+                                ))}
+                              </Form.Control>
+                            </Col>
+                            <Col sm='3'>
+                              <Form.Control
+                                placeholder=''
+                                name={`detail_biaya.${index}.jumlah`}
+                                value={props.values.detail_biaya[0].jumlah}
+                                onChange={(e) => {
+                                  props.setFieldValue(`detail_biaya.${index}.jumlah`, parseInt(e.target.value));
+                                  if (props.values.boolean == false) {
+                                    // Rumus subtotal
+                                    let jumlah = parseInt(e.target.value);
+                                    props.setFieldValue((props.values.detail_biaya[index].jumlah = jumlah));
+                                    const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+                                    props.setFieldValue((props.values.subtotal = subtotal));
+                                    props.setFieldValue("subtotal", subtotal);
+
+                                    // Rumus pajak total
+                                    let pajak = jumlah * (props.values.detail_biaya[index].pajak_persen / 100);
+                                    props.setFieldValue((props.values.detail_biaya[index].hasil_pajak = pajak));
+                                    const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                    props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                    // Rumus jumlah - pajak
+                                    let new_jumlah = jumlah - pajak;
+                                    props.setFieldValue((props.values.detail_biaya[index].jumlah2 = new_jumlah));
+
+                                    // Rumus total
+                                    let total = subtotal + pajak_total;
+                                    props.setFieldValue((props.values.total = total));
+                                    props.setFieldValue("total", total);
+
+                                    // Rumus pemotongan
+                                    let pemotongan = total - props.values.pemotongan;
+                                    props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                                    props.setFieldValue("sisa_tagihan", pemotongan);
+                                  } else {
+                                    // Rumus subtotal
+                                    let jumlah = parseInt(e.target.value);
+                                    props.setFieldValue((props.values.detail_biaya[index].jumlah = jumlah));
+                                    const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+
+                                    // Rumus pajak total
+                                    let pajak = jumlah * (props.values.detail_biaya[index].pajak_persen / 100);
+                                    props.setFieldValue((props.values.detail_biaya[index].hasil_pajak = pajak));
+                                    const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+                                    props.setFieldValue((props.values.total_pajak_per_baris = pajak_total));
+                                    props.setFieldValue("total_pajak_per_baris", pajak_total);
+
+                                    // Rumus jumlah - pajak
+                                    let new_jumlah = jumlah - pajak;
+                                    props.setFieldValue((props.values.detail_biaya[index].jumlah2 = new_jumlah));
+
+                                    // Rumus new subtotal
+                                    let new_subtotal = subtotal - pajak_total;
+                                    props.setFieldValue((props.values.subtotal = new_subtotal));
+                                    props.setFieldValue("subtotal", new_subtotal);
+
+                                    // Rumus total
+                                    let total = new_subtotal + pajak_total;
+                                    props.setFieldValue((props.values.total = total));
+                                    props.setFieldValue("total", total);
+
+                                    // Rumus pemotongan
+                                    let pemotongan = total - props.values.pemotongan;
+                                    props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                                    props.setFieldValue("sisa_tagihan", pemotongan);
+                                  }
+                                }}
+                              />
+                            </Col>
+                            <Col sm='1'>
+                              <Button variant='danger' onClick={() => remove(index)}>
+                                <CloseIcon fontSize='small' />
+                              </Button>
+                            </Col>
+                          </Row>
+                        ))}
+                      <Button
+                        type='button'
+                        variant='primary'
+                        onClick={() =>
+                          push({
+                            akun_biaya_id: "",
+                            nama_akun: "",
+                            deskripsi: "kosong",
+                            pajak_id: 0,
+                            pajak_nama: "kosong",
+                            pajak_akun_beli_id: "",
+                            pajak_persen: 0,
+                            hasil_pajak: 0,
+                            jumlah: "",
+                            jumlah2: 0,
+                          })
+                        }>
+                        <AddIcon /> Tambah data
+                      </Button>
+                    </div>
+                  )}
+                </FieldArray>
+              </Form>
+
+              {/* memo, subtotal, pajak, total, pemotongan and total */}
+              <Row sm='12' className='mt-3'>
+                <Col sm='4'>
+                  <Form.Label className='font-medium'>Memo</Form.Label>
+                  <Form.Control as='textarea' rows={4} value={props.values.memo} name='memo' onChange={props.handleChange} />
+                </Col>
+                <Col sm='3' />
+                <Col sm='2' className='mt-3'>
+                  <Col>
+                    <p>SubTotal</p>
+                    <p>Pajak</p>
+                    <p>Total</p>
+                    <p>Pemotongan</p>
+                  </Col>
+                </Col>
+                <Col sm='3' className='mt-3'>
+                  <Col>
+                    <p name='subtotal'>Rp. {props.values.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                    <p name='hasil_pajak'>Rp. {props.values.totalPajak}</p>
+                    <p name='total'>Rp. {props.values.total}</p>
+                    <InputGroup.Append>
+                      <InputGroup className='mb-3'>
+                        <InputGroup.Append>
+                          <InputGroup.Text>Rp</InputGroup.Text>
+                        </InputGroup.Append>
+                        <Form.Control
+                          type='text'
+                          placeholder=''
+                          aria-label='Amount (to the nearest dollar)'
+                          name='pemotongan'
+                          value={props.values.pemotongan}
+                          onChange={(e) => {
+                            props.setFieldValue(`pemotongan`, parseInt(e.target.value));
+                            if (props.values.boolean == false) {
+                              // Rumus akumulasi subtotal dan pajak total
+                              const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+                              const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                              // Rumus total
+                              let total = subtotal + pajak_total;
+
+                              // Rumus pemotongan
+                              let pemotongan = total - e.target.value;
+
+                              props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                              props.setFieldValue("sisa_tagihan", pemotongan);
+                            } else {
+                              // Rumus akumulasi subtotal dan pajak total
+                              const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
+                              const pajak_total = props.values.detail_biaya.reduce((a, b) => (a = a + b.hasil_pajak), 0);
+
+                              // Rumus new subtotal
+                              let new_subtotal = subtotal - pajak_total;
+                              props.setFieldValue((props.values.subtotal = new_subtotal));
+                              props.setFieldValue("subtotal", new_subtotal);
+
+                              // Rumus total
+                              let total = new_subtotal + pajak_total;
+
+                              // Rumus pemotongan
+                              let pemotongan = total - e.target.value;
+                              props.setFieldValue((props.values.sisa_tagihan = pemotongan));
+                              props.setFieldValue("sisa_tagihan", pemotongan);
+                            }
+                          }}
+                        />
+                      </InputGroup>
+                    </InputGroup.Append>
+                  </Col>
+                </Col>
+              </Row>
+
+              {/* lampiran, select, pemotongan input, and total */}
+              <Row sm='12'>
+                <Col sm='4'>
+                  <Form.Label className='font-medium'>Lampiran</Form.Label>
+                  <Form>
+                    <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
+                  </Form>
+                </Col>
+                <Col sm='3'>
+                  <Form.Control as='select' defaultValue='Choose...' name='akun_pemotongan' onChange={props.handleChange}>
+                    <option>pilih</option>
+                    {data5.map((akun, index) => (
+                      <option key={index} value={akun.id}>
+                        {akun.nama_akun}
+                      </option>
+                    ))}
+                  </Form.Control>
+                </Col>
+                {/* <Col sm="3">
+                
+                </Col>
+                <Col sm="2">
+                  <Col className="mt-2">
+                    <p>Rp. 0,00</p>
+                  </Col>
+                </Col> */}
+              </Row>
+
+              {/* total */}
+              <Row sm='12' className='mt-3'>
+                <Col sm='4' />
+                <Col sm='3' />
+                <Col sm='3' />
+                <Col sm='2' className='justify-content-end'>
+                  <Row>
+                    <h4 className='mr-2 '>Sisa Tagihan</h4>
+                    <h4 class='text-blue-600' name='sisa_tagihan'>
+                      Rp. {props.values.sisa_tagihan}
+                    </h4>
+                  </Row>
+                </Col>
+              </Row>
+
+              {/* button batal and bayar */}
+              <Row>
+                <Col className='d-flex justify-content-end mt-10'>
+                  <Button variant='danger mr-2'>Batal</Button>
+                  <Button variant='success' className='ml-2' onClick={props.handleSubmit}>
+                    Bayar
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </Forms>
+        )}
+      </Formik>
     </Layout>
   );
 }
@@ -200,33 +685,88 @@ export default function ViewBiaya({ data, data2 }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  // Get biaya from API
-  const headerBiaya = await prisma.headerBiaya.findMany({
+  const header = await prisma.headerBiaya.findMany({
     where: {
       id: parseInt(id),
     },
     include: {
-      detail_biaya: true,
       akun1: true,
+      akun2: true,
       kontak: true,
+      detail_biaya: true,
     },
   });
 
-  const detailBiaya = await prisma.detailBiaya.findMany({
+  // Get kategori akun from akun model
+  const getAkun = await prisma.akun.findMany({
     where: {
-      header_biaya_id: 88,
-    },
-    include: {
-      header_biaya: true,
-      akun_biaya: true,
-      pajak: true,
+      // Akun kas & bank
+      kategoriId: 3,
     },
   });
+
+  const getAkun2 = await prisma.akun.findMany({
+    where: {
+      // Akun beban, & beban lainnya
+      kategoriId: {
+        in: [16, 17],
+      },
+    },
+  });
+
+  const getAkun3 = await prisma.akun.findMany({
+    where: {
+      // Akun pendapatan
+      kategoriId: 13,
+    },
+  });
+
+  // Get kontak from kontak model
+  const getKontak = await prisma.kontak.findMany({
+    orderBy: [
+      {
+        nama: "asc",
+      },
+    ],
+  });
+
+  //Get Pajak form pajak model
+  const getPajak = await prisma.pajak.findMany({
+    orderBy: [
+      {
+        nama: "asc",
+      },
+    ],
+    include: {
+      kategori2: true,
+    },
+  });
+
+    let biaya = []
+    header[0].detail_biaya.map((i) => {
+      biaya.push({
+        akun_biaya_id: parseInt(i.akun_biaya_id),
+        nama_akun: i.nama_akun,
+        deskripsi: i.deskripsi,
+        pajak_id: parseInt(i.pajak_id),
+        pajak_nama: i.pajak_nama,
+        pajak_persen: parseInt(i.pajak_persen),
+        hasil_pajak: parseInt(i.hasil_pajak),
+        pajak_akun_beli_id: i.pajak_akun_beli_id,
+        jumlah: parseInt(i.jumlah),
+        jumlah2: parseInt(i.jumlah2),
+      })
+    })
 
   return {
     props: {
-      data: headerBiaya,
-      data2: detailBiaya,
+      data: getAkun,
+      data2: getAkun2,
+      data3: getKontak,
+      data4: getPajak,
+      data5: getAkun3,
+      header: header,
+      biaya: biaya,
     },
   };
 }

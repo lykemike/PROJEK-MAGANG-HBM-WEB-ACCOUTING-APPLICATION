@@ -6,6 +6,17 @@ import { Button, DropdownButton, Dropdown, Row, Col, Pagination } from "react-bo
 import Add from "@material-ui/icons/Add";
 import Axios from "axios";
 import { useRouter } from "next/router";
+
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+import Tables from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -62,123 +73,97 @@ export default function DaftarAkun({ data }) {
   const handleLastPage = () => {
     setPage(parseInt(data.length / rowsPerPage));
   };
-  
+
   return (
     <Layout>
-      <div variant='container'>
+      <div className='border-b border-gray-200'>
+        <Breadcrumbs aria-label='breadcrumb'>
+          <Typography color='textPrimary'>Daftar Akun</Typography>
+        </Breadcrumbs>
+
         <Row>
           <Col>
-            <h4>Daftar Akun</h4>
+            <h2 className='text-blue-600'>Daftar Akun</h2>
           </Col>
+
           <Col className='d-flex justify-content-end'>
-            <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Tindakan'>
-              <Dropdown.Item>
-                <Link href='/daftar-akun/atur-saldo-awal'>
-                  <a>Atur Saldo Awal</a>
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <Link href='/daftar-akun/tutup-buku'>Penutupan Buku</Link>
-              </Dropdown.Item>
-            </DropdownButton>
-            <Link href='/daftar-akun/buat-akun-baru'>
-              <Button>
-                <Add fontSize='small' />
-                Buat akun baru
-              </Button>
-            </Link>
+            <Row>
+              <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Tindakan'>
+                <Dropdown.Item>
+                  <Link href='/daftar-akun/atur-saldo-awal'>
+                    <a>Atur Saldo Awal</a>
+                  </Link>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Link href='/daftar-akun/tutup-buku'>Penutupan Buku</Link>
+                </Dropdown.Item>
+              </DropdownButton>
+              <Link href='/daftar-akun/buat-akun-baru'>
+                <Button variant='primary'>
+                  <Add fontSize='small' />
+                  Buat akun baru
+                </Button>
+              </Link>
+            </Row>
           </Col>
         </Row>
-        <div class='mt-8'>
-          <table class='min-w-full table-auto'>
-            <thead class='justify-between'>
-              <tr class='bg-dark'>
-                <th class='px-2 py-2'>
-                  <span class='text-gray-300'>Kode Akun</span>
-                </th>
-                <th class='px-2 py-2'>
-                  <span class='text-gray-300'>Nama Akun</span>
-                </th>
-                <th class='px-2 py-2'>
-                  <span class='text-gray-300'>Kategori Akun</span>
-                </th>
+      </div>
 
-                <th class='px-2 py-2'>
-                  <span class='text-gray-300'>Saldo (dalam IDR)</span>
-                </th>
-                <th class='px-2 py-2'>
-                  <span class='text-gray-300'>Action</span>
-                </th>
-              </tr>
-            </thead>
-
-            <tbody class='bg-white divide-y divide-gray-200'>
-              <tr>
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='flex items-center'>
-                    <div>
-                      <div class='text-sm font-medium text-gray-900' />
-                      <div class='text-sm text-gray-500' />
-                    </div>
-                  </div>
-                </td>
-                {/* <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-xl text-red-600 font-medium'>Kas</div>
-                </td> */}
-                <td class='px-2 py-2 whitespace-nowrap'>
-                  <div class='text-sm text-gray-900' />
-                </td>
-                <td class='px-2 py-2 whitespace-nowrap font-medium'>
-                  <div class='text-sm text-gray-900' />
-                </td>
-              </tr>
-              {data.slice(firstIndex, lastIndex).map((i) => (
-                <tr>
-                  <td class='px-2 py-2 whitespace-nowrap'>
-                    <div class='flex items-center'>
-                      <div>
-                        <div class='text-sm font-medium text-gray-900'>{i.kode_akun}</div>
-                        {/* <div class="text-sm text-gray-500">test</div> */}
-                      </div>
-                    </div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap'>
-                    <div class='text-sm text-gray-900'>{i.nama_akun}</div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap'>
-                    <div class='text-sm text-gray-900'>{i.kategori_akun.name}</div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap font-medium'>
-                    <div class='text-sm text-gray-900'>Rp. </div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap'>
-                    <div class='text-sm text-gray-900'>
-                      <Button variant='warning mr-2'>Edit</Button>
-                      <Button
-                        variant='danger'
-                        onClick={() => {
-                          deletedata(i.id);
-                        }}>
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div class='flex items-center justify-center mt-4'>
-            <TablePagination
-              onPrevChange={handlePrevChange}
-              onNextChange={handleNextChange}
-              onFirstPage={handleFirstPage}
-              onLastPage={handleLastPage}
-              onClickPage={handleClickPage}
-              lastIndex={parseInt(data.length / rowsPerPage)}
-              currentPage={page}
-            />
-          </div>
-        </div>
+      <TableContainer className='mt-8' component={Paper}>
+        <Tables size='small' aria-label='a dense table'>
+          <TableHead className='bg-dark'>
+            <TableRow>
+              <TableCell>
+                <Typography className='text-white font-bold'>Kode Akun</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Nama Akun</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Kategori Akun</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Saldo</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className='text-white font-bold'>Action</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.slice(firstIndex, lastIndex).map((i) => (
+              <TableRow>
+                <TableCell component='th' scope='row'>
+                  {i.kode_akun}
+                </TableCell>
+                <TableCell>{i.nama_akun}</TableCell>
+                <TableCell>{i.kategori_akun.name}</TableCell>
+                <TableCell></TableCell>
+                <TableCell>
+                  <Button variant='warning mr-2'>Edit</Button>
+                  <Button
+                    variant='danger'
+                    onClick={() => {
+                      deletedata(i.id);
+                    }}>
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Tables>
+      </TableContainer>
+      <div class='flex items-center justify-center mt-4'>
+        <TablePagination
+          onPrevChange={handlePrevChange}
+          onNextChange={handleNextChange}
+          onFirstPage={handleFirstPage}
+          onLastPage={handleLastPage}
+          onClickPage={handleClickPage}
+          lastIndex={parseInt(data.length / rowsPerPage)}
+          currentPage={page}
+        />
       </div>
     </Layout>
   );

@@ -12,9 +12,11 @@ export default function SidebarSetting() {
                 <span class="ml-2 text-lg tracking-wide truncate text-black">Perusahaan</span> <br/>
                 </a>
 			</Link>
+
+
             <Link href="/setting/pengingat-faktur">
 				<a>
-                <span class="ml-4 text-lg tracking-wide truncate text-gray-500"><ArrowRightIcon fontSize="small"/> Pengingat Faktur</span> <br/>
+                <span class="ml-2 text-lg tracking-wide truncate text-black">Pengingat Faktur</span> <br/>
                 </a>
 			</Link>
 

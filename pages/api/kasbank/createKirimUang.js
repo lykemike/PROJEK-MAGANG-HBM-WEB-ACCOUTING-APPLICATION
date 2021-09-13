@@ -39,7 +39,7 @@ export default async (req, res) => {
   try {
     const frontend_data = {
       akun_bayar_id: parseInt(req.body.akun_bayar_id),
-      akun_penerima_id: parseInt(req.body.akun_penerima_id),
+      kontak_id: parseInt(req.body.kontak_id),
       no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,

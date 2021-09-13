@@ -35,7 +35,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
         initialValues={{
           akun_transfer: "",
           akun_setor: "",
-          jumlah: "",
+          total: "",
           memo: "-",
           no_transaksi: 0,
           tgl_transaksi: "",
@@ -50,20 +50,19 @@ export default function tranfer_uang({ data, data2, data3 }) {
             .catch(function (error) {
               console.log(error);
             });
-        }}
-      >
+        }}>
         {(props) => (
           <Forms noValidate>
-            <div variant="container">
-              <div class="text-md font-medium text-gray-900 mb-2">Transaksi</div>
-              <h4 class="mt-2 mb-5">Transfer Uang</h4>
+            <div variant='container'>
+              <div class='text-md font-medium text-gray-900 mb-2'>Transaksi</div>
+              <h4 class='mt-2 mb-5'>Transfer Uang</h4>
 
-              <div class="mb-10">
+              <div class='mb-10'>
                 <Row>
                   <Col>
                     <Form.Label>Transfer dari</Form.Label>
-                    <Form.Control as="select" name="akun_transfer" onChange={props.handleChange} onBlur={props.handleBlur}>
-                      <option value="kosong">Pilih</option>
+                    <Form.Control as='select' name='akun_transfer' onChange={props.handleChange} onBlur={props.handleBlur}>
+                      <option value='kosong'>Pilih</option>
                       {data.map((akun) => (
                         <option key={akun.id} value={akun.id}>
                           {akun.nama_akun}
@@ -75,8 +74,8 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
                   <Col>
                     <Form.Label>Setor ke</Form.Label>
-                    <Form.Control as="select" name="akun_setor" onChange={props.handleChange} onBlur={props.handleBlur}>
-                      <option value="kosong">Pilih</option>
+                    <Form.Control as='select' name='akun_setor' onChange={props.handleChange} onBlur={props.handleBlur}>
+                      <option value='kosong'>Pilih</option>
                       {data.map((akun) => (
                         <option key={akun.id} value={akun.id}>
                           {akun.nama_akun}
@@ -87,43 +86,43 @@ export default function tranfer_uang({ data, data2, data3 }) {
                   </Col>
 
                   <Col>
-                    <Form.Label>Jumlah</Form.Label>
-                    <Form.Control placeholder="Jumlah Uang" name="jumlah" onChange={props.handleChange} />
+                    <Form.Label>total</Form.Label>
+                    <Form.Control placeholder='total Uang' name='total' onChange={props.handleChange} />
                   </Col>
                 </Row>
               </div>
 
-              <div class="mb-10">
+              <div class='mb-10'>
                 <Row>
                   <Col>
-                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                    <Form.Group controlId='exampleForm.ControlTextarea1'>
                       <Form.Label>Memo</Form.Label>
-                      <Form.Control as="textarea" rows={3} name="memo" placeholder="Isi Memo" onChange={props.handleChange} />
+                      <Form.Control as='textarea' rows={3} name='memo' placeholder='Isi Memo' onChange={props.handleChange} />
                       {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
                     </Form.Group>
                   </Col>
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control placeholder={"Auto"} name="no_transaksi" disabled />
+                    <Form.Control placeholder={"Auto"} name='no_transaksi' disabled />
                   </Col>
 
                   <Col>
                     <Form.Label>Tanggal Transaksi</Form.Label>
-                    <InputGroup className="mb-3">
-                      <FormControl placeholder="Pick date" type="date" aria-label="date" name="tgl_transaksi" onChange={props.handleChange} />
+                    <InputGroup className='mb-3'>
+                      <FormControl placeholder='Pick date' type='date' aria-label='date' name='tgl_transaksi' onChange={props.handleChange} />
                       {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                     </InputGroup>
                   </Col>
 
                   <Col>
                     <Form.Label>Tag</Form.Label>
-                    <Form.Control placeholder="Tag" name="tag" onChange={props.handleChange} />
+                    <Form.Control placeholder='Tag' name='tag' onChange={props.handleChange} />
                   </Col>
                 </Row>
               </div>
 
-              <div class="mb-10">
+              <div class='mb-10'>
                 <Row>
                   <Col>
                     {/* <div>
@@ -147,13 +146,13 @@ export default function tranfer_uang({ data, data2, data3 }) {
                 </Row>
               </div>
 
-              <div className="float-right">
-                <Button variant="danger mr-2">
-                  <HighlightOffIcon fontSize="medium" /> Batal
+              <div className='float-right'>
+                <Button variant='danger mr-2'>
+                  <HighlightOffIcon fontSize='medium' /> Batal
                 </Button>
 
-                <Button variant="success" type="submit" onClick={props.handleSubmit}>
-                  <CheckCircleIcon fontSize="medium" /> Buat Transferan
+                <Button variant='success' type='submit' onClick={props.handleSubmit}>
+                  <CheckCircleIcon fontSize='medium' /> Buat Transferan
                 </Button>
               </div>
             </div>

@@ -9,19 +9,13 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 
 export default function addRole() {
-  // Form Validation
   const RoleSchema = Yup.object().shape({
     role_type: Yup.string().required(" required"),
-    // role_desc: Yup.string().required(' required'),
   });
 
-  // Role API
   const url = "http://localhost:3000/api/role/createRole";
-
-  // Redirect Function
   const router = useRouter();
 
-  // Batal Button Function
   function cancelButton() {
     router.push("../role/tabel-role");
   }
@@ -36,9 +30,6 @@ export default function addRole() {
         }}
         validationSchema={RoleSchema}
         onSubmit={async (values) => {
-          // alert(JSON.stringify(values, null, 2));
-          // console.log(JSON.stringify(values, null, 2));
-          // console.log(values);
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
@@ -133,6 +124,12 @@ export default function addRole() {
                             Laporan
                           </label>
                         </Row>
+                        <Row>
+                          <label>
+                            <Field type='checkbox' name='menu' value='15' />
+                            Reimbursement
+                          </label>
+                        </Row>
                       </div>
                     </Col>
 
@@ -183,6 +180,12 @@ export default function addRole() {
                           <label>
                             <Field type='checkbox' name='menu' value='14' />
                             Pengaturan
+                          </label>
+                        </Row>
+                        <Row>
+                          <label>
+                            <Field type='checkbox' name='menu' value='15' />
+                            Aset
                           </label>
                         </Row>
                       </div>
