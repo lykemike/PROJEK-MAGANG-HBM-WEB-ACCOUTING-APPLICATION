@@ -121,7 +121,6 @@ model Akun {
   Aset4 Aset[] @relation("AkumulasiAkunPenyusutan")
 
   PelepasanAset               PelepasanAset[]
-  InvoicePelepasanAset        InvoicePelepasanAset[]
 
   // Jurnal
   JurnalPenjualan             JurnalPenjualan[]
@@ -754,6 +753,7 @@ model Aset {
   akun_aset_id                 Int
   deskripsi_aset               String
   tgl_akuisisi                 String
+  PIC                          String
   biaya_akuisisi               Int
   akun_dikreditkan             Akun    @relation("AkunDikreditkan", fields: [akun_dikreditkan_id], references: [id])
   akun_dikreditkan_id          Int
@@ -770,12 +770,17 @@ model Aset {
   tgl_penyusutan               String
   terjual                      Boolean
   JurnalAset JurnalAset[]
+  PelepasanAset PelepasanAset[]
+  JurnalPelepasanAset JurnalPelepasanAset[]
+  JurnalInvoicePelepasanAset JurnalInvoicePelepasanAset[]
 }
 
 model PelepasanAset {
   id            Int    @id @default(autoincrement())
   tgl_transaksi String
   harga_jual    Int
+  header_aset    Aset   @relation(fields: [header_aset_id], references: [id])
+  header_aset_id Int
   deposit       Akun   @relation(fields: [deposit_id], references: [id])
   deposit_id    Int
   memo          String
@@ -783,19 +788,9 @@ model PelepasanAset {
   
 
   JurnalPelepasanAset JurnalPelepasanAset[]
-}
-
-model InvoicePelepasanAset {
-  id             Int    @id @default(autoincrement())
-  akun           Akun @relation(fields: [akun_id], references:[id])
-  akun_id        Int
-  nominal        Int
-  tipe_saldo     String
-  untungrugi     Int
-  untungrugiakun String
-
   JurnalInvoicePelepasanAset JurnalInvoicePelepasanAset[]
 }
+
 
 model JurnalAset {
   id             Int    @id @default(autoincrement())
@@ -813,16 +808,20 @@ model JurnalPelepasanAset {
   header_pelepasan_aset_id Int
   akun                     Akun @relation(fields: [akun_id], references:[id])
   akun_id                  Int
+  header_aset    Aset   @relation(fields: [header_aset_id], references: [id])
+  header_aset_id Int
   nominal                  Int
   tipe_saldo               String
 }
 
 model JurnalInvoicePelepasanAset {
   id                        Int                  @id @default(autoincrement())
-  invoice_pelepasan_aset    InvoicePelepasanAset @relation(fields: [invoice_pelepasan_aset_id], references: [id])
-  invoice_pelepasan_aset_id Int
-  akun                     Akun @relation(fields: [akun_id], references:[id])
-  akun_id                  Int
+  pelepasan_aset            PelepasanAset @relation(fields: [pelepasan_aset_id], references: [id])
+  pelepasan_aset_id         Int
+  header_aset               Aset   @relation(fields: [header_aset_id], references: [id])
+  header_aset_id            Int
+  akun                      Akun @relation(fields: [akun_id], references:[id])
+  akun_id                   Int
   nominal                   Int
   tipe_saldo                String
 }

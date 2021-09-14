@@ -8,6 +8,7 @@ export default async (req, res) => {
         {
           tgl_transaksi: req.body.tgl_transaksi,
           harga_jual: parseInt(req.body.harga_jual),
+          header_aset_id: parseInt(req.body.id),
           deposit_id: parseInt(req.body.deposit_id),
           memo: req.body.memo,
           tag: req.body.tag,
@@ -22,7 +23,7 @@ export default async (req, res) => {
       },
     });
 
-    const updateaset = await prisma.Aset.update({
+    const updateaset = await prisma.aset.update({
       where: {
         id: parseInt(req.body.id),
       },
@@ -39,7 +40,7 @@ export default async (req, res) => {
 
     const get_setting_aset_tetap = await prisma.settingDefault.findMany({
       where: {
-        tipe: "aset",
+        nama_setting: "aset_tetap",
       },
       include: {
         akun: true,
@@ -50,13 +51,15 @@ export default async (req, res) => {
       data: [
         {
           header_pelepasan_aset_id: find_latest.id,
-          akun_id: parseInt(find_akun_deposit_ke[0].id),
+          header_aset_id: parseInt(req.body.id),
+          akun_id: parseInt(find_akun_deposit_ke.id),
           nominal: parseInt(req.body.harga_jual),
           tipe_saldo: "Debit",
         },
         {
           header_pelepasan_aset_id: find_latest.id,
-          akun_id: parseInt(get_setting_aset_tetap[0].id),
+          header_aset_id: parseInt(req.body.id),
+          akun_id: parseInt(get_setting_aset_tetap[0].akun_id),
           nominal: parseInt(req.body.harga_jual),
           tipe_saldo: "Kredit",
         },
