@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,6 +22,9 @@ export default function Table2({ data, index, label, label2, view }) {
     setOpen(!open);
   };
 
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
+
   const detail = useMemo(() => {
     if (view == "jual") {
       return data.PenerimaanPembayaran;
@@ -31,6 +34,20 @@ export default function Table2({ data, index, label, label2, view }) {
       return data.pengirimanbiaya;
     }
   }, [view]);
+
+  const status = useCallback((tgl_jatuh_tempo, status) => {
+    if (tgl_jatuh_tempo < current) {
+      return <span class='bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs'>Jatuh Tempo</span>;
+    } else if (status == "Complete") {
+      return <span class='bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs'>{data.status}</span>;
+    } else if (status == "Active") {
+      return <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{data.status}</span>;
+    } else if (status == "Partial") {
+      return <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{data.status}</span>;
+    } else {
+      null;
+    }
+  }, []);
 
   let autoIncrement = 1;
 
@@ -53,13 +70,7 @@ export default function Table2({ data, index, label, label2, view }) {
             <TableCell>{data.akun1.nama_akun.length > 28 ? data.akun1.nama_akun.slice(0, 28) + "..." : data.akun1.nama_akun}</TableCell>
             <TableCell>{data.kontak.nama}</TableCell>
             <TableCell>{data.tag}</TableCell>
-            <TableCell>
-              {data.status == "Complete" ? (
-                <span class='bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs'>{data.status}</span>
-              ) : (
-                <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{data.status}</span>
-              )}
-            </TableCell>
+            <TableCell>{status(data.tgl_jatuh_tempo, data.status)}</TableCell>
             <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell align='center'>
@@ -139,13 +150,7 @@ export default function Table2({ data, index, label, label2, view }) {
             <TableCell>{data.kontak.nama}</TableCell>
             <TableCell>{data.tgl_jatuh_tempo}</TableCell>
             <TableCell>{data.tag}</TableCell>
-            <TableCell>
-              {data.status == "Complete" ? (
-                <span class='bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs'>{data.status}</span>
-              ) : (
-                <span class='bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs'>{data.status}</span>
-              )}
-            </TableCell>
+            <TableCell>{status(data.tgl_jatuh_tempo, data.status)}</TableCell>
             <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell align='center'>

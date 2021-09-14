@@ -26,7 +26,7 @@ export default async (req, res) => {
       detail.push({
         header_reimburse_id: find_latest.id,
         tanggal: i.tanggal,
-        tempat: i.biaya,
+        tempat: i.tempat,
         biaya: i.biaya,
         keterangan: i.keterangan,
         jumlah: parseInt(i.jumlah),

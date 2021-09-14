@@ -108,16 +108,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Nama Panggilan</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='John'
-                          type='text'
-                          name='namaPanggilan'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.namaPanggilan && props.touched.namaPanggilan ? (
-                          <div class='text-red-500 text-sm'>{props.errors.namaPanggilan}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='namaPanggilan' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.namaPanggilan && props.touched.namaPanggilan ? <div class='text-red-500 text-sm'>{props.errors.namaPanggilan}</div> : null}
                       </Col>
                     </Row>
 
@@ -165,12 +157,7 @@ export default function BuatKontakBaru({ data, data2 }) {
                       <Col sm='10'>
                         <Row>
                           <Col sm='2'>
-                            <Form.Control
-                              as='select'
-                              defaultValue='Choose...'
-                              name='gelar'
-                              onChange={props.handleChange}
-                              onBLur={props.handleBlur}>
+                            <Form.Control as='select' defaultValue='Choose...' name='gelar' onChange={props.handleChange} onBLur={props.handleBlur}>
                               <option>Pilih</option>
                               <option value='Mr.'>Mr. </option>
                               <option value='Ms.'>Ms. </option>
@@ -178,16 +165,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                             </Form.Control>
                           </Col>
                           <Col>
-                            <Form.Control
-                              placeholder='John Doe Smith'
-                              type='text'
-                              name='nama'
-                              onChange={props.handleChange}
-                              onBLur={props.handleBlur}
-                            />
-                            {props.errors.nama && props.touched.nama ? (
-                              <div class='text-red-500 text-sm'>{props.errors.nama}</div>
-                            ) : null}
+                            <Form.Control placeholder='-' type='text' name='nama' onChange={props.handleChange} onBLur={props.handleBlur} />
+                            {props.errors.nama && props.touched.nama ? <div class='text-red-500 text-sm'>{props.errors.nama}</div> : null}
                           </Col>
                         </Row>
                       </Col>
@@ -198,16 +177,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Handphone</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='+62 812 9876 5432'
-                          type='text'
-                          name='nomorHp'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.nomorHp && props.touched.nomorHp ? (
-                          <div class='text-red-500 text-sm'>{props.errors.nomorHp}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='nomorHp' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.nomorHp && props.touched.nomorHp ? <div class='text-red-500 text-sm'>{props.errors.nomorHp}</div> : null}
                       </Col>
                     </Row>
 
@@ -218,12 +189,7 @@ export default function BuatKontakBaru({ data, data2 }) {
                       <Col>
                         <Row>
                           <Col sm='2'>
-                            <Form.Control
-                              as='select'
-                              defaultValue='Choose...'
-                              name='tipeIdentitas'
-                              onChange={props.handleChange}
-                              onBLur={props.handleBlur}>
+                            <Form.Control as='select' defaultValue='Choose...' name='tipeIdentitas' onChange={props.handleChange} onBLur={props.handleBlur}>
                               <option>Pilih</option>
                               <option value='Passport'>Passport</option>
                               <option value='KTP'>KTP</option>
@@ -232,16 +198,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                             </Form.Control>
                           </Col>
                           <Col>
-                            <Form.Control
-                              placeholder='1234567890'
-                              type='text'
-                              name='nomorIdentitas'
-                              onChange={props.handleChange}
-                              onBLur={props.handleBlur}
-                            />
-                            {props.errors.nomorIdentitas && props.touched.nomorIdentitas ? (
-                              <div class='text-red-500 text-sm'>{props.errors.nomorIdentitas}</div>
-                            ) : null}
+                            <Form.Control placeholder='-' type='text' name='nomorIdentitas' onChange={props.handleChange} onBLur={props.handleBlur} />
+                            {props.errors.nomorIdentitas && props.touched.nomorIdentitas ? <div class='text-red-500 text-sm'>{props.errors.nomorIdentitas}</div> : null}
                           </Col>
                         </Row>
                       </Col>
@@ -252,16 +210,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Email</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='johndoe@gmail.com'
-                          type='email'
-                          name='email'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.email && props.touched.email ? (
-                          <div class='text-red-500 text-sm'>{props.errors.email}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='email' name='email' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.email && props.touched.email ? <div class='text-red-500 text-sm'>{props.errors.email}</div> : null}
                       </Col>
                     </Row>
 
@@ -270,16 +220,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Info Lain</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='Info Lain'
-                          type='text'
-                          name='infoLain'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.infoLain && props.touched.infoLain ? (
-                          <div class='text-red-500 text-sm'>{props.errors.infoLain}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='infoLain' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.infoLain && props.touched.infoLain ? <div class='text-red-500 text-sm'>{props.errors.infoLain}</div> : null}
                       </Col>
                     </Row>
 
@@ -288,16 +230,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Nama Perusahaan</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='PT. ABC DEF'
-                          type='text'
-                          name='namaPerusahaan'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.namaPerusahaan && props.touched.namaPerusahaan ? (
-                          <div class='text-red-500 text-sm'>{props.errors.namaPerusahaan}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='namaPerusahaan' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.namaPerusahaan && props.touched.namaPerusahaan ? <div class='text-red-500 text-sm'>{props.errors.namaPerusahaan}</div> : null}
                       </Col>
                     </Row>
 
@@ -306,16 +240,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Telepon</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='0123 4567'
-                          type='text'
-                          name='nomorTelepon'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.nomorTelepon && props.touched.nomorTelepon ? (
-                          <div class='text-red-500 text-sm'>{props.errors.nomorTelepon}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='nomorTelepon' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.nomorTelepon && props.touched.nomorTelepon ? <div class='text-red-500 text-sm'>{props.errors.nomorTelepon}</div> : null}
                       </Col>
                     </Row>
 
@@ -324,16 +250,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Fax</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='7654 3210'
-                          type='text'
-                          name='nomorFax'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.nomorFax && props.touched.nomorFax ? (
-                          <div class='text-red-500 text-sm'>{props.errors.nomorFax}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='nomorFax' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.nomorFax && props.touched.nomorFax ? <div class='text-red-500 text-sm'>{props.errors.nomorFax}</div> : null}
                       </Col>
                     </Row>
 
@@ -342,16 +260,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>NPWP</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='12345 67890 12345'
-                          type='text'
-                          name='nomorNpwp'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.nomorNpwp && props.touched.nomorNpwp ? (
-                          <div class='text-red-500 text-sm'>{props.errors.nomorNpwp}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='nomorNpwp' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.nomorNpwp && props.touched.nomorNpwp ? <div class='text-red-500 text-sm'>{props.errors.nomorNpwp}</div> : null}
                       </Col>
                     </Row>
 
@@ -360,16 +270,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Alamat Pembayaran</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='Gedung A, Jalan Sudirman, No. 3'
-                          type='text'
-                          name='alamatPembayaran'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.alamatPembayaran && props.touched.alamatPembayaran ? (
-                          <div class='text-red-500 text-sm'>{props.errors.alamatPembayaran}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='alamatPembayaran' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.alamatPembayaran && props.touched.alamatPembayaran ? <div class='text-red-500 text-sm'>{props.errors.alamatPembayaran}</div> : null}
                       </Col>
                     </Row>
 
@@ -378,16 +280,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Alamat Pengiriman</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='Gedung B, Jalan Kebon Jeruk, Blok C, No. 15'
-                          type='text'
-                          name='alamatPengiriman'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.alamatPengiriman && props.touched.alamatPengiriman ? (
-                          <div class='text-red-500 text-sm'>{props.errors.alamatPengiriman}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='alamatPengiriman' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.alamatPengiriman && props.touched.alamatPengiriman ? <div class='text-red-500 text-sm'>{props.errors.alamatPengiriman}</div> : null}
                       </Col>
                     </Row>
 
@@ -401,12 +295,6 @@ export default function BuatKontakBaru({ data, data2 }) {
                       <Col sm='2'>
                         <h5>Akun Bank</h5>
                       </Col>
-                      <Col className='d-flex justify-content-end mr-3'>
-                        <Row>
-                          <DeleteIcon fontSize='medium' />
-                          <h5>Hapus</h5>
-                        </Row>
-                      </Col>
                     </Row>
 
                     <Row className='mb-2'>
@@ -414,16 +302,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Nama Bank</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='Bank Central Asia (BCA)'
-                          type='text'
-                          name='namaBank'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.namaBank && props.touched.namaBank ? (
-                          <div class='text-red-500 text-sm'>{props.errors.namaBank}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='namaBank' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.namaBank && props.touched.namaBank ? <div class='text-red-500 text-sm'>{props.errors.namaBank}</div> : null}
                       </Col>
                     </Row>
 
@@ -432,16 +312,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Kantor Cabang Bank</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='Cabang Jalan Merpati, Blok A, No. 8'
-                          type='text'
-                          name='kantorCabangBank'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.kantorCabangBank && props.touched.kantorCabangBank ? (
-                          <div class='text-red-500 text-sm'>{props.errors.kantorCabangBank}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='kantorCabangBank' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.kantorCabangBank && props.touched.kantorCabangBank ? <div class='text-red-500 text-sm'>{props.errors.kantorCabangBank}</div> : null}
                       </Col>
                     </Row>
 
@@ -450,16 +322,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Pemegang Akun Bank</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='John Doe Smith'
-                          type='text'
-                          name='pemegangAkunBank'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.pemegangAkunBank && props.touched.pemegangAkunBank ? (
-                          <div class='text-red-500 text-sm'>{props.errors.pemegangAkunBank}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='pemegangAkunBank' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.pemegangAkunBank && props.touched.pemegangAkunBank ? <div class='text-red-500 text-sm'>{props.errors.pemegangAkunBank}</div> : null}
                       </Col>
                     </Row>
 
@@ -468,16 +332,8 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Nomor Rekening</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          placeholder='12345 67890'
-                          type='text'
-                          name='nomorRekening'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}
-                        />
-                        {props.errors.nomorRekening && props.touched.nomorRekening ? (
-                          <div class='text-red-500 text-sm'>{props.errors.nomorRekening}</div>
-                        ) : null}
+                        <Form.Control placeholder='-' type='text' name='nomorRekening' onChange={props.handleChange} onBLur={props.handleBlur} />
+                        {props.errors.nomorRekening && props.touched.nomorRekening ? <div class='text-red-500 text-sm'>{props.errors.nomorRekening}</div> : null}
                       </Col>
                       {/* <Col sm='12'>
                         <Button className='mb-2 mt-4' variant='outline-primary' block>
@@ -498,12 +354,7 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Akun Piutang</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          as='select'
-                          defaultValue='Choose...'
-                          name='akunPiutang'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}>
+                        <Form.Control as='select' defaultValue='Choose...' name='akunPiutang' onChange={props.handleChange} onBLur={props.handleBlur}>
                           <option>Pilih</option>
                           {data.map((akunPiutang) => (
                             <option key={akunPiutang.id} value={akunPiutang.id}>
@@ -519,12 +370,7 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Akun Hutang</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          as='select'
-                          defaultValue='Choose...'
-                          name='akunHutang'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}>
+                        <Form.Control as='select' defaultValue='Choose...' name='akunHutang' onChange={props.handleChange} onBLur={props.handleBlur}>
                           <option>Pilih</option>
                           {data2.map((akunHutang) => (
                             <option key={akunHutang.id} value={akunHutang.id}>
@@ -540,12 +386,7 @@ export default function BuatKontakBaru({ data, data2 }) {
                         <Form.Label>Syarat Pembayaran Utama</Form.Label>
                       </Col>
                       <Col sm='10'>
-                        <Form.Control
-                          as='select'
-                          defaultValue='Choose...'
-                          name='syaratPembayaranUtama'
-                          onChange={props.handleChange}
-                          onBLur={props.handleBlur}>
+                        <Form.Control as='select' defaultValue='Choose...' name='syaratPembayaranUtama' onChange={props.handleChange} onBLur={props.handleBlur}>
                           <option>Pilih</option>
                           <option value='1'>Tunai / Cash</option>
                           <option value='2'>Kredit / Term of Payment</option>
