@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import Layout from "../../components/layout";
 import Link from "next/link";
 import { Button, Row, Col, Form } from "react-bootstrap";
@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 export default function reimbursement() {
   const url = "http://localhost:3000/api/reimbursement/createReimbursement";
   const router = useRouter();
+
 
   return (
     <div>
@@ -40,7 +41,7 @@ export default function reimbursement() {
             Axios.post(url, values)
               .then(function (response) {
                 console.log(response);
-                // router.push("../tabel-reimbursement");
+                router.push(`view/${response.data.id.id}`);
               })
               .catch(function (error) {
                 console.log(error);
@@ -220,7 +221,7 @@ export default function reimbursement() {
                     <HighlightOffIcon fontSize='medium' /> Batal
                   </Button>
                   <Button variant='success' type='submit' onClick={props.handleSubmit}>
-                    <CheckCircleIcon fontSize='medium' /> Buat Transferan
+                    <CheckCircleIcon fontSize='medium' /> Buat Reimbursement
                   </Button>
                 </div>
               </div>

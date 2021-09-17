@@ -1,6 +1,11 @@
 import React, { useState, useMemo } from "react";
 
-export default function TableDetailRow({ data, index, label = "Sales Invoice", tipe = "penjualan" }) {
+export default function TableDetailRow({
+  data,
+  index,
+  label = "Sales Invoice",
+  tipe = "penjualan",
+}) {
   const [open, setOpen] = useState(false);
   const onClick = () => {
     setOpen(!open);
@@ -8,6 +13,8 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
   const detail = useMemo(() => {
     if (tipe == "pembelian") {
       return data.JurnalPembelian;
+    } else if (tipe == "biaya") {
+      return data.JurnalBiaya;
     } else if (tipe == "transferUang") {
       return data.JurnalTransferUang;
     } else if (tipe == "kirimUang") {
@@ -53,8 +60,18 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
                   <td class="px-2 py-2">
                     {i.akun.kode_akun} - {i.akun.nama_akun}
                   </td>
-                  <td class="px-2 py-2">Rp. {i.tipe_saldo === "Debit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</td>
-                  <td class="px-2 py-2">Rp. {i.tipe_saldo === "Kredit" ? i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : 0}</td>
+                  <td class="px-2 py-2">
+                    Rp.{" "}
+                    {i.tipe_saldo === "Debit"
+                      ? i.nominal.toLocaleString({ minimumFractionDigits: 0 })
+                      : 0}
+                  </td>
+                  <td class="px-2 py-2">
+                    Rp.{" "}
+                    {i.tipe_saldo === "Kredit"
+                      ? i.nominal.toLocaleString({ minimumFractionDigits: 0 })
+                      : 0}
+                  </td>
                 </tr>
               ))}
             </tbody>

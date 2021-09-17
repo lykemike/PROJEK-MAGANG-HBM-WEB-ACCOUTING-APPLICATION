@@ -8,9 +8,15 @@ export default function TableDetailBBRow({ data, label = "Aset" }) {
     setOpen(!open);
   };
 
+  console.log(data);
   return (
     <>
-      {console.log(data[32].JurnalPembelian.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0))}
+      {console.log(
+        data[32].JurnalPembelian.filter((i) => i.tipe_saldo === "Debit").reduce(
+          (a, b) => (a = a + b.nominal),
+          0
+        )
+      )}
       <tr>
         <td class="py-3">
           <p class="text-blue-600 cursor-pointer" onClick={onClick}>
@@ -71,17 +77,31 @@ export default function TableDetailBBRow({ data, label = "Aset" }) {
                 </td>
 
                 <td colSpan="1" class="px-2 py-1">
-                  <span class="text-gray-300"></span>
+                  <span class="text-black-300">
+                    Rp. {aset.DetailSaldoAwal[0].debit}
+                  </span>
                 </td>
                 <td class="px-4 py-1">
-                  <span class="text-gray-300"></span>
+                  <span class="text-black-300">
+                    Rp. {aset.DetailSaldoAwal[0].kredit}
+                  </span>
                 </td>
 
                 <td colSpan="1" class="px-2 py-1">
-                  <span class="text-gray-300">Rp. {data[index].JurnalPembelian.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0)}</span>
+                  <span class="text-black-300">
+                    Rp.{" "}
+                    {data[index].JurnalPembelian.filter(
+                      (i) => i.tipe_saldo === "Debit"
+                    ).reduce((a, b) => (a = a + b.nominal), 0)}
+                  </span>
                 </td>
                 <td colSpan="1" class="px-4 py-1">
-                  <span class="text-gray-300">Rp. {data[index].JurnalPembelian.filter((i) => i.tipe_saldo === "Kredit").reduce((a, b) => (a = a + b.nominal), 0)}</span>
+                  <span class="text-black-300">
+                    Rp.{" "}
+                    {data[index].JurnalPembelian.filter(
+                      (i) => i.tipe_saldo === "Kredit"
+                    ).reduce((a, b) => (a = a + b.nominal), 0)}
+                  </span>
                 </td>
 
                 <td colSpan="1" class="px-2 py-1">
