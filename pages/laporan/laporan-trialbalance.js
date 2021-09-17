@@ -1,11 +1,19 @@
 import React, { useRef } from "react";
 import Layout from "../../components/layout";
 import TableDetailTBRow from "../../components/TrialBalance/TableDetailTBRow";
-import Kewajiban from "../../components/TrialBalance/Kewajiban";
-import Ekuitas from "../../components/TrialBalance/Ekuitas";
 
 import Link from "next/link";
-import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
+import {
+  Button,
+  Table,
+  DropdownButton,
+  Row,
+  Col,
+  Form,
+  FormControl,
+  InputGroup,
+  Dropdown,
+} from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -27,13 +35,23 @@ export default function laporantrialbalance({ header, header2, header3 }) {
             <Col sm="3">
               <Form.Label>Tanggal Mulai</Form.Label>
               <InputGroup className="mb-3">
-                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_mulai} />
+                <FormControl
+                  placeholder="Pick date"
+                  type="date"
+                  aria-label="date"
+                  ref={tgl_mulai}
+                />
               </InputGroup>
             </Col>
             <Col sm="3">
               <Form.Label>Tanggal Selesai</Form.Label>
               <InputGroup className="mb-3">
-                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_akhir} />
+                <FormControl
+                  placeholder="Pick date"
+                  type="date"
+                  aria-label="date"
+                  ref={tgl_akhir}
+                />
               </InputGroup>
             </Col>
 
@@ -46,7 +64,11 @@ export default function laporantrialbalance({ header, header2, header3 }) {
           </Row>
 
           <div class="flex flex-row-reverse">
-            <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Export">
+            <DropdownButton
+              variant="primary ml-2"
+              id="dropdown-basic-button"
+              title="Export"
+            >
               <Dropdown.Item>
                 <Link href="#">
                   <a>PDF</a>
@@ -94,6 +116,12 @@ export async function getServerSideProps() {
     },
     include: {
       JurnalPembelian: true,
+      DetailSaldoAwal: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalKirimUang: true,
     },
   });
 
@@ -105,6 +133,12 @@ export async function getServerSideProps() {
     },
     include: {
       JurnalPembelian: true,
+      DetailSaldoAwal: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalKirimUang: true,
     },
   });
 
@@ -116,6 +150,12 @@ export async function getServerSideProps() {
     },
     include: {
       JurnalPembelian: true,
+      DetailSaldoAwal: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalKirimUang: true,
     },
   });
 

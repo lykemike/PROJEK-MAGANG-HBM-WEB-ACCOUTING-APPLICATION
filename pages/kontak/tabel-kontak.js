@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import {
-  Tabs,
-  Tab,
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  InputGroup,
-  FormControl,
-  Form,
-  Col,
-  Row,
-  FormCheck,
-} from "react-bootstrap";
+import TableKontak from "../../components/kontak/Table";
+import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, InputGroup, FormControl, Form, Col, Row, FormCheck } from "react-bootstrap";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 import SearchIcon from "@material-ui/icons/Search";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AddIcon from "@material-ui/icons/Add";
+import Table from "@material-ui/core/Table";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import Paper from "@material-ui/core/Paper";
+
 import { useRouter } from "next/router";
 import Axios from "axios";
 
@@ -66,17 +63,33 @@ export default function Kontak({ data, data2 }) {
 
   return (
     <Layout>
-      <h2>Kontak</h2>
-      <div className='d-flex justify-content-end'>
-        <Link href='/kontak/add-kontak'>
-          <Button variant='primary'>
-            <AddIcon fontSize='small' />
-            Kontak Baru
-          </Button>
-        </Link>
+      <div className='border-b border-gray-200'>
+        <Breadcrumbs aria-label='breadcrumb'>
+          <Typography color='textPrimary'>Kontak</Typography>
+        </Breadcrumbs>
+
+        <Row>
+          <Col sm='8'>
+            <h2 className='text-blue-600'>Kontak</h2>
+          </Col>
+          <Col sm='4'>
+            <div className='d-flex justify-content-end'>
+              <Row>
+                <Link href='/kontak/add-kontak'>
+                  <a>
+                    <Button variant='primary'>
+                      <AddIcon fontSize='small' />
+                      Kontak Baru
+                    </Button>
+                  </a>
+                </Link>
+              </Row>
+            </div>
+          </Col>
+        </Row>
       </div>
-      <hr />
-      <div variant='container'>
+
+      <div variant='container' className='mt-4'>
         <Tabs defaultActiveKey='profile' id='uncontrolled-tab-example'>
           <Tab eventKey='pelanggan' title='Pelanggan' />
           <Tab eventKey='supplier' title='Supplier' />
@@ -84,483 +97,257 @@ export default function Kontak({ data, data2 }) {
           <Tab eventKey='lainnya' title='Lainnya' />
 
           <div eventKey='pelanggan'>
-            <div class='mt-8'>
-              <Form.Group as={Row}>
-                <SettingsIcon fontSize='Large' />
-                <h3>Daftar Pelanggan</h3>
-              </Form.Group>
-              <div class='flex flex-row-reverse mb-2'>
-                <Form.Group as={Row}>
-                  {/* <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Tindakan">
-										<Dropdown.Item>
-											<a>Arsip</a>
-										</Dropdown.Item>
-										<Dropdown.Item>
-											<a>Hapus</a>
-										</Dropdown.Item>
-									</DropdownButton> */}
-
-                  <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
-                    <Dropdown.Item>
-                      <a>Excel</a>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <a>Hapus</a>
-                    </Dropdown.Item>
-                  </DropdownButton>
-                  <Col sm='6'>
-                    <InputGroup>
-                      <InputGroup.Prepend>
-                        <InputGroup.Text id='basic-addon1'>
-                          <SearchIcon />
-                        </InputGroup.Text>
-                      </InputGroup.Prepend>
-                      <FormControl placeholder='cari' aria-label='cari' aria-describedby='basic-addon1' />
-                    </InputGroup>
-                  </Col>
-                </Form.Group>
-              </div>
-
-              <Card>
-                <Card.Body>
-                  <div class='mt-2'>
-                    <table class='min-w-full table-auto'>
-                      <thead class='justify-between'>
-                        <tr class='bg-dark'>
-                          <th class='px-2 py-2'>
-                            <FormCheck />
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama Perushaan</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Alamat</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Email</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>No Handphone</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Saldo</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Action</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class='bg-white divide-y divide-gray-200'>
-                        {data2
-                          .filter((i) => i.kontak_type_id == 2)
-                          .map((j) => (
-                            <tr>
-                              <th class='px-2 py-2'>
-                                <FormCheck />
-                              </th>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_panggilan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap' style={{ fontStyle: "italic", fontWeight: "400" }}>
-                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman.length > 20 ? j.kontak.alamat_pengiriman.slice(0, 20) +("...") : j.kontak.alamat_pengiriman }</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.email}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nomor_hp}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>Rp. </div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>
-                                  <Link key={j.kontak.id} href={`${j.kontak.id}`}>
-                                    <Button variant='warning mr-2'>Edit</Button>
-                                  </Link>
-                                  <Button variant='danger' key={j.kontak.id} id='id' name='id' onClick={() => handleDelete(i.id)}>
-                                    Delete
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+            <div class='mt-4'>
+              <Row>
+                <Col sm='8'>
+                  <h4>
+                    <SettingsIcon fontSize='large' />
+                    Daftar Pelanggan
+                  </h4>
+                </Col>
+                <Col sm='4'>
+                  <div className='d-flex justify-content-end'>
+                    <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Ekspor'>
+                      <Dropdown.Item>
+                        <a>Excel</a>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <a>Hapus</a>
+                      </Dropdown.Item>
+                    </DropdownButton>
+                    <FormControl type='text' placeholder='Search . . . .' />
                   </div>
-                </Card.Body>
-              </Card>
+                </Col>
+              </Row>
+
+              <TableContainer className='mt-8' component={Paper}>
+                <Table size='small' aria-label='a dense table'>
+                  <TableHead className='bg-dark'>
+                    <TableRow>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama Perusahaan</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Alamat</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Email</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>No. Handphone</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Saldo</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold' align='right'>
+                          Action
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {data2
+                    .filter((i) => i.kontak_type_id == 2)
+                    .map((data) => (
+                      <TableKontak data={data} />
+                    ))}
+                </Table>
+              </TableContainer>
             </div>
           </div>
 
           <div eventKey='supplier'>
-            <div class='mt-8'>
-              <Form.Group as={Row}>
-                <SettingsIcon fontSize='large' />
-                <h3>Daftar Pelanggan</h3>
-              </Form.Group>
-              <div class='flex flex-row-reverse mb-2'>
-                <Form.Group as={Row}>
-                  {/* <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Tindakan">
-										<Dropdown.Item>
-											<a>Arsip</a>
-										</Dropdown.Item>
-										<Dropdown.Item>
-											<a>Hapus</a>
-										</Dropdown.Item>
-									</DropdownButton> */}
-
-                  <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
-                    <Dropdown.Item>
-                      <a>Excel</a>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <a>Hapus</a>
-                    </Dropdown.Item>
-                  </DropdownButton>
-                  <Col sm='6'>
-                    <InputGroup>
-                      <InputGroup.Prepend>
-                        <InputGroup.Text id='basic-addon1'>
-                          <SearchIcon />
-                        </InputGroup.Text>
-                      </InputGroup.Prepend>
-                      <FormControl
-                        placeholder='cari'
-                        aria-label='cari'
-                        aria-describedby='basic-addon1'
-                        onChange={(e) => handleChange(e)}
-                      />
-                    </InputGroup>
-                  </Col>
-                </Form.Group>
-              </div>
-
-              <Card>
-                <Card.Body>
-                  <div class='mt-2'>
-                    <table class='min-w-full table-auto'>
-                      <thead class='justify-between'>
-                        <tr class='bg-dark'>
-                          <th class='px-2 py-2'>
-                            <FormCheck />
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama Perushaan</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Alamat</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Email</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>No Handphone</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Saldo</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Action</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class='bg-white divide-y divide-gray-200'>
-                        {data2
-                          .filter((i) => i.kontak_type_id == 1)
-                          .map((j) => (
-                            <tr>
-                              <th class='px-2 py-2'>
-                                <FormCheck />
-                              </th>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_panggilan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap' style={{ fontStyle: "italic", fontWeight: "400" }}>
-                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman.length > 30 ? j.kontak.alamat_pengiriman.slice(0, 30) +("...") : j.kontak.alamat_pengiriman }</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.email}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nomor_hp}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>Rp. </div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>
-                                  <Link key={j.kontak.id} href={`${j.kontak.id}`}>
-                                    <Button variant='warning mr-2'>Edit</Button>
-                                  </Link>
-                                  <Button variant='danger' key={j.kontak.id} id='id' name='id' onClick={() => handleDelete(i.id)}>
-                                    Delete
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+            <div class='mt-4'>
+              <Row>
+                <Col sm='8'>
+                  <h4>
+                    <SettingsIcon fontSize='large' />
+                    Daftar Supplier
+                  </h4>
+                </Col>
+                <Col sm='4'>
+                  <div className='d-flex justify-content-end'>
+                    <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Ekspor'>
+                      <Dropdown.Item>
+                        <a>Excel</a>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <a>Hapus</a>
+                      </Dropdown.Item>
+                    </DropdownButton>
+                    <FormControl type='text' placeholder='Search . . . .' />
                   </div>
-                </Card.Body>
-              </Card>
+                </Col>
+              </Row>
+
+              <TableContainer className='mt-8' component={Paper}>
+                <Table size='small' aria-label='a dense table'>
+                  <TableHead className='bg-dark'>
+                    <TableRow>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama Perusahaan</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Alamat</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Email</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>No. Handphone</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Saldo</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold' align='right'>
+                          Action
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {data2
+                    .filter((i) => i.kontak_type_id == 1)
+                    .map((data) => (
+                      <TableKontak data={data} />
+                    ))}
+                </Table>
+              </TableContainer>
             </div>
           </div>
 
           <div eventKey='karyawan'>
-            <div class='mt-8'>
-              <Form.Group as={Row}>
-                <SettingsIcon fontSize='Large' />
-                <h3>Daftar Pelanggan</h3>
-              </Form.Group>
-              <div class='flex flex-row-reverse mb-2'>
-                <Form.Group as={Row}>
-                  {/* <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Tindakan">
-										<Dropdown.Item>
-											<a>Arsip</a>
-										</Dropdown.Item>
-										<Dropdown.Item>
-											<a>Hapus</a>
-										</Dropdown.Item>
-									</DropdownButton> */}
-
-                  <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
-                    <Dropdown.Item>
-                      <a>Excel</a>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <a>Hapus</a>
-                    </Dropdown.Item>
-                  </DropdownButton>
-                  <Col sm='6'>
-                    <InputGroup>
-                      <InputGroup.Prepend>
-                        <InputGroup.Text id='basic-addon1'>
-                          <SearchIcon />
-                        </InputGroup.Text>
-                      </InputGroup.Prepend>
-                      <FormControl placeholder='cari' aria-label='cari' aria-describedby='basic-addon1' />
-                    </InputGroup>
-                  </Col>
-                </Form.Group>
-              </div>
-
-              <Card>
-                <Card.Body>
-                  <div class='mt-2'>
-                    <table class='min-w-full table-auto'>
-                      <thead class='justify-between'>
-                        <tr class='bg-dark'>
-                          <th class='px-2 py-2'>
-                            <FormCheck />
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama Perushaan</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Alamat</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Email</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>No Handphone</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Saldo</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Action</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class='bg-white divide-y divide-gray-200'>
-                        {data2
-                          .filter((i) => i.kontak_type_id == 3)
-                          .map((j) => (
-                            <tr>
-                              <th class='px-2 py-2'>
-                                <FormCheck />
-                              </th>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_panggilan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap' style={{ fontStyle: "italic", fontWeight: "400" }}>
-                                <div class='text-sm text-gray-900'>{j.kontak.alamat_pengiriman.length > 30 ? j.kontak.alamat_pengiriman.slice(0, 30) +("...") : j.kontak.alamat_pengiriman }</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.email}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nomor_hp}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>Rp. </div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>
-                                  <Link key={j.kontak.id} href={`${j.kontak.id}`}>
-                                    <Button variant='warning mr-2'>Edit</Button>
-                                  </Link>
-                                  <Button variant='danger' key={j.kontak.id} id='id' name='id' onClick={() => handleDelete(i.id)}>
-                                    Delete
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+            <div class='mt-4'>
+              <Row>
+                <Col sm='8'>
+                  <h4>
+                    <SettingsIcon fontSize='large' />
+                    Daftar Karywan
+                  </h4>
+                </Col>
+                <Col sm='4'>
+                  <div className='d-flex justify-content-end'>
+                    <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Ekspor'>
+                      <Dropdown.Item>
+                        <a>Excel</a>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <a>Hapus</a>
+                      </Dropdown.Item>
+                    </DropdownButton>
+                    <FormControl type='text' placeholder='Search . . . .' />
                   </div>
-                </Card.Body>
-              </Card>
+                </Col>
+              </Row>
+
+              <TableContainer className='mt-8' component={Paper}>
+                <Table size='small' aria-label='a dense table'>
+                  <TableHead className='bg-dark'>
+                    <TableRow>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama Perusahaan</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Alamat</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Email</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>No. Handphone</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Saldo</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold' align='right'>
+                          Action
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {data2
+                    .filter((i) => i.kontak_type_id == 3)
+                    .map((data) => (
+                      <TableKontak data={data} />
+                    ))}
+                </Table>
+              </TableContainer>
             </div>
           </div>
 
           <div eventKey='lainnya'>
-            <div class='mt-8'>
-              <Form.Group as={Row}>
-                <SettingsIcon fontSize='Large' />
-                <h3>Daftar Pelanggan</h3>
-              </Form.Group>
-              <div class='flex flex-row-reverse mb-2'>
-                <Form.Group as={Row}>
-                  {/* <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Tindakan">
-										<Dropdown.Item>
-											<a>Arsip</a>
-										</Dropdown.Item>
-										<Dropdown.Item>
-											<a>Hapus</a>
-										</Dropdown.Item>
-									</DropdownButton> */}
-
-                  <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
-                    <Dropdown.Item>
-                      <a>Excel</a>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                      <a>Hapus</a>
-                    </Dropdown.Item>
-                  </DropdownButton>
-                  <Col sm='6'>
-                    <InputGroup>
-                      <InputGroup.Prepend>
-                        <InputGroup.Text id='basic-addon1'>
-                          <SearchIcon />
-                        </InputGroup.Text>
-                      </InputGroup.Prepend>
-                      <FormControl placeholder='cari' aria-label='cari' aria-describedby='basic-addon1' />
-                    </InputGroup>
-                  </Col>
-                </Form.Group>
-              </div>
-
-              <Card>
-                <Card.Body>
-                  <div class='mt-2'>
-                    <table class='min-w-full table-auto'>
-                      <thead class='justify-between'>
-                        <tr class='bg-dark'>
-                          <th class='px-2 py-2'>
-                            <FormCheck />
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Nama Perushaan</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Alamat</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Email</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>No Handphone</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Saldo</span>
-                          </th>
-                          <th class='px-2 py-2'>
-                            <span class='text-gray-300'>Action</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class='bg-white divide-y divide-gray-200'>
-                        {data2
-                          .filter((i) => i.kontak_type_id == 4)
-                          .map((j) => (
-                            <tr>
-                              <th class='px-2 py-2'>
-                                <FormCheck />
-                              </th>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_panggilan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nama_perusahaan}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900' style={{ fontStyle: "italic", fontWeight: "400" }}>
-                                  {j.kontak.alamat_pengiriman.length > 30 ? j.kontak.alamat_pengiriman.slice(0, 30) +("...") : j.kontak.alamat_pengiriman }
-                                </div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.email}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>{j.kontak.nomor_hp}</div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>Rp. </div>
-                              </td>
-                              <td class='px-2 py-2 whitespace-nowrap'>
-                                <div class='text-sm text-gray-900'>
-                                  <Link key={j.kontak.id} href={`${j.kontak.id}`}>
-                                    <Button variant='warning mr-2'>Edit</Button>
-                                  </Link>
-                                  <Button variant='danger' key={j.kontak.id} id='id' name='id' onClick={() => handleDelete(i.id)}>
-                                    Delete
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
+            <div class='mt-4'>
+              <Row>
+                <Col sm='8'>
+                  <h4>
+                    <SettingsIcon fontSize='large' />
+                    Daftar Lainnya
+                  </h4>
+                </Col>
+                <Col sm='4'>
+                  <div className='d-flex justify-content-end'>
+                    <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Ekspor'>
+                      <Dropdown.Item>
+                        <a>Excel</a>
+                      </Dropdown.Item>
+                      <Dropdown.Item>
+                        <a>Hapus</a>
+                      </Dropdown.Item>
+                    </DropdownButton>
+                    <FormControl type='text' placeholder='Search . . . .' />
                   </div>
-                </Card.Body>
-              </Card>
+                </Col>
+              </Row>
+
+              <TableContainer className='mt-8' component={Paper}>
+                <Table size='small' aria-label='a dense table'>
+                  <TableHead className='bg-dark'>
+                    <TableRow>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Nama Perusahaan</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Alamat</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Email</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>No. Handphone</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold'>Saldo</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className='text-white font-bold' align='right'>
+                          Action
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {data2
+                    .filter((i) => i.kontak_type_id == 4)
+                    .map((data) => (
+                      <TableKontak data={data} />
+                    ))}
+                </Table>
+              </TableContainer>
             </div>
           </div>
         </Tabs>
-
-        <div class='float-right mt-8'>
-          <Button variant='danger mr-2'>Kembali</Button>
-          <Link href='/daftar-akun/tutup-buku-berhasil'>
-            <Button variant='success'>Konfirmasi Tutup Buku</Button>
-          </Link>
-        </div>
       </div>
     </Layout>
   );

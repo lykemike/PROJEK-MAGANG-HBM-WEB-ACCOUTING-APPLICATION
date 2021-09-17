@@ -25,7 +25,7 @@ export default function tabelProduk({ data }) {
   const [product, setProduct] = useState(data);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
@@ -136,8 +136,7 @@ export default function tabelProduk({ data }) {
                   <Dropdown.Item></Dropdown.Item>
                   <Dropdown.Item eventKey='1' as='button'>
                     <CSVLink data={restructure(data)} filename='product.csv'>
-                      {" "}
-                      CSV{" "}
+                      CSV
                     </CSVLink>
                   </Dropdown.Item>
                 </DropdownButton>

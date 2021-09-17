@@ -22,8 +22,10 @@ import Paper from "@material-ui/core/Paper";
 
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
-export default function list({}) {
+export default function list({data}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -138,19 +140,21 @@ export default function list({}) {
               </TableCell>
             </TableRow>
           </TableHead>
+          {data.map((data) => (
           <TableBody>
             <TableRow>
-              <TableCell component='th' scope='row'></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
+              <TableCell component='th' scope='row'>{data.id}</TableCell>
+              <TableCell>{data.nama_pegawai}</TableCell>
+              <TableCell>{data.yang_mengetahui}</TableCell>
+              <TableCell>{data.yang_menyetujui}</TableCell>
+              <TableCell>{data.status}</TableCell>
               <TableCell align='right'>
                 <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
                 <DeleteOutlineIcon color='secondary' fontSize='small' />
               </TableCell>
             </TableRow>
           </TableBody>
+          ))}
         </Tables>
       </TableContainer>
     </Layout>
@@ -158,7 +162,16 @@ export default function list({}) {
 }
 
 export async function getServerSideProps() {
+  // Get Roles from API
+  const reimbursement = await prisma.headerReimburse.findMany({
+    orderBy: {
+      id: "asc"
+    },
+  });
+
   return {
-    props: {},
+    props: {
+      data: reimbursement,
+    },
   };
 }

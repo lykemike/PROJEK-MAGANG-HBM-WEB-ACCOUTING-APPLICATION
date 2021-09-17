@@ -331,38 +331,36 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
             </div>
 
             <Table responsive>
-              <div className='border-t border-gray-200'>
-                <Form>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Form.Label column sm='2'>
-                      Produk
-                    </Form.Label>
-                    <Form.Label column sm='1'>
-                      Deskripsi
-                    </Form.Label>
-                    <Form.Label column sm='1'>
-                      Kuantitas
-                    </Form.Label>
-                    <Form.Label column sm='1'>
-                      Satuan
-                    </Form.Label>
-                    <Form.Label column sm='2'>
-                      Harga Satuan
-                    </Form.Label>
-                    <Form.Label column sm='1'>
-                      Diskon
-                    </Form.Label>
-                    <Form.Label column sm='1'>
-                      Pajak
-                    </Form.Label>
-                    <Form.Label column sm='2'>
-                      Jumlah
-                    </Form.Label>
-                    <Form.Label column sm='1'></Form.Label>
-                  </Form.Group>
-                </Form>
+              <div className='border-t border-b border-gray-200 bg-gray-300 rounded'>
+                <Row>
+                  <Col sm='2'>
+                    <label className='font-semibold text-lg'>Produk</label>
+                  </Col>
+                  <Col sm='1'>
+                    <label className='font-semibold text-lg'>Deskripsi</label>
+                  </Col>
+                  <Col sm='1'>
+                    <label className='font-semibold text-lg'>Kuantitas</label>
+                  </Col>
+                  <Col sm='1'>
+                    <label className='font-semibold text-lg'>Satuan</label>
+                  </Col>
+                  <Col sm='2'>
+                    <label className='font-semibold text-lg'>Harga Satuan</label>
+                  </Col>
+                  <Col sm='1'>
+                    <label className='font-semibold text-lg'>Diskon</label>
+                  </Col>
+                  <Col sm='1'>
+                    <label className='font-semibold text-lg'>Pajak</label>
+                  </Col>
+                  <Col sm='2'>
+                    <label className='font-semibold text-lg'>Jumlah</label>
+                  </Col>
+                  <Col sm='1' />
+                </Row>
               </div>
-              <div className='border-t border-gray-200'>
+              <div>
                 <Form className='py-2'>
                   <FieldArray name='produks'>
                     {({ insert, remove, push }) => (
@@ -832,7 +830,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
 
                         <button
                           type='button'
-                          class='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'
+                          class='mt-4 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'
                           onClick={() =>
                             push({
                               produk_id: "",

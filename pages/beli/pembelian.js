@@ -24,6 +24,11 @@ export default function pembelian({ data }) {
   };
   const total_tagihan = data.reduce((a, b) => (a = a + b.sisa_tagihan), 0);
 
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
+
+  const due_date = data.filter((i) => i.tgl_jatuh_tempo < current).reduce((a, b) => (a = a + b.sisa_tagihan), 0);
+
   return (
     <Layout>
       <div className='border-b border-gray-200'>
@@ -67,7 +72,7 @@ export default function pembelian({ data }) {
                 <h1 class='text-xl font-gray-700 font-bold'>Pembelian Jatuh Tempo</h1>
               </div>
               <div class='px-4 py-2 flex space-x-2 mt-2'>
-                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. -</h3>
+                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. {due_date > 0 ? due_date.toLocaleString({ minimumFractionDigits: 0 }) : "0,00"}</h3>
               </div>
             </div>
           </Col>

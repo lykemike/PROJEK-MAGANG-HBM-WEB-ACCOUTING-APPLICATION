@@ -17,7 +17,7 @@ export const editFileName = (req, file, callback) => {
 // middleware that process files uploaded in multipart/form-data format.
 const upload = multer({
   storage: multer.diskStorage({
-    destination: "./public/uploads",
+    destination: "./public/uploads/logo",
     filename: editFileName,
   }),
 });
@@ -38,7 +38,7 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      logo: req.bodyParser.filename,
+      logo: req.file.filename,
       tampilkan_logo: req.body.boolean,
       nama_perushaan: req.body.nama_perushaaan,
       alamat: req.body.alamat,
@@ -55,6 +55,7 @@ export default async (req, res) => {
       atas_nama: req.body.atas_nama,
       swift_code: req.body.swift_code,
     };
+
     const settingPerusahaan = await prisma.settingPerusahaan.update({
       where: {
         id: 1,

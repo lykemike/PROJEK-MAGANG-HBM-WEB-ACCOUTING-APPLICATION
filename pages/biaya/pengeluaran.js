@@ -30,11 +30,16 @@ export default function Pengeluaran({ data }) {
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
-      setSearch(product.filter((biaya) => biaya.penerima.toLowerCase().includes(e.target.value.toLowerCase())));
+      setSearch(product.filter((i) => i.kontak.nama.toLowerCase().includes(e.target.value.toLowerCase())));
     } else {
       setSearch([]);
     }
   };
+
+  const handleList = () => {
+    return search.length > 0 ? search : product;
+  };
+
   const handlePrevChange = () => {
     if (page < 1) {
       setPage(0);
