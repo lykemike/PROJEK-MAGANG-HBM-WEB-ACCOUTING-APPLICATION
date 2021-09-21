@@ -9,17 +9,10 @@ export default function TableDetailBBRow({ data, label = "Aset" }) {
     setOpen(!open);
   };
 
-  const daftar_akun = { akun: [{ kode_akun: "1-10001", nama_akun: "Kas Besar (BCA 525536917)" }] };
-  const saldo_awal = { akun: [{ saldo_awal: [{ debit: 0, kredit: 9600000 }] }] };
-  const penyesuaian = { akun: [{ penyesuaian: [{ debit: 0, kredit: 500000 }] }] };
-  const saldo_akhir = { akun: [{ saldo_akhir: [{ debit: 0, kredit: 9100000 }] }] };
-
-  const tb = merge(daftar_akun, saldo_awal, penyesuaian, saldo_akhir);
-  console.log(tb);
+  console.log(data);
   return (
     <>
-      {/* {console.log(data[32].JurnalPembelian.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0))} */}
-      {tb.akun[0].saldo_awal[0].kredit - tb.akun[0].penyesuaian[0].kredit}
+      {console.log(data[32].JurnalPembelian.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0))}
       <tr>
         <td class='py-3'>
           <p class='text-blue-600 cursor-pointer' onClick={onClick}>
@@ -80,20 +73,20 @@ export default function TableDetailBBRow({ data, label = "Aset" }) {
                 </td>
 
                 <td colSpan='1' class='px-2 py-1'>
-                  <span class='text-gray-300'></span>
+                  <span class='text-black-300'>Rp. {aset.DetailSaldoAwal[0].debit}</span>
                 </td>
                 <td class='px-4 py-1'>
-                  <span class='text-gray-300'></span>
+                  <span class='text-black-300'>Rp. {aset.DetailSaldoAwal[0].kredit}</span>
                 </td>
 
                 <td colSpan='1' class='px-2 py-1'>
-                  <span class='text-gray-300'>
+                  <span class='text-black-300'>
                     Rp.{" "}
                     {data[index].JurnalPembelian.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0)}
                   </span>
                 </td>
                 <td colSpan='1' class='px-4 py-1'>
-                  <span class='text-gray-300'>
+                  <span class='text-black-300'>
                     Rp.{" "}
                     {data[index].JurnalPembelian.filter((i) => i.tipe_saldo === "Kredit").reduce(
                       (a, b) => (a = a + b.nominal),

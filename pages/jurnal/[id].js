@@ -177,14 +177,53 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                   <Form.Control
                                     placeholder='Isi Debit'
                                     name={`detail_jurnal.${index}.debit`}
+                                    disabled={props.values.detail_jurnal[index].debit_disable}
                                     value={props.values.detail_jurnal[index].debit}
                                     onChange={(e) => {
-                                      props.setFieldValue(`detail_jurnal.${index}.debit`, parseInt(e.target.value));
-                                      let debit = parseInt(e.target.value);
-                                      props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
-                                      const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
-                                      props.setFieldValue((props.values.total_debit = total_debit));
-                                      props.setFieldValue("total_debit", total_debit);
+                                      if (e.target.value.length > 0) {
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit_disable`, true);
+                                        props.setFieldValue(`detail_jurnal.${index}.debit`, parseInt(e.target.value));
+
+                                        let debit = parseInt(e.target.value);
+                                        props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+
+                                        const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
+                                        props.setFieldValue((props.values.total_debit = total_debit));
+                                        props.setFieldValue("total_debit", total_debit);
+
+                                        if ((props.values.total_debit / props.values.total_kredit) % 0) {
+                                          let balance = props.values.total_debit - props.values.total_kredit;
+                                          props.setFieldValue((balance = "Balance"));
+                                          props.setFieldValue("balance", balance);
+                                        } else if (props.values.total_kredit > props.values.total_debit) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Debit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
+                                          props.setFieldValue("balance", balance);
+                                        } else {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Kredit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
+                                          props.setFieldValue("balance", balance);
+                                        }
+                                      } else {
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit_disable`, false);
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit`, 0);
+                                        props.setFieldValue(`detail_jurnal.${index}.debit`, 0);
+
+                                        let debit = 0;
+                                        props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+
+                                        const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
+                                        props.setFieldValue((props.values.total_debit = total_debit));
+                                        props.setFieldValue("total_debit", total_debit);
+                                      }
                                     }}
                                   />
                                 </Col>
@@ -192,14 +231,53 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                   <Form.Control
                                     placeholder='Isi Kredit'
                                     name='kredit'
+                                    disabled={props.values.detail_jurnal[index].kredit_disable}
                                     value={props.values.detail_jurnal[index].kredit}
                                     onChange={(e) => {
-                                      props.setFieldValue(`detail_jurnal.${index}.kredit`, parseInt(e.target.value));
-                                      let kredit = parseInt(e.target.value);
-                                      props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
-                                      const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
-                                      props.setFieldValue((props.values.total_kredit = total_kredit));
-                                      props.setFieldValue("total_kredit", total_kredit);
+                                      if (e.target.value.length > 0) {
+                                        props.setFieldValue(`detail_jurnal.${index}.debit_disable`, true);
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit`, parseInt(e.target.value));
+
+                                        let kredit = parseInt(e.target.value);
+                                        props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+
+                                        const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
+                                        props.setFieldValue((props.values.total_kredit = total_kredit));
+                                        props.setFieldValue("total_kredit", total_kredit);
+
+                                        if (props.values.total_kredit / props.values.total_debit == 1) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue((balance = "Balance"));
+                                          props.setFieldValue("balance", balance);
+                                        } else if (props.values.total_debit > props.values.total_kredit) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Kredit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
+                                          props.setFieldValue("balance", balance);
+                                        } else {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Debit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
+                                          props.setFieldValue("balance", balance);
+                                        }
+                                      } else {
+                                        props.setFieldValue(`detail_jurnal.${index}.debit_disable`, false);
+                                        props.setFieldValue(`detail_jurnal.${index}.debit`, 0);
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit`, 0);
+
+                                        let kredit = 0;
+                                        props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+
+                                        const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
+                                        props.setFieldValue((props.values.total_kredit = total_kredit));
+                                        props.setFieldValue("total_kredit", total_kredit);
+                                      }
                                     }}
                                   />
                                 </Col>

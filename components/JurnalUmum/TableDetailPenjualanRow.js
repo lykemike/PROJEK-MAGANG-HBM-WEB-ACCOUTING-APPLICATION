@@ -8,6 +8,8 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
   const detail = useMemo(() => {
     if (tipe == "pembelian") {
       return data.JurnalPembelian;
+    } else if (tipe == "biaya") {
+      return data.JurnalBiaya;
     } else if (tipe == "transferUang") {
       return data.JurnalTransferUang;
     } else if (tipe == "kirimUang") {
