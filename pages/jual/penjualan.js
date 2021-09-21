@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
 import { Row, Col, FormControl } from "react-bootstrap";
-
-import Table from "@material-ui/core/Table";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
+import {
+  Breadcrumbs,
+  Typography,
+  Checkbox,
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableSortLabel,
+} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-
 import Link from "next/Link";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -45,7 +47,9 @@ export default function penjualan({ data }) {
             <div className='d-flex justify-content-end'>
               <Link href='/jual/penagihan-penjualan'>
                 <a>
-                  <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
+                  <button
+                    type='button'
+                    className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
                     <AddIcon fontSize='small' /> Buat Penjualan Baru
                   </button>
                 </a>
@@ -63,7 +67,9 @@ export default function penjualan({ data }) {
                 <h1 class='text-xl font-gray-700 font-bold'>Penjualan Belum Dibayar</h1>
               </div>
               <div class='px-4 py-2 flex space-x-2 mt-2'>
-                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. {total_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+                <h3 class='text-lg text-gray-600 font-semibold mb-2'>
+                  Rp. {total_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
+                </h3>
               </div>
             </div>
           </Col>
@@ -73,7 +79,9 @@ export default function penjualan({ data }) {
                 <h1 class='text-xl font-gray-700 font-bold'>Penjualan Jatuh Tempo</h1>
               </div>
               <div class='px-4 py-2 flex space-x-2 mt-2'>
-                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. {due_date > 0 ? due_date.toLocaleString({ minimumFractionDigits: 0 }) : "0,00"}</h3>
+                <h3 class='text-lg text-gray-600 font-semibold mb-2'>
+                  Rp. {due_date > 0 ? due_date.toLocaleString({ minimumFractionDigits: 0 }) : "0,00"}
+                </h3>
               </div>
             </div>
           </Col>

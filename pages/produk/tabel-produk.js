@@ -1,11 +1,37 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import { Card, Button, DropdownButton, Dropdown, InputGroup, FormControl, Col, Row, FormCheck, Pagination } from "react-bootstrap";
-import SearchIcon from "@material-ui/icons/Search";
+import {
+  Card,
+  Button,
+  DropdownButton,
+  Dropdown,
+  InputGroup,
+  FormControl,
+  Col,
+  Row,
+  FormCheck,
+  Pagination,
+} from "react-bootstrap";
 import TablePagination from "../../components/TablePagination";
+import {
+  Breadcrumbs,
+  Typography,
+  Checkbox,
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+} from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
+import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { CSVLink, CSVDownload } from "react-csv";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -25,7 +51,7 @@ export default function tabelProduk({ data }) {
   const [product, setProduct] = useState(data);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
 
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
@@ -86,162 +112,155 @@ export default function tabelProduk({ data }) {
 
   return (
     <Layout>
-      <Row>
-        <Col>
-          <h2>Produk</h2>
-        </Col>
-        <Col className='d-flex justify-content-end'>
-          {/* <a>
-              <SettingsIcon fontSize='Large' />
-            </a>
-          <h4 className='mr-4'>Kategori Produk</h4> */}
-          <Link href='/produk/add-produk'>
-            <a>
-              <Button variant='primary'>
-                <AddIcon fontSize='small' />
-                Buat Baru
-              </Button>
-            </a>
-          </Link>
-        </Col>
-      </Row>
+      <div className='border-b border-gray-200'>
+        <Breadcrumbs aria-label='breadcrumb'>
+          <Typography color='textPrimary'>Tabel Produk</Typography>
+        </Breadcrumbs>
 
-      <hr />
-      <div>
-        <Card>
-          <Card.Body>
-            <Row>
-              <Col>
-                <Row>
-                  <SettingsIcon fontSize='medium' className='mt-1' />
-                  <h4>Barang & Jasa</h4>
-                </Row>
-              </Col>
-
-              <Col className='d-flex justify-content-end'>
-                <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Tambah'>
-                  <Dropdown.Item>
-                    <a>
-                      <Link href='kategori/tabel-kategori'>Kategori Produk</Link>
-                    </a>
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <a>
-                      <Link href='satuan/tabel-satuan'>Satuan Produk</Link>
-                    </a>
-                  </Dropdown.Item>
-                </DropdownButton>
-
-                <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
-                  <Dropdown.Item></Dropdown.Item>
-                  <Dropdown.Item eventKey='1' as='button'>
-                    <CSVLink data={restructure(data)} filename='product.csv'>
-                      CSV
-                    </CSVLink>
-                  </Dropdown.Item>
-                </DropdownButton>
-                <Col sm='6'>
-                  <InputGroup>
-                    <InputGroup.Prepend>
-                      <InputGroup.Text id='basic-addon1'>
-                        <SearchIcon />
-                      </InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <FormControl placeholder='cari' aria-label='cari' aria-describedby='basic-addon1' onChange={(e) => handleChange(e)} />
-                  </InputGroup>
-                </Col>
-              </Col>
-            </Row>
-
-            <div className='mt-2'>
-              <table className='min-w-full table-auto'>
-                <thead className='justify-between'>
-                  <tr className='bg-dark'>
-                    <th className='px-2 py-2'>
-                      <FormCheck />
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Kode Produk</span>
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Nama Produk</span>
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Qty</span>
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Unit</span>
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Harga Beli Satuan</span>
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Harga Jual Satuan</span>
-                    </th>
-                    <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Action</span>
-                    </th>
-                    {/* <th className='px-2 py-2'>
-                      <span className='text-gray-300'>Image</span>
-                    </th> */}
-                  </tr>
-                </thead>
-                <tbody className='bg-white divide-y divide-gray-200'>
-                  {data.slice(firstIndex, lastIndex).map((produk) => (
-                    <tr>
-                      <th className='px-2 py-2'>
-                        <FormCheck />
-                      </th>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.kode_sku}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.nama}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.quantity}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>{produk.satuan.satuan}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>Rp. {produk.harga_beli_satuan.toLocaleString({ minimumFractionDigits: 0 })}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>Rp. {produk.harga_jual_satuan.toLocaleString({ minimumFractionDigits: 0 })}</div>
-                      </td>
-                      <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>
-                          <Link key={produk.id} href={`${produk.id}`}>
-                            <a>
-                              <Button variant='warning mr-2'>Edit</Button>
-                            </a>
-                          </Link>
-                        </div>
-                      </td>
-                      {/* <td className='px-2 py-2 whitespace-nowrap'>
-                        <div className='text-sm text-gray-900'>
-                          <img src={`http://localhost:3000/uploads/${produk.image}`} alt='produk' />
-                        </div>
-                      </td> */}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div class='flex items-center justify-center mt-4'>
-                <TablePagination
-                  onPrevChange={handlePrevChange}
-                  onNextChange={handleNextChange}
-                  onFirstPage={handleFirstPage}
-                  onLastPage={handleLastPage}
-                  onClickPage={handleClickPage}
-                  lastIndex={parseInt(data.length / rowsPerPage)}
-                  currentPage={page}
-                />
-              </div>
+        <Row>
+          <Col sm='8'>
+            <h2 className='text-blue-600'>Produk</h2>
+          </Col>
+          <Col sm='4'>
+            <div className='d-flex justify-content-end'>
+              <Link href='/produk/add-produk'>
+                <a>
+                  <button
+                    type='button'
+                    className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
+                    <AddIcon fontSize='small' />
+                    Buat Baru
+                  </button>
+                </a>
+              </Link>
             </div>
-          </Card.Body>
-        </Card>
+          </Col>
+        </Row>
+      </div>
+      <div>
+        <Row className='mt-4 mb-8 '>
+          <Col>
+            <Row>
+              <SettingsIcon fontSize='medium' className='mt-1' />
+              <h4>Barang & Jasa</h4>
+            </Row>
+          </Col>
+
+          <Col className='d-flex justify-content-end'>
+            <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Tambah'>
+              <Dropdown.Item>
+                <a>
+                  <Link href='kategori/tabel-kategori'>Kategori Produk</Link>
+                </a>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <a>
+                  <Link href='satuan/tabel-satuan'>Satuan Produk</Link>
+                </a>
+              </Dropdown.Item>
+            </DropdownButton>
+
+            <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
+              <Dropdown.Item></Dropdown.Item>
+              <Dropdown.Item eventKey='1' as='button'>
+                <CSVLink data={restructure(data)} filename='product.csv'>
+                  CSV
+                </CSVLink>
+              </Dropdown.Item>
+            </DropdownButton>
+            <Col sm='6'>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id='basic-addon1'>
+                    <SearchIcon />
+                  </InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  placeholder='cari'
+                  aria-label='cari'
+                  aria-describedby='basic-addon1'
+                  onChange={(e) => handleChange(e)}
+                />
+              </InputGroup>
+            </Col>
+          </Col>
+        </Row>
+        <div style={{ height: "30rem" }}>
+          <TableContainer className='mt-4' component={Paper}>
+            <Table size='small' aria-label='a dense table'>
+              <TableHead className='bg-dark'>
+                <TableRow>
+                  <TableCell>
+                    <FormCheck />
+                  </TableCell>
+                  <TableCell>
+                    <Typography className='text-white font-bold'>Kode Produk</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography className='text-white font-bold'>Nama Produk</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography className='text-white font-bold' align='center'>
+                      Quantity
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography className='text-white font-bold'>Satuan</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography className='text-white font-bold'>Harga Beli Satuan</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography className='text-white font-bold'>Harga Jual Satuan</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography className='text-white font-bold'>Action</Typography>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {handleList()
+                  .slice(firstIndex, lastIndex)
+                  .map((i, index) => (
+                    <TableRow key={index}>
+                      <TableCell component='th'>
+                        <FormCheck />
+                      </TableCell>
+                      <TableCell>{i.kode_sku}</TableCell>
+                      <TableCell>{i.nama}</TableCell>
+                      <TableCell align='center'>{i.quantity}</TableCell>
+                      <TableCell>{i.satuan.satuan}</TableCell>
+                      <TableCell>Rp. {i.harga_beli_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>Rp. {i.harga_jual_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>
+                        <Link href={`../produk/view/${i.id}`}>
+                          <a>
+                            <VisibilityOutlinedIcon color='primary' fontSize='small' className='mr-2' />
+                          </a>
+                        </Link>
+                        <Link href={`${i.id}`}>
+                          <a>
+                            <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
+                          </a>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+        <div class='flex items-center justify-center mt-4'>
+          <TablePagination
+            onPrevChange={handlePrevChange}
+            onNextChange={handleNextChange}
+            onFirstPage={handleFirstPage}
+            onLastPage={handleLastPage}
+            onClickPage={handleClickPage}
+            lastIndex={parseInt(data.length / rowsPerPage)}
+            currentPage={page}
+          />
+        </div>
       </div>
     </Layout>
   );

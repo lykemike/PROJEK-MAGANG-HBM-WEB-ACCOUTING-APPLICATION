@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/layout";
 import Link from "next/link";
-import { Button, Table, DropdownButton, Dropdown } from "react-bootstrap";
+import { Button, DropdownButton, Dropdown, Row, Col } from "react-bootstrap";
 import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
+import Table from "@material-ui/core/Table";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableBody from "@material-ui/core/TableBody";
+import TableRow from "@material-ui/core/TableRow";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import AddIcon from "@material-ui/icons/Add";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import TablePagination from "../../components/TablePagination";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -42,80 +52,87 @@ export default function jurnalentry({ data }) {
     setPage(parseInt(data.length / rowsPerPage));
   };
 
+  console.log(data);
+
   return (
     <Layout>
-      <div variant='container'>
-        <div class='text-md font-medium text-gray-900'>
-          <AccountBalanceWalletIcon /> Kas & Bank
-        </div>
-        <h4 class='mt-2'>Akun Kas</h4>
+      <div className='border-b border-gray-200'>
+        <Breadcrumbs aria-label='breadcrumb'>
+          <Typography color='textPrimary'>Kas & Bank</Typography>
+        </Breadcrumbs>
 
-        <div class='flex flex-row-reverse'>
-          <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Buat Transaksi'>
-            <Dropdown.Item>
-              <Link href='/kasbank/transferuang'>
-                <a>Transfer Uang</a>
-              </Link>
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <Link href='/kasbank/terimauang'>
-                <a>Terima Uang</a>
-              </Link>
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <Link href='/kasbank/kirimuang'>
-                <a>Kirim Uang</a>
-              </Link>
-            </Dropdown.Item>
-          </DropdownButton>
-        </div>
-        <div className='mt-8'>
-          <table className='min-w-full table-auto'>
-            <thead className='justify-between'>
-              <tr className='bg-dark'>
-                <th className='px-2 py-2'>
-                  <span className='text-gray-300'>Kode Akun</span>
-                </th>
-                <th className='px-2 py-2'>
-                  <span className='text-gray-300'>Nama Akun</span>
-                </th>
-                <th className='px-2 py-2'>
-                  <span className='text-gray-300'>Saldo</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className='bg-white divide-y divide-gray-200'>
+        <Row>
+          <Col sm='8'>
+            <h2 className='text-blue-600'>Akun Kas</h2>
+          </Col>
+          <Col sm='4'>
+            <div className='d-flex justify-content-end'>
+              <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Buat Transaksi'>
+                <Dropdown.Item>
+                  <Link href='/kasbank/transferuang'>
+                    <a>Transfer Uang</a>
+                  </Link>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Link href='/kasbank/terimauang'>
+                    <a>Terima Uang</a>
+                  </Link>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <Link href='/kasbank/kirimuang'>
+                    <a>Kirim Uang</a>
+                  </Link>
+                </Dropdown.Item>
+              </DropdownButton>
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <div className='mt-8' style={{ height: "30rem" }}>
+        <TableContainer component={Paper}>
+          <Table size='small' aria-label='a dense table'>
+            <TableHead className='bg-dark'>
+              <TableRow>
+                <TableCell>
+                  <Typography className='text-white font-bold'>Kode Akun</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className='text-white font-bold'>Nama Akun</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className='text-white font-bold'>Saldo Akun</Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {data.slice(firstIndex, lastIndex).map((i, index) => (
-                <tr>
-                  <td className='px-2 py-2 whitespace-nowrap font-medium'>
-                    <div className='text-sm text-gray-900'>{i.kode_akun}</div>
-                  </td>
-                  <td className='px-2 py-2 whitespace-nowrap'>
+                <TableRow>
+                  <TableCell component='th' scope='row'>
+                    <label className='font-semibold'>{i.kode_akun}</label>
+                  </TableCell>
+                  <TableCell>
                     <Link key={index} href={`/kasbank/${i.id}`}>
-                      <a>
-                        <div className='text-sm text-blue-600 cursor-pointer'>{i.nama_akun}</div>
-                      </a>
+                      <a>{i.nama_akun}</a>
                     </Link>
-                  </td>
-                  <td className='px-2 py-2 whitespace-nowrap'>
-                    <div className='text-sm text-gray-900'>Rp. 0,00</div>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell>Rp. {i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-          <div class='flex items-center justify-center mt-4'>
-            <TablePagination
-              onPrevChange={handlePrevChange}
-              onNextChange={handleNextChange}
-              onFirstPage={handleFirstPage}
-              onLastPage={handleLastPage}
-              onClickPage={handleClickPage}
-              lastIndex={parseInt(data.length / rowsPerPage)}
-              currentPage={page}
-            />
-          </div>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      <div class='flex items-center justify-center mt-4'>
+        <TablePagination
+          onPrevChange={handlePrevChange}
+          onNextChange={handleNextChange}
+          onFirstPage={handleFirstPage}
+          onLastPage={handleLastPage}
+          onClickPage={handleClickPage}
+          lastIndex={parseInt(data.length / rowsPerPage)}
+          currentPage={page}
+        />
       </div>
     </Layout>
   );
@@ -126,6 +143,9 @@ export async function getServerSideProps() {
   const kasBank = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
+    },
+    include: {
+      DetailSaldoAwal: true,
     },
   });
 

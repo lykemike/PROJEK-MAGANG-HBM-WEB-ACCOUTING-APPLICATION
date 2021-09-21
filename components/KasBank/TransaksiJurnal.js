@@ -19,10 +19,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { Formik, Field, Form } from "formik";
 export default function TransaksiJurnal({ data, index, label, view, contact }) {
-  console.log(data);
-
   const detail = useMemo(() => {
     if (view == "kirimuang") {
       return data.HeaderKirimUang;
@@ -37,9 +34,7 @@ export default function TransaksiJurnal({ data, index, label, view, contact }) {
       <TableBody>
         {detail.map((i) => (
           <TableRow>
-            <TableCell>
-              <Field type='checkbox' name='toggle' />
-            </TableCell>
+            <TableCell></TableCell>
             <TableCell component='th' scope='row'>
               {i.tgl_transaksi}
             </TableCell>
