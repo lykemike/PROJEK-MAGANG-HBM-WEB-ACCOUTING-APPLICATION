@@ -3,6 +3,8 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import TransaksiJurnal from "../../components/KasBank/TransaksiJurnal";
 import BankStatement from "../../components/KasBank/BankStatement";
+import { Formik, Form as Forms, FieldArray } from "formik";
+import Axios from "axios";
 import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl } from "react-bootstrap";
 import {
   Breadcrumbs,
@@ -78,6 +80,17 @@ export default function akundetail({ data }) {
       return false;
     }
   }, [selectedTransactions, data]);
+
+  const url = "http://localhost:3000/api/kasbank/ubahstatus";
+  const onSubmit = async () => {
+    Axios.post(url, selectedTransactions)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const handleSelectOne = (event, id) => {
     const selectedIndex = selectedTransactions.indexOf(id);
@@ -211,10 +224,12 @@ export default function akundetail({ data }) {
               <div>
                 <Row className='mt-2 mb-2'>
                   <Col sm='9'>
-                    <Button variant='primary' className='mr-2'>
-                      Import Bank Statement
-                    </Button>
-                    {selectedTransactions.length > 0 ? <Button variant='primary'>Rekonsiliasi</Button> : null}
+                    {selectedTransactions.length > 0 ? (
+                      <Button className='mr-2' variant='primary' onClick={onSubmit}>
+                        Rekonsiliasi
+                      </Button>
+                    ) : null}
+                    <Button variant='primary'>Import Bank Statement</Button>
                   </Col>
                   <Col sm='3' className='d-flex justify-content-end'>
                     <FormControl type='text' placeholder='Search . . . .' className='mr-2' />

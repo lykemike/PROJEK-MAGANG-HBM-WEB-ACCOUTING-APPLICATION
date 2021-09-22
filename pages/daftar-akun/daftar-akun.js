@@ -79,31 +79,31 @@ export default function DaftarAkun({ data }) {
 
   return (
     <Layout>
-      <div className='border-b border-gray-200'>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Typography color='textPrimary'>Daftar Akun</Typography>
+      <div className="border-b border-gray-200">
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="textPrimary">Daftar Akun</Typography>
         </Breadcrumbs>
 
         <Row>
           <Col>
-            <h2 className='text-blue-600'>Daftar Akun</h2>
+            <h2 className="text-blue-600">Daftar Akun</h2>
           </Col>
-          <div className='d-flex justify-content-end'>
+          <div className="d-flex justify-content-end">
             <Col>
               <Row>
-                <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Tindakan'>
+                <DropdownButton variant="primary mr-2" id="dropdown-basic-button" title="Tindakan">
                   <Dropdown.Item>
-                    <Link href='/daftar-akun/atur-saldo-awal'>
+                    <Link href="/daftar-akun/atur-saldo-awal">
                       <a>Atur Saldo Awal</a>
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link href='/daftar-akun/tutup-buku'>Penutupan Buku</Link>
+                    <Link href="/daftar-akun/tutup-buku">Penutupan Buku</Link>
                   </Dropdown.Item>
                 </DropdownButton>
-                <Link href='/daftar-akun/buat-akun-baru'>
-                  <Button variant='primary'>
-                    <Add fontSize='small' />
+                <Link href="/daftar-akun/buat-akun-baru">
+                  <Button variant="primary">
+                    <Add fontSize="small" />
                     Buat akun baru
                   </Button>
                 </Link>
@@ -114,24 +114,24 @@ export default function DaftarAkun({ data }) {
       </div>
 
       <div style={{ height: "30rem" }}>
-        <TableContainer className='mt-8' component={Paper}>
-          <Tables size='small' aria-label='a dense table'>
-            <TableHead className='bg-dark'>
+        <TableContainer className="mt-8" component={Paper}>
+          <Tables size="small" aria-label="a dense table">
+            <TableHead className="bg-dark">
               <TableRow>
                 <TableCell>
-                  <Typography className='text-white font-bold'>Kode Akun</Typography>
+                  <Typography className="text-white font-bold">Kode Akun</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className='text-white font-bold'>Nama Akun</Typography>
+                  <Typography className="text-white font-bold">Nama Akun</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className='text-white font-bold'>Kategori Akun</Typography>
+                  <Typography className="text-white font-bold">Kategori Akun</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className='text-white font-bold'>Saldo</Typography>
+                  <Typography className="text-white font-bold">Saldo</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className='text-white font-bold' align='right'>
+                  <Typography className="text-white font-bold" align="right">
                     Action
                   </Typography>
                 </TableCell>
@@ -140,8 +140,8 @@ export default function DaftarAkun({ data }) {
             <TableBody>
               {data.slice(firstIndex, lastIndex).map((i) => (
                 <TableRow>
-                  <TableCell component='th' scope='row'>
-                    <label className='font-semibold'>{i.kode_akun}</label>
+                  <TableCell component="th" scope="row">
+                    <label className="font-semibold">{i.kode_akun}</label>
                   </TableCell>
                   <TableCell>{i.nama_akun}</TableCell>
                   <TableCell>{i.kategori_akun.name}</TableCell>
@@ -151,9 +151,9 @@ export default function DaftarAkun({ data }) {
                       ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })
                       : i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 })}
                   </TableCell>
-                  <TableCell align='right'>
-                    <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
-                    <DeleteOutlineIcon color='secondary' fontSize='small' />
+                  <TableCell align="right">
+                    <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                    <DeleteOutlineIcon color="secondary" fontSize="small" />
                     {/* <Button variant='warning mr-2'>Edit</Button>
                   <Button
                     variant='danger'
@@ -169,7 +169,7 @@ export default function DaftarAkun({ data }) {
           </Tables>
         </TableContainer>
       </div>
-      <div class='flex items-center justify-center mt-4 '>
+      <div class="flex items-center justify-center mt-4 ">
         <TablePagination
           onPrevChange={handlePrevChange}
           onNextChange={handleNextChange}

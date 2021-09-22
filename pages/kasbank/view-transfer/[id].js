@@ -74,7 +74,7 @@ export default function bank_transfer({ data }) {
             {data.map((i) => (
               <Col>
                 <Form.Label className="font-medium">Jumlah: </Form.Label>
-                <p> {i.jumlah}</p>
+                <p> {i.total}</p>
               </Col>
             ))}
 
