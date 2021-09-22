@@ -211,12 +211,10 @@ export default function akundetail({ data }) {
               <div>
                 <Row className='mt-2 mb-2'>
                   <Col sm='9'>
-                    {selectedTransactions.length > 0 ? (
-                      <Button className='mr-2' variant='primary'>
-                        Rekonsiliasi
-                      </Button>
-                    ) : null}
-                    <Button variant='primary'>Import Bank Statement</Button>
+                    <Button variant='primary' className='mr-2'>
+                      Import Bank Statement
+                    </Button>
+                    {selectedTransactions.length > 0 ? <Button variant='primary'>Rekonsiliasi</Button> : null}
                   </Col>
                   <Col sm='3' className='d-flex justify-content-end'>
                     <FormControl type='text' placeholder='Search . . . .' className='mr-2' />
