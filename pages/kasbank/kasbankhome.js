@@ -56,30 +56,30 @@ export default function jurnalentry({ data }) {
 
   return (
     <Layout>
-      <div className='border-b border-gray-200'>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Typography color='textPrimary'>Kas & Bank</Typography>
+      <div className="border-b border-gray-200">
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="textPrimary">Kas & Bank</Typography>
         </Breadcrumbs>
 
         <Row>
-          <Col sm='8'>
-            <h2 className='text-blue-600'>Akun Kas</h2>
+          <Col sm="8">
+            <h2 className="text-blue-600">Akun Kas</h2>
           </Col>
-          <Col sm='4'>
-            <div className='d-flex justify-content-end'>
-              <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Buat Transaksi'>
+          <Col sm="4">
+            <div className="d-flex justify-content-end">
+              <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Buat Transaksi">
                 <Dropdown.Item>
-                  <Link href='/kasbank/transferuang'>
+                  <Link href="/kasbank/transferuang">
                     <a>Transfer Uang</a>
                   </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Link href='/kasbank/terimauang'>
+                  <Link href="/kasbank/terimauang">
                     <a>Terima Uang</a>
                   </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Link href='/kasbank/kirimuang'>
+                  <Link href="/kasbank/kirimuang">
                     <a>Kirim Uang</a>
                   </Link>
                 </Dropdown.Item>
@@ -89,27 +89,27 @@ export default function jurnalentry({ data }) {
         </Row>
       </div>
 
-      <div className='mt-8' style={{ height: "30rem" }}>
+      <div className="mt-8" style={{ height: "30rem" }}>
         <TableContainer component={Paper}>
-          <Table size='small' aria-label='a dense table'>
-            <TableHead className='bg-dark'>
+          <Table size="small" aria-label="a dense table">
+            <TableHead className="bg-dark">
               <TableRow>
                 <TableCell>
-                  <Typography className='text-white font-bold'>Kode Akun</Typography>
+                  <Typography className="text-white font-bold">Kode Akun</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className='text-white font-bold'>Nama Akun</Typography>
+                  <Typography className="text-white font-bold">Nama Akun</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className='text-white font-bold'>Saldo Akun</Typography>
+                  <Typography className="text-white font-bold">Saldo Akun</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.slice(firstIndex, lastIndex).map((i, index) => (
                 <TableRow>
-                  <TableCell component='th' scope='row'>
-                    <label className='font-semibold'>{i.kode_akun}</label>
+                  <TableCell component="th" scope="row">
+                    <label className="font-semibold">{i.kode_akun}</label>
                   </TableCell>
                   <TableCell>
                     <Link key={index} href={`/kasbank/${i.id}`}>
@@ -123,7 +123,7 @@ export default function jurnalentry({ data }) {
           </Table>
         </TableContainer>
       </div>
-      <div class='flex items-center justify-center mt-4'>
+      <div class="flex items-center justify-center mt-4">
         <TablePagination
           onPrevChange={handlePrevChange}
           onNextChange={handleNextChange}

@@ -3,19 +3,10 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import TransaksiJurnal from "../../components/KasBank/TransaksiJurnal";
 import BankStatement from "../../components/KasBank/BankStatement";
+import { Formik, Form as Forms, FieldArray } from "formik";
+import Axios from "axios";
 import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableSortLabel,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableSortLabel } from "@material-ui/core";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import CachedIcon from "@material-ui/icons/Cached";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -79,6 +70,17 @@ export default function akundetail({ data }) {
     }
   }, [selectedTransactions, data]);
 
+  const url = "http://localhost:3000/api/kasbank/ubahstatus";
+  const onSubmit = async () => {
+    Axios.post(url, selectedTransactions)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   const handleSelectOne = (event, id) => {
     const selectedIndex = selectedTransactions.indexOf(id);
     let newselectedTransactions = [];
@@ -90,51 +92,48 @@ export default function akundetail({ data }) {
     } else if (selectedIndex === selectedTransactions.length - 1) {
       newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newselectedTransactions = newselectedTransactions.concat(
-        selectedTransactions.slice(0, selectedIndex),
-        selectedTransactions.slice(selectedIndex + 1)
-      );
+      newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, selectedIndex), selectedTransactions.slice(selectedIndex + 1));
     }
     setselectedTransactions(newselectedTransactions);
   };
 
   return (
     <Layout>
-      <Breadcrumbs aria-label='breadcrumb'>
-        <Link color='inherit' href='../jual/penjualan'>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link color="inherit" href="../jual/penjualan">
           Kas & Bank
         </Link>
-        <Typography color='textPrimary'>Akun - Cash & Bank</Typography>
+        <Typography color="textPrimary">Akun - Cash & Bank</Typography>
       </Breadcrumbs>
-      <div className='border-b border-gray-200'>
+      <div className="border-b border-gray-200">
         <Row>
-          <Col sm='8'>
+          <Col sm="8">
             {data.map((i) => (
               <h2>
                 ({i.kode_akun}) - {i.nama_akun}
               </h2>
             ))}
           </Col>
-          <Col sm='4'>
-            <div className='d-flex justify-content-end'>
-              <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Tindakan'>
+          <Col sm="4">
+            <div className="d-flex justify-content-end">
+              <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Tindakan">
                 <Dropdown.Item>
-                  <Link href='/kasbank/rekeningkoran'>
+                  <Link href="/kasbank/rekeningkoran">
                     <a>Import Bank Statement</a>
                   </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Link href='/kasbank/cashlink'>
+                  <Link href="/kasbank/cashlink">
                     <a>Cashlink</a>
                   </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Link href='/kasbank/laporanrekonsilasi'>
+                  <Link href="/kasbank/laporanrekonsilasi">
                     <a>Laporan Rekonsilasi</a>
                   </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Link href='/kasbank/mutasirek'>
+                  <Link href="/kasbank/mutasirek">
                     <a>Mutasi Rekening</a>
                   </Link>
                 </Dropdown.Item>
@@ -145,179 +144,150 @@ export default function akundetail({ data }) {
         </Row>
       </div>
 
-      <div variant='container' className='mt-4'>
-        <Tabs defaultActiveKey='profile' id='uncontrolled-tab-example'>
-          <Tab eventKey='transaksiJurnal' title='Transaksi Jurnal' />
-          <Tab eventKey='bankStatement' title='Bank Statement' />
-          <Tab eventKey='pemetaanKas' title='Pemetaan Kas' />
+      <div variant="container" className="mt-4">
+        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+          <Tab eventKey="transaksiJurnal" title="Transaksi Jurnal" />
+          <Tab eventKey="bankStatement" title="Bank Statement" />
+          <Tab eventKey="pemetaanKas" title="Pemetaan Kas" />
 
-          <div eventKey='transaksiJurnal'>
-            <div class='mt-2'>
+          <div eventKey="transaksiJurnal">
+            <div class="mt-2">
               <div>
-                <Row className='mt-2 mb-2'>
-                  <Col sm='9'>
-                    <Button variant='primary'>Rekonsiliasi</Button>
+                <Row className="mt-2 mb-2">
+                  <Col sm="9">
+                    <Button variant="primary">Rekonsiliasi</Button>
                   </Col>
-                  <Col sm='3' className='d-flex justify-content-end'>
-                    <FormControl type='text' placeholder='Search . . . .' />
+                  <Col sm="3" className="d-flex justify-content-end">
+                    <FormControl type="text" placeholder="Search . . . ." />
                   </Col>
                 </Row>
               </div>
 
               <TableContainer component={Paper}>
-                <Table size='small' aria-label='simple table'>
-                  <TableHead className='bg-dark'>
+                <Table size="small" aria-label="simple table">
+                  <TableHead className="bg-dark">
                     <TableRow>
                       <TableCell></TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Tanggal</Typography>
+                        <Typography className="text-white font-bold">Tanggal</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Kontak</Typography>
+                        <Typography className="text-white font-bold">Kontak</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Tag</Typography>
+                        <Typography className="text-white font-bold">Tag</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Terima (dalam IDR)</Typography>
+                        <Typography className="text-white font-bold">Terima (dalam IDR)</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Kirim (dalam IDR)</Typography>
+                        <Typography className="text-white font-bold">Kirim (dalam IDR)</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Saldo (dalam IDR)</Typography>
+                        <Typography className="text-white font-bold">Saldo (dalam IDR)</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Status</Typography>
+                        <Typography className="text-white font-bold">Status</Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   {data.map((data, index) => (
-                    <TransaksiJurnal data={data} index={index} label='incoming' view='terimauang' contact='contact' />
+                    <TransaksiJurnal data={data} index={index} label="incoming" view="terimauang" contact="contact" />
                   ))}
                   {data.map((data, index) => (
-                    <TransaksiJurnal data={data} index={index} label='outgoing' view='kirimuang' contact='contact' />
+                    <TransaksiJurnal data={data} index={index} label="outgoing" view="kirimuang" contact="contact" />
                   ))}
                   {data.map((data, index) => (
-                    <TransaksiJurnal data={data} index={index} label='outgoing' view='transferuang' contact='nocontact' />
+                    <TransaksiJurnal data={data} index={index} label="outgoing" view="transferuang" contact="nocontact" />
                   ))}
                 </Table>
               </TableContainer>
             </div>
           </div>
 
-          <div eventKey='bankStatement'>
-            <div class='mt-2'>
+          <div eventKey="bankStatement">
+            <div class="mt-2">
               <div>
-                <Row className='mt-2 mb-2'>
-                  <Col sm='9'>
+                <Row className="mt-2 mb-2">
+                  <Col sm="9">
                     {selectedTransactions.length > 0 ? (
-                      <Button className='mr-2' variant='primary'>
+                      <Button className="mr-2" variant="primary" onClick={onSubmit}>
                         Rekonsiliasi
                       </Button>
                     ) : null}
-                    <Button variant='primary'>Import Bank Statement</Button>
+                    <Button variant="primary">Import Bank Statement</Button>
                   </Col>
-                  <Col sm='3' className='d-flex justify-content-end'>
-                    <FormControl type='text' placeholder='Search . . . .' className='mr-2' />
-                    <Button variant='primary'>Ekspor</Button>
+                  <Col sm="3" className="d-flex justify-content-end">
+                    <FormControl type="text" placeholder="Search . . . ." className="mr-2" />
+                    <Button variant="primary">Ekspor</Button>
                   </Col>
                 </Row>
               </div>
 
               <TableContainer component={Paper}>
-                <Table size='small' aria-label='simple table'>
-                  <TableHead className='bg-dark'>
+                <Table size="small" aria-label="simple table">
+                  <TableHead className="bg-dark">
                     <TableRow>
                       <TableCell>
-                        <Checkbox
-                          checked={isChecked}
-                          color='primary'
-                          indeterminate={isIndeterminate}
-                          onChange={handleSelectAll}
-                        />
+                        <Checkbox checked={isChecked} color="primary" indeterminate={isIndeterminate} onChange={handleSelectAll} />
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Tanggal</Typography>
+                        <Typography className="text-white font-bold">Tanggal</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Deskripsi</Typography>
+                        <Typography className="text-white font-bold">Deskripsi</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Tanggal Import</Typography>
+                        <Typography className="text-white font-bold">Tanggal Import</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Terima</Typography>
+                        <Typography className="text-white font-bold">Terima</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Kirim</Typography>
+                        <Typography className="text-white font-bold">Kirim</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Saldo</Typography>
+                        <Typography className="text-white font-bold">Saldo</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Sumber</Typography>
+                        <Typography className="text-white font-bold">Sumber</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className='text-white font-bold'>Status</Typography>
+                        <Typography className="text-white font-bold">Status</Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   {data.map((data, index) => (
-                    <BankStatement
-                      data={data}
-                      index={index}
-                      label='incoming'
-                      view='terimauang'
-                      contact='contact'
-                      selectedTransactions={selectedTransactions}
-                      handleSelectOne={handleSelectOne}
-                    />
+                    <BankStatement data={data} index={index} label="incoming" view="terimauang" contact="contact" selectedTransactions={selectedTransactions} handleSelectOne={handleSelectOne} />
                   ))}
                   {data.map((data, index) => (
-                    <BankStatement
-                      data={data}
-                      index={index}
-                      label='outgoing'
-                      view='kirimuang'
-                      contact='contact'
-                      selectedTransactions={selectedTransactions}
-                      handleSelectOne={handleSelectOne}
-                    />
+                    <BankStatement data={data} index={index} label="outgoing" view="kirimuang" contact="contact" selectedTransactions={selectedTransactions} handleSelectOne={handleSelectOne} />
                   ))}
                   {data.map((data, index) => (
-                    <BankStatement
-                      data={data}
-                      index={index}
-                      label='outgoing'
-                      view='transferuang'
-                      contact='nocontact'
-                      selectedTransactions={selectedTransactions}
-                      handleSelectOne={handleSelectOne}
-                    />
+                    <BankStatement data={data} index={index} label="outgoing" view="transferuang" contact="nocontact" selectedTransactions={selectedTransactions} handleSelectOne={handleSelectOne} />
                   ))}
                 </Table>
               </TableContainer>
             </div>
           </div>
 
-          <div eventKey='pemetaanKas'>
-            <div class='mt-6 mb-3'>
+          <div eventKey="pemetaanKas">
+            <div class="mt-6 mb-3">
               <div>
-                <Button variant='primary'>
-                  <CachedIcon fontSize='medium' /> Muat Ulang
+                <Button variant="primary">
+                  <CachedIcon fontSize="medium" /> Muat Ulang
                 </Button>
 
-                <div className='float-right'>
-                  <Button variant='secondary mr-2'>
-                    <RotateLeftIcon fontSize='medium' />
+                <div className="float-right">
+                  <Button variant="secondary mr-2">
+                    <RotateLeftIcon fontSize="medium" />
                     Reset
                   </Button>
-                  <Button variant='danger mr-2'>
-                    <HighlightOffIcon fontSize='medium' /> Hapus
+                  <Button variant="danger mr-2">
+                    <HighlightOffIcon fontSize="medium" /> Hapus
                   </Button>
-                  <Button variant='success'>
-                    <CheckCircleIcon fontSize='medium' /> Rekonsilasi
+                  <Button variant="success">
+                    <CheckCircleIcon fontSize="medium" /> Rekonsilasi
                   </Button>
                 </div>
               </div>
