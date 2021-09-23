@@ -25,7 +25,13 @@ export default function create_jurnal({ data, data2 }) {
   const [idInvoice, setIdInvoice] = useState(id);
 
   function SelectField(FieldProps) {
-    return <Select options={data} isClearable={false} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
+    return (
+      <Select
+        options={data}
+        isClearable={false}
+        onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
+      />
+    );
   }
 
   return (
@@ -43,6 +49,8 @@ export default function create_jurnal({ data, data2 }) {
               akun_id: "",
               deskripsi: "-",
               tag: "-",
+              nominal: 0,
+              tipe_saldo: 0,
               debit: 0,
               debit_disable: false,
               kredit: 0,
@@ -97,7 +105,11 @@ export default function create_jurnal({ data, data2 }) {
 
               <Col sm='6'>
                 <div className='flex justify-end items-center'>
-                  {props.values.balance == "Balance" ? <h1 className='text-green-500'>Balance</h1> : <h2 className='text-red-500'>{props.values.balance}</h2>}
+                  {props.values.balance == "Balance" ? (
+                    <h1 className='text-green-500'>Balance</h1>
+                  ) : (
+                    <h2 className='text-red-500'>{props.values.balance}</h2>
+                  )}
                 </div>
               </Col>
             </Row>
@@ -108,7 +120,13 @@ export default function create_jurnal({ data, data2 }) {
               </Col>
               <Col sm='1' />
               <Col sm='2'>
-                <FormControl placeholder='Pick date' type='date' aria-label='date' onChange={props.handleChange} name='tgl_transaksi' />
+                <FormControl
+                  placeholder='Pick date'
+                  type='date'
+                  aria-label='date'
+                  onChange={props.handleChange}
+                  name='tgl_transaksi'
+                />
                 {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
               </Col>
             </Row>
@@ -194,6 +212,8 @@ export default function create_jurnal({ data, data2 }) {
 
                                         let debit = parseInt(e.target.value);
                                         props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Debit"));
 
                                         const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
                                         props.setFieldValue((props.values.total_debit = total_debit));
@@ -205,11 +225,19 @@ export default function create_jurnal({ data, data2 }) {
                                           props.setFieldValue("balance", balance);
                                         } else if (props.values.total_kredit > props.values.total_debit) {
                                           let balance = props.values.total_kredit - props.values.total_debit;
-                                          props.setFieldValue((balance = "Debit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Debit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
                                           props.setFieldValue("balance", balance);
                                         } else {
                                           let balance = props.values.total_kredit - props.values.total_debit;
-                                          props.setFieldValue((balance = "Kredit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Kredit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
                                           props.setFieldValue("balance", balance);
                                         }
                                       } else {
@@ -219,6 +247,8 @@ export default function create_jurnal({ data, data2 }) {
 
                                         let debit = 0;
                                         props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Debit"));
 
                                         const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
                                         props.setFieldValue((props.values.total_debit = total_debit));
@@ -240,6 +270,8 @@ export default function create_jurnal({ data, data2 }) {
 
                                         let kredit = parseInt(e.target.value);
                                         props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Kredit"));
 
                                         const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
                                         props.setFieldValue((props.values.total_kredit = total_kredit));
@@ -251,11 +283,19 @@ export default function create_jurnal({ data, data2 }) {
                                           props.setFieldValue("balance", balance);
                                         } else if (props.values.total_debit > props.values.total_kredit) {
                                           let balance = props.values.total_kredit - props.values.total_debit;
-                                          props.setFieldValue((balance = "Kredit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Kredit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
                                           props.setFieldValue("balance", balance);
                                         } else {
                                           let balance = props.values.total_kredit - props.values.total_debit;
-                                          props.setFieldValue((balance = "Debit kurang: Rp. " + Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 })));
+                                          props.setFieldValue(
+                                            (balance =
+                                              "Debit kurang: Rp. " +
+                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                          );
                                           props.setFieldValue("balance", balance);
                                         }
                                       } else {
@@ -265,6 +305,8 @@ export default function create_jurnal({ data, data2 }) {
 
                                         let kredit = 0;
                                         props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Kredit"));
 
                                         const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
                                         props.setFieldValue((props.values.total_kredit = total_kredit));
@@ -324,18 +366,26 @@ export default function create_jurnal({ data, data2 }) {
                   <Form.Group as={Row} controlId='formPlaintext'>
                     <Col sm='3'>
                       File Attachment <br />
-                      <Form.File type='file' name='fileattachment' onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
+                      <Form.File
+                        type='file'
+                        name='fileattachment'
+                        onChange={(e) => props.setFieldValue("fileattachment", e.target.files)}
+                      />
                     </Col>
                   </Form.Group>
                 </Form>
               </div>
             </div>
             <div class='left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3'>
-              <button onclick='openModal(false)' class='bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none ml-4 mr-2'>
+              <button
+                onclick='openModal(false)'
+                class='bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none ml-4 mr-2'>
                 Batal
               </button>
 
-              <button class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none' onClick={props.handleSubmit}>
+              <button
+                class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none'
+                onClick={props.handleSubmit}>
                 Submit
               </button>
             </div>

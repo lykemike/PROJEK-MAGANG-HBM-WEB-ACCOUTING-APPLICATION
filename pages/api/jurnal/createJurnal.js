@@ -66,6 +66,8 @@ export default async (req, res) => {
           tag: i.tag,
           debit: parseInt(i.debit),
           kredit: parseInt(i.kredit),
+          nominal: parseInt(i.nominal),
+          tipe_saldo: i.tipe_saldo,
         });
       });
 
