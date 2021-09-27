@@ -58,6 +58,8 @@ export default function create_jurnal({ data, data2 }) {
               akun_id: "",
               deskripsi: "-",
               tag: "-",
+              nominal: 0,
+              tipe_saldo: 0,
               debit: 0,
               debit_disable: false,
               kredit: 0,
@@ -262,6 +264,16 @@ export default function create_jurnal({ data, data2 }) {
                                             index
                                           ].debit = debit)
                                         );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].nominal = debit)
+                                        );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].tipe_saldo = "Debit")
+                                        );
 
                                         const total_debit =
                                           props.values.detail_jurnal.reduce(
@@ -346,6 +358,16 @@ export default function create_jurnal({ data, data2 }) {
                                             index
                                           ].debit = debit)
                                         );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].nominal = debit)
+                                        );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].tipe_saldo = "Debit")
+                                        );
 
                                         const total_debit =
                                           props.values.detail_jurnal.reduce(
@@ -397,6 +419,16 @@ export default function create_jurnal({ data, data2 }) {
                                           (props.values.detail_jurnal[
                                             index
                                           ].kredit = kredit)
+                                        );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].nominal = kredit)
+                                        );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].tipe_saldo = "Kredit")
                                         );
 
                                         const total_kredit =
@@ -481,6 +513,16 @@ export default function create_jurnal({ data, data2 }) {
                                           (props.values.detail_jurnal[
                                             index
                                           ].kredit = kredit)
+                                        );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].nominal = kredit)
+                                        );
+                                        props.setFieldValue(
+                                          (props.values.detail_jurnal[
+                                            index
+                                          ].tipe_saldo = "Kredit")
                                         );
 
                                         const total_kredit =

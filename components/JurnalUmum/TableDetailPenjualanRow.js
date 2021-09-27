@@ -7,7 +7,6 @@ export default function TableDetailRow({
   index,
   label = "Sales Invoice",
   tipe = "penjualan",
-  view,
 }) {
   const [open, setOpen] = useState(false);
   const onClick = () => {
@@ -31,17 +30,8 @@ export default function TableDetailRow({
     }
   }, [tipe]);
 
-  // const pembelian = data.JurnalPenjualan[0].map((i) => i.debit);
-  const grand_ = [];
-  detail
-    .filter((i) => i.tipe_saldo === "Debit")
-    .map((i) => {
-      grand_.push({
-        debit: i.nominal,
-      });
-    });
-
-  console.log(grand_.reduce((a, b) => (a = a + b.debit), 0));
+  console.log(data);
+  const result = 1 + 1;
 
   return (
     <>

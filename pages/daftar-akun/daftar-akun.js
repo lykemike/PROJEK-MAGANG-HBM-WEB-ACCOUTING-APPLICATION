@@ -79,78 +79,82 @@ export default function DaftarAkun({ data }) {
 
   return (
     <Layout>
-      <div className='border-b border-gray-200'>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Typography color='textPrimary'>Daftar Akun</Typography>
+      <div className="border-b border-gray-200">
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="textPrimary">Daftar Akun</Typography>
         </Breadcrumbs>
 
         <Row>
           <Col>
-            <h2 className='text-blue-600'>Daftar Akun</h2>
+            <h2 className="text-blue-600">Daftar Akun</h2>
           </Col>
-
-          <Col className='d-flex justify-content-end'>
-            <Row>
-              <DropdownButton variant='primary mr-2' id='dropdown-basic-button' title='Tindakan'>
-                <Dropdown.Item>
-                  <Link href='/daftar-akun/atur-saldo-awal'>
-                    <a>Atur Saldo Awal</a>
-                  </Link>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Link href='/daftar-akun/tutup-buku'>Penutupan Buku</Link>
-                </Dropdown.Item>
-              </DropdownButton>
-              <Link href='/daftar-akun/buat-akun-baru'>
-                <Button variant='primary'>
-                  <Add fontSize='small' />
-                  Buat akun baru
-                </Button>
-              </Link>
-            </Row>
-          </Col>
+          <div className="d-flex justify-content-end">
+            <Col>
+              <Row>
+                <DropdownButton variant="primary mr-2" id="dropdown-basic-button" title="Tindakan">
+                  <Dropdown.Item>
+                    <Link href="/daftar-akun/atur-saldo-awal">
+                      <a>Atur Saldo Awal</a>
+                    </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link href="/daftar-akun/tutup-buku">Penutupan Buku</Link>
+                  </Dropdown.Item>
+                </DropdownButton>
+                <Link href="/daftar-akun/buat-akun-baru">
+                  <Button variant="primary">
+                    <Add fontSize="small" />
+                    Buat akun baru
+                  </Button>
+                </Link>
+              </Row>
+            </Col>
+          </div>
         </Row>
       </div>
 
-      <TableContainer className='mt-8' component={Paper}>
-        <Tables size='small' aria-label='a dense table'>
-          <TableHead className='bg-dark'>
-            <TableRow>
-              <TableCell>
-                <Typography className='text-white font-bold'>Kode Akun</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className='text-white font-bold'>Nama Akun</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className='text-white font-bold'>Kategori Akun</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className='text-white font-bold'>Saldo</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className='text-white font-bold' align='right'>
-                  Action
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.slice(firstIndex, lastIndex).map((i) => (
+      <div style={{ height: "30rem" }}>
+        <TableContainer className="mt-8" component={Paper}>
+          <Tables size="small" aria-label="a dense table">
+            <TableHead className="bg-dark">
               <TableRow>
-                <TableCell component='th' scope='row'>
-                  {i.kode_akun}
-                </TableCell>
-                <TableCell>{i.nama_akun}</TableCell>
-                <TableCell>{i.kategori_akun.name}</TableCell>
                 <TableCell>
-                  Rp.{" "}
-                  {i.DetailSaldoAwal[0].debit > 0 ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 }) : i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 })}
+                  <Typography className="text-white font-bold">Kode Akun</Typography>
                 </TableCell>
-                <TableCell align='right'>
-                  <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
-                  <DeleteOutlineIcon color='secondary' fontSize='small' />
-                  {/* <Button variant='warning mr-2'>Edit</Button>
+                <TableCell>
+                  <Typography className="text-white font-bold">Nama Akun</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Kategori Akun</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Saldo</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold" align="right">
+                    Action
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.slice(firstIndex, lastIndex).map((i) => (
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    <label className="font-semibold">{i.kode_akun}</label>
+                  </TableCell>
+                  <TableCell>{i.nama_akun}</TableCell>
+                  <TableCell>{i.kategori_akun.name}</TableCell>
+                  <TableCell>
+                    Rp.{" "}
+                    {i.DetailSaldoAwal[0].debit > 0
+                      ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })
+                      : i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 })}
+                  </TableCell>
+                  <TableCell align="right">
+                    <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                    <DeleteOutlineIcon color="secondary" fontSize="small" />
+                    {/* <Button variant='warning mr-2'>Edit</Button>
                   <Button
                     variant='danger'
                     onClick={() => {
@@ -158,13 +162,14 @@ export default function DaftarAkun({ data }) {
                     }}>
                     Delete
                   </Button> */}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Tables>
-      </TableContainer>
-      <div class='flex items-center justify-center mt-4'>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Tables>
+        </TableContainer>
+      </div>
+      <div class="flex items-center justify-center mt-4 ">
         <TablePagination
           onPrevChange={handlePrevChange}
           onNextChange={handleNextChange}

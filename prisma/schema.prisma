@@ -739,6 +739,8 @@ model DetailJurnal {
   akun             Akun         @relation(fields: [akun_id], references: [id])
   akun_id          Int
 
+  nominal   Int
+  tipe_saldo String
   debit     Int
   kredit    Int
   deskripsi String

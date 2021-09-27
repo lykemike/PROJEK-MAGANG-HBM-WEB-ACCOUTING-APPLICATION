@@ -64,6 +64,8 @@ export default async (req, res) => {
           akun_id: parseInt(i.akun_id),
           deskripsi: i.deskripsi,
           tag: i.tag,
+          debit: parseInt(i.debit),
+          kredit: parseInt(i.kredit),
           nominal: parseInt(i.nominal),
           tipe_saldo: i.tipe_saldo,
         });
