@@ -828,3 +828,9 @@ PERTANYAAN MEETING TEKNIKAL 8/14/2021
 - cara import data dan query ke database  
 (DONE) nampilin setting yg kepake dan update
 (DONE) Misalnya hapus satu data dari database header penjualan, ketika buat penjualan id invoicenya tdk sinkron pas redirect aja
+
+
+
+New
+--- CATATAN:
+ADA ERROR DI DETAIL JURNAL DB

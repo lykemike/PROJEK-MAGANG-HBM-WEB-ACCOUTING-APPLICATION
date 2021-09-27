@@ -95,15 +95,24 @@ export default function laporanjurnalumum({
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            {header.map((data, index) => {
-              return <TableDetailRow key={index} data={data} index={index} />;
-            })}
+            {/* {header.map((data, index) => {
+              return (
+                <TableDetailPenjualanRow
+                  key={index}
+                  data={data}
+                  index={index}
+                  tipe="jurnal"
+                  view="view1"
+                />
+              );
+            })} */}
             {header2.map((data, index) => {
               return (
                 <TableDetailPenjualanRow
                   key={index}
                   data={data}
                   index={index}
+                  view="view2"
                 />
               );
             })}
@@ -115,6 +124,7 @@ export default function laporanjurnalumum({
                   key={index}
                   data={data}
                   index={index}
+                  view="view2"
                 />
               );
             })}
@@ -126,6 +136,7 @@ export default function laporanjurnalumum({
                   key={index}
                   data={data}
                   index={index}
+                  view="view2"
                 />
               );
             })}
@@ -137,6 +148,7 @@ export default function laporanjurnalumum({
                   key={index}
                   data={data}
                   index={index}
+                  view="view2"
                 />
               );
             })}
@@ -148,6 +160,7 @@ export default function laporanjurnalumum({
                   key={index}
                   data={data}
                   index={index}
+                  view="view2"
                 />
               );
             })}
@@ -164,13 +177,13 @@ export default function laporanjurnalumum({
             })} */}
           </tbody>
           <tfoot>
-            {/* <tr>
-              <td class='px-2 py-1' align='right'>
+            <tr>
+              <td class="px-2 py-1" align="right">
                 Grand Total
               </td>
-              <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
-              <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
-            </tr> */}
+              {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
+              <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td> */}
+            </tr>
           </tfoot>
         </table>
       </div>

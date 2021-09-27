@@ -3,7 +3,17 @@ import Layout from "../../components/layout";
 import TableDetailBBRow from "../../components/BukuBesar/TableDetailBBRow";
 import Link from "next/link";
 import TablePagination from "../../components/TablePagination";
-import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
+import {
+  Button,
+  Table,
+  DropdownButton,
+  Row,
+  Col,
+  Form,
+  FormControl,
+  InputGroup,
+  Dropdown,
+} from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -48,57 +58,71 @@ export default function laporanbukubesar({ header }) {
     setPage(parseInt(header.length / rowsPerPage));
   };
 
-  console.log(header)
+  console.log(header);
   return (
     <Layout>
-      <div variant='container'>
+      <div variant="container">
         <div></div>
-        <h4 class='mb-6 mt-2'>Buku Besar</h4>
-        <div class='mb-10'>
+        <h4 class="mb-6 mt-2">Buku Besar</h4>
+        <div class="mb-10">
           <Row>
-            <Col sm='3'>
+            <Col sm="3">
               <Form.Label>Tanggal Mulai</Form.Label>
-              <InputGroup className='mb-3'>
-                <FormControl placeholder='Pick date' type='date' aria-label='date' ref={tgl_mulai} />
+              <InputGroup className="mb-3">
+                <FormControl
+                  placeholder="Pick date"
+                  type="date"
+                  aria-label="date"
+                  ref={tgl_mulai}
+                />
               </InputGroup>
             </Col>
-            <Col sm='3'>
+            <Col sm="3">
               <Form.Label>Tanggal Selesai</Form.Label>
-              <InputGroup className='mb-3'>
-                <FormControl placeholder='Pick date' type='date' aria-label='date' ref={tgl_akhir} />
+              <InputGroup className="mb-3">
+                <FormControl
+                  placeholder="Pick date"
+                  type="date"
+                  aria-label="date"
+                  ref={tgl_akhir}
+                />
               </InputGroup>
             </Col>
 
             <Col>
-              <Button variant='primary mr-2 mt-7' onClick={onClick}>
+              <Button variant="primary mr-2 mt-7" onClick={onClick}>
                 {" "}
                 Filter
               </Button>
             </Col>
           </Row>
 
-          <div class='flex flex-row-reverse'>
-            <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Export'>
+          <div class="flex flex-row-reverse">
+            <DropdownButton
+              variant="primary ml-2"
+              id="dropdown-basic-button"
+              title="Export"
+            >
               <Dropdown.Item>
-                <Link href='#'>
+                <Link href="#">
                   <a>PDF</a>
                 </Link>
               </Dropdown.Item>
-              <Dropdown.Item href='#/action-2'>XLS</Dropdown.Item>
-              <Dropdown.Item href='#/action-2'>CSV</Dropdown.Item>
+              <Dropdown.Item href="#/action-2">XLS</Dropdown.Item>
+              <Dropdown.Item href="#/action-2">CSV</Dropdown.Item>
             </DropdownButton>
           </div>
         </div>
-        <table class='min-w-full table-auto'>
-          <thead class='justify-between'>
-            <tr class='bg-dark'>
-              <th class='px-2 py-2' colSpan='3'>
-                <span class='text-gray-300'>Data</span>
+        <table class="min-w-full table-auto">
+          <thead class="justify-between">
+            <tr class="bg-dark">
+              <th class="px-2 py-2" colSpan="3">
+                <span class="text-gray-300">Data</span>
               </th>
             </tr>
           </thead>
-          <tbody class='bg-white divide-y divide-gray-200'>
-          {header.slice(firstIndex, lastIndex).map((data, index) => {
+          <tbody class="bg-white divide-y divide-gray-200">
+            {header.slice(firstIndex, lastIndex).map((data, index) => {
               return <TableDetailBBRow key={index} data={data} index={index} />;
             })}
             {/* {header2.map((data, index) => {
@@ -118,8 +142,8 @@ export default function laporanbukubesar({ header }) {
             </tr> */}
           </tfoot>
         </table>
-        <div class='float-right mt-2'>
-           <TablePagination
+        <div class="float-right mt-2">
+          <TablePagination
             onPrevChange={handlePrevChange}
             onNextChange={handleNextChange}
             onFirstPage={handleFirstPage}
@@ -127,7 +151,7 @@ export default function laporanbukubesar({ header }) {
             onClickPage={handleClickPage}
             lastIndex={parseInt(header.length / rowsPerPage)}
             currentPage={page}
-            />
+          />
         </div>
       </div>
     </Layout>
@@ -142,32 +166,31 @@ export async function getServerSideProps() {
     include: {
       JurnalPenjualan: {
         include: {
-          header_penjualan: true
-        }
+          header_penjualan: true,
+        },
       },
-      DetailJurnal: {
-        include: {
-          header_jurnal: true
-        }
-      },
+      // DetailJurnal: {
+      //   include: {
+      //     header_jurnal: true
+      //   }
+      // },
       JurnalKirimUang: {
         include: {
           header_kirim_uang: true,
-        }
+        },
       },
       JurnalTerimaUang: {
         include: {
           header_terima_uang: true,
-        }
+        },
       },
       JurnalTransferUang: {
         include: {
           transfer_uang: true,
-        }
-      }
-    }
-  })
-
+        },
+      },
+    },
+  });
 
   return {
     props: {

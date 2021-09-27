@@ -17,7 +17,7 @@ import {
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function laporan_neraca({ header }) {
+export default function laporan_neraca({ header, header2, header3 }) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
   const onClick = () => {
@@ -79,19 +79,23 @@ export default function laporan_neraca({ header }) {
 
         <Table class="table mt-4">
           <tbody>
-            <tr>
-              <td>Pendapatan dari Penjualan</td>
-              <td></td>
-              <td></td>
-              <td>Rp. XXX</td>
-            </tr>
+            {header2.map((i) => (
+              <tr>
+                <td>Pendapatan dari Penjualan</td>
+                <td></td>
+                <td></td>
+                <td>Rp. {i.nominal}</td>
+              </tr>
+            ))}
 
-            <tr>
-              <td>Harga Pokok Penjualan</td>
-              <td></td>
-              <td></td>
-              <td>Rp. XXX</td>
-            </tr>
+            {header3.map((i) => (
+              <tr>
+                <td>Harga Pokok Penjualan</td>
+                <td></td>
+                <td></td>
+                <td>Rp. {i.nominal}</td>
+              </tr>
+            ))}
 
             <tr>
               <td>
@@ -132,7 +136,7 @@ export default function laporan_neraca({ header }) {
                 </td>
 
                 <td>
-                  Rp. {i.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0)}
+                  {/* Rp. {i.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0)} */}
                 </td>
                 <td></td>
                 <td></td>
@@ -228,14 +232,32 @@ export async function getServerSideProps() {
         in: 17,
       },
     },
-    include: {
-      DetailJurnal: true,
+    // include: {
+    //   DetailJurnal: true,
+    // },
+  });
+
+  const pendapatanPenjualan = await prisma.jurnalPenjualan.findMany({
+    where: {
+      akun_id: {
+        in: 120,
+      },
+    },
+  });
+
+  const hargaPokok = await prisma.jurnalPenjualan.findMany({
+    where: {
+      akun_id: {
+        in: 26,
+      },
     },
   });
 
   return {
     props: {
       header: bebanLainnya,
+      header2: pendapatanPenjualan,
+      header3: hargaPokok,
     },
   };
 }

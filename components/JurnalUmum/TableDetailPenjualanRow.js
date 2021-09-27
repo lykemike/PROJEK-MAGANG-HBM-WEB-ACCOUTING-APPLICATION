@@ -1,10 +1,13 @@
 import React, { useState, useMemo } from "react";
+import merge from "lodash/merge";
+import _ from "lodash";
 
 export default function TableDetailRow({
   data,
   index,
   label = "Sales Invoice",
   tipe = "penjualan",
+  view,
 }) {
   const [open, setOpen] = useState(false);
   const onClick = () => {
@@ -21,10 +24,24 @@ export default function TableDetailRow({
       return data.JurnalKirimUang;
     } else if (tipe == "terimaUang") {
       return data.JurnalTerimaUang;
+    } else if (tipe == "jurnal") {
+      return data.DetailJurnal;
     } else {
       return data.JurnalPenjualan;
     }
   }, [tipe]);
+
+  // const pembelian = data.JurnalPenjualan[0].map((i) => i.debit);
+  const grand_ = [];
+  detail
+    .filter((i) => i.tipe_saldo === "Debit")
+    .map((i) => {
+      grand_.push({
+        debit: i.nominal,
+      });
+    });
+
+  console.log(grand_.reduce((a, b) => (a = a + b.debit), 0));
 
   return (
     <>

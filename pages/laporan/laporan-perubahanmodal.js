@@ -84,42 +84,42 @@ export default function perubahan_modal({}) {
               <Modal.Title>Pemegang Saham</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-             <Row>
-              <Col>Nama </Col>
-              <Col>Akun Modal</Col>
-              <Col>Akun Prive</Col>
-              <Col>Persentase</Col>
-             </Row>
               <Row>
-              <Col sm="3">
-                 <Form.Control
-                    placeholder=''
-                    type='text'
-                    name='nama_pemegangsaham'
+                <Col>Nama </Col>
+                <Col>Akun Modal</Col>
+                <Col>Akun Prive</Col>
+                <Col>Persentase</Col>
+              </Row>
+              <Row>
+                <Col sm="3">
+                  <Form.Control
+                    placeholder=""
+                    type="text"
+                    name="nama_pemegangsaham"
                   />
-             </Col>
-             <Col sm="3">
-                 <Form.Control
-                    placeholder=''
+                </Col>
+
+                <Col sm="3">
+                  <Form.Control
                     as="select"
-                    name='akun_modal'
-                  />
-             </Col>
-             <Col sm="3">
-                 <Form.Control
-                    placeholder=''
-                    type='text'
-                    name='akun_prive'
-                  />
-             </Col>
-             <Col sm="3">
-                 <Form.Control
-                    placeholder='-'
-                    type='text'
-                    name='persentase'
-                  />
-             </Col>
-             </Row>
+                    name="akun_modal"
+                    // onChange={props.handleChange}
+                    // onBLur={props.handleBlur}
+                  >
+                    {/* {data.map((akun_modal) => (
+                      <option key={akun_modal.id} value={akun_modal.id}>
+                        {akun_modal.nama_akun}
+                      </option>
+                    ))} */}
+                  </Form.Control>
+                </Col>
+                <Col sm="3">
+                  <Form.Control placeholder="" type="text" name="akun_prive" />
+                </Col>
+                <Col sm="3">
+                  <Form.Control placeholder="-" type="text" name="persentase" />
+                </Col>
+              </Row>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
