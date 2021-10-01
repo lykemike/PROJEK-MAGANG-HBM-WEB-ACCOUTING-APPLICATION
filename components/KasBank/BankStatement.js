@@ -42,7 +42,7 @@ export default function BankStatement({ data, index, label, view, contact, selec
             <TableCell />
             <TableCell>Rp. {label == "incoming" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "0, 00"}</TableCell>
             <TableCell>Rp. {label == "outgoing" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "0, 00"}</TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
+            <TableCell>Rp. {label == "outgoing" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : i.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             <TableCell>-</TableCell>
             <TableCell>
               {i.status == "Belum terekonsiliasi" ? (
