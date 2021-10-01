@@ -46,7 +46,6 @@ export default async (req, res) => {
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
       syarat_pembayaran: String(req.body.syarat_pembayaran),
       no_ref_penagihan: req.body.no_ref_penagihan,
-      no_transaksi: parseInt(req.body.no_transaksi),
       tag: req.body.tag,
       pesan: req.body.pesan,
       memo: req.body.memo,
@@ -66,6 +65,7 @@ export default async (req, res) => {
       balance: parseInt(req.body.balance),
       tgl_kontrak: req.body.tgl_kontrak,
       status: "Active",
+      custom_invoice: "-"
     };
 
     const create_header_penjualan = await prisma.headerPenjualan.createMany({
@@ -79,14 +79,25 @@ export default async (req, res) => {
       },
     });
 
-    const update_no_transaksi = await prisma.headerPenjualan.update({
+    let nomor_invoice_custom = ""
+    if((find_latest.id).toString().length == 3) {
+      nomor_invoice_custom = find_latest.id.toString()
+    } else if ((find_latest.id).toString().length == 2) {
+      nomor_invoice_custom = "0" + find_latest.id.toString()
+    } else if ((find_latest.id).toString().length == 1) {
+      nomor_invoice_custom = "00" + find_latest.id.toString()
+    }
+
+    const join = nomor_invoice_custom + req.body.custom_invoice
+
+    const update_nomor_invoice_custom = await prisma.headerPenjualan.update({
       where: {
-        id: find_latest.id,
+        id: find_latest.id
       },
       data: {
-        no_transaksi: find_latest.id,
-      },
-    });
+        custom_invoice: join.toString()
+      }
+    })
 
     const get_setting_penjualan = await prisma.settingDefault.findMany({
       where: {
@@ -227,7 +238,7 @@ export default async (req, res) => {
       data: list_pajak,
     });
 
-    res.status(201).json([{ message: "Create Penerimaan Pembayaran Success!", data: list_pajak, id: find_latest }]);
+    res.status(201).json([{ message: "Create Penerimaan Pembayaran Success!", data: list_pajak, id: find_latest}]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

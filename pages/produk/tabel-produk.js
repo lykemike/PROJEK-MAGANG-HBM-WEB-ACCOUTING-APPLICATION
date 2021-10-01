@@ -112,23 +112,24 @@ export default function tabelProduk({ data }) {
 
   return (
     <Layout>
-      <div className='border-b border-gray-200'>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Typography color='textPrimary'>Tabel Produk</Typography>
+      <div className="border-b border-gray-200">
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="textPrimary">Tabel Produk</Typography>
         </Breadcrumbs>
 
         <Row>
-          <Col sm='8'>
-            <h2 className='text-blue-600'>Produk</h2>
+          <Col sm="8">
+            <h2 className="text-blue-600">Produk</h2>
           </Col>
-          <Col sm='4'>
-            <div className='d-flex justify-content-end'>
-              <Link href='/produk/add-produk'>
+          <Col sm="4">
+            <div className="d-flex justify-content-end">
+              <Link href="/produk/add-produk">
                 <a>
                   <button
-                    type='button'
-                    className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
-                    <AddIcon fontSize='small' />
+                    type="button"
+                    className="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
+                  >
+                    <AddIcon fontSize="small" />
                     Buat Baru
                   </button>
                 </a>
@@ -138,47 +139,47 @@ export default function tabelProduk({ data }) {
         </Row>
       </div>
       <div>
-        <Row className='mt-4 mb-8 '>
+        <Row className="mt-4 mb-8 ">
           <Col>
             <Row>
-              <SettingsIcon fontSize='medium' className='mt-1' />
+              <SettingsIcon fontSize="medium" className="mt-1" />
               <h4>Barang & Jasa</h4>
             </Row>
           </Col>
 
-          <Col className='d-flex justify-content-end'>
-            <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Tambah'>
+          <Col className="d-flex justify-content-end">
+            <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Tambah">
               <Dropdown.Item>
                 <a>
-                  <Link href='kategori/tabel-kategori'>Kategori Produk</Link>
+                  <Link href="kategori/tabel-kategori">Kategori Produk</Link>
                 </a>
               </Dropdown.Item>
               <Dropdown.Item>
                 <a>
-                  <Link href='satuan/tabel-satuan'>Satuan Produk</Link>
+                  <Link href="satuan/tabel-satuan">Satuan Produk</Link>
                 </a>
               </Dropdown.Item>
             </DropdownButton>
 
-            <DropdownButton variant='primary ml-2' id='dropdown-basic-button' title='Ekspor'>
+            <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Ekspor">
               <Dropdown.Item></Dropdown.Item>
-              <Dropdown.Item eventKey='1' as='button'>
-                <CSVLink data={restructure(data)} filename='product.csv'>
+              <Dropdown.Item eventKey="1" as="button">
+                <CSVLink data={restructure(data)} filename="product.csv">
                   CSV
                 </CSVLink>
               </Dropdown.Item>
             </DropdownButton>
-            <Col sm='6'>
+            <Col sm="6">
               <InputGroup>
                 <InputGroup.Prepend>
-                  <InputGroup.Text id='basic-addon1'>
+                  <InputGroup.Text id="basic-addon1">
                     <SearchIcon />
                   </InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
-                  placeholder='cari'
-                  aria-label='cari'
-                  aria-describedby='basic-addon1'
+                  placeholder="cari"
+                  aria-label="cari"
+                  aria-describedby="basic-addon1"
                   onChange={(e) => handleChange(e)}
                 />
               </InputGroup>
@@ -186,35 +187,35 @@ export default function tabelProduk({ data }) {
           </Col>
         </Row>
         <div style={{ height: "30rem" }}>
-          <TableContainer className='mt-4' component={Paper}>
-            <Table size='small' aria-label='a dense table'>
-              <TableHead className='bg-dark'>
+          <TableContainer className="mt-4" component={Paper}>
+            <Table size="small" aria-label="a dense table">
+              <TableHead className="bg-dark">
                 <TableRow>
                   <TableCell>
                     <FormCheck />
                   </TableCell>
                   <TableCell>
-                    <Typography className='text-white font-bold'>Kode Produk</Typography>
+                    <Typography className="text-white font-bold">Kode Produk</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className='text-white font-bold'>Nama Produk</Typography>
+                    <Typography className="text-white font-bold">Nama Produk</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className='text-white font-bold' align='center'>
+                    <Typography className="text-white font-bold" align="center">
                       Quantity
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className='text-white font-bold'>Satuan</Typography>
+                    <Typography className="text-white font-bold">Satuan</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className='text-white font-bold'>Harga Beli Satuan</Typography>
+                    <Typography className="text-white font-bold">Harga Beli Satuan</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className='text-white font-bold'>Harga Jual Satuan</Typography>
+                    <Typography className="text-white font-bold">Harga Jual Satuan</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className='text-white font-bold'>Action</Typography>
+                    <Typography className="text-white font-bold">Action</Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -223,24 +224,24 @@ export default function tabelProduk({ data }) {
                   .slice(firstIndex, lastIndex)
                   .map((i, index) => (
                     <TableRow key={index}>
-                      <TableCell component='th'>
+                      <TableCell component="th">
                         <FormCheck />
                       </TableCell>
                       <TableCell>{i.kode_sku}</TableCell>
                       <TableCell>{i.nama}</TableCell>
-                      <TableCell align='center'>{i.quantity}</TableCell>
+                      <TableCell align="center">{i.quantity}</TableCell>
                       <TableCell>{i.satuan.satuan}</TableCell>
                       <TableCell>Rp. {i.harga_beli_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                       <TableCell>Rp. {i.harga_jual_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                       <TableCell>
                         <Link href={`../produk/view/${i.id}`}>
                           <a>
-                            <VisibilityOutlinedIcon color='primary' fontSize='small' className='mr-2' />
+                            <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
                           </a>
                         </Link>
                         <Link href={`${i.id}`}>
                           <a>
-                            <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
+                            <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
                           </a>
                         </Link>
                       </TableCell>
@@ -250,7 +251,7 @@ export default function tabelProduk({ data }) {
             </Table>
           </TableContainer>
         </div>
-        <div class='flex items-center justify-center mt-4'>
+        <div class="flex items-center justify-center mt-4">
           <TablePagination
             onPrevChange={handlePrevChange}
             onNextChange={handleNextChange}

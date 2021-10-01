@@ -19,7 +19,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-export default function TransaksiJurnal({ data, index, label, view, contact }) {
+export default function TransaksiJurnal({ data, index, label, view, contact, selectedTransactions, handleSelectOne }) {
   const detail = useMemo(() => {
     if (view == "kirimuang") {
       return data.HeaderKirimUang;
@@ -32,9 +32,16 @@ export default function TransaksiJurnal({ data, index, label, view, contact }) {
   return (
     <>
       <TableBody>
-        {detail.map((i) => (
-          <TableRow>
-            <TableCell></TableCell>
+        {detail.map((i, index) => (
+          <TableRow key={JSON.stringify({ id: i.id, tipe: view })} selected={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}>
+            <TableCell>
+              <Checkbox
+                checked={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
+                color="primary"
+                onChange={(event) => handleSelectOne(event, JSON.stringify({ id: i.id, tipe: view }))}
+                value={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
+              />
+            </TableCell>
             <TableCell component='th' scope='row'>
               {i.tgl_transaksi}
             </TableCell>

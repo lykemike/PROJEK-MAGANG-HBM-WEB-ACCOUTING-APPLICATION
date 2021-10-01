@@ -137,6 +137,7 @@ model Akun {
   JurnalPengirimanBiaya       JurnalPengirimanBiaya[]
 
   DetailSaldoAwal DetailSaldoAwal[]
+  DetailBankStatement DetailBankStatement[]
 }
 
 model HeaderSaldoAwal {
@@ -289,7 +290,7 @@ model HeaderPenjualan {
   tgl_jatuh_tempo         String
   syarat_pembayaran       String
   no_ref_penagihan        String
-  no_transaksi            Int    @unique
+  custom_invoice          String
   tag                     String
   pesan                   String
   memo                    String
@@ -867,4 +868,17 @@ model DetailReimburse {
   biaya                 String
   keterangan            String
   jumlah                Int
+}
+
+model DetailBankStatement {
+ id                   Int     @id @default(autoincrement())
+ akun                 Akun    @relation(fields: [akun_id], references: [id]) 
+ akun_id              Int     
+ tgl_mutasi_bank      String      
+ deskripsi            String
+ tgl_import           String
+ debit                Int
+ kredit               Int
+ saldo                Int
+ status               String
 }

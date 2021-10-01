@@ -36,38 +36,6 @@ export default async (req, res) => {
         });
       }
     }
-    // req.body &&
-    //   req.body.map((data) => {
-    //     let parsed = JSON.parse(data);
-    //     if (parsed.tipe === "kirimuang") {
-    //       const kirimuang = await prisma.headerKirimUang.update({
-    //         where: {
-    //           id: +parsed.id,
-    //         },
-    //         data: {
-    //           status: "Sudah Terekonsilisasi",
-    //         },
-    //       });
-    //     } else if (parsed.tipe === "terimauang") {
-    //       const terimauang = await prisma.headerTerimaUang.update({
-    //         where: {
-    //           id: +parsed.id,
-    //         },
-    //         data: {
-    //           status: "Sudah Terekonsilisasi",
-    //         },
-    //       });
-    //     } else {
-    //       const transferuang = await prisma.transferUang.update({
-    //         where: {
-    //           id: +parsed.id,
-    //         },
-    //         data: {
-    //           status: "Sudah Terekonsilisasi",
-    //         },
-    //       });
-    //     }
-    //   });
 
     res.status(201).json({ message: "Terkonsiliasi Success!", data: req.body });
   } catch (error) {

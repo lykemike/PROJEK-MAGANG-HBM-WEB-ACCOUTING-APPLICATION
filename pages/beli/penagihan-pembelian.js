@@ -244,7 +244,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                     <Form.Control type='date' placeholder='Auto' name='tgl_jatuh_tempo' onChange={props.handleChange} value={props.values.tgl_jatuh_tempo} />
                   </div>
                   <div className='mb-2'>
-                    <label>Nomor Kontrak</label>
+                    <label>No. Referensi</label>
                     <Form.Control type='text' placeholder='-' name='no_ref_penagihan' onChange={props.handleChange} />
                   </div>
                 </Col>
