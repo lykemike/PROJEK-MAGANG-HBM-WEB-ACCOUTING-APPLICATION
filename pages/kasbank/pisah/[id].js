@@ -34,30 +34,60 @@ import TextField from "@material-ui/core/TextField";
 import Select from "react-select";
 import { Formik, Form as Forms, FieldArray, Field } from "formik";
 import Axios from "axios";
-import { array } from "yup";
+import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function pisah({ bank, data2 }) {
+export default function MultipleAkun({ bank, data2, terima, kirim }) {
   const router = useRouter();
   const { id } = router.query;
   console.log(bank);
 
-  function SelectField(FieldProps) {
+  function Terima(FieldProps) {
     return (
       <Select
-        options={data2}
+        options={terima}
         isClearable={false}
         onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
       />
     );
   }
+
+  function Kirim(FieldProps) {
+    return (
+      <Select
+        options={kirim}
+        isClearable={false}
+        onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
+      />
+    );
+  }
+
+  // const UserSchema = Yup.object().shape({
+  //   multiple_akun: Yup.array(
+  //     Yup.object({
+  //       deskripsi: Yup.string().min(1, "Minimal 1 karakter").max(30),
+  //       jumlah: Yup.number().min(1, "Jumlah lebih dari 1"),
+  //     })
+  //   ).min(1),
+  // });
+
+  const url = "http://localhost:3000/api/kasbank/createPemetaanKas";
+
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
+
+  console.log(current);
   return (
     <Layout>
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
-          <Typography color="textPrimary">Pisah</Typography>
+          {bank[0].kredit == 0 ? (
+            <Typography color="textPrimary">Debit</Typography>
+          ) : (
+            <Typography color="textPrimary">Kredit</Typography>
+          )}
         </Breadcrumbs>
 
         <Row>
@@ -87,21 +117,24 @@ export default function pisah({ bank, data2 }) {
           <Col sm="4" />
         </Row>
       </div>
+
       <Formik
         initialValues={{
-          pisah: [
+          bank_type: bank[0].kredit == 0 ? "Debit" : "Kredit",
+          multiple_akun: [
             {
-              bank_header: "",
+              detail_bank_statement_id: parseInt(id),
               deskripsi: "",
               akun_id: "",
               jumlah: "",
+              tgl_transaksi: current,
             },
           ],
         }}
-        // validationSchema={}
+        // validationSchema={UserSchema}
         onSubmit={async (values) => {
           console.log(values);
-          Axios.post(createUser, values)
+          Axios.post(url, values)
             .then(function (response) {
               console.log(response);
             })
@@ -112,45 +145,118 @@ export default function pisah({ bank, data2 }) {
       >
         {(props) => (
           <Forms noValidate>
-            <FieldArray name="pisah">
-              {({ insert, remove, push }) => (
-                <div className="mt-2">
-                  {props.values.pisah.length > 0 &&
-                    props.values.pisah.map((i, index) => (
-                      <Row key={index} className="mt-2">
-                        <Col sm="3">
-                          <Form.Control type="text" name={`pisah.${index}.deskrpsi`} />
-                        </Col>
-                        <Col sm="3">
-                          <Field options={data2} name={`pisah.${index}.akun_id`} component={SelectField} />
-                        </Col>
-                        <Col sm="2">
-                          <Form.Control type="number" name={`pisah.${index}.jumlah`} />
-                        </Col>
-                        <Col sm="4">
-                          <div className="d-flex justify-content-end">
-                            <BackspaceIcon className="cursor-pointer w-8 h-8" onClick={() => remove(index)} />
-                          </div>
-                        </Col>
-                      </Row>
-                    ))}
+            {bank[0].kredit == 0 ? (
+              <FieldArray name="multiple_akun">
+                {({ insert, remove, push }) => (
+                  <div className="mt-2">
+                    {props.values.multiple_akun.length > 0 &&
+                      props.values.multiple_akun.map((i, index) => (
+                        <Row key={index} className="mt-2">
+                          <Col sm="3">
+                            <Form.Control
+                              type="text"
+                              name={`multiple_akun.${index}.deskripsi`}
+                              onChange={props.handleChange}
+                            />
+                            {/* {`props.error.multiple_akun.${index}.deskripsi` && `props.touched.multiple_akun.${index}.deskripsi` ? (
+                              <div class="text-red-500 text-sm">{`props.errors.multiple_akun.${index}.deskripsi`}</div>
+                            ) : null} */}
+                          </Col>
+                          <Col sm="3">
+                            <Field options={terima} name={`multiple_akun.${index}.akun_id`} component={Terima} />
+                          </Col>
+                          <Col sm="2">
+                            <Form.Control
+                              type="number"
+                              name={`multiple_akun.${index}.jumlah`}
+                              onChange={props.handleChange}
+                            />
+                            {/* {`props.error.multiple_akun.${index}.jumlah` && `props.touched.multiple_akun.${index}.jumlah` ? (
+                              <div class="text-red-500 text-sm">{`props.errors.multiple_akun.${index}.jumlah`}</div>
+                            ) : null} */}
+                          </Col>
+                          <Col sm="4">
+                            <div className="d-flex justify-content-end">
+                              <BackspaceIcon className="cursor-pointer w-8 h-8" onClick={() => remove(index)} />
+                            </div>
+                          </Col>
+                        </Row>
+                      ))}
 
-                  <button
-                    type="button"
-                    class="mt-4 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
-                    onClick={() =>
-                      push({
-                        deskripsi: "",
-                        akun_id: "",
-                        jumlah: "",
-                      })
-                    }
-                  >
-                    Tambah data
-                  </button>
-                </div>
-              )}
-            </FieldArray>
+                    <button
+                      class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
+                      type="submit"
+                      onClick={() =>
+                        push({
+                          bank_header: "",
+                          deskripsi: "",
+                          akun_id: "",
+                          jumlah: "",
+                        })
+                      }
+                    >
+                      Tambah
+                    </button>
+                  </div>
+                )}
+              </FieldArray>
+            ) : (
+              <FieldArray name="multiple_akun">
+                {({ insert, remove, push }) => (
+                  <div className="mt-2">
+                    {props.values.multiple_akun.length > 0 &&
+                      props.values.multiple_akun.map((i, index) => (
+                        <Row key={index} className="mt-2">
+                          <Col sm="3">
+                            <Form.Control
+                              type="text"
+                              name={`multiple_akun.${index}.deskripsi`}
+                              onChange={props.handleChange}
+                            />
+                          </Col>
+                          <Col sm="3">
+                            <Field options={kirim} name={`multiple_akun.${index}.akun_id`} component={Kirim} />
+                          </Col>
+                          <Col sm="2">
+                            <Form.Control
+                              type="number"
+                              name={`multiple_akun.${index}.jumlah`}
+                              onChange={props.handleChange}
+                            />
+                          </Col>
+                          <Col sm="4">
+                            <div className="d-flex justify-content-end">
+                              <BackspaceIcon className="cursor-pointer w-8 h-8" onClick={() => remove(index)} />
+                            </div>
+                          </Col>
+                        </Row>
+                      ))}
+                    <button
+                      class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
+                      type="submit"
+                      onClick={() =>
+                        push({
+                          bank_header: "",
+                          deskripsi: "",
+                          akun_id: "",
+                          jumlah: "",
+                        })
+                      }
+                    >
+                      Tambah
+                    </button>
+                  </div>
+                )}
+              </FieldArray>
+            )}
+
+            <button
+              class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
+              type="submit"
+              onClick={props.handleSubmit}
+            >
+              Buat
+            </button>
           </Forms>
         )}
       </Formik>
@@ -184,6 +290,34 @@ export async function getServerSideProps(context) {
     },
   });
 
+  const terima = await prisma.akun.findMany({
+    where: {
+      kategoriId: 14,
+    },
+  });
+
+  let terima_structure = [];
+  terima.map((i) => {
+    terima_structure.push({
+      value: i.id,
+      label: i.kode_akun + " - " + i.nama_akun,
+    });
+  });
+
+  const kirim = await prisma.akun.findMany({
+    where: {
+      kategoriId: 17,
+    },
+  });
+
+  let kirim_structure = [];
+  kirim.map((i) => {
+    kirim_structure.push({
+      value: i.id,
+      label: i.kode_akun + " - " + i.nama_akun,
+    });
+  });
+
   const bank_statement = await prisma.detailBankStatement.findMany({
     where: {
       id: parseInt(id),
@@ -206,6 +340,8 @@ export async function getServerSideProps(context) {
       data: akun,
       bank: bank_statement,
       data2: detail,
+      terima: terima_structure,
+      kirim: kirim_structure,
     },
   };
 }
