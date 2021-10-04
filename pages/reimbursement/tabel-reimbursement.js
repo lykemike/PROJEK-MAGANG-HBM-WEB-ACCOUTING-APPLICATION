@@ -19,39 +19,36 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function list({data}) {
+export default function list({ data }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
-  // // User API
-  // const deleteUser = 'http://localhost:3000/api/user/deleteUser'
+  const deleteReimbursement =
+    "http://localhost:3000/api/reimbursement/deleteReimbursement";
 
-  // // Redirect Function
-  // const router = useRouter();
-
-  // // Delete Exisiting User based on [id]
-  // const handleDelete = async (id) => {
-  //     Axios.delete(deleteUser, {
-  //         data: {
-  //             userid: id
-  //         }
-  //     }).then(function (response) {
-  //         console.log(response);
-  //         router.push('tabel-user');
-  //     }).
-  //         catch(function (error) {
-  //             console.log(error)
-  //         })
-  // };
+  const handleDelete = async (id) => {
+    Axios.delete(deleteReimbursement, {
+      data: {
+        reimbursementId: id,
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        router.push("table-reimbursement");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const handlePrevChange = () => {
     if (page < 1) {
@@ -83,20 +80,23 @@ export default function list({data}) {
 
   return (
     <Layout>
-      <div className='border-b border-gray-200'>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Typography color='textPrimary'>Reimbursement</Typography>
+      <div className="border-b border-gray-200">
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="textPrimary">Reimbursement</Typography>
         </Breadcrumbs>
 
         <Row>
-          <Col sm='8'>
-            <h2 className='text-blue-600'>Reimbursement List</h2>
+          <Col sm="8">
+            <h2 className="text-blue-600">Reimbursement List</h2>
           </Col>
-          <Col sm='4'>
-            <Link href='add-reimbursement'>
-              <div className='d-flex justify-content-end'>
-                <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
-                  <Add fontSize='small' /> Buat Reimbursement Baru
+          <Col sm="4">
+            <Link href="add-reimbursement">
+              <div className="d-flex justify-content-end">
+                <button
+                  type="button"
+                  className="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
+                >
+                  <Add fontSize="small" /> Buat Reimbursement Baru
                 </button>
               </div>
             </Link>
@@ -105,55 +105,93 @@ export default function list({data}) {
       </div>
 
       <div>
-        <Row className='mt-3'>
-          <Col sm='9'></Col>
+        <Row className="mt-3">
+          <Col sm="9"></Col>
 
-          <Col sm='3' className='float-right'>
-            <FormControl placeholder='Search . . . .' aria-label='cari' aria-describedby='basic-addon1' onChange={(e) => handleChange(e)} />
+          <Col sm="3" className="float-right">
+            <FormControl
+              placeholder="Search . . . ."
+              aria-label="cari"
+              aria-describedby="basic-addon1"
+              onChange={(e) => handleChange(e)}
+            />
           </Col>
         </Row>
       </div>
 
-      <TableContainer className='mt-8' component={Paper}>
-        <Tables size='small' aria-label='a dense table'>
-          <TableHead className='bg-dark'>
+      <TableContainer className="mt-8" component={Paper}>
+        <Tables size="small" aria-label="a dense table">
+          <TableHead className="bg-dark">
             <TableRow>
               <TableCell>
-                <Typography className='text-white font-bold'>No Reimbursement</Typography>
+                <Typography className="text-white font-bold">
+                  No Reimbursement
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Nama Pegawai</Typography>
+                <Typography className="text-white font-bold">
+                  Periode
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Yang Mengetahui</Typography>
+                <Typography className="text-white font-bold">
+                  Nama Pegawai
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Yang Menyetujui</Typography>
+                <Typography className="text-white font-bold">
+                  Yang Mengetahui
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Status</Typography>
+                <Typography className="text-white font-bold">
+                  Yang Menyetujui
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold' align='right'>
+                <Typography className="text-white font-bold">Status</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold" align="right">
                   Actions
                 </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           {data.map((data) => (
-          <TableBody>
-            <TableRow>
-              <TableCell component='th' scope='row'>{data.id}</TableCell>
-              <TableCell>{data.nama_pegawai}</TableCell>
-              <TableCell>{data.yang_mengetahui}</TableCell>
-              <TableCell>{data.yang_menyetujui}</TableCell>
-              <TableCell>{data.status}</TableCell>
-              <TableCell align='right'>
-                <EditOutlinedIcon color='action' fontSize='small' className='mr-2' />
-                <DeleteOutlineIcon color='secondary' fontSize='small' />
-              </TableCell>
-            </TableRow>
-          </TableBody>
+            <TableBody>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  {data.id}
+                </TableCell>
+                <TableCell>{data.periode}</TableCell>
+                <TableCell>{data.nama_pegawai}</TableCell>
+                <TableCell>{data.yang_mengetahui}</TableCell>
+                <TableCell>{data.yang_menyetujui}</TableCell>
+                <TableCell>{data.status}</TableCell>
+                <TableCell align="right">
+                  <Link href={`../../reimbursement/view/${data.id}`}>
+                    <a>
+                      <VisibilityOutlinedIcon
+                        color="primary"
+                        fontSize="small"
+                        className="mr-2"
+                      />
+                    </a>
+                  </Link>
+                  <EditOutlinedIcon
+                    color="action"
+                    fontSize="small"
+                    className="mr-2"
+                  />
+                  <DeleteOutlineIcon
+                    color="secondary"
+                    fontSize="small"
+                    onClick={() => handleDelete(data.id)}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableBody>
           ))}
         </Tables>
       </TableContainer>
@@ -165,7 +203,7 @@ export async function getServerSideProps() {
   // Get Roles from API
   const reimbursement = await prisma.headerReimburse.findMany({
     orderBy: {
-      id: "asc"
+      id: "asc",
     },
   });
 

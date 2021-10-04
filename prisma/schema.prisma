@@ -152,9 +152,10 @@ model DetailSaldoAwal {
   header_saldo_awal     HeaderSaldoAwal @relation(fields: [header_saldo_awal_id], references: [id])
   header_saldo_awal_id  Int
   akun                  Akun    @relation(fields: [akun_id], references: [id])
-  akun_id               Int
+  akun_id               Int    @unique
   debit                 Int
   kredit                Int
+  sisa_saldo            Int
 }
 
 // Kategori Kontak
@@ -599,6 +600,8 @@ model TransferUang {
   tgl_transaksi String
   tag           String
   status        String
+  sisa_saldo_akuntransfer Int
+  sisa_saldo_akunsetor   Int
 
   JurnalTransferUang JurnalTransferUang[]
 }
@@ -629,6 +632,7 @@ model HeaderTerimaUang {
   subtotal        Int
   pajak           Int
   total           Int
+  sisa_saldo_akunsetor  Int
   status          String
 
   DetailTerimaUang DetailTerimaUang[]
@@ -684,6 +688,7 @@ model HeaderKirimUang {
   subtotal        Int
   pajak           Int
   total           Int
+  sisa_saldo_akuntransfer  Int
   status          String
 
   DetailKirimUang DetailKirimUang[]
@@ -855,6 +860,7 @@ model HeaderReimburse {
   nama_pegawai      String
   yang_mengetahui   String
   yang_menyetujui   String  
+  periode           String
   status            String  
 
   DetailReimburse   DetailReimburse[]

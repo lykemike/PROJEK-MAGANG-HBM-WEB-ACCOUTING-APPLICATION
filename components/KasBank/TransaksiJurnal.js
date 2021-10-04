@@ -19,25 +19,25 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-export default function TransaksiJurnal({ data, index, label, view, contact, selectedTransactions, handleSelectOne }) {
+export default function TransaksiJurnal({ data, index, bankid, label, view, contact, selectedTransactions, handleSelectOne }) {
   const detail = useMemo(() => {
     if (view == "kirimuang") {
       return data.HeaderKirimUang;
     } else if (view == "terimauang") {
       return data.HeaderTerimaUang;
-    } else {
+    } else if (view == "transferuang1") {
       return data.TransferUang1;
+    } else {
+      return data.TransferUang2;
     }
   }, [view]);
 
+  console.log(data.JurnalTransferUang);
   return (
     <>
       <TableBody>
         {detail.map((i, index) => (
-          <TableRow
-            key={JSON.stringify({ id: i.id, tipe: view })}
-            selected={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
-          >
+          <TableRow key={JSON.stringify({ id: i.id, tipe: view })} selected={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}>
             <TableCell>
               <Checkbox
                 checked={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
@@ -51,13 +51,11 @@ export default function TransaksiJurnal({ data, index, label, view, contact, sel
             </TableCell>
             <TableCell>{contact == "contact" ? i.kontak.nama : "-"}</TableCell>
             <TableCell>{i.tag}</TableCell>
+            <TableCell>Rp. {label == "incoming" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "0, 00"}</TableCell>
+            <TableCell>Rp. {label == "outgoing" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "0, 00"}</TableCell>
             <TableCell>
-              Rp. {label == "incoming" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "Rp. 0, 00"}
+              Rp. {label == "outgoing" ? i.sisa_saldo_akuntransfer.toLocaleString({ minimumFractionDigits: 0 }) : i.sisa_saldo_akunsetor.toLocaleString({ minimumFractionDigits: 0 })}
             </TableCell>
-            <TableCell>
-              Rp. {label == "outgoing" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "Rp. 0, 00"}
-            </TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
             <TableCell>
               {i.status == "Belum terekonsiliasi" ? (
                 <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">{i.status}</span>

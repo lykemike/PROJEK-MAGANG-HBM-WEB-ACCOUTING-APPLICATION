@@ -1,29 +1,44 @@
-import React,{useRef} from 'react'
-import Layout from '../../components/layout'
-import Link from 'next/link';
+import React, { useRef } from "react";
+import Layout from "../../components/layout";
+import Link from "next/link";
 import AsetTetap from "../../components/Neraca/AsetTetap";
 import AsetLancar from "../../components/Neraca/AsetLancar";
 import AsetLainnya from "../../components/Neraca/AsetLainnya";
 import LiabilitasJangkaPendek from "../../components/Neraca/LiabilitasJangkaPendek";
 import LiabilitasJangkaPanjang from "../../components/Neraca/LiabilitasJangkaPanjang";
 import Modal from "../../components/Neraca/Modal";
-import { Button, Table, DropdownButton,Row,Col,Form,FormControl,InputGroup, Dropdown } from 'react-bootstrap';
-
-
+import {
+  Button,
+  Table,
+  DropdownButton,
+  Row,
+  Col,
+  Form,
+  FormControl,
+  InputGroup,
+  Dropdown,
+} from "react-bootstrap";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function laporan_neraca({ header, header2,header3,header4,header5,header6}) {
-    const tgl_mulai = useRef(null);
-    const tgl_akhir = useRef(null);
-    const onClick = () => {
-      // Axios.get()
-    };
+export default function laporan_neraca({
+  header,
+  header2,
+  header3,
+  header4,
+  header5,
+  header6,
+}) {
+  const tgl_mulai = useRef(null);
+  const tgl_akhir = useRef(null);
+  const onClick = () => {
+    // Axios.get()
+  };
 
-    return (
-        <Layout>
-        <div variant="container">
+  return (
+    <Layout>
+      <div variant="container">
         <div></div>
         <h4 class="mb-6 mt-2">Neraca</h4>
         <div class="mb-10">
@@ -31,13 +46,23 @@ export default function laporan_neraca({ header, header2,header3,header4,header5
             <Col sm="3">
               <Form.Label>Tanggal Mulai</Form.Label>
               <InputGroup className="mb-3">
-                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_mulai} />
+                <FormControl
+                  placeholder="Pick date"
+                  type="date"
+                  aria-label="date"
+                  ref={tgl_mulai}
+                />
               </InputGroup>
             </Col>
             <Col sm="3">
               <Form.Label>Tanggal Selesai</Form.Label>
               <InputGroup className="mb-3">
-                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_akhir} />
+                <FormControl
+                  placeholder="Pick date"
+                  type="date"
+                  aria-label="date"
+                  ref={tgl_akhir}
+                />
               </InputGroup>
             </Col>
 
@@ -50,7 +75,11 @@ export default function laporan_neraca({ header, header2,header3,header4,header5
           </Row>
 
           <div class="flex flex-row-reverse">
-            <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Export">
+            <DropdownButton
+              variant="primary ml-2"
+              id="dropdown-basic-button"
+              title="Export"
+            >
               <Dropdown.Item>
                 <Link href="#">
                   <a>PDF</a>
@@ -71,27 +100,53 @@ export default function laporan_neraca({ header, header2,header3,header4,header5
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <div>
-              <th >Aset</th>
+              <th>Aset</th>
               <AsetLancar label="Aset Lancar" data={header} />
-              <td>Total Aset Lancar</td>
+              <tr>
+                <td>Total Aset Lancar</td>
+                <td class="pl-5">XXX</td>
+              </tr>
               <AsetTetap label="Aset Tetap" data={header2} />
-              <td>Total Aset Tetap</td>
+              <tr>
+                <td>Total Aset Tetap</td>
+                <td class="pl-5">XXX</td>
+              </tr>
               <AsetLainnya label="Aset Lainnya" data={header3} />
-              <td>Total Aset Lainnya</td>
+              <tr>
+                <td>Total Aset Lainnya</td>
+                <td class="pl-5">XXX</td>
+              </tr>
             </div>
             <div className="mt-4">
               <th className="mt-2">Liabilitas dan Modal</th>
-              <LiabilitasJangkaPendek label="Liabilitas Jangka Pendek" data={header4} />
-              <td>Total Liabilitas Jangka Pendek</td>
-              <LiabilitasJangkaPanjang label="Liabilitas Jangka Panjang" data={header5} />
-              <td>Total Liabilitas Jangka Panjang</td>
+              <LiabilitasJangkaPendek
+                label="Liabilitas Jangka Pendek"
+                data={header4}
+              />
+              <tr>
+                <td>Total Liabilitas Jangka Panjang</td>
+                <td class="pl-5">XXX</td>
+              </tr>
+
+              <LiabilitasJangkaPanjang
+                label="Liabilitas Jangka Panjang"
+                data={header5}
+              />
+              <tr>
+                <td>Total Liabilitas Jangka Pendek</td>
+                <td class="pl-5">XXX</td>
+              </tr>
+
               <Modal label="Modal" data={header6} />
-              <td>Total Modal</td>
+              <tr>
+                <td>Total Modal</td>
+                <td class="pl-5">XXX</td>
+              </tr>
             </div>
           </tbody>
           <tfoot>
             <tr>
-              <td class='px-2 py-1' align='right'>
+              <td class="px-2 py-1" align="right">
                 Grand Total
               </td>
               {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
@@ -100,71 +155,85 @@ export default function laporan_neraca({ header, header2,header3,header4,header5
           </tfoot>
         </table>
       </div>
-     </Layout>	
-    )
+    </Layout>
+  );
 }
 
-
 export async function getServerSideProps() {
-
-    const asetLancar = await prisma.akun.findMany({
-      where: {
-       kategoriId :{
-           in: [3,1,2,4],
-       }
+  const asetLancar = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [3, 1, 2, 4],
       },
-    });
+    },
+    include: {
+      DetailSaldoAwal: true,
+    },
+  });
 
-    const asetTetap = await prisma.akun.findMany({
-        where: {
-         kategoriId :{
-             in: [5,7],
-         }
-        },
-      });
-
-      const asetLainnya = await prisma.akun.findMany({
-        where: {
-         kategoriId :{
-             in: [6],
-         }
-        },
-      });
-
-      const liabilitasjkpendek = await prisma.akun.findMany({
-        where: {
-         kategoriId :{
-             in: [8,10],
-         }
-        },
-      });
-  
-      const liabilitasjkpanjang = await prisma.akun.findMany({
-        where: {
-         kategoriId :{
-             in: [11],
-         }
-        },
-      });
-
-      const modal = await prisma.akun.findMany({
-        where: {
-         kategoriId :{
-             in: [12],
-         }
-        },
-      });
-  
- 
-    return {
-      props: {
-        header: asetLancar,
-        header2: asetTetap,
-        header3: asetLainnya,
-        header4: liabilitasjkpendek,
-        header5: liabilitasjkpanjang,
-        header6: modal,
+  const asetTetap = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [5, 7],
       },
-    };
-  }
-  
+    },
+    include: {
+      DetailSaldoAwal: true,
+    },
+  });
+
+  const asetLainnya = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [6],
+      },
+    },
+    include: {
+      DetailSaldoAwal: true,
+    },
+  });
+
+  const liabilitasjkpendek = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [8, 10],
+      },
+    },
+    include: {
+      DetailSaldoAwal: true,
+    },
+  });
+
+  const liabilitasjkpanjang = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [11],
+      },
+    },
+    include: {
+      DetailSaldoAwal: true,
+    },
+  });
+
+  const modal = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [12],
+      },
+    },
+    include: {
+      DetailSaldoAwal: true,
+    },
+  });
+
+  return {
+    props: {
+      header: asetLancar,
+      header2: asetTetap,
+      header3: asetLainnya,
+      header4: liabilitasjkpendek,
+      header5: liabilitasjkpanjang,
+      header6: modal,
+    },
+  };
+}

@@ -7,6 +7,7 @@ export default async (req, res) => {
       nama_pegawai: req.body.nama_pegawai,
       yang_mengetahui: req.body.yang_mengetahui,
       yang_menyetujui: req.body.yang_menyetujui,
+      periode: req.body.periode,
       status: "Process",
     };
 
@@ -37,7 +38,11 @@ export default async (req, res) => {
       data: detail,
     });
 
-    res.status(201).json({ message: "Create Reimbursement Successful!", data: create_detail_reimburse });
+    res.status(201).json({
+      message: "Create Reimbursement Successful!",
+      data: create_detail_reimburse,
+      id: find_latest,
+    });
   } catch (error) {
     res.status(400).json({ data: "Create Reimbursement Failed!", error });
     console.log(error);

@@ -1,13 +1,27 @@
 import React from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Table, Row, Col, Form } from "react-bootstrap";
-import ImportExportIcon from "@material-ui/icons/ImportExport";
-import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import CachedIcon from "@material-ui/icons/Cached";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
+import {
+  Tabs,
+  Tab,
+  Card,
+  Button,
+  DropdownButton,
+  Dropdown,
+  Table,
+  Row,
+  Col,
+  Form,
+} from "react-bootstrap";
+import Tables from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import AddIcon from "@material-ui/icons/Add";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -65,72 +79,84 @@ export default function listaset({ data }) {
                   <Form.Control placeholder="Search" />
                 </div>
 
-                <Table class="table mt-8">
-                  <thead class="thead-light">
-                    <tr>
-                      <th class="px-2 py-2">
-                        <span>Tanggal Akuisisi</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Nomor</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Nama Aset</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Biaya Akuisisi</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Tag</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Masa Manfaat</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Nilai/Tahun</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Action</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  {data.map((i, index) => (
-                    <tr>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">{i.tgl_akuisisi}</div>
-                      </td>
-                      <td class="px-8 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">{i.nomor_aset}</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">{i.nama_aset}</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">{i.biaya_akuisisi}</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">{i.tag}</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">{i.masa_manfaat}</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">{i.nilai_tahun}</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">
-                          <Link key={index} href={`/aset/jual-aset/${i.id}`}>
-                            <Button variant="outline-success mr-2">Jual</Button>
-                          </Link>
-                          <Button variant="warning mr-2">Edit</Button>
-                          <Button variant="danger" onClick={() => handleDelete(i.id)}>
-                            Hapus
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </Table>
+                <TableContainer className="mt-8" component={Paper}>
+                  <Tables size="small" aria-label="a dense table">
+                    <TableHead className="bg-dark">
+                      <TableRow>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Tanggal Akuisisi
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Nomor
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Nama Aset
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Biaya Akuisisi
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Tag
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Masa Manfaat
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Nilai/Tahun
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            className="text-white font-bold"
+                            align="right"
+                          >
+                            Actions
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+
+                    {data.map((i, index) => (
+                      <TableBody>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            {i.tgl_akuisisi}
+                          </TableCell>
+                          <TableCell>{i.nomor_aset}</TableCell>
+                          <TableCell>{i.nama_aset}</TableCell>
+                          <TableCell>{i.biaya_akuisisi}</TableCell>
+                          <TableCell>{i.tag}</TableCell>
+                          <TableCell>{i.masa_manfaat}</TableCell>
+                          <TableCell>{i.masa_manfaat}</TableCell>
+                          <TableCell align="right">
+                            <EditOutlinedIcon
+                              color="action"
+                              fontSize="small"
+                              className="mr-2"
+                            />
+                            <DeleteOutlineIcon
+                              color="secondary"
+                              fontSize="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    ))}
+                  </Tables>
+                </TableContainer>
               </div>
             </div>
 
@@ -139,65 +165,81 @@ export default function listaset({ data }) {
                 <div class="float-right mb-6">
                   <Form.Control placeholder="Search" />
                 </div>
+                <TableContainer className="mt-8" component={Paper}>
+                  <Tables size="small" aria-label="a dense table">
+                    <TableHead className="bg-dark">
+                      <TableRow>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Tanggal
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Tindakan
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Transaksi
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Nomor
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Nomor Akun
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Nama Akun
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Debit
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">
+                            Kredit
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
 
-                <Table class="table mt-8">
-                  <thead class="thead-light">
-                    <tr>
-                      <th class="px-2 py-2">
-                        <span>Tanggal</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Tindakan</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Transaksi</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Nomor</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Nomor Akun</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Nama Akun</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Debit</span>
-                      </th>
-                      <th class="px-2 py-2">
-                        <span>Kredit</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  {data.map((aset) => (
-                    <tr>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">1 Januari 2021</div>
-                      </td>
-                      <td class="px-8 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">01-02</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">Rp, 0.00</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">Rp, 0.00</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">Rp.0,00</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">Data Dummy</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">Data Dummy</div>
-                      </td>
-                      <td class="px-2 py-2 whitespace-nowrap font-medium">
-                        <div class="text-lg text-gray-900">Data Dummy</div>
-                      </td>
-                    </tr>
-                  ))}
-                </Table>
+                    {data.map((i, index) => (
+                      <TableBody>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            {i.tgl_akuisisi}
+                          </TableCell>
+                          <TableCell>{i.nomor_aset}</TableCell>
+                          <TableCell>{i.nama_aset}</TableCell>
+                          <TableCell>{i.biaya_akuisisi}</TableCell>
+                          <TableCell>{i.tag}</TableCell>
+                          <TableCell>{i.masa_manfaat}</TableCell>
+                          <TableCell>{i.masa_manfaat}</TableCell>
+                          <TableCell align="right">
+                            <EditOutlinedIcon
+                              color="action"
+                              fontSize="small"
+                              className="mr-2"
+                            />
+                            <DeleteOutlineIcon
+                              color="secondary"
+                              fontSize="small"
+                            />
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    ))}
+                  </Tables>
+                </TableContainer>
               </div>
             </div>
           </Tabs>

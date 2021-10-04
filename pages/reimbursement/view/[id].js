@@ -13,10 +13,6 @@ import {
   Form,
   Card,
 } from "react-bootstrap";
-import AttachmentIcon from "@material-ui/icons/Attachment";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import { Formik, Form as Forms } from "formik";
 import * as Yup from "yup";
 import { PrismaClient } from "@prisma/client";
@@ -26,6 +22,18 @@ import { useRouter } from "next/router";
 export default function invoice_reimbursement({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
+
+  function print() {
+    router.push(`../print/${id}`);
+  }
+
+  let tanggal = data[0].DetailReimburse.tanggal;
+  // tanggal = new Date(tanggal[0], tanggal[1] - 1, tanggal[2]);
+  // tanggal.setDate(tanggal.getDate() + props.values.syarat_pembayaran);
+  // let tanggal = tgltransaksi.toLocaleDateString();
+  // let tgl = tanggal.split("/");
+
+  console.log(tanggal);
 
   return (
     <div>
@@ -40,11 +48,16 @@ export default function invoice_reimbursement({ data, data2 }) {
                   <p className="font-medium ml-2">Nama Pegawai: </p>
                   <p className="ml-2">{i.nama_pegawai}</p>
                 </Col>
-                <Col></Col>
+                <Col>
+                  <p className="font-medium ml-2">Periode: </p>
+                  <p className="ml-2"> {i.periode}</p>
+                </Col>
                 <Col></Col>
               </Row>
             </div>
           ))}
+
+          {/* ^^^^^ notes : tanya cara get bulan dari tanggal */}
 
           <div class="mb-12">
             <Table class="table mt-4">
@@ -57,8 +70,9 @@ export default function invoice_reimbursement({ data, data2 }) {
                   <th scope="col">Jumlah</th>
                 </tr>
               </thead>
-              {data2.map((i) => (
-                <tbody>
+
+              <tbody>
+                {data[0].DetailReimburse.map((i) => (
                   <tr>
                     <td>
                       <p>{i.tanggal}</p>
@@ -73,11 +87,29 @@ export default function invoice_reimbursement({ data, data2 }) {
                       <p>{i.keterangan}</p>
                     </td>
                     <td>
-                      <p>{i.jumlah}</p>
+                      <p>
+                        Rp.{" "}
+                        {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}
+                      </p>
                     </td>
                   </tr>
-                </tbody>
-              ))}
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td />
+                  <td />
+                  <td />
+                  <td>Total Reimbursement</td>
+                  <td>
+                    Rp.{" "}
+                    {data[0].DetailReimburse.reduce(
+                      (a, b) => (a = a + b.jumlah),
+                      0
+                    ).toLocaleString({ minimumFractionDigits: 0 })}
+                  </td>
+                </tr>
+              </tfoot>
             </Table>
             {/* <Button variant="primary ml-2"><PlaylistAddIcon fontSize="medium"/> Tambah Data</Button> */}
           </div>
@@ -104,7 +136,7 @@ export default function invoice_reimbursement({ data, data2 }) {
           </div>
 
           <div className="float-right mb-10">
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={print}>
               Cetak
             </Button>
           </div>
@@ -120,6 +152,9 @@ export async function getServerSideProps(context) {
   const header = await prisma.headerReimburse.findMany({
     where: {
       id: parseInt(id),
+    },
+    include: {
+      DetailReimburse: true,
     },
   });
 

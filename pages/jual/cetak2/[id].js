@@ -22,10 +22,10 @@ export default function salesInvoice({ header, detail, jurnal }) {
       <Row>
         <Col>
           <h5>Transaksi</h5>
-          <h3 className="text-blue-600">Sales Invoice #{id}</h3>
+          <h3 className="text-blue-600">Proforma Invoice #{id}</h3>
         </Col>
         <Col>
-          <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3>
+          {/* <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3> */}
         </Col>
       </Row>
 

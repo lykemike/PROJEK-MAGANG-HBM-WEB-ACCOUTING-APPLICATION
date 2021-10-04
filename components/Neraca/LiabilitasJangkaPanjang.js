@@ -52,7 +52,10 @@ export default function TableDetailBBRow({
                 </td>
 
                 <td colSpan="1" class="px-2 py-1">
-                  <span class="text-gray-300">Rp. XXX</span>
+                  <span class="text-black-300">
+                    {" "}
+                    Rp. {liabilitasjkpanjang.DetailSaldoAwal[0].kredit}
+                  </span>
                 </td>
                 <td colSpan="1" class="px-4 py-1">
                   <span class="text-gray-300"></span>

@@ -15,9 +15,16 @@ import {
 } from "react-bootstrap";
 
 import { PrismaClient } from "@prisma/client";
+import { reduce } from "lodash";
 const prisma = new PrismaClient();
 
-export default function laporan_neraca({ header }) {
+export default function laporan_neraca({
+  header,
+  header2,
+  header3,
+  setting,
+  setting2,
+}) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
   const onClick = () => {
@@ -29,6 +36,13 @@ export default function laporan_neraca({ header }) {
   // ];
 
   // console.log(akumulasibeban);
+
+  // const total
+  console.log(setting2);
+
+  const total_labakotor =
+    header2.reduce((a, b) => (a = a + b.nominal), 0) -
+    header3.reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
     <Layout>
@@ -83,14 +97,26 @@ export default function laporan_neraca({ header }) {
               <td>Pendapatan dari Penjualan</td>
               <td></td>
               <td></td>
-              <td>Rp. XXX</td>
+
+              <td>
+                Rp.{" "}
+                {header2
+                  .reduce((a, b) => (a = a + b.nominal), 0)
+                  .toLocaleString({ minimumFractionDigits: 0 })}
+              </td>
             </tr>
 
             <tr>
               <td>Harga Pokok Penjualan</td>
               <td></td>
               <td></td>
-              <td>Rp. XXX</td>
+
+              <td>
+                Rp.{" "}
+                {header3
+                  .reduce((a, b) => (a = a + b.nominal), 0)
+                  .toLocaleString({ minimumFractionDigits: 0 })}
+              </td>
             </tr>
 
             <tr>
@@ -106,7 +132,10 @@ export default function laporan_neraca({ header }) {
                 <div class="text-md font-medium text-gray-900"></div>
               </td>
               <td>
-                <div class="text-md font-medium text-gray-900">Rp. 0.00</div>
+                <div class="text-md font-medium text-gray-900">
+                  Rp.{" "}
+                  {total_labakotor.toLocaleString({ minimumFractionDigits: 0 })}
+                </div>
               </td>
             </tr>
           </tbody>
@@ -132,7 +161,7 @@ export default function laporan_neraca({ header }) {
                 </td>
 
                 <td>
-                  Rp. {i.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0)}
+                  {/* Rp. {i.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0)} */}
                 </td>
                 <td></td>
                 <td></td>
@@ -183,7 +212,7 @@ export default function laporan_neraca({ header }) {
                 <div class="text-md font-medium text-gray-900"></div>
               </td>
               <td>
-                <div class="text-md font-medium text-gray-900">Rp. 0.00</div>
+                <div class="text-md font-medium text-gray-900"></div>
               </td>
             </tr>
           </tbody>
@@ -228,14 +257,42 @@ export async function getServerSideProps() {
         in: 17,
       },
     },
-    include: {
-      DetailJurnal: true,
+    // include: {
+    //   DetailJurnal: true,
+    // },
+  });
+
+  const getSettings = await prisma.settingDefault.findMany({
+    where: {
+      nama_setting: "pendapatan_penjualan",
+    },
+  });
+
+  const getSettingsHargaPokok = await prisma.settingDefault.findMany({
+    where: {
+      nama_setting: "piutang_blm_ditagih",
+    },
+  });
+
+  const pendapatanPenjualan = await prisma.jurnalPenjualan.findMany({
+    where: {
+      akun_id: getSettings[0].akun_id,
+    },
+  });
+
+  const hargaPokok = await prisma.jurnalPenjualan.findMany({
+    where: {
+      akun_id: getSettingsHargaPokok[0].akun_id,
     },
   });
 
   return {
     props: {
       header: bebanLainnya,
+      header2: pendapatanPenjualan,
+      header3: hargaPokok,
+      setting: getSettings,
+      setting2: getSettingsHargaPokok,
     },
   };
 }

@@ -48,7 +48,10 @@ export default function TableDetailBBRow({ data, label = "Aset Tetap" }) {
                 </td>
 
                 <td colSpan="1" class="px-2 py-1">
-                  <span class="text-gray-300">Rp. XXX</span>
+                  <span class="text-black-300">
+                    {" "}
+                    Rp. {asetTetap.DetailSaldoAwal[0].debit}
+                  </span>
                 </td>
                 <td colSpan="1" class="px-4 py-1">
                   <span class="text-gray-300"></span>

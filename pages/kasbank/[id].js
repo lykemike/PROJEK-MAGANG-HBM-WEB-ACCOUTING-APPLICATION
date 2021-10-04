@@ -7,32 +7,8 @@ import PemetaanKas from "../../components/KasBank/PemetaanKas";
 
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
-import {
-  Tabs,
-  Tab,
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  Row,
-  Col,
-  FormControl,
-  Modal,
-  Form,
-  Alert,
-} from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableSortLabel,
-} from "@material-ui/core";
+import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl, Modal, Form, Alert } from "react-bootstrap";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableSortLabel } from "@material-ui/core";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import CachedIcon from "@material-ui/icons/Cached";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -127,10 +103,7 @@ export default function akundetail({ data, bank }) {
     } else if (selectedIndex === selectedTransactions.length - 1) {
       newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newselectedTransactions = newselectedTransactions.concat(
-        selectedTransactions.slice(0, selectedIndex),
-        selectedTransactions.slice(selectedIndex + 1)
-      );
+      newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, selectedIndex), selectedTransactions.slice(selectedIndex + 1));
     }
     setselectedTransactions(newselectedTransactions);
   };
@@ -151,10 +124,7 @@ export default function akundetail({ data, bank }) {
     } else if (selectedIndex === selectedBankStatement.length - 1) {
       newselectedBankStatement = newselectedBankStatement.concat(selectedBankStatement.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newselectedBankStatement = newselectedBankStatement.concat(
-        selectedBankStatement.slice(0, selectedIndex),
-        selectedBankStatement.slice(selectedIndex + 1)
-      );
+      newselectedBankStatement = newselectedBankStatement.concat(selectedBankStatement.slice(0, selectedIndex), selectedBankStatement.slice(selectedIndex + 1));
     }
     setselectedBankStatement(newselectedBankStatement);
   };
@@ -288,12 +258,7 @@ export default function akundetail({ data, bank }) {
                   <TableHead className="bg-dark">
                     <TableRow>
                       <TableCell>
-                        <Checkbox
-                          checked={isChecked}
-                          color="primary"
-                          indeterminate={isIndeterminate}
-                          onChange={handleSelectAll}
-                        />
+                        <Checkbox checked={isChecked} color="primary" indeterminate={isIndeterminate} onChange={handleSelectAll} />
                       </TableCell>
                       <TableCell>
                         <Typography className="text-white font-bold">Tanggal</Typography>
@@ -325,6 +290,7 @@ export default function akundetail({ data, bank }) {
                       label="incoming"
                       view="terimauang"
                       contact="contact"
+                      bankid={id}
                       selectedTransactions={selectedTransactions}
                       handleSelectOne={handleSelectOne}
                     />
@@ -336,6 +302,7 @@ export default function akundetail({ data, bank }) {
                       label="outgoing"
                       view="kirimuang"
                       contact="contact"
+                      bankid={id}
                       selectedTransactions={selectedTransactions}
                       handleSelectOne={handleSelectOne}
                     />
@@ -345,8 +312,21 @@ export default function akundetail({ data, bank }) {
                       data={data}
                       index={index}
                       label="outgoing"
-                      view="transferuang"
+                      view="transferuang1"
                       contact="nocontact"
+                      bankid={id}
+                      selectedTransactions={selectedTransactions}
+                      handleSelectOne={handleSelectOne}
+                    />
+                  ))}
+                  {data.map((data, index) => (
+                    <TransaksiJurnal
+                      data={data}
+                      index={index}
+                      label="incoming"
+                      view="transferuang2"
+                      contact="nocontact"
+                      bankid={id}
                       selectedTransactions={selectedTransactions}
                       handleSelectOne={handleSelectOne}
                     />
@@ -378,9 +358,8 @@ export default function akundetail({ data, bank }) {
                           <p className="font-medium">Langkah 1. Download file template rekening koran kami</p>
                           <hr />
                           <p>
-                            Mulai dengan men-download template file XLSX (Excel Microsoft Office Open XML Format
-                            Spreadsheet file) rekening koran kami. File ini memiliki kolom heading sesuai yang perlu
-                            untuk meng-import data rekening koran Anda.
+                            Mulai dengan men-download template file XLSX (Excel Microsoft Office Open XML Format Spreadsheet file) rekening koran kami. File ini memiliki kolom heading sesuai yang
+                            perlu untuk meng-import data rekening koran Anda.
                           </p>
                           <button
                             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
@@ -410,19 +389,13 @@ export default function akundetail({ data, bank }) {
                           {/* <Button
                             variant="outline-primary"
                             onClick={() => {
-                              const header_excel = [
-                                { TransactionDateBank: "" },
-                                { Received: "" },
-                                { Spent: "" },
-                                { Description: "" },
-                              ];
+                              const header_excel = [{ TransactionDateBank: "" }, { Received: "" }, { Spent: "" }, { Description: "" }];
                               var ws = XLSX.utils.json_to_sheet(header_excel);
                               var wb = XLSX.utils.book_new();
                               XLSX.utils.book_append_sheet(wb, ws, "Bank Statement");
                               XLSX.writeFile(wb, "template_import_bank_statement.xlsx");
                               handleClose();
-                            }}
-                          >
+                            }}>
                             <NoteIcon className="mr-2" />
                             Download Bank Statement
                           </Button> */}
@@ -432,13 +405,12 @@ export default function akundetail({ data, bank }) {
                           <p className="font-medium">Langkah 2. Copy data rekening koran Anda ke dalam template</p>
                           <hr />
                           <p>
-                            Copy dan paste data rekening koran Anda dari file yg di ekspor ke dalam template. Pastikan
-                            bahwa data rekening Anda sesuai dengan heading kolom yang di sediakan dalam template.
+                            Copy dan paste data rekening koran Anda dari file yg di ekspor ke dalam template. Pastikan bahwa data rekening Anda sesuai dengan heading kolom yang di sediakan dalam
+                            template.
                           </p>
                           <p className="text-red-500">
-                            Penting: Jangan rubah heading kolom yang di sediakan dalam template. Ini harus tetap sama
-                            supaya import bisa jalan pada langkah selanjutnya. Kami mengasumsi bahwa tanggal ada dalam
-                            format YYYY-MM-DD. Contoh: 2021-09-30
+                            Penting: Jangan rubah heading kolom yang di sediakan dalam template. Ini harus tetap sama supaya import bisa jalan pada langkah selanjutnya. Kami mengasumsi bahwa tanggal
+                            ada dalam format YYYY-MM-DD. Contoh: 2021-09-30
                           </p>
                         </div>
 
@@ -455,10 +427,7 @@ export default function akundetail({ data, bank }) {
                               }}
                             />
                           </Form.Group>
-                          <p>
-                            File yang Anda impor harus dalam bentuk XLSX (Excel Microsoft Office Open XML Format
-                            Spreadsheet file). Nama file Anda harus di akhiri dengan .xlsx
-                          </p>
+                          <p>File yang Anda impor harus dalam bentuk XLSX (Excel Microsoft Office Open XML Format Spreadsheet file). Nama file Anda harus di akhiri dengan .xlsx</p>
                         </div>
                       </Modal.Body>
 
@@ -515,12 +484,7 @@ export default function akundetail({ data, bank }) {
                     </TableRow>
                   </TableHead>
                   {bank.map((data, index) => (
-                    <BankStatement
-                      data={data}
-                      index={index}
-                      selectedBankStatement={selectedBankStatement}
-                      handleSelectOneBankStatement={handleSelectOneBankStatement}
-                    />
+                    <BankStatement data={data} index={index} selectedBankStatement={selectedBankStatement} handleSelectOneBankStatement={handleSelectOneBankStatement} />
                   ))}
                 </Table>
               </TableContainer>
@@ -583,13 +547,7 @@ export default function akundetail({ data, bank }) {
                   {bank
                     .filter((i) => i.status == "Belum Terekonsiliasi")
                     .map((data, index) => (
-                      <PemetaanKas
-                        bankId={id}
-                        data={data}
-                        index={index}
-                        selectedBankStatement={selectedBankStatement}
-                        handleSelectOneBankStatement={handleSelectOneBankStatement}
-                      />
+                      <PemetaanKas bankId={id} data={data} index={index} selectedBankStatement={selectedBankStatement} handleSelectOneBankStatement={handleSelectOneBankStatement} />
                     ))}
                 </Table>
               </TableContainer>
