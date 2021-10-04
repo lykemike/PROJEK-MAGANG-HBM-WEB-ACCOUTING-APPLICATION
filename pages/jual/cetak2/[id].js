@@ -86,7 +86,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
           <Col sm="4">
             <Row>
               <p className="font-medium">No. Transaksi:</p>
-              <p className="ml-2">Sales Invoice #{i.no_transaksi}</p>
+              <p className="ml-2">{i.custom_invoice}</p>
             </Row>
             <Row>
               <p className="font-medium">Tag: </p>
@@ -181,9 +181,9 @@ export default function salesInvoice({ header, detail, jurnal }) {
                 <p className="font-medium d-flex justify-content-end">
                   Sudah Dibayar
                 </p>
-                <h3 className="font-medium d-flex justify-content-end mt-12">
+                <h5 className="font-medium d-flex justify-content-end mt-12">
                   Sisa Tagihan
-                </h3>
+                </h5>
               </Col>
               <Col>
                 <p className="ml-2">
@@ -208,10 +208,10 @@ export default function salesInvoice({ header, detail, jurnal }) {
                     minimumFractionDigits: 0,
                   })}
                 </p>
-                <h3 className="ml-2 mt-12">
+                <h5 className="ml-2 mt-12">
                   Rp.{" "}
                   {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
-                </h3>
+                </h5>
               </Col>
             </Row>
           </Col>

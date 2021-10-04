@@ -12,17 +12,20 @@ export default function salesInvoice({ header, detail, jurnal }) {
   const router = useRouter();
   const { id } = router.query;
 
-  const jurnal_penerimaan_pembayaran = jurnal.reduce((a, b) => (a = a + b.nominal), 0);
+  const jurnal_penerimaan_pembayaran = jurnal.reduce(
+    (a, b) => (a = a + b.nominal),
+    0
+  );
 
   return (
-    <div className='container'>
+    <div className="container">
       <Row>
         <Col>
           <h5>Transaksi</h5>
-          <h3 className='text-blue-600'>Sales Invoice #{id}</h3>
+          <h3 className="text-blue-600">Sales Invoice #{id}</h3>
         </Col>
         <Col>
-          <h3 className='mt-2 mb-3 float-right'>Terbayar Sebagian</h3>
+          <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3>
         </Col>
       </Row>
 
@@ -30,22 +33,25 @@ export default function salesInvoice({ header, detail, jurnal }) {
 
       {header.map((i) => (
         <Row>
-          <Col sm='4'>
+          <Col sm="4">
             <Row>
-              <p className='font-medium'>Pelanggan: </p>
-              <p className='ml-2'>{i.kontak.nama}</p>
+              <p className="font-medium">Pelanggan: </p>
+              <p className="ml-2">{i.kontak.nama}</p>
             </Row>
           </Col>
-          <Col sm='4'>
+          <Col sm="4">
             <Row>
-              <p className='font-medium'>Email: </p>
-              <p className='ml-2'>{i.email}</p>
+              <p className="font-medium">Email: </p>
+              <p className="ml-2">{i.email}</p>
             </Row>
           </Col>
-          <Col sm='4'>
-            <Row className='mt-2 mb-3 float-right'>
+          <Col sm="4">
+            <Row className="mt-2 mb-3 float-right">
               <h3>Total Amount</h3>
-              <h3 className=' text-blue-600 ml-2'>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+              <h3 className=" text-blue-600 ml-2">
+                Rp.{" "}
+                {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
+              </h3>
             </Row>
           </Col>
         </Row>
@@ -55,95 +61,100 @@ export default function salesInvoice({ header, detail, jurnal }) {
 
       {header.map((i) => (
         <Row>
-          <Col sm='4'>
+          <Col sm="4">
             <Row>
-              <p className='font-medium'>Alamat Penagihan: </p>
+              <p className="font-medium">Alamat Penagihan: </p>
             </Row>
-            <p className='ml-2'>{i.alamat_supplier}</p>
+            <p className="ml-2">{i.alamat_supplier}</p>
           </Col>
 
-          <Col sm='4'>
+          <Col sm="4">
             <Row>
-              <p className='font-medium'>Tanggal Transaksi: </p>
-              <p className='ml-2'>{i.tgl_transaksi}</p>
+              <p className="font-medium">Tanggal Transaksi: </p>
+              <p className="ml-2">{i.tgl_transaksi}</p>
             </Row>
             <Row>
-              <p className='font-medium'>Tanggal Jatuh Tempo: </p>
-              <p className='ml-2'>{i.tgl_jatuh_tempo}</p>
+              <p className="font-medium">Tanggal Jatuh Tempo: </p>
+              <p className="ml-2">{i.tgl_jatuh_tempo}</p>
             </Row>
             <Row>
-              <p className='font-medium'>Syarat Pembayaran: </p>
-              <p className='ml-2'>{i.syarat_pembayaran}</p>
+              <p className="font-medium">Syarat Pembayaran: </p>
+              <p className="ml-2">{i.syarat_pembayaran}</p>
             </Row>
           </Col>
 
-          <Col sm='4'>
+          <Col sm="4">
             <Row>
-              <p className='font-medium'>No. Transaksi:</p>
-              <p className='ml-2'>Sales Invoice #{i.no_transaksi}</p>
+              <p className="font-medium">No. Transaksi:</p>
+              <p className="ml-2">{i.custom_invoice}</p>
             </Row>
             <Row>
-              <p className='font-medium'>Tag: </p>
-              <p className='ml-2'>{i.tag}</p>
+              <p className="font-medium">Tag: </p>
+              <p className="ml-2">{i.tag}</p>
             </Row>
             <Row>
-              <p className='font-medium'>No. Kontrak: </p>
-              <p className='ml-2'>{i.no_ref_penagihan}</p>
+              <p className="font-medium">No. Kontrak: </p>
+              <p className="ml-2">{i.no_ref_penagihan}</p>
             </Row>
           </Col>
         </Row>
       ))}
 
-      <table class='min-w-full table-auto mt-12'>
-        <thead class='justify-between'>
-          <tr class='bg-dark'>
-            <th class='px-2 py-2'>
-              <span class='text-gray-300'>Produk</span>
+      <table class="min-w-full table-auto mt-12">
+        <thead class="justify-between">
+          <tr class="bg-dark">
+            <th class="px-2 py-2">
+              <span class="text-gray-300">Produk</span>
             </th>
-            <th class='px-2 py-2'>
-              <span class='text-gray-300'>Deskripsi</span>
+            <th class="px-2 py-2">
+              <span class="text-gray-300">Deskripsi</span>
             </th>
-            <th class='px-2 py-2'>
-              <span class='text-gray-300'>Kuantitas</span>
+            <th class="px-2 py-2">
+              <span class="text-gray-300">Kuantitas</span>
             </th>
-            <th class='px-2 py-2'>
-              <span class='text-gray-300'>Satuan</span>
+            <th class="px-2 py-2">
+              <span class="text-gray-300">Satuan</span>
             </th>
-            <th class='px-2 py-2'>
-              <span class='text-gray-300'>Harga Satuan</span>
+            <th class="px-2 py-2">
+              <span class="text-gray-300">Harga Satuan</span>
             </th>
-            <th class='px-2 py-2'>
-              <span class='text-gray-300'>Diskon</span>
+            <th class="px-2 py-2">
+              <span class="text-gray-300">Diskon</span>
             </th>
-            <th class='px-2 py-2'>
-              <span class='text-gray-300'>Jumlah</span>
+            <th class="px-2 py-2">
+              <span class="text-gray-300">Jumlah</span>
             </th>
           </tr>
         </thead>
 
         {detail.map((i) => (
-          <tbody class='bg-white divide-y divide-gray-200'>
+          <tbody class="bg-white divide-y divide-gray-200">
             <tr>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>{i.produk.nama}</div>
+              <td class="px-2 py-2 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{i.produk.nama}</div>
               </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>{i.deskripsi}</div>
+              <td class="px-2 py-2 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{i.deskripsi}</div>
               </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>{i.kuantitas}</div>
+              <td class="px-2 py-2 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{i.kuantitas}</div>
               </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>{i.satuan}</div>
+              <td class="px-2 py-2 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{i.satuan}</div>
               </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. {i.harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}</div>
+              <td class="px-2 py-2 whitespace-nowrap">
+                <div class="text-sm text-gray-900">
+                  Rp.{" "}
+                  {i.harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}
+                </div>
               </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>{i.diskon}%</div>
+              <td class="px-2 py-2 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{i.diskon}%</div>
               </td>
-              <td class='px-2 py-2 whitespace-nowrap'>
-                <div class='text-sm text-gray-900'>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</div>
+              <td class="px-2 py-2 whitespace-nowrap">
+                <div class="text-sm text-gray-900">
+                  Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}
+                </div>
               </td>
             </tr>
           </tbody>
@@ -154,25 +165,53 @@ export default function salesInvoice({ header, detail, jurnal }) {
 
       {header.map((i) => (
         <Row>
-          <Col sm='4'></Col>
-          <Col sm='2'></Col>
-          <Col sm='6'>
+          <Col sm="4"></Col>
+          <Col sm="2"></Col>
+          <Col sm="6">
             <Row>
               <Col>
-                <p className='font-medium d-flex justify-content-end'>Subtotal</p>
-                <p className='font-medium d-flex justify-content-end'>Diskon</p>
-                <p className='font-medium d-flex justify-content-end'>Total</p>
-                <p className='font-medium d-flex justify-content-end'>Jumlah Pemotongan</p>
-                <p className='font-medium d-flex justify-content-end'>Sudah Dibayar</p>
-                <h3 className='font-medium d-flex justify-content-end mt-12'>Sisa Tagihan</h3>
+                <p className="font-medium d-flex justify-content-end">
+                  Subtotal
+                </p>
+                <p className="font-medium d-flex justify-content-end">Diskon</p>
+                <p className="font-medium d-flex justify-content-end">Total</p>
+                <p className="font-medium d-flex justify-content-end">
+                  Jumlah Pemotongan
+                </p>
+                <p className="font-medium d-flex justify-content-end">
+                  Sudah Dibayar
+                </p>
+                <h5 className="font-medium d-flex justify-content-end mt-12">
+                  Sisa Tagihan
+                </h5>
               </Col>
               <Col>
-                <p className='ml-2'>Rp. {i.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                <p className='ml-2'>Rp. {(i.total_diskon + i.total_diskon_per_baris).toLocaleString({ minimumFractionDigits: 0 })}</p>
-                <p className='ml-2'>Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                <p className='ml-2'>Rp. {i.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                <p className='ml-2'>Rp. {(i.uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}</p>
-                <h3 className='ml-2 mt-12'>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+                <p className="ml-2">
+                  Rp. {i.subtotal.toLocaleString({ minimumFractionDigits: 0 })}
+                </p>
+                <p className="ml-2">
+                  Rp.{" "}
+                  {(i.total_diskon + i.total_diskon_per_baris).toLocaleString({
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
+                <p className="ml-2">
+                  Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}
+                </p>
+                <p className="ml-2">
+                  Rp.{" "}
+                  {i.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}
+                </p>
+                <p className="ml-2">
+                  Rp.{" "}
+                  {(i.uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({
+                    minimumFractionDigits: 0,
+                  })}
+                </p>
+                <h5 className="ml-2 mt-12">
+                  Rp.{" "}
+                  {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
+                </h5>
               </Col>
             </Row>
           </Col>
@@ -183,7 +222,7 @@ export default function salesInvoice({ header, detail, jurnal }) {
       <div>
         <Row>
           <Col>
-            <Row className='float-left'></Row>
+            <Row className="float-left"></Row>
           </Col>
           {/* <Col>
               <Row>
@@ -230,12 +269,13 @@ export async function getServerSideProps(context) {
     },
   });
 
-  const jurnal_penerimaan_pembayaran = await prisma.jurnalPenerimaanPembayaran.findMany({
-    where: {
-      header_penjualan_id: parseInt(id),
-      tipe_saldo: "Debit",
-    },
-  });
+  const jurnal_penerimaan_pembayaran =
+    await prisma.jurnalPenerimaanPembayaran.findMany({
+      where: {
+        header_penjualan_id: parseInt(id),
+        tipe_saldo: "Debit",
+      },
+    });
 
   return {
     props: {

@@ -206,9 +206,9 @@ export default function salesInvoice({ data, header }) {
                   <p className="font-medium d-flex justify-content-end">
                     Sudah Dibayar
                   </p>
-                  <h3 className="font-medium d-flex justify-content-end mt-12">
+                  <h5 className="font-medium d-flex justify-content-end mt-12">
                     Sisa Tagihan
-                  </h3>
+                  </h5>
                 </Col>
                 <Col>
                   <p className="ml-2">
@@ -234,12 +234,12 @@ export default function salesInvoice({ data, header }) {
                       i.uang_muka + jurnal_penerimaan_pembayaran
                     ).toLocaleString({ minimumFractionDigits: 0 })}
                   </p>
-                  <h3 className="ml-2 mt-12">
+                  <h5 className="ml-2 mt-12">
                     Rp.{" "}
                     {i.sisa_tagihan.toLocaleString({
                       minimumFractionDigits: 0,
                     })}
-                  </h3>
+                  </h5>
                 </Col>
               </Row>
             </Col>
