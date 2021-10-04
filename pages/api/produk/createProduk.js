@@ -47,7 +47,6 @@ export default async (req, res) => {
           quantity: parseInt(req.body.quantity),
           unit: parseInt(req.body.unit),
           deskripsi: req.body.deskripsi,
-
           harga_beli_satuan: parseInt(req.body.hbs),
           akun_pembelian: parseInt(req.body.akun_pembelian),
 

@@ -89,7 +89,7 @@ export default function salesInvoice({ data, header }) {
             <Col sm='4'>
               <Row>
                 <p className='font-medium'>No. Transaksi:</p>
-                <p className='ml-2'>Sales Invoice #{i.no_transaksi}</p>
+                <p className='ml-2'>{i.custom_invoice}</p>
               </Row>
               <Row>
                 <p className='font-medium'>Tag: </p>

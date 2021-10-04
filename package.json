@@ -41,6 +41,7 @@
     "sequelize": "^6.6.2",
     "sequelize-cli": "^6.2.0",
     "styled-jsx": "^3.3.2",
+    "xlsx": "^0.17.2",
     "yup": "^0.32.9"
   },
   "devDependencies": {

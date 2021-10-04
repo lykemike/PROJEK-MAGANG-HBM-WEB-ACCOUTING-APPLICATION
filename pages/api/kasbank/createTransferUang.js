@@ -50,10 +50,28 @@ export default async (req, res) => {
       sisa_saldo_akuntransfer: parseInt(updatesaldo_akuntransfer),
     };
 
+    // const reverse_frontend_data = {
+    //   akun_transfer_id: parseInt(req.body.akun_setor),
+    //   akun_setor_id: parseInt(req.body.akun_transfer),
+    //   total: parseInt(req.body.total),
+    //   memo: req.body.memo,
+    //   no_transaksi: parseInt(req.body.no_transaksi),
+    //   tgl_transaksi: req.body.tgl_transaksi,
+    //   tag: req.body.tag,
+    //   status: "Belum terekonsiliasi",
+    //   sisa_saldo_akunsetor: parseInt(updatesaldo_akuntransfer),
+    //   sisa_saldo_akuntransfer: parseInt(updatesaldo_akunsetor),
+    // };
+
     const create_transfer_uang = await prisma.transferUang.createMany({
       data: [frontend_data],
       skipDuplicates: true,
     });
+
+    // const create_reverse_transfer_uang = await prisma.transferUang.createMany({
+    //   data: [reverse_frontend_data],
+    //   skipDuplicates: true,
+    // });
 
     const find_latest = await prisma.transferUang.findFirst({
       orderBy: {

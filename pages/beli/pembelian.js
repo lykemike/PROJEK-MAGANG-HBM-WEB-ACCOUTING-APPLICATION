@@ -125,7 +125,7 @@ export default function pembelian({ data }) {
             </TableRow>
           </TableHead>
           {data.map((data, index) => (
-            <TableReusable data={data} index={index} label='Sales Invoice' label2='Pengiriman Bayaran' view='beli' />
+            <TableReusable data={data} index={index} label='Purchase Invoice' label2='Pengiriman Bayaran' view='beli' />
           ))}
         </Table>
       </TableContainer>
