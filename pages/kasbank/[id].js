@@ -3,9 +3,24 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import TransaksiJurnal from "../../components/KasBank/TransaksiJurnal";
 import BankStatement from "../../components/KasBank/BankStatement";
+import PemetaanKas from "../../components/KasBank/PemetaanKas";
+
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
-import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl, Modal, Form } from "react-bootstrap";
+import {
+  Tabs,
+  Tab,
+  Card,
+  Button,
+  DropdownButton,
+  Dropdown,
+  Row,
+  Col,
+  FormControl,
+  Modal,
+  Form,
+  Alert,
+} from "react-bootstrap";
 import {
   Breadcrumbs,
   Typography,
@@ -94,6 +109,7 @@ export default function akundetail({ data, bank }) {
     Axios.post(url, selectedTransactions)
       .then(function (response) {
         console.log(response);
+        router.push(`../kasbank/${id}`);
       })
       .catch(function (error) {
         console.log(error);
@@ -190,6 +206,7 @@ export default function akundetail({ data, bank }) {
     Axios.post(update_bank_statement_status, selectedBankStatement)
       .then(function (response) {
         console.log(response);
+        router.push(`../kasbank/${id}`);
       })
       .catch(function (error) {
         console.log(error);
@@ -414,7 +431,7 @@ export default function akundetail({ data, bank }) {
                             />
                           </Form.Group>
                           <p>
-                            File yang Anda impor harus dalam bentu XLSX (Excel Microsoft Office Open XML Format
+                            File yang Anda impor harus dalam bentuk XLSX (Excel Microsoft Office Open XML Format
                             Spreadsheet file). Nama file Anda harus di akhiri dengan .xlsx
                           </p>
                         </div>
@@ -486,7 +503,7 @@ export default function akundetail({ data, bank }) {
           </div>
 
           <div eventKey="pemetaanKas">
-            <div class="mt-6 mb-3">
+            <div class="mt-2 mb-2">
               <div>
                 <Button variant="primary">
                   <CachedIcon fontSize="medium" /> Muat Ulang
@@ -506,65 +523,51 @@ export default function akundetail({ data, bank }) {
                 </div>
               </div>
 
-              {/* <Table class='table mt-6'>
-                <thead class='thead-light'>
-                  <tr>
-                    <th class='px-2 py-2'>
-                      <span>Tanggal</span>
-                    </th>
-                    <th class='px-2 py-2'>
-                      <span>Terima(dalam IDR)</span>
-                    </th>
-                    <th class='px-2 py-2'>
-                      <span>Bayar(dalam IDR)</span>
-                    </th>
-                    <th class='px-2 py-2'>
-                      <span>Deskripsi</span>
-                    </th>
-                    <th class='px-2 py-2'>
-                      <span>Akun</span>
-                    </th>
-                    <th class='px-2 py-2'>
-                      <span>Tarif Pajak</span>
-                    </th>
-                    <th class='px-2 py-2'>
-                      <span></span>
-                    </th>
-                  </tr>
-                </thead>
-                <tr>
-                  <td class='px-2 py-2 whitespace-nowrap font-large'>
-                    <div class='text-lg text-gray-900'>1 Januari 2021</div>
-                  </td>
-                  <td class='px-8 py-2 whitespace-nowrap font-large'>
-                    <div class='text-lg text-gray-900'>01-02</div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap font-large'>
-                    <div class='text-lg text-gray-900'>Rp, 0.00</div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap font-large'>
-                    <div class='text-lg text-gray-900'>Rp, 0.00</div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap font-large'>
-                    <div class='text-lg text-gray-900'>Data Dummy</div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap font-large'>
-                    <div class='text-lg text-gray-900'>Data Dummy</div>
-                  </td>
-                  <td class='px-2 py-2 whitespace-nowrap font-large'>
-                    <div class='text-lg text-gray-900'>
-                      <DropdownButton variant='secondary' id='dropdown-basic-button'>
-                        <Dropdown.Item>
-                          <a>Pisah</a>
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <a>Hapus</a>
-                        </Dropdown.Item>
-                      </DropdownButton>
-                    </div>
-                  </td>
-                </tr>
-              </Table> */}
+              <TableContainer component={Paper} className="mt-2">
+                <Table size="small" aria-label="simple table">
+                  <TableHead className="bg-dark">
+                    <TableRow>
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedBankStatement.length === bank.length}
+                          color="primary"
+                          indeterminate={selectedBankStatement.length > 0 && selectedBankStatement.length < bank.length}
+                          onChange={handleSelectAllBankStatement}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="text-white font-bold">Tanggal</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="text-white font-bold">Terima</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="text-white font-bold">Bayar</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="text-white font-bold">Deskripsi</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="text-white font-bold">Status</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography className="text-white font-bold">Akun</Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {bank
+                    .filter((i) => i.status == "Belum Terekonsiliasi")
+                    .map((data, index) => (
+                      <PemetaanKas
+                        bankId={id}
+                        data={data}
+                        index={index}
+                        selectedBankStatement={selectedBankStatement}
+                        handleSelectOneBankStatement={handleSelectOneBankStatement}
+                      />
+                    ))}
+                </Table>
+              </TableContainer>
             </div>
           </div>
         </Tabs>
@@ -593,6 +596,7 @@ export async function getServerSideProps(context) {
       },
       TransferUang1: true,
       TransferUang2: true,
+      JurnalTransferUang: true,
     },
   });
 

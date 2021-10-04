@@ -24,7 +24,7 @@ export default function BankStatement({ data, index, selectedBankStatement, hand
           <TableCell>Rp. {data.kredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           <TableCell>Rp. 0, 00</TableCell>
           <TableCell>
-            {data.status == "Belum terekonsiliasi" ? (
+            {data.status == "Belum Terekonsiliasi" ? (
               <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">{data.status}</span>
             ) : (
               <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{data.status}</span>

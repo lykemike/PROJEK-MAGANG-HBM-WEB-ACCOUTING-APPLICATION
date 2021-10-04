@@ -16,7 +16,7 @@ export default async (req, res) => {
         kredit: parseInt(i.Spent),
         deskripsi: i.Description,
         saldo: 0,
-        status: "Belum terekonsiliasi",
+        status: "Belum Terekonsiliasi",
       });
     });
 

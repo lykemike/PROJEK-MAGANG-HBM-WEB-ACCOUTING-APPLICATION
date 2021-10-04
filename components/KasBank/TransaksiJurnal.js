@@ -29,11 +29,15 @@ export default function TransaksiJurnal({ data, index, label, view, contact, sel
       return data.TransferUang1;
     }
   }, [view]);
+
   return (
     <>
       <TableBody>
         {detail.map((i, index) => (
-          <TableRow key={JSON.stringify({ id: i.id, tipe: view })} selected={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}>
+          <TableRow
+            key={JSON.stringify({ id: i.id, tipe: view })}
+            selected={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
+          >
             <TableCell>
               <Checkbox
                 checked={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
@@ -42,19 +46,23 @@ export default function TransaksiJurnal({ data, index, label, view, contact, sel
                 value={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
               />
             </TableCell>
-            <TableCell component='th' scope='row'>
+            <TableCell component="th" scope="row">
               {i.tgl_transaksi}
             </TableCell>
             <TableCell>{contact == "contact" ? i.kontak.nama : "-"}</TableCell>
             <TableCell>{i.tag}</TableCell>
-            <TableCell>Rp. {label == "incoming" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "Rp. 0, 00"}</TableCell>
-            <TableCell>Rp. {label == "outgoing" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "Rp. 0, 00"}</TableCell>
+            <TableCell>
+              Rp. {label == "incoming" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "Rp. 0, 00"}
+            </TableCell>
+            <TableCell>
+              Rp. {label == "outgoing" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "Rp. 0, 00"}
+            </TableCell>
             <TableCell>Rp. 0, 00</TableCell>
             <TableCell>
               {i.status == "Belum terekonsiliasi" ? (
-                <span class='bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs'>{i.status}</span>
+                <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">{i.status}</span>
               ) : (
-                <span class='bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs'>{i.status}</span>
+                <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{i.status}</span>
               )}
             </TableCell>
           </TableRow>
