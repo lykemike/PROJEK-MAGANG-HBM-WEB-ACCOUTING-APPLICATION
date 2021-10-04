@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef , useState,useMemo,useCallback} from "react";
 import Layout from "../../components/layout";
 import TableDetailRow from "../../components/JurnalUmum/TableDetailRow";
 import TableDetailPenjualanRow from "../../components/JurnalUmum/TableDetailPenjualanRow";
@@ -16,7 +16,6 @@ import {
 } from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
 export default function laporanjurnalumum({
   header,
   header2,
@@ -30,8 +29,14 @@ export default function laporanjurnalumum({
   const onClick = () => {
     // Axios.get()
   };
-  console.log(header2);
+  console.log(header);
+  let debitAkhir = [];
 
+  const [grandtotaldebit, setgrandtotaldebit] = useState(0);
+
+  const setGrandTotalDebit = useCallback((nilai) => {
+   debitAkhir.push({nilai})
+  },[])
   return (
     <Layout>
       <div variant="container">
@@ -95,17 +100,19 @@ export default function laporanjurnalumum({
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            {/* {header.map((data, index) => {
+            {header.map((data, index) => {
               return (
                 <TableDetailPenjualanRow
                   key={index}
                   data={data}
                   index={index}
                   tipe="jurnal"
-                  view="view1"
+                  view="view2"
+                  label="Journal Entry"
+                  setgrandtotal = {setGrandTotalDebit}
                 />
               );
-            })} */}
+            })}
             {header2.map((data, index) => {
               return (
                 <TableDetailPenjualanRow
@@ -113,6 +120,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
+                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -125,6 +133,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
+                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -137,6 +146,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
+                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -149,6 +159,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
+                  setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -161,6 +172,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
+                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -181,8 +193,10 @@ export default function laporanjurnalumum({
               <td class="px-2 py-1" align="right">
                 Grand Total
               </td>
-              {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
-              <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td> */}
+              <td class='px-2 py-1'>Rp. {console.log(debitAkhir)}</td>
+
+
+              {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td> */}
             </tr>
           </tfoot>
         </table>

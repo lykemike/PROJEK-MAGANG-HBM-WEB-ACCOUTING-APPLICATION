@@ -64,8 +64,6 @@ export default function create_jurnal({ data, data2 }) {
               debit_disable: false,
               kredit: 0,
               kredit_disable: false,
-              nominal: 0,
-              tipe_saldo: 0,
             },
           ],
         }}
@@ -249,14 +247,6 @@ export default function create_jurnal({ data, data2 }) {
                                           `detail_jurnal.${index}.debit`,
                                           parseInt(e.target.value)
                                         );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.nominal`,
-                                          parseInt(e.target.value)
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.tipe_saldo`,
-                                          "Debit"
-                                        );
 
                                         let debit = parseInt(e.target.value);
                                         props.setFieldValue(
@@ -404,14 +394,6 @@ export default function create_jurnal({ data, data2 }) {
                                         props.setFieldValue(
                                           `detail_jurnal.${index}.kredit`,
                                           parseInt(e.target.value)
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.nominal`,
-                                          parseInt(e.target.value)
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.tipe_saldo`,
-                                          "Kredit"
                                         );
 
                                         let kredit = parseInt(e.target.value);

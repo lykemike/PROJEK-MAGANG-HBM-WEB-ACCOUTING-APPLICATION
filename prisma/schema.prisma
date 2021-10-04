@@ -853,6 +853,7 @@ model HeaderReimburse {
   nama_pegawai      String
   yang_mengetahui   String
   yang_menyetujui   String  
+  periode           String
   status            String  
 
   DetailReimburse   DetailReimburse[]
