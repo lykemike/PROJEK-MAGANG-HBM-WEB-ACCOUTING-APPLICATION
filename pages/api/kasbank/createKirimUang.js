@@ -37,6 +37,22 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
+    const akuntransfer = await prisma.detailSaldoAwal.findMany({
+      where: {
+        akun_id: parseInt(req.body.akun_bayar_id),
+      },
+    });
+    const updatesaldo_akuntransfer = akuntransfer[0].sisa_saldo - parseInt(req.body.total);
+
+    const update_saldo_akuntransfer = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: parseInt(akuntransfer[0].akun_id),
+      },
+      data: {
+        sisa_saldo: parseInt(updatesaldo_akuntransfer),
+      },
+    });
+
     const frontend_data = {
       akun_bayar_id: parseInt(req.body.akun_bayar_id),
       kontak_id: parseInt(req.body.kontak_id),
@@ -48,6 +64,7 @@ export default async (req, res) => {
       subtotal: parseInt(req.body.subtotal),
       pajak: parseInt(req.body.hasil_pajak),
       total: parseInt(req.body.total),
+      sisa_saldo_akuntransfer: parseInt(updatesaldo_akuntransfer),
       status: "Belum terekonsiliasi",
     };
 

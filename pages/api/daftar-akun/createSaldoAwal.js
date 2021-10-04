@@ -1,5 +1,5 @@
 import { PrismaClient } from ".prisma/client";
-import { find } from "lodash";
+import { find, uniqueId } from "lodash";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
@@ -20,12 +20,23 @@ export default async (req, res) => {
 
     let detail = [];
     req.body.saldo_awal.map((i) => {
-      detail.push({
-        header_saldo_awal_id: find_latest.id,
-        akun_id: parseInt(i.id),
-        debit: parseInt(i.debit),
-        kredit: parseInt(i.kredit),
-      });
+      if (i.kredit === 0) {
+        detail.push({
+          header_saldo_awal_id: find_latest.id,
+          akun_id: parseInt(i.id),
+          debit: parseInt(i.debit),
+          kredit: parseInt(i.kredit),
+          sisa_saldo: parseInt(i.debit),
+        });
+      } else {
+        detail.push({
+          header_saldo_awal_id: find_latest.id,
+          akun_id: parseInt(i.id),
+          debit: parseInt(i.debit),
+          kredit: parseInt(i.kredit),
+          sisa_saldo: parseInt(i.kredit),
+        });
+      }
     });
 
     const create_detail_saldo = await prisma.detailSaldoAwal.createMany({
