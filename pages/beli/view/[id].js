@@ -94,7 +94,7 @@ export default function purchaseInvoice({ header, data }) {
                 <p className='ml-2'>{i.tag}</p>
               </Row>
               <Row>
-                <p className='font-medium'>No. Kontrak: </p>
+                <p className='font-medium'>No. Referensi: </p>
                 <p className='ml-2'>{i.no_ref_penagihan}</p>
               </Row>
             </Col>

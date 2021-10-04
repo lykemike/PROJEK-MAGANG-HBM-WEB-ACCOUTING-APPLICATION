@@ -7,7 +7,7 @@ export default function TableDetailRow({
   index,
   label = "Sales Invoice",
   tipe = "penjualan",
-  setgrandtotal
+  setgrandtotal,
 }) {
   const [open, setOpen] = useState(false);
   const onClick = () => {
@@ -31,10 +31,11 @@ export default function TableDetailRow({
     }
   }, [tipe]);
 
-   setgrandtotal(detail
-                    .filter((i) => i.tipe_saldo === "Debit")
-                    .reduce((a, b) => (a = a + b.nominal), 0)
-                    )
+  setgrandtotal(
+    detail
+      .filter((i) => i.tipe_saldo === "Debit")
+      .reduce((a, b) => (a = a + b.nominal), 0)
+  );
 
   const result = 1 + 1;
 
