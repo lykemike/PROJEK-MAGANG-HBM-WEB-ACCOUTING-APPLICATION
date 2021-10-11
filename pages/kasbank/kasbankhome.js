@@ -116,7 +116,12 @@ export default function jurnalentry({ data }) {
                       <a>{i.nama_akun}</a>
                     </Link>
                   </TableCell>
-                  <TableCell>Rp. {i.DetailSaldoAwal[0].sisa_saldo.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                  <TableCell>
+                    Rp.{" "}
+                    {i.DetailSaldoAwal[0] >= 0
+                      ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })
+                      : "0, 00"}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

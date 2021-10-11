@@ -5,18 +5,18 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
-import { Navbar, Nav, NavDropdown, Form } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Form, Modal, Button, Row } from "react-bootstrap";
 import Link from "next/link";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import Axios from "axios";
+import HorizontalSplitOutlinedIcon from "@material-ui/icons/HorizontalSplitOutlined";
+import { TrashIcon, ViewListIcon } from "@heroicons/react/solid";
 
-export default function BankStatement({ data, index, selectedBankStatement, handleSelectOneBankStatement, bankId }) {
+export default function BankStatement({ data, index, selectedBankStatement, handleSelectOneBankStatement, onDelete }) {
   const [open, setOpen] = useState(false);
-
-  let autoIncrement = 1;
-  console.log(bankId);
 
   function cancelButton() {
     router.push(`pisah/${data.id}`);
-    bankId;
   }
   return (
     <>
@@ -44,35 +44,15 @@ export default function BankStatement({ data, index, selectedBankStatement, hand
             )}
           </TableCell>
           <TableCell>
-            <Nav className="mr-auto" />
-            <Nav>
-              <NavDropdown id="collasible-nav-dropdown">
-                <NavDropdown.Item>
-                  <Link href={`pisah/${data.id}`}>
-                    <a>Pisah</a>
-                  </Link>
-                </NavDropdown.Item>
-
-                <NavDropdown.Item>Hapus</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
+            <Row>
+              <Link href={`pisah/${data.id}`}>
+                <a>
+                  <ViewListIcon className="cursor-pointer w-6 h-6 text-blue-600" fontSize="small" />
+                </a>
+              </Link>
+              <TrashIcon className="cursor-pointer w-6 h-6 text-red-500" fontSize="small" onClick={onDelete} />
+            </Row>
           </TableCell>
-          {/* <List component="nav" aria-label="mailbox folders">
-            <ListItem button>
-              <ListItemText primary="Inbox" />
-            </ListItem>
-            <Divider />
-            <ListItem button divider>
-              <ListItemText primary="Drafts" />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Trash" />
-            </ListItem>
-            <Divider light />
-            <ListItem button>
-              <ListItemText primary="Spam" />
-            </ListItem>
-          </List> */}
         </TableRow>
       </TableBody>
     </>

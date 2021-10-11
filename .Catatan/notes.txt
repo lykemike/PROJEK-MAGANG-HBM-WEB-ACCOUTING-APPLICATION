@@ -779,6 +779,56 @@ Setting
 - Detail Produk = 80%
 - Revisi dan perubahan kas bank bagian rekonsiliasi (Teknikal Issues) = 77%
 
+🗓️ Tanggal 05 October, Selasa
+* Import Bank Statment 
+	- buat database baru = 100%
+    - download template bank statement = 100% (sudah testing download, dan file extension XLSX)
+	- read import bank statement = 100% (udah bisa read file yg di import, udah bisa query ke database, masuk sesuai dengan akun yg di import)
+	- buat langkah-langkah buat cara download dan import = 100%
+    - api buat import = 100%
+    - api buat ubah status (sudah/belum terkonsiliasi) = 100%
+    - tampilin data yg di import ke tabel = 100%
+
+* Invoice Penjualan pada saat create penjualan e.g. 001/HBM/INV/IX/2021
+  - Custom HBM Invoice for Penjualan = 100%
+    -- 001 Ototmatis increment & unique = 100%
+    -- IX (09) itu angka bulan 1-12, kalau gabisa romawi pake angka biasa aja = 100%
+    -- 2021 tiap tahun angka pertama di reset = 100%
+  - Database add new field custom invoice = 100%
+  - Update API for new custom invoice = 100%
+  - Sudah testing ganti bulan, id, dan tahun = 100%
+
+* Pembelian No. Kontrak viewnya di ganti ke No. referensi = 100%
+
+* Pemetaan Kas
+  - tampilin semua data dari bank statment yg belum di rekonsiliasi = 90% (sisa invoice dan merge data yang tanggal & nominal yg sama)
+  - pemetaan kas pajaknya di ilangin ss = 100%
+
+
+* Import Bank Statment 
+	- buat database baru = 100%
+    - download template bank statement = 100% (sudah testing download, dan file extension XLSX)
+	- read import bank statement = 100% (udah bisa read file yg di import, udah bisa query ke database, masuk sesuai dengan akun yg di import)
+	- buat langkah-langkah buat cara download dan import = 100%
+    - api buat import = 100%
+    - api buat ubah status (sudah/belum terkonsiliasi) = 100%
+    - tampilin data yg di import ke tabel = 100%
+
+* Invoice Penjualan pada saat create penjualan e.g. 001/HBM/INV/IX/2021
+  - Custom HBM Invoice for Penjualan = 100%
+    -- 001 Ototmatis increment & unique = 100%
+    -- IX (09) itu angka bulan 1-12, kalau gabisa romawi pake angka biasa aja = 100%
+    -- 2021 tiap tahun angka pertama di reset = 100%
+  - Database add new field custom invoice = 100%
+  - Update API for new custom invoice = 100%
+  - Sudah testing ganti bulan, id, dan tahun = 100%
+
+* Pembelian No. Kontrak viewnya di ganti ke No. referensi = 100%
+
+* Pemetaan Kas
+  - tampilin semua data dari bank statment yg belum di rekonsiliasi = 50% (pending dari import bank statement)
+  - pemetaan kas pajaknya di ilangin ss
+
 ----------------
 || ON PROCESS ||
 ----------------
@@ -940,7 +990,7 @@ PERTANYAAN MEETING TEKNIKAL 8/14/2021
 
 * Pembelian No. Kontrak viewnya di ganti ke No. referensi = 100%
 
-* Pemetaan Kas
+* Pemetaan Kas = 100%
   - tampilin semua data dari bank statment yg belum di rekonsiliasi = 20% (pending dari import bank statement)
   - pemetaan kas pajaknya di ilangin
 

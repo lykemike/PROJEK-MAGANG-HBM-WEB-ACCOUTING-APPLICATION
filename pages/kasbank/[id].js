@@ -7,8 +7,33 @@ import PemetaanKas from "../../components/KasBank/PemetaanKas";
 
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
-import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl, Modal, Form, Alert } from "react-bootstrap";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableSortLabel } from "@material-ui/core";
+import {
+  Tabs,
+  Tab,
+  Card,
+  Button,
+  DropdownButton,
+  Dropdown,
+  Row,
+  Col,
+  FormControl,
+  Modal,
+  Form,
+  Alert,
+  Toast,
+} from "react-bootstrap";
+import {
+  Breadcrumbs,
+  Typography,
+  Checkbox,
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableSortLabel,
+} from "@material-ui/core";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import CachedIcon from "@material-ui/icons/Cached";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -20,6 +45,78 @@ import { PrismaClient } from "@prisma/client";
 import * as XLSX from "xlsx";
 const prisma = new PrismaClient();
 
+function MyVerticallyCenteredModal(props) {
+  const router = useRouter();
+  const { id } = router.query;
+  const api_delete = "http://localhost:3000/api/kasbank/deleteBankStatement";
+
+  const handle_delete = async () => {
+    Axios.delete(api_delete, {
+      data: {
+        bank_statement_id: props.id,
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        router.push(`../kasbank/${parseInt(id)}`);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
+      </Modal.Header>
+      {/* <Modal.Body>
+        <h4>Centered Modal</h4>
+        <p>
+          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo
+          risus, porta ac consectetur ac, vestibulum at eros.
+        </p>
+      </Modal.Body> */}
+      <Modal.Footer>
+        <div className="d-flex justify-content-end">
+          <button
+            class="mr-2 mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-red-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-300"
+            type="button"
+            onClick={props.onHide}
+          >
+            Cancel
+          </button>
+
+          <button
+            class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-green-500 hover:bg-green-600 active:bg-green-700 focus:ring-green-300"
+            type="button"
+            onClick={handle_delete}
+          >
+            Confirm
+          </button>
+        </div>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+// function AlertDismissibleExample() {
+//   const [show, setShow] = useState(false);
+
+//   if (show) {
+//     return (
+//       <Alert variant="success" onClose={() => setShow(false)} dismissible>
+//         <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+//         <p>
+//           Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio
+//           sem nec elit. Cras mattis consectetur purus sit amet fermentum.
+//         </p>
+//       </Alert>
+//     );
+//   }
+//   return <Button onClick={() => setShow(true)}>Show Alert</Button>;
+// }
+
 export default function akundetail({ data, bank }) {
   const router = useRouter();
   const { id } = router.query;
@@ -28,6 +125,7 @@ export default function akundetail({ data, bank }) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, akun: 0 });
 
   const [selectedTransactions, setselectedTransactions] = useState([]);
 
@@ -103,7 +201,10 @@ export default function akundetail({ data, bank }) {
     } else if (selectedIndex === selectedTransactions.length - 1) {
       newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, selectedIndex), selectedTransactions.slice(selectedIndex + 1));
+      newselectedTransactions = newselectedTransactions.concat(
+        selectedTransactions.slice(0, selectedIndex),
+        selectedTransactions.slice(selectedIndex + 1)
+      );
     }
     setselectedTransactions(newselectedTransactions);
   };
@@ -124,7 +225,10 @@ export default function akundetail({ data, bank }) {
     } else if (selectedIndex === selectedBankStatement.length - 1) {
       newselectedBankStatement = newselectedBankStatement.concat(selectedBankStatement.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newselectedBankStatement = newselectedBankStatement.concat(selectedBankStatement.slice(0, selectedIndex), selectedBankStatement.slice(selectedIndex + 1));
+      newselectedBankStatement = newselectedBankStatement.concat(
+        selectedBankStatement.slice(0, selectedIndex),
+        selectedBankStatement.slice(selectedIndex + 1)
+      );
     }
     setselectedBankStatement(newselectedBankStatement);
   };
@@ -147,16 +251,15 @@ export default function akundetail({ data, bank }) {
     });
     promise.then((imported_data) => {
       setBankStatement(imported_data);
-      console.log(imported_data);
     });
   };
 
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
 
-  const import_bank_statement_url = "http://localhost:3000/api/kasbank/importBankStatement";
+  const api_import_bank_statement = "http://localhost:3000/api/kasbank/importBankStatement";
   const import_bank_statement = async () => {
-    Axios.post(import_bank_statement_url, {
+    Axios.post(api_import_bank_statement, {
       bankStatement,
       id,
       current,
@@ -171,9 +274,9 @@ export default function akundetail({ data, bank }) {
       });
   };
 
-  const update_bank_statement_status = "http://localhost:3000/api/kasbank/updateBankStatementStatus";
+  const api_update_bank_statement_status = "http://localhost:3000/api/kasbank/updateBankStatementStatus";
   const onSubmitBankStatus = async () => {
-    Axios.post(update_bank_statement_status, selectedBankStatement)
+    Axios.post(api_update_bank_statement_status, selectedBankStatement)
       .then(function (response) {
         console.log(response);
         router.push(`../kasbank/${id}`);
@@ -185,6 +288,9 @@ export default function akundetail({ data, bank }) {
 
   return (
     <Layout>
+      <MyVerticallyCenteredModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
+      {/* <AlertDismissibleExample /> */}
+
       <Breadcrumbs aria-label="breadcrumb">
         <Link color="inherit" href="../jual/penjualan">
           Kas & Bank
@@ -258,7 +364,12 @@ export default function akundetail({ data, bank }) {
                   <TableHead className="bg-dark">
                     <TableRow>
                       <TableCell>
-                        <Checkbox checked={isChecked} color="primary" indeterminate={isIndeterminate} onChange={handleSelectAll} />
+                        <Checkbox
+                          checked={isChecked}
+                          color="primary"
+                          indeterminate={isIndeterminate}
+                          onChange={handleSelectAll}
+                        />
                       </TableCell>
                       <TableCell>
                         <Typography className="text-white font-bold">Tanggal</Typography>
@@ -345,8 +456,8 @@ export default function akundetail({ data, bank }) {
                       Import Bank Statement
                     </Button>
                     {selectedBankStatement.length > 0 ? (
-                      <Button variant="primary" onClick={onSubmitBankStatus}>
-                        Rekonsiliasi
+                      <Button variant="success" onClick={onSubmitBankStatus}>
+                        <CheckCircleIcon fontSize="medium" /> Rekonsilasi
                       </Button>
                     ) : null}
                     <Modal show={show} onHide={handleClose} size="lg">
@@ -358,8 +469,9 @@ export default function akundetail({ data, bank }) {
                           <p className="font-medium">Langkah 1. Download file template rekening koran kami</p>
                           <hr />
                           <p>
-                            Mulai dengan men-download template file XLSX (Excel Microsoft Office Open XML Format Spreadsheet file) rekening koran kami. File ini memiliki kolom heading sesuai yang
-                            perlu untuk meng-import data rekening koran Anda.
+                            Mulai dengan men-download template file XLSX (Excel Microsoft Office Open XML Format Spreadsheet file)
+                            rekening koran kami. File ini memiliki kolom heading sesuai yang perlu untuk meng-import data rekening
+                            koran Anda.
                           </p>
                           <button
                             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
@@ -377,40 +489,24 @@ export default function akundetail({ data, bank }) {
                               handleClose();
                             }}
                           >
-                            <svg
-                              class="fill-current w-4 h-4 mr-2"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 20 20"
-                            >
+                            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                               <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
                             </svg>
                             <span>Download Bank Statement</span>
                           </button>
-                          {/* <Button
-                            variant="outline-primary"
-                            onClick={() => {
-                              const header_excel = [{ TransactionDateBank: "" }, { Received: "" }, { Spent: "" }, { Description: "" }];
-                              var ws = XLSX.utils.json_to_sheet(header_excel);
-                              var wb = XLSX.utils.book_new();
-                              XLSX.utils.book_append_sheet(wb, ws, "Bank Statement");
-                              XLSX.writeFile(wb, "template_import_bank_statement.xlsx");
-                              handleClose();
-                            }}>
-                            <NoteIcon className="mr-2" />
-                            Download Bank Statement
-                          </Button> */}
                         </div>
 
                         <div className="mt-4">
                           <p className="font-medium">Langkah 2. Copy data rekening koran Anda ke dalam template</p>
                           <hr />
                           <p>
-                            Copy dan paste data rekening koran Anda dari file yg di ekspor ke dalam template. Pastikan bahwa data rekening Anda sesuai dengan heading kolom yang di sediakan dalam
-                            template.
+                            Copy dan paste data rekening koran Anda dari file yg di ekspor ke dalam template. Pastikan bahwa data
+                            rekening Anda sesuai dengan heading kolom yang di sediakan dalam template.
                           </p>
                           <p className="text-red-500">
-                            Penting: Jangan rubah heading kolom yang di sediakan dalam template. Ini harus tetap sama supaya import bisa jalan pada langkah selanjutnya. Kami mengasumsi bahwa tanggal
-                            ada dalam format YYYY-MM-DD. Contoh: 2021-09-30
+                            Penting: Jangan rubah heading kolom yang di sediakan dalam template. Ini harus tetap sama supaya
+                            import bisa jalan pada langkah selanjutnya. Kami mengasumsi bahwa tanggal ada dalam format YYYY-MM-DD.
+                            Contoh: 2021-09-30
                           </p>
                         </div>
 
@@ -427,7 +523,10 @@ export default function akundetail({ data, bank }) {
                               }}
                             />
                           </Form.Group>
-                          <p>File yang Anda impor harus dalam bentuk XLSX (Excel Microsoft Office Open XML Format Spreadsheet file). Nama file Anda harus di akhiri dengan .xlsx</p>
+                          <p>
+                            File yang Anda impor harus dalam bentuk XLSX (Excel Microsoft Office Open XML Format Spreadsheet
+                            file). Nama file Anda harus di akhiri dengan .xlsx
+                          </p>
                         </div>
                       </Modal.Body>
 
@@ -484,7 +583,12 @@ export default function akundetail({ data, bank }) {
                     </TableRow>
                   </TableHead>
                   {bank.map((data, index) => (
-                    <BankStatement data={data} index={index} selectedBankStatement={selectedBankStatement} handleSelectOneBankStatement={handleSelectOneBankStatement} />
+                    <BankStatement
+                      data={data}
+                      index={index}
+                      selectedBankStatement={selectedBankStatement}
+                      handleSelectOneBankStatement={handleSelectOneBankStatement}
+                    />
                   ))}
                 </Table>
               </TableContainer>
@@ -503,9 +607,15 @@ export default function akundetail({ data, bank }) {
                     <RotateLeftIcon fontSize="medium" />
                     Reset
                   </Button>
-                  <Button variant="danger mr-2">
-                    <HighlightOffIcon fontSize="medium" /> Hapus
-                  </Button>
+
+                  {selectedBankStatement.length > 0 ? (
+                    <Button variant="danger mr-2">
+                      <HighlightOffIcon fontSize="medium" onClick={() => setModalShow({ open: true, id: data.id })} /> Hapus
+                    </Button>
+                  ) : null}
+                  {/* <Button variant="danger mr-2">
+                    <HighlightOffIcon fontSize="medium" onClick={() => setModalShow({ open: true, id: data.id })} /> Hapus
+                  </Button> */}
                   <Button variant="success">
                     <CheckCircleIcon fontSize="medium" /> Rekonsilasi
                   </Button>
@@ -540,14 +650,20 @@ export default function akundetail({ data, bank }) {
                         <Typography className="text-white font-bold">Status</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography className="text-white font-bold">Akun</Typography>
+                        <Typography className="text-white font-bold">Actions</Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   {bank
                     .filter((i) => i.status == "Belum Terekonsiliasi")
                     .map((data, index) => (
-                      <PemetaanKas bankId={id} data={data} index={index} selectedBankStatement={selectedBankStatement} handleSelectOneBankStatement={handleSelectOneBankStatement} />
+                      <PemetaanKas
+                        data={data}
+                        index={index}
+                        selectedBankStatement={selectedBankStatement}
+                        handleSelectOneBankStatement={handleSelectOneBankStatement}
+                        onDelete={() => setModalShow({ open: true, id: data.id })}
+                      />
                     ))}
                 </Table>
               </TableContainer>

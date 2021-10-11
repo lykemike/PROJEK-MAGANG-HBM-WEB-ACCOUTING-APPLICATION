@@ -1,20 +1,7 @@
 import React from "react";
 import Layout from "../../../components/Layout";
 import Link from "next/link";
-import {
-  Tabs,
-  Tab,
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  Row,
-  Col,
-  FormControl,
-  Modal,
-  Alert,
-  Form,
-} from "react-bootstrap";
+import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl, Modal, Alert, Form } from "react-bootstrap";
 import {
   Breadcrumbs,
   Typography,
@@ -42,7 +29,6 @@ const prisma = new PrismaClient();
 export default function MultipleAkun({ bank, data2, terima, kirim }) {
   const router = useRouter();
   const { id } = router.query;
-  console.log(bank);
 
   function Terima(FieldProps) {
     return (
@@ -64,11 +50,15 @@ export default function MultipleAkun({ bank, data2, terima, kirim }) {
     );
   }
 
+  function cancelButton() {
+    router.push(`../${bank[0].akun_id}`);
+  }
+
   // const UserSchema = Yup.object().shape({
   //   multiple_akun: Yup.array(
   //     Yup.object({
   //       deskripsi: Yup.string().min(1, "Minimal 1 karakter").max(30),
-  //       jumlah: Yup.number().min(1, "Jumlah lebih dari 1"),
+  //       nominal: Yup.number().min(1, "nominal lebih dari 1"),
   //     })
   //   ).min(1),
   // });
@@ -78,30 +68,51 @@ export default function MultipleAkun({ bank, data2, terima, kirim }) {
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
 
-  console.log(current);
   return (
     <Layout>
-      <div className="border-b border-gray-200">
-        <Breadcrumbs aria-label="breadcrumb">
-          {bank[0].kredit == 0 ? (
+      {bank[0].kredit == 0 ? (
+        <div className="border-b border-gray-200">
+          <Breadcrumbs aria-label="breadcrumb">
             <Typography color="textPrimary">Debit</Typography>
-          ) : (
+          </Breadcrumbs>
+          <Row>
+            <Col>
+              <h2 className="text-blue-600">Terima</h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <p>
+                ({bank[0].akun.kode_akun}) - {bank[0].akun.nama_akun}
+              </p>
+            </Col>
+            <Col>
+              <div className="d-flex justify-content-end">Rp. {bank[0].debit.toLocaleString({ minimumFractionDigits: 0 })}</div>
+            </Col>
+          </Row>
+        </div>
+      ) : (
+        <div className="border-b border-gray-200">
+          <Breadcrumbs aria-label="breadcrumb">
             <Typography color="textPrimary">Kredit</Typography>
-          )}
-        </Breadcrumbs>
-
-        <Row>
-          <h2 className="text-blue-600">Terima/Bayar Utang</h2>
-        </Row>
-        <Row>
-          <Col>
-            <p>(Nomor Akun) Nama Akun</p>
-          </Col>
-          <Col>
-            <div className="d-flex justify-content-end">Rp. {bank[0].debit}</div>
-          </Col>
-        </Row>
-      </div>
+          </Breadcrumbs>
+          <Row>
+            <Col>
+              <h2 className="text-blue-600">Bayar Utang</h2>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <p>
+                ({bank[0].akun.kode_akun}) - {bank[0].akun.nama_akun}
+              </p>
+            </Col>
+            <Col>
+              <div className="d-flex justify-content-end">Rp. {bank[0].kredit.toLocaleString({ minimumFractionDigits: 0 })}</div>
+            </Col>
+          </Row>
+        </div>
+      )}
 
       <div className="border-b border-t border-gray-200 mt-2">
         <Row>
@@ -121,22 +132,26 @@ export default function MultipleAkun({ bank, data2, terima, kirim }) {
       <Formik
         initialValues={{
           bank_type: bank[0].kredit == 0 ? "Debit" : "Kredit",
+          total: bank[0].debit == 0 ? bank[0].kredit : bank[0].debit,
+          header_akun: bank[0],
+          current_date: current,
+          total: 0,
           multiple_akun: [
             {
-              detail_bank_statement_id: parseInt(id),
-              deskripsi: "",
+              detail_bank_statement_id: id,
+              deskripsi: "-",
               akun_id: "",
-              jumlah: "",
+              nominal: 0,
               tgl_transaksi: current,
             },
           ],
         }}
         // validationSchema={UserSchema}
         onSubmit={async (values) => {
-          console.log(values);
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
+              router.push(`invoice/${id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -145,118 +160,104 @@ export default function MultipleAkun({ bank, data2, terima, kirim }) {
       >
         {(props) => (
           <Forms noValidate>
-            {bank[0].kredit == 0 ? (
-              <FieldArray name="multiple_akun">
-                {({ insert, remove, push }) => (
-                  <div className="mt-2">
-                    {props.values.multiple_akun.length > 0 &&
-                      props.values.multiple_akun.map((i, index) => (
-                        <Row key={index} className="mt-2">
-                          <Col sm="3">
-                            <Form.Control
-                              type="text"
-                              name={`multiple_akun.${index}.deskripsi`}
-                              onChange={props.handleChange}
-                            />
-                            {/* {`props.error.multiple_akun.${index}.deskripsi` && `props.touched.multiple_akun.${index}.deskripsi` ? (
+            <FieldArray name="multiple_akun">
+              {({ insert, remove, push }) => (
+                <div className="mt-2">
+                  {props.values.multiple_akun.length > 0 &&
+                    props.values.multiple_akun.map((i, index) => (
+                      <Row key={index} className="mt-2 ">
+                        <Col sm="3">
+                          <Form.Control type="text" name={`multiple_akun.${index}.deskripsi`} onChange={props.handleChange} />
+                          {/* {`props.error.multiple_akun.${index}.deskripsi` &&
+                            `props.touched.multiple_akun.${index}.deskripsi` ? (
                               <div class="text-red-500 text-sm">{`props.errors.multiple_akun.${index}.deskripsi`}</div>
                             ) : null} */}
-                          </Col>
-                          <Col sm="3">
+                        </Col>
+                        <Col sm="3">
+                          {bank[0].kredit == 0 ? (
                             <Field options={terima} name={`multiple_akun.${index}.akun_id`} component={Terima} />
-                          </Col>
-                          <Col sm="2">
-                            <Form.Control
-                              type="number"
-                              name={`multiple_akun.${index}.jumlah`}
-                              onChange={props.handleChange}
-                            />
-                            {/* {`props.error.multiple_akun.${index}.jumlah` && `props.touched.multiple_akun.${index}.jumlah` ? (
-                              <div class="text-red-500 text-sm">{`props.errors.multiple_akun.${index}.jumlah`}</div>
-                            ) : null} */}
-                          </Col>
-                          <Col sm="4">
-                            <div className="d-flex justify-content-end">
-                              <BackspaceIcon className="cursor-pointer w-8 h-8" onClick={() => remove(index)} />
-                            </div>
-                          </Col>
-                        </Row>
-                      ))}
-
-                    <button
-                      class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
-                      type="submit"
-                      onClick={() =>
-                        push({
-                          bank_header: "",
-                          deskripsi: "",
-                          akun_id: "",
-                          jumlah: "",
-                        })
-                      }
-                    >
-                      Tambah
-                    </button>
-                  </div>
-                )}
-              </FieldArray>
-            ) : (
-              <FieldArray name="multiple_akun">
-                {({ insert, remove, push }) => (
-                  <div className="mt-2">
-                    {props.values.multiple_akun.length > 0 &&
-                      props.values.multiple_akun.map((i, index) => (
-                        <Row key={index} className="mt-2">
-                          <Col sm="3">
-                            <Form.Control
-                              type="text"
-                              name={`multiple_akun.${index}.deskripsi`}
-                              onChange={props.handleChange}
-                            />
-                          </Col>
-                          <Col sm="3">
+                          ) : (
                             <Field options={kirim} name={`multiple_akun.${index}.akun_id`} component={Kirim} />
-                          </Col>
-                          <Col sm="2">
-                            <Form.Control
-                              type="number"
-                              name={`multiple_akun.${index}.jumlah`}
-                              onChange={props.handleChange}
-                            />
-                          </Col>
-                          <Col sm="4">
-                            <div className="d-flex justify-content-end">
-                              <BackspaceIcon className="cursor-pointer w-8 h-8" onClick={() => remove(index)} />
-                            </div>
-                          </Col>
-                        </Row>
-                      ))}
-                    <button
-                      class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
-                      type="submit"
-                      onClick={() =>
-                        push({
-                          bank_header: "",
-                          deskripsi: "",
-                          akun_id: "",
-                          jumlah: "",
-                        })
-                      }
-                    >
-                      Tambah
-                    </button>
-                  </div>
-                )}
-              </FieldArray>
-            )}
+                          )}
+                        </Col>
+                        <Col sm="2">
+                          <Form.Control
+                            type="number"
+                            name={`multiple_akun.${index}.nominal`}
+                            onChange={(e) => {
+                              // props.setFieldValue(`multiple_akun.${index}.nominal`, parseInt(e.target.value));
+                              props.setFieldValue((props.values.multiple_akun[index].nominal = parseInt(e.target.value)));
 
-            <button
-              class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
-              type="submit"
-              onClick={props.handleSubmit}
-            >
-              Buat
-            </button>
+                              let total = props.values.multiple_akun.reduce((a, b) => (a = a + b.nominal), 0);
+                              props.setFieldValue((props.values.total = total));
+                              props.setFieldValue("_total", total);
+                            }}
+                          />
+                          {/* {`props.error.multiple_akun.${index}.nominal` && `props.touched.multiple_akun.${index}.nominal` ? (
+                              <div class="text-red-500 text-sm">{`props.errors.multiple_akun.${index}.nominal`}</div>
+                            ) : null} */}
+                        </Col>
+                        <Col sm="4">
+                          <div className="d-flex justify-content-end">
+                            <BackspaceIcon className="cursor-pointer w-8 h-8" onClick={() => remove(index)} />
+                          </div>
+                        </Col>
+                      </Row>
+                    ))}
+                  <hr />
+                  <Row className="mt-2">
+                    <Col sm="6">
+                      <button
+                        class="px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
+                        type="button"
+                        onClick={() =>
+                          push({
+                            detail_bank_statement_id: id,
+                            deskripsi: "-",
+                            akun_id: "",
+                            nominal: 0,
+                            tgl_transaksi: current,
+                          })
+                        }
+                      >
+                        Tambah Data
+                      </button>
+                    </Col>
+
+                    <Col sm="6">
+                      <Row className="px-4 py-2">
+                        <p className="mr-8">Total</p>
+                        <p name="_total">
+                          Rp.{" "}
+                          {props.values.total.toLocaleString({
+                            minimumFractionDigits: 0,
+                          })}
+                        </p>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <hr />
+                </div>
+              )}
+            </FieldArray>
+
+            <div className="d-flex justify-content-end">
+              <button
+                class="mr-2 mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-red-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-300"
+                type="submit"
+                onClick={cancelButton}
+              >
+                Batal
+              </button>
+
+              <button
+                class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:ring-blue-300"
+                type="submit"
+                onClick={props.handleSubmit}
+              >
+                Buat
+              </button>
+            </div>
           </Forms>
         )}
       </Formik>

@@ -902,4 +902,5 @@ model JurnalBankStatement {
  nominal                  Int
  tipe_saldo               String
  tgl_transaksi            String 
+ tipe_transaksi           String
 }
