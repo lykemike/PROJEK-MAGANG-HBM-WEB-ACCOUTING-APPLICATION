@@ -1,51 +1,60 @@
 import React from "react";
+import Head from "next/head";
+import Link from "next/link";
 import Layout from "../../components/Layout";
+
 import { Form, Row, Col, Button } from "react-bootstrap";
+import { Breadcrumbs, Typography } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import Axios from "axios";
 import { useRouter } from "next/router";
 import { Formik, Form as Forms, Field } from "formik";
+import Select from "react-select";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function User({ data }) {
-  // Form validation
+  const router = useRouter();
+  const api_create = "http://localhost:3000/api/user/createUser";
+
+  function SelectField(FieldProps) {
+    return <Select options={data} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
+  }
+
   const UserSchema = Yup.object().shape({
-    first_name: Yup.string().required("*required"),
-    last_name: Yup.string().required("*required"),
-    email: Yup.string().email().required("*required"),
-    password: Yup.string().required("*required"),
+    first_name: Yup.string()
+      .min(2, "* chracters must be more than 2")
+      .max(20, "* chracters must be less than 20")
+      .required("*required"),
+    email: Yup.string().email("* must be a valid email").required("* required"),
+    password: Yup.string().min(6, "* password must be more than 6 characters").required("* required"),
+    // role_id: Yup.object().shape({
+    //   value: Yup.number().required("* required"),
+    // }),
   });
 
-  // User API
-  const createUser = "http://localhost:3000/api/user/createUser";
-
-  // Redirect Function
-  const router = useRouter();
-
-  // Batal Button Function
   function cancelButton() {
     router.push("../user/tabel-user");
   }
 
   return (
     <Layout>
+      <Head>
+        <title>Buat User Baru</title>
+      </Head>
       <Formik
         initialValues={{
           first_name: "",
-          last_name: "",
+          last_name: "-",
           email: "",
           password: "",
           role_id: "",
-          toggle : false,
-          checked: [],
         }}
         validationSchema={UserSchema}
         onSubmit={async (values) => {
-          // alert(JSON.stringify(values, null, 2));
-          Axios.post(createUser, values)
+          Axios.post(api_create, values)
             .then(function (response) {
               console.log(response);
               router.push("tabel-user");
@@ -53,120 +62,115 @@ export default function User({ data }) {
             .catch(function (error) {
               console.log(error);
             });
-        }}>
+        }}
+      >
         {(props) => (
           <Forms noValidate>
-            <div>
-              <h4>Buat User Baru</h4>
-              <div class='mt-12 container'>
-                <Form>
-                  <Row className='mb-2'>
-                    <Col sm='2'>
-                      <Form.Label>First Name</Form.Label>
-                    </Col>
-                    <Col sm='4'>
-                      <Form.Control
-                        placeholder='First Name'
-                        name='first_name'
-                        onChange={props.handleChange}
-                        onBLur={props.handleBlur}
-                      />
-                      {props.errors.first_name && props.touched.first_name ? (
-                        <div class='text-red-500 text-sm'>{props.errors.first_name}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
+            <div className="border-b border-gray-200">
+              <Breadcrumbs aria-label="breadcrumb">
+                <Link color="inherit" href="../user/tabel-user">
+                  User list
+                </Link>
+                <Typography color="textPrimary">Buat User Baru</Typography>
+              </Breadcrumbs>
 
-                  <Row className='mb-2'>
-                    <Col sm='2'>
-                      <Form.Label>Last Name</Form.Label>
-                    </Col>
-                    <Col sm='4'>
-                      <Form.Control
-                        placeholder='Last Name'
-                        name='last_name'
-                        onChange={props.handleChange}
-                        onBLur={props.handleBlur}
-                      />
-                      {props.errors.last_name && props.touched.last_name ? (
-                        <div class='text-red-500 text-sm'>{props.errors.last_name}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
+              <h2>Buat User Baru</h2>
+            </div>
 
-                  <Row className='mb-2'>
-                    <Col sm='2'>
-                      <Form.Label>Email</Form.Label>
-                    </Col>
-                    <Col sm='4'>
-                      <Form.Control
-                        placeholder='Email'
-                        name='email'
-                        onChange={props.handleChange}
-                        onBLur={props.handleBlur}
-                      />
-                      {props.errors.email && props.touched.email ? (
-                        <div class='text-red-500 text-sm'>{props.errors.email}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
+            <div class="mt-12 container">
+              <Form>
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <Form.Label>First Name</Form.Label>
+                  </Col>
+                  <Col sm="4">
+                    <Form.Control
+                      placeholder="First Name"
+                      name="first_name"
+                      onChange={props.handleChange}
+                      onBLur={props.handleBlur}
+                    />
+                    {props.errors.first_name && props.touched.first_name ? (
+                      <div class="text-red-500 text-sm">{props.errors.first_name}</div>
+                    ) : null}
+                  </Col>
+                </Row>
 
-                  <Row className='mb-2'>
-                    <Col sm='2'>
-                      <Form.Label>Password</Form.Label>
-                    </Col>
-                    <Col sm='4'>
-                      <Form.Control
-                        type='password'
-                        placeholder='Password'
-                        name='password'
-                        onChange={props.handleChange}
-                        onBLur={props.handleBlur}
-                      />
-                      {props.errors.password && props.touched.password ? (
-                        <div class='text-red-500 text-sm'>{props.errors.password}</div>
-                      ) : null}
-                    </Col>
-                  </Row>
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <Form.Label>Last Name</Form.Label>
+                  </Col>
+                  <Col sm="4">
+                    <Form.Control
+                      placeholder="Last Name"
+                      name="last_name"
+                      onChange={props.handleChange}
+                      onBLur={props.handleBlur}
+                    />
+                    {props.errors.last_name && props.touched.last_name ? (
+                      <div class="text-red-500 text-sm">{props.errors.last_name}</div>
+                    ) : null}
+                  </Col>
+                </Row>
 
-                  <Row className='mb-2'>
-                    <Col sm='2'>
-                      <Form.Label>Roles</Form.Label>
-                    </Col>
-                    <Col sm='4'>
-                      <Row>
-                        <Col>
-                          <Form.Control
-                            as='select'
-                            name='role_id'
-                            onChange={props.handleChange}
-                            onBLur={props.handleBlur}>
-                            {/* loop over roles and show them */}
-                            <option>pilih</option>
-                            {data.map((role) => (
-                              <option key={role.id} value={role.id}>
-                                {role.roleType}
-                              </option>
-                            ))}
-                          </Form.Control>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                  
-                  <Row>
-                    <Col sm='2' />
-                    <Col sm='4' className='d-flex justify-content-end mt-10'>
-                      <Button variant='danger mr-2' onClick={cancelButton}>
-                        Batal
-                      </Button>
-                      <Button variant='success' onClick={props.handleSubmit}>
-                        Simpan
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <Form.Label>Email</Form.Label>
+                  </Col>
+                  <Col sm="4">
+                    <Form.Control placeholder="Email" name="email" onChange={props.handleChange} onBLur={props.handleBlur} />
+                    {props.errors.email && props.touched.email ? (
+                      <div class="text-red-500 text-sm">{props.errors.email}</div>
+                    ) : null}
+                  </Col>
+                </Row>
+
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <Form.Label>Password</Form.Label>
+                  </Col>
+                  <Col sm="4">
+                    <Form.Control
+                      type="password"
+                      placeholder="Password"
+                      name="password"
+                      onChange={props.handleChange}
+                      onBLur={props.handleBlur}
+                    />
+                    {props.errors.password && props.touched.password ? (
+                      <div class="text-red-500 text-sm">{props.errors.password}</div>
+                    ) : null}
+                  </Col>
+                </Row>
+
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <Form.Label>Roles</Form.Label>
+                  </Col>
+                  <Col sm="4">
+                    <Row>
+                      <Col>
+                        <Field options={data} name="role_id" component={SelectField} />
+                        {/* {props.errors.role_id && props.touched.role_id ? (
+                            <div class="text-red-500 text-sm">{props.errors.role_id}</div>
+                          ) : null} */}
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col sm="2" />
+                  <Col sm="4" className="d-flex justify-content-end mt-10">
+                    <Button variant="danger mr-2" onClick={cancelButton}>
+                      Batal
+                    </Button>
+                    <Button variant="success" onClick={props.handleSubmit}>
+                      Simpan
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
             </div>
           </Forms>
         )}
@@ -176,18 +180,25 @@ export default function User({ data }) {
 }
 
 export async function getServerSideProps() {
-  // Get Roles from API
   const roles = await prisma.role.findMany({
     orderBy: [
       {
-        id: "asc",
+        roleType: "asc",
       },
     ],
   });
 
+  let detail = [];
+  roles.map((i) => {
+    detail.push({
+      value: i.id,
+      label: i.roleType,
+    });
+  });
+
   return {
     props: {
-      data: roles,
+      data: detail,
     },
   };
 }

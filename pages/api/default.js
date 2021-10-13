@@ -1816,7 +1816,14 @@ export default async (req, res) => {
     });
 
     const createSatuanProduk = await prisma.satuanProduk.createMany({
-      data: [{ satuan: "pcs" }, { satuan: "box" }, { satuan: "lusin" }, { satuan: "buah" }, { satuan: "lembar" }, { satuan: "biji" }],
+      data: [
+        { satuan: "pcs" },
+        { satuan: "box" },
+        { satuan: "lusin" },
+        { satuan: "buah" },
+        { satuan: "lembar" },
+        { satuan: "biji" },
+      ],
       skipDuplicates: true,
     });
 

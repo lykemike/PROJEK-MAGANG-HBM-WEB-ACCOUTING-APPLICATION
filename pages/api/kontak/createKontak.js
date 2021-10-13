@@ -58,15 +58,9 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res
-      .status(201)
-      .json(
-        { message: "Create Kontak Success!", data: create_kontak },
-        { message: "Find Kontak ID Success!", data: find_kontak },
-        { message: "Create Kontak Detail Success!", data: create_kontak_detail }
-      );
+    res.status(201).json({ message: "Create Kontak Success!", data: create_kontak_detail });
   } catch (error) {
-    res.status(400).json({ data: "Failed!", error });
+    res.status(400).json({ data: "Create kontak failed!", error });
     console.log(error);
   }
 };

@@ -1016,3 +1016,72 @@ Kalau Kredit dropdown Beban Lainnya
 
   BNI (829004)  Rp. 5,000
   BCA (2321321)		          Rp. 5, 000
+
+
+Testing dan Perbaikan
+  Role Menu
+  - Perbaikin UI = 100%
+  - Edit = 100%
+  - Delete = 100%
+  - Delete Confirmation = 100%
+  - Pagination = 100%
+  - Select2 = 100%
+  - Validation frontend = 100%
+  !BUG fix
+  - menu role -> buat role baru, check box reimbursement dan aset = 100%
+  - menu role -> edit, check box menu tidak ada = 100%
+  - menu role -> delete = 100%
+
+  User Menu
+  - Perbaikan UI = 100%
+  - Edit = 100%
+  - Delete = 100%
+  - Delete Confirmation = 100%
+  - Pagination = 100%
+  - Select2 = 100%
+  - Validation frontend = 100%
+  !BUG fix
+  - menu user -> fitur edit = 100%
+
+  Kontak Menu
+  - Perbaikan UI = 100%
+  - Edit = 100%
+  - Delete = 100%
+  - Delete Confirmation = 100%
+  - Ekspor = 100%
+  - Pagination = 100%
+  - Search = 100%
+  - Select2 = 100%
+  - Validation frontend = 100%
+  !On Process
+  - Filter = 0%
+
+  Pajak Menu
+  - Perbaikan UI = 100%
+  - update pajak -> data submit = 100%
+  - fitur hapus = 99%
+  - Pagination  = 100%
+  - Validation frontend = 99%
+  - Select2 = 100%
+
+  Jurnal Menu
+  - Perbaikan UI = 
+  - Validation frontend = 99%
+  - Select2 = 100%
+  - menu jurnal, ngak ada import ?
+  - menu jurnal, ngak ada validasi balance = 100%
+  - menu jurnal, edit jurnal, tidak tersubmit - data tidak terubah, file tidak ada
+  - menu jurnal, tidak ada fitur hapus
+  - menu jurnal, tanggal transaksi auto = 100%
+      -- dan bisa diubah
+  - menu jurnal, fitur cetak
+
+view list
+
+
+On Proccess
+List Data Tutup Buku (On Process, butuh meeting)
+Action date tutup buku (On Process, butuh meeting)
+Action View Laporan Tutup Buku (On Process, butuh meeting)
+
+

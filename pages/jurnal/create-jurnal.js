@@ -24,6 +24,9 @@ export default function create_jurnal({ data, data2 }) {
 
   const [idInvoice, setIdInvoice] = useState(id);
 
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
+
   function SelectField(FieldProps) {
     return (
       <Select
@@ -33,13 +36,12 @@ export default function create_jurnal({ data, data2 }) {
       />
     );
   }
-
   return (
     <Layout>
       <Formik
         initialValues={{
           no_transaksi: id,
-          tgl_transaksi: "",
+          tgl_transaksi: current,
           total_debit: "",
           total_kredit: "",
           fileattachment: [],
@@ -127,6 +129,8 @@ export default function create_jurnal({ data, data2 }) {
                   aria-label="date"
                   onChange={props.handleChange}
                   name="tgl_transaksi"
+                  value={current}
+                  disabled
                 />
                 {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
               </Col>
@@ -151,9 +155,7 @@ export default function create_jurnal({ data, data2 }) {
                     <Col m="2">
                       <p className="font-semibold">Kredit</p>
                     </Col>
-                    <Col sm="2">
-                      <p className="font-semibold">Action</p>
-                    </Col>
+                    <Col sm="2">{/* <p className="font-semibold">Action</p> */}</Col>
                   </Row>
 
                   <FieldArray name="detail_jurnal">
@@ -325,7 +327,7 @@ export default function create_jurnal({ data, data2 }) {
                                   />
                                 </Col>
                                 <Col sm="2">
-                                  <Button variant="primary" onClick={() => remove(index)}>
+                                  <Button variant="danger" onClick={() => remove(index)}>
                                     Remove
                                   </Button>
                                 </Col>
@@ -393,19 +395,16 @@ export default function create_jurnal({ data, data2 }) {
               </div>
             </div>
             <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
-              <button
-                onclick="openModal(false)"
-                class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none ml-4 mr-2"
-              >
-                Batal
-              </button>
-
-              <button
-                class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none"
-                onClick={props.handleSubmit}
-              >
-                Submit
-              </button>
+              <Button variant="danger">Batal</Button>
+              {props.values.total_debit == props.values.total_kredit ? (
+                <Button variant="success" onClick={props.handleSubmit}>
+                  Submit
+                </Button>
+              ) : (
+                <Button variant="success" disabled>
+                  Submit
+                </Button>
+              )}
             </div>
           </Forms>
         )}
