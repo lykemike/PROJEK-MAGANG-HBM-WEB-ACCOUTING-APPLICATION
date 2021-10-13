@@ -44,8 +44,8 @@ export default function addProduk({ data, data2, data3, data5, data6 }) {
   return (
     <Select
       options={data6}    
-      isClearable={true}
-      onChange={option => FieldProps.form.setFieldValue(FieldProps.field.name, option)}
+      
+      onChange={option => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
     />
   )
 }
