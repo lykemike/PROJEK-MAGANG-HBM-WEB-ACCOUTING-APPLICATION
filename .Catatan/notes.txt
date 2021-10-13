@@ -1053,6 +1053,7 @@ Testing dan Perbaikan
   - Search = 100%
   - Select2 = 100%
   - Validation frontend = 100%
+  - Hapus saldo =
   !On Process
   - Filter = 0%
 
@@ -1065,16 +1066,20 @@ Testing dan Perbaikan
   - Select2 = 100%
 
   Jurnal Menu
-  - Perbaikan UI = 
+  - Perbaikan UI = 90%
   - Validation frontend = 99%
   - Select2 = 100%
-  - menu jurnal, ngak ada import ?
   - menu jurnal, ngak ada validasi balance = 100%
-  - menu jurnal, edit jurnal, tidak tersubmit - data tidak terubah, file tidak ada
+  - menu jurnal, edit jurnal, tidak tersubmit - data tidak terubah = 90%
+    -- file tidak ada = 
   - menu jurnal, tidak ada fitur hapus
   - menu jurnal, tanggal transaksi auto = 100%
-      -- dan bisa diubah
-  - menu jurnal, fitur cetak
+      -- dan bisa diubah = 
+  - menu jurnal, fitur cetak = 100%
+
+  Daftar Akun Menu
+  - Atur Saldo Awal harus balance untuk di terbitkan
+
 
 view list
 

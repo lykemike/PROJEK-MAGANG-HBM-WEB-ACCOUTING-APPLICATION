@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
+import Head from "next/head";
 import { Form, Row, Col, FormControl, Button, FormGroup } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import PlaylistAddIcon from "@material-ui/icons/Add";
@@ -38,6 +39,9 @@ export default function create_jurnal({ data, data2 }) {
   }
   return (
     <Layout>
+      <Head>
+        <title>Buat Jurnal</title>
+      </Head>
       <Formik
         initialValues={{
           no_transaksi: id,
@@ -52,7 +56,7 @@ export default function create_jurnal({ data, data2 }) {
               deskripsi: "-",
               tag: "-",
               nominal: 0,
-              tipe_saldo: 0,
+              tipe_saldo: "",
               debit: 0,
               debit_disable: false,
               kredit: 0,
@@ -87,18 +91,19 @@ export default function create_jurnal({ data, data2 }) {
       >
         {(props) => (
           <Forms noValidate>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Typography color="textPrimary">Jurnal</Typography>
-            </Breadcrumbs>
-            <Row>
-              <Col sm="8">
-                <h2 className="text-blue-600">Jurnal</h2>
-              </Col>
-              <Col sm="4"></Col>
-            </Row>
+            <div className="border-b border-gray-200">
+              <Breadcrumbs aria-label="breadcrumb">
+                <Typography color="textPrimary">Jurnal</Typography>
+              </Breadcrumbs>
+              <Row>
+                <Col sm="8">
+                  <h2 className="text-blue-600">Jurnal</h2>
+                </Col>
+                <Col sm="4"></Col>
+              </Row>
+            </div>
 
-            <hr />
-            <Row>
+            <Row className="mt-4">
               <Col sm="3">
                 <p className="font-semibold">No. Transaksi</p>
               </Col>

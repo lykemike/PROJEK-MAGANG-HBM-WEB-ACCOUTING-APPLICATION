@@ -1,29 +1,12 @@
-import React, { useRef , useState,useMemo,useCallback} from "react";
+import React, { useRef, useState, useMemo, useCallback } from "react";
 import Layout from "../../components/layout";
 import TableDetailRow from "../../components/JurnalUmum/TableDetailRow";
 import TableDetailPenjualanRow from "../../components/JurnalUmum/TableDetailPenjualanRow";
 import Link from "next/link";
-import {
-  Button,
-  Table,
-  DropdownButton,
-  Row,
-  Col,
-  Form,
-  FormControl,
-  InputGroup,
-  Dropdown,
-} from "react-bootstrap";
+import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-export default function laporanjurnalumum({
-  header,
-  header2,
-  header3,
-  header4,
-  header5,
-  header6,
-}) {
+export default function laporanjurnalumum({ header, header2, header3, header4, header5, header6 }) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
   const onClick = () => {
@@ -35,8 +18,10 @@ export default function laporanjurnalumum({
   const [grandtotaldebit, setgrandtotaldebit] = useState(0);
 
   const setGrandTotalDebit = useCallback((nilai) => {
-   debitAkhir.push({nilai})
-  },[])
+    debitAkhir.push({ nilai });
+  }, []);
+
+  console.log(debitAkhir.reduce((a, b) => (a = a + b.nilai), 0));
   return (
     <Layout>
       <div variant="container">
@@ -47,23 +32,13 @@ export default function laporanjurnalumum({
             <Col sm="3">
               <Form.Label>Tanggal Mulai</Form.Label>
               <InputGroup className="mb-3">
-                <FormControl
-                  placeholder="Pick date"
-                  type="date"
-                  aria-label="date"
-                  ref={tgl_mulai}
-                />
+                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_mulai} />
               </InputGroup>
             </Col>
             <Col sm="3">
               <Form.Label>Tanggal Selesai</Form.Label>
               <InputGroup className="mb-3">
-                <FormControl
-                  placeholder="Pick date"
-                  type="date"
-                  aria-label="date"
-                  ref={tgl_akhir}
-                />
+                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_akhir} />
               </InputGroup>
             </Col>
 
@@ -76,11 +51,7 @@ export default function laporanjurnalumum({
           </Row>
 
           <div class="flex flex-row-reverse">
-            <DropdownButton
-              variant="primary ml-2"
-              id="dropdown-basic-button"
-              title="Export"
-            >
+            <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Export">
               <Dropdown.Item>
                 <Link href="#">
                   <a>PDF</a>
@@ -109,19 +80,13 @@ export default function laporanjurnalumum({
                   tipe="jurnal"
                   view="view2"
                   label="Journal Entry"
-                  setgrandtotal = {setGrandTotalDebit}
+                  setgrandtotal={setGrandTotalDebit}
                 />
               );
             })}
             {header2.map((data, index) => {
               return (
-                <TableDetailPenjualanRow
-                  key={index}
-                  data={data}
-                  index={index}
-                  view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
-                />
+                <TableDetailPenjualanRow key={index} data={data} index={index} view="view2" setgrandtotal={setGrandTotalDebit} />
               );
             })}
             {header3.map((data, index) => {
@@ -133,7 +98,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
+                  setgrandtotal={setGrandTotalDebit}
                 />
               );
             })}
@@ -146,7 +111,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
+                  setgrandtotal={setGrandTotalDebit}
                 />
               );
             })}
@@ -159,7 +124,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                  setgrandtotal = {setGrandTotalDebit}
+                  setgrandtotal={setGrandTotalDebit}
                 />
               );
             })}
@@ -172,7 +137,7 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
+                  setgrandtotal={setGrandTotalDebit}
                 />
               );
             })}
@@ -193,8 +158,7 @@ export default function laporanjurnalumum({
               <td class="px-2 py-1" align="right">
                 Grand Total
               </td>
-              <td class='px-2 py-1'>Rp. {console.log(debitAkhir)}</td>
-
+              <td class="px-2 py-1">Rp. {console.log(debitAkhir)}</td>
 
               {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td> */}
             </tr>

@@ -42,7 +42,7 @@ export default async (req, res) => {
       tgl_transaksi: req.body.tgl_transaksi,
       total_debit: parseInt(req.body.total_debit),
       total_kredit: parseInt(req.body.total_kredit),
-      lampiran: req.file.filename,
+      lampiran: "req.file.filename",
     };
 
     const update_header_jurnal = await prisma.headerJurnal.updateMany({
@@ -50,7 +50,6 @@ export default async (req, res) => {
         id: parseInt(req.body.id),
       },
       data: [frontend_data],
-      skipDuplicates: true,
     });
 
     const find_header_jurnal = await prisma.headerJurnal.findFirst({
@@ -69,6 +68,8 @@ export default async (req, res) => {
           tag: i.tag,
           debit: parseInt(i.debit),
           kredit: parseInt(i.kredit),
+          nominal: parseInt(i.nominal),
+          tipe_saldo: i.tipe_saldo,
         });
       });
 

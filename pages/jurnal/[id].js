@@ -1,19 +1,22 @@
 import React, { useState, useRef } from "react";
 import Layout from "../../components/Layout";
+import Head from "next/head";
 import { Form, Row, Col, FormControl, Button, FormGroup } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import PlaylistAddIcon from "@material-ui/icons/Add";
 import Link from "next/link";
-
+import Typography from "@material-ui/core/Typography";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import * as Yup from "yup";
-import { Formik, Form as Forms, FieldArray } from "formik";
+import { Formik, Form as Forms, FieldArray, Field } from "formik";
+import Select from "react-select";
 import Axios from "axios";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function edit_jurnal({ data, data2, header, jurnal }) {
-  const url = "http://localhost:3000/api/jurnal/createJurnal";
+  const url = "http://localhost:3000/api/jurnal/updateJurnal";
   const formik = useRef(null);
 
   // Redirect
@@ -25,8 +28,21 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
     router.push("");
   }
 
+  // function SelectField(FieldProps) {
+  //   return (
+  //     <Select
+  //       options={jurnal}
+  //       isClearable={false}
+  //       onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
+  //     />
+  //   );
+  // }
+
   return (
     <Layout>
+      <Head>
+        <title>Update Jurnal</title>
+      </Head>
       <Formik
         enableReinitialize={true}
         innerRef={formik}
@@ -36,6 +52,7 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
           total_debit: header[0].total_debit,
           total_kredit: header[0].total_kredit,
           fileattachment: [],
+          balance: "",
           detail_jurnal: jurnal,
           // debit_disable: false,
         }}
@@ -66,65 +83,83 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
       >
         {(props) => (
           <Forms noValidate>
-            <h1>Jurnal</h1>
-            <Form>
-              <Form.Group as={Row} controlId="formPlaintext">
-                <Form.Label column sm="2">
-                  No. Transaksi
-                </Form.Label>
-                <Form.Label column sm="2">
-                  Tgl.Transaksi
-                </Form.Label>
-              </Form.Group>
-              <Form.Group as={Row} controlId="formPlaintext">
-                <Col sm="2">
-                  <Form.Control
-                    placeholder={"Auto " + "(" + id + ")"}
-                    name="no_transaksi"
-                    onChange={props.handleChange}
-                    value={props.values.no_transaksi}
-                    disabled
-                  />
+            <div className="border-b border-gray-200">
+              <Breadcrumbs aria-label="breadcrumb">
+                <Typography color="textPrimary">Update Jurnal</Typography>
+              </Breadcrumbs>
+              <Row>
+                <Col sm="8">
+                  <h2 className="text-blue-600">Update Jurnal</h2>
                 </Col>
-                <Col sm="2">
-                  <FormControl
-                    placeholder="Pick date"
-                    type="date"
-                    aria-label="date"
-                    onChange={props.handleChange}
-                    name="tgl_transaksi"
-                    value={props.values.tgl_transaksi}
-                    disabled
-                  />
-                  {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
-                  {/* <KeyboardDatePicker disableToolbar variant="inline" format="MM/dd/yyyy" margin="normal" id="date-picker-inline" label="Date picker inline" value={selectedDate} onChange={handleDateChange} KeyboardButtonProps={{'aria-label': 'change date',}}/> */}
-                </Col>
-              </Form.Group>
-            </Form>
+                <Col sm="4"></Col>
+              </Row>
+            </div>
 
-            <div className="card">
+            <Row className="mt-4">
+              <Col sm="3">
+                <p className="font-semibold">No. Transaksi</p>
+              </Col>
+              <Col sm="3">
+                <p className="font-semibold">Tanggal Transaksi</p>
+              </Col>
+
+              <Col sm="6">
+                <div className="flex justify-end items-center">
+                  {props.values.balance == "Balance" ? (
+                    <h1 className="text-green-500">Balance</h1>
+                  ) : (
+                    <h2 className="text-red-500">{props.values.balance}</h2>
+                  )}
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col sm="2">
+                <Form.Control
+                  placeholder={"Auto"}
+                  name="no_transaksi"
+                  onChange={props.handleChange}
+                  value={props.values.no_transaksi}
+                  disabled
+                />
+              </Col>
+              <Col sm="1" />
+              <Col sm="2">
+                <FormControl
+                  placeholder="Pick date"
+                  type="date"
+                  aria-label="date"
+                  onChange={props.handleChange}
+                  name="tgl_transaksi"
+                  value={props.values.tgl_transaksi}
+                  disabled
+                />
+                {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
+              </Col>
+            </Row>
+
+            <div className="card mt-8">
               <div className="card-body">
                 <Form>
-                  <Form.Group as={Row} controlId="formPlaintext">
-                    <Form.Label column sm="2">
-                      Akun
-                    </Form.Label>
-                    <Form.Label column sm="2">
-                      Deskripsi
-                    </Form.Label>
-                    <Form.Label column sm="1">
-                      Tag
-                    </Form.Label>
-                    <Form.Label column sm="2">
-                      Debit
-                    </Form.Label>
-                    <Form.Label column sm="2">
-                      Kredit
-                    </Form.Label>
-                    <Form.Label column sm="2">
-                      Action
-                    </Form.Label>
-                  </Form.Group>
+                  <Row>
+                    <Col sm="3">
+                      <p className="font-semibold">Akun</p>
+                    </Col>
+                    <Col sm="2">
+                      <p className="font-semibold">Deskripsi</p>
+                    </Col>
+                    <Col sm="1">
+                      <p className="font-semibold">Tag</p>
+                    </Col>
+                    <Col sm="2">
+                      <p className="font-semibold">Debit</p>
+                    </Col>
+                    <Col m="2">
+                      <p className="font-semibold">Kredit</p>
+                    </Col>
+                    <Col sm="2">{/* <p className="font-semibold">Action</p> */}</Col>
+                  </Row>
 
                   <FieldArray name="detail_jurnal">
                     {({ insert, remove, push }) => (
@@ -134,6 +169,7 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                             <div key={index} name="detail_jurnal">
                               <Form.Group as={Row} controlId="formPlaintext">
                                 <Col sm="2">
+                                  {/* <Field options={jurnal} name={`detail_jurnal.${index}.akun_id`} component={SelectField} /> */}
                                   <Form.Control
                                     as="select"
                                     name={`detail_jurnal.${index}.akun_id`}
@@ -175,9 +211,10 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                 </Col>
                                 <Col sm="2">
                                   <Form.Control
-                                    placeholder="Isi Debit"
-                                    name={`detail_jurnal.${index}.debit`}
+                                    type="number"
+                                    placeholder="Rp. 0,00"
                                     disabled={props.values.detail_jurnal[index].debit_disable}
+                                    name={`detail_jurnal.${index}.debit`}
                                     value={props.values.detail_jurnal[index].debit}
                                     onChange={(e) => {
                                       if (e.target.value.length > 0) {
@@ -186,6 +223,8 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
 
                                         let debit = parseInt(e.target.value);
                                         props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Debit"));
 
                                         const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
                                         props.setFieldValue((props.values.total_debit = total_debit));
@@ -200,7 +239,9 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                           props.setFieldValue(
                                             (balance =
                                               "Debit kurang: Rp. " +
-                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                              Math.abs(balance).toLocaleString({
+                                                minimumFractionDigits: 0,
+                                              }))
                                           );
                                           props.setFieldValue("balance", balance);
                                         } else {
@@ -208,7 +249,9 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                           props.setFieldValue(
                                             (balance =
                                               "Kredit kurang: Rp. " +
-                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                              Math.abs(balance).toLocaleString({
+                                                minimumFractionDigits: 0,
+                                              }))
                                           );
                                           props.setFieldValue("balance", balance);
                                         }
@@ -219,6 +262,8 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
 
                                         let debit = 0;
                                         props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Debit"));
 
                                         const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
                                         props.setFieldValue((props.values.total_debit = total_debit));
@@ -229,7 +274,8 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                 </Col>
                                 <Col sm="2">
                                   <Form.Control
-                                    placeholder="Isi Kredit"
+                                    type="number"
+                                    placeholder="Rp. 0,00"
                                     name="kredit"
                                     disabled={props.values.detail_jurnal[index].kredit_disable}
                                     value={props.values.detail_jurnal[index].kredit}
@@ -240,6 +286,8 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
 
                                         let kredit = parseInt(e.target.value);
                                         props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Kredit"));
 
                                         const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
                                         props.setFieldValue((props.values.total_kredit = total_kredit));
@@ -254,7 +302,9 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                           props.setFieldValue(
                                             (balance =
                                               "Kredit kurang: Rp. " +
-                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                              Math.abs(balance).toLocaleString({
+                                                minimumFractionDigits: 0,
+                                              }))
                                           );
                                           props.setFieldValue("balance", balance);
                                         } else {
@@ -262,7 +312,9 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                           props.setFieldValue(
                                             (balance =
                                               "Debit kurang: Rp. " +
-                                              Math.abs(balance).toLocaleString({ minimumFractionDigits: 0 }))
+                                              Math.abs(balance).toLocaleString({
+                                                minimumFractionDigits: 0,
+                                              }))
                                           );
                                           props.setFieldValue("balance", balance);
                                         }
@@ -273,6 +325,8 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
 
                                         let kredit = 0;
                                         props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Kredit"));
 
                                         const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
                                         props.setFieldValue((props.values.total_kredit = total_kredit));
@@ -282,7 +336,7 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                   />
                                 </Col>
                                 <Col sm="2">
-                                  <Button variant="primary" onClick={() => remove(index)}>
+                                  <Button variant="danger" onClick={() => remove(index)}>
                                     Remove
                                   </Button>
                                 </Col>
@@ -334,19 +388,16 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
               </div>
             </div>
             <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
-              <button
-                onclick="openModal(false)"
-                class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none ml-4 mr-2"
-              >
-                Batal
-              </button>
-
-              <button
-                class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none"
-                onClick={props.handleSubmit}
-              >
-                Submit
-              </button>
+              <Button variant="danger">Batal</Button>
+              {props.values.total_debit == props.values.total_kredit ? (
+                <Button variant="success" onClick={props.handleSubmit}>
+                  Update
+                </Button>
+              ) : (
+                <Button variant="success" disabled>
+                  Update
+                </Button>
+              )}
             </div>
           </Forms>
         )}
@@ -380,7 +431,11 @@ export async function getServerSideProps(context) {
       id: parseInt(id),
     },
     include: {
-      DetailJurnal: true,
+      DetailJurnal: {
+        include: {
+          akun: true,
+        },
+      },
     },
   });
 
@@ -394,6 +449,8 @@ export async function getServerSideProps(context) {
       debit_disable: false,
       kredit: parseInt(i.kredit),
       kredit_disable: false,
+      nominal: parseInt(i.nominal),
+      tipe_saldo: i.tipe_saldo,
     });
   });
 
