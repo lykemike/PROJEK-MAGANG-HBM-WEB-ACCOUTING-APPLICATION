@@ -1,7 +1,18 @@
 import React, { useState } from "react";
 import Layout from "../../components/layout";
 import Link from "next/link";
-import { Button, Table, DropdownButton, FormControl, InputGroup, Dropdown, Row, Col, Form, Card } from "react-bootstrap";
+import {
+  Button,
+  Table,
+  DropdownButton,
+  FormControl,
+  InputGroup,
+  Dropdown,
+  Row,
+  Col,
+  Form,
+  Card,
+} from "react-bootstrap";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -15,15 +26,16 @@ import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
 // const TransferUangSchema = Yup.object().shape({
-//     bankPengirim: Yup.string()
-//       .required('Required'),
-//     bankPenerima : Yup.string().required('Required'),
-//     // lastName: Yup.string()
-//     //   .min(2, 'Too Short!')
-//     //   .max(50, 'Too Long!')
-//     //   .required('Required'),
-//     // email: Yup.string().email('Invalid email').required('Required'),
-//   });
+//   akun_transfer: Yup.string().required("Harus Pilih Akun"),
+//   akun_setor: Yup.string().required("Harus Pilih Akun"),
+//   total: Yup.string().required("Input total"),
+//   tgl_transaksi: Yup.string().required("Pilih tanggal"),
+//   // lastName: Yup.string()
+//   //   .min(2, 'Too Short!')
+//   //   .max(50, 'Too Long!')
+//   //   .required('Required'),
+//   // email: Yup.string().email('Invalid email').required('Required'),
+// });
 
 export default function tranfer_uang({ data, data2, data3 }) {
   const router = useRouter();
@@ -41,6 +53,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
           tgl_transaksi: "",
           tag: "-",
         }}
+        // validationSchema={TransferUangSchema}
         onSubmit={async (values) => {
           console.log(values);
           Axios.post(url, values)
@@ -50,18 +63,26 @@ export default function tranfer_uang({ data, data2, data3 }) {
             .catch(function (error) {
               console.log(error);
             });
-        }}>
+        }}
+      >
         {(props) => (
           <Forms noValidate>
             <div variant="container">
-              <div class="text-md font-medium text-gray-900 mb-2">Transaksi</div>
+              <div class="text-md font-medium text-gray-900 mb-2">
+                Transaksi
+              </div>
               <h4 class="mt-2 mb-5">Transfer Uang</h4>
 
               <div class="mb-10">
                 <Row>
                   <Col>
                     <Form.Label>Transfer dari</Form.Label>
-                    <Form.Control as="select" name="akun_transfer" onChange={props.handleChange} onBlur={props.handleBlur}>
+                    <Form.Control
+                      as="select"
+                      name="akun_transfer"
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                    >
                       <option value="kosong">Pilih</option>
                       {data.map((akun) => (
                         <option key={akun.id} value={akun.id}>
@@ -69,12 +90,20 @@ export default function tranfer_uang({ data, data2, data3 }) {
                         </option>
                       ))}
                     </Form.Control>
-                    {props.errors.akun_transfer && props.touched.akun_transfer ? <div>{props.errors.akun_transfer}</div> : null}
+                    {props.errors.akun_transfer &&
+                    props.touched.akun_transfer ? (
+                      <div>{props.errors.akun_transfer}</div>
+                    ) : null}
                   </Col>
 
                   <Col>
                     <Form.Label>Setor ke</Form.Label>
-                    <Form.Control as="select" name="akun_setor" onChange={props.handleChange} onBlur={props.handleBlur}>
+                    <Form.Control
+                      as="select"
+                      name="akun_setor"
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                    >
                       <option value="kosong">Pilih</option>
                       {data.map((akun) => (
                         <option key={akun.id} value={akun.id}>
@@ -82,12 +111,18 @@ export default function tranfer_uang({ data, data2, data3 }) {
                         </option>
                       ))}
                     </Form.Control>
-                    {props.errors.akun_setor && props.touched.akun_setor ? <div>{props.errors.akun_setor}</div> : null}
+                    {props.errors.akun_setor && props.touched.akun_setor ? (
+                      <div>{props.errors.akun_setor}</div>
+                    ) : null}
                   </Col>
 
                   <Col>
-                    <Form.Label>total</Form.Label>
-                    <Form.Control placeholder="total Uang" name="total" onChange={props.handleChange} />
+                    <Form.Label>Total</Form.Label>
+                    <Form.Control
+                      placeholder="total Uang"
+                      name="total"
+                      onChange={props.handleChange}
+                    />
                   </Col>
                 </Row>
               </div>
@@ -97,27 +132,52 @@ export default function tranfer_uang({ data, data2, data3 }) {
                   <Col>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
                       <Form.Label>Memo</Form.Label>
-                      <Form.Control as="textarea" rows={3} name="memo" placeholder="Isi Memo" onChange={props.handleChange} />
-                      {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="memo"
+                        placeholder="Isi Memo"
+                        onChange={props.handleChange}
+                      />
+                      {props.errors.memo && props.touched.memo ? (
+                        <div>{props.errors.memo}</div>
+                      ) : null}
                     </Form.Group>
                   </Col>
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control placeholder={"Auto"} name="no_transaksi" disabled />
+                    <Form.Control
+                      placeholder={"Auto"}
+                      name="no_transaksi"
+                      disabled
+                    />
                   </Col>
 
                   <Col>
                     <Form.Label>Tanggal Transaksi</Form.Label>
                     <InputGroup className="mb-3">
-                      <FormControl placeholder="Pick date" type="date" aria-label="date" name="tgl_transaksi" onChange={props.handleChange} />
-                      {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
+                      <FormControl
+                        placeholder="Pick date"
+                        type="date"
+                        aria-label="date"
+                        name="tgl_transaksi"
+                        onChange={props.handleChange}
+                      />
+                      {props.errors.tgl_transaksi &&
+                      props.touched.tgl_transaksi ? (
+                        <div>{props.errors.tgl_transaksi}</div>
+                      ) : null}
                     </InputGroup>
                   </Col>
 
                   <Col>
                     <Form.Label>Tag</Form.Label>
-                    <Form.Control placeholder="Tag" name="tag" onChange={props.handleChange} />
+                    <Form.Control
+                      placeholder="Tag"
+                      name="tag"
+                      onChange={props.handleChange}
+                    />
                   </Col>
                 </Row>
               </div>
@@ -151,7 +211,11 @@ export default function tranfer_uang({ data, data2, data3 }) {
                   <HighlightOffIcon fontSize="medium" /> Batal
                 </Button>
 
-                <Button variant="success" type="submit" onClick={props.handleSubmit}>
+                <Button
+                  variant="success"
+                  type="submit"
+                  onClick={props.handleSubmit}
+                >
                   <CheckCircleIcon fontSize="medium" /> Buat Transferan
                 </Button>
               </div>

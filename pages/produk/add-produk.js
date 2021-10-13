@@ -162,18 +162,21 @@ export default function addProduk({ data, data2, data3, data5, data6 }) {
                     </Col>
                     <Col sm="4">
                       {/* <Select options={data6} name='kategori_produk' isClearable={true} component={SelectField} /> */}
-                      <Forms>
-                        <Field options={data6} name="kategori_produk" component={SelectField} />
-                      </Forms>
-                      {/* <Form.Control className='mb-2' as='select' name='kategori_produk' onChange={props.handleChange}>
-                   
-                        <option value='0'>Pilih</option>
+                      {/* <Forms>
+                        <Field
+                          options={data6}
+                          name="kategori_produk"
+                          component={SelectField}
+                        />
+                      </Forms> */}
+                      <Form.Control className="mb-2" as="select" name="kategori_produk" onChange={props.handleChange}>
+                        <option value="0">Pilih</option>
                         {data3.map((kategoriProduk) => (
                           <option key={kategoriProduk.id} value={kategoriProduk.id}>
                             {kategoriProduk.nama}
                           </option>
                         ))}
-                      </Form.Control> */}
+                      </Form.Control>
                       {/* {props.errors.kategori_produk && props.touched.kategori_produk ? (
                         <div class='text-red-500 text-sm'>
                           <ErrorOutlineIcon />

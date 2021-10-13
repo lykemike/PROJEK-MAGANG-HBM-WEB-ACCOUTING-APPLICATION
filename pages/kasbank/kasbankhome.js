@@ -67,7 +67,11 @@ export default function jurnalentry({ data }) {
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
-              <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Buat Transaksi">
+              <DropdownButton
+                variant="primary ml-2"
+                id="dropdown-basic-button"
+                title="Buat Transaksi"
+              >
                 <Dropdown.Item>
                   <Link href="/kasbank/transferuang">
                     <a>Transfer Uang</a>
@@ -95,13 +99,19 @@ export default function jurnalentry({ data }) {
             <TableHead className="bg-dark">
               <TableRow>
                 <TableCell>
-                  <Typography className="text-white font-bold">Kode Akun</Typography>
+                  <Typography className="text-white font-bold">
+                    Kode Akun
+                  </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className="text-white font-bold">Nama Akun</Typography>
+                  <Typography className="text-white font-bold">
+                    Nama Akun
+                  </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className="text-white font-bold">Saldo Akun</Typography>
+                  <Typography className="text-white font-bold">
+                    Saldo Akun
+                  </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -119,7 +129,9 @@ export default function jurnalentry({ data }) {
                   <TableCell>
                     Rp.{" "}
                     {i.DetailSaldoAwal[0] >= 0
-                      ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })
+                      ? i.DetailSaldoAwal[0].debit.toLocaleString({
+                          minimumFractionDigits: 0,
+                        })
                       : "0, 00"}
                   </TableCell>
                 </TableRow>

@@ -30,33 +30,34 @@ export default function test({ list }) {
   var today = new Date(),
     date = today.toISOString().slice(0, 10);
 
-  const handlePrevChange = () => {
-    if (page < 1) {
-      setPage(0);
-    } else {
-      setPage(page - 1);
-    }
-  };
+  // const handlePrevChange = () => {
+  //   if (page < 1) {
+  //     setPage(0);
+  //   } else {
+  //     setPage(page - 1);
+  //   }
+  // };
 
-  const handleNextChange = () => {
-    if (page < parseInt(list.length / rowsPerPage)) {
-      setPage(page + 1);
-    } else {
-      setPage(parseInt(list.length / rowsPerPage));
-    }
-  };
+  // const handleNextChange = () => {
+  //   if (page < parseInt(list.length / rowsPerPage)) {
+  //     setPage(page + 1);
+  //   } else {
+  //     setPage(parseInt(list.length / rowsPerPage));
+  //   }
+  // };
 
-  const handleFirstPage = () => {
-    setPage(0);
-  };
+  // const handleFirstPage = () => {
+  //   setPage(0);
+  // };
 
-  const handleClickPage = (id) => {
-    setPage(id);
-  };
+  // const handleClickPage = (id) => {
+  //   setPage(id);
+  // };
 
-  const handleLastPage = () => {
-    setPage(parseInt(list.length / rowsPerPage));
-  };
+  // const handleLastPage = () => {
+  //   setPage(parseInt(list.length / rowsPerPage));
+  // };
+
   return (
     <Layout>
       <Formik
@@ -75,96 +76,147 @@ export default function test({ list }) {
             .catch(function (error) {
               console.log(error);
             });
-        }}>
+        }}
+      >
         {(props) => (
           <Forms noValidate>
-            <div className='border-b border-gray-200'>
-              <Breadcrumbs aria-label='breadcrumb'>
-                <Link color='inherit' href='../daftar-akun/daftar-akun'>
+            <div className="border-b border-gray-200">
+              <Breadcrumbs aria-label="breadcrumb">
+                <Link color="inherit" href="../daftar-akun/daftar-akun">
                   Daftar Akun
                 </Link>
-                <Typography color='textPrimary'>Atur Saldo Awal</Typography>
+                <Typography color="textPrimary">Atur Saldo Awal</Typography>
               </Breadcrumbs>
 
               <Row>
-                <Col sm='8'>
-                  <h2 className='text-blue-600'>Saldo Awal</h2>
+                <Col sm="8">
+                  <h2 className="text-blue-600">Saldo Awal</h2>
                 </Col>
               </Row>
             </div>
 
-            <div class='mt-4 mb-4'>
+            <div class="mt-4 mb-4">
               <h5>Tanggal Konversi</h5>
-              <TextField id='date' type='date' defaultValue={date} name='tgl_konversi' onChange={props.handleChange} />
+              <TextField
+                id="date"
+                type="date"
+                defaultValue={date}
+                name="tgl_konversi"
+                onChange={props.handleChange}
+              />
             </div>
 
             <TableContainer component={Paper}>
-              <Tables size='small' aria-label='a dense table'>
-                <TableHead className='bg-dark'>
+              <Tables size="small" aria-label="a dense table">
+                <TableHead className="bg-dark">
                   <TableRow>
                     <TableCell>
-                      <Typography className='text-white font-bold' align='left'>
+                      <Typography className="text-white font-bold" align="left">
                         Kode Akun
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography className='text-white font-bold' align='left'>
+                      <Typography className="text-white font-bold" align="left">
                         Nama Akun
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography className='text-white font-bold' align='center'>
+                      <Typography
+                        className="text-white font-bold"
+                        align="center"
+                      >
                         Debit
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography className='text-white font-bold' align='center'>
+                      <Typography
+                        className="text-white font-bold"
+                        align="center"
+                      >
                         Kredit
                       </Typography>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <FieldArray name='saldo_awal'>
+                  <FieldArray name="saldo_awal">
                     {({ insert, remove, push }) => (
                       <>
                         {props.values.saldo_awal.map((i, index) => (
                           <TableRow>
-                            <TableCell component='th' scope='row' align='left'>
+                            <TableCell component="th" scope="row" align="left">
                               {props.values.saldo_awal[index].kode_akun}
                             </TableCell>
-                            <TableCell align='left'>{props.values.saldo_awal[index].nama_akun}</TableCell>
-                            <TableCell align='center'>
+                            <TableCell align="left">
+                              {props.values.saldo_awal[index].nama_akun}
+                            </TableCell>
+                            <TableCell align="center">
                               <Form.Control
-                                size='sm'
-                                disabled={props.values.saldo_awal[index].tipe_saldo === "Kredit"}
-                                type='number'
-                                min='0'
+                                size="sm"
+                                disabled={
+                                  props.values.saldo_awal[index].tipe_saldo ===
+                                  "Kredit"
+                                }
+                                type="number"
+                                min="0"
                                 name={`saldo_awal.${index}.debit`}
                                 onChange={(e) => {
-                                  props.setFieldValue(`saldo_awal.${index}.debit`, parseInt(e.target.value));
-                                  props.setFieldValue((props.values.saldo_awal[index].debit = parseInt(e.target.value)));
+                                  props.setFieldValue(
+                                    `saldo_awal.${index}.debit`,
+                                    parseInt(e.target.value)
+                                  );
+                                  props.setFieldValue(
+                                    (props.values.saldo_awal[index].debit =
+                                      parseInt(e.target.value))
+                                  );
 
-                                  const total_debit = props.values.saldo_awal.reduce((a, b) => (a = a + b.debit), 0);
-                                  props.setFieldValue((props.values.total_debit = total_debit));
-                                  props.setFieldValue("total_debit", total_debit);
+                                  const total_debit =
+                                    props.values.saldo_awal.reduce(
+                                      (a, b) => (a = a + b.debit),
+                                      0
+                                    );
+                                  props.setFieldValue(
+                                    (props.values.total_debit = total_debit)
+                                  );
+                                  props.setFieldValue(
+                                    "total_debit",
+                                    total_debit
+                                  );
                                 }}
                               />
                             </TableCell>
-                            <TableCell align='center'>
+                            <TableCell align="center">
                               <Form.Control
-                                size='sm'
-                                disabled={props.values.saldo_awal[index].tipe_saldo === "Debit"}
-                                type='number'
-                                min='0'
+                                size="sm"
+                                disabled={
+                                  props.values.saldo_awal[index].tipe_saldo ===
+                                  "Debit"
+                                }
+                                type="number"
+                                min="0"
                                 name={`saldo_awal.${index}.kredit`}
                                 onChange={(e) => {
-                                  props.setFieldValue(`saldo_awal.${index}.kredit`, parseInt(e.target.value));
-                                  props.setFieldValue((props.values.saldo_awal[index].kredit = parseInt(e.target.value)));
+                                  props.setFieldValue(
+                                    `saldo_awal.${index}.kredit`,
+                                    parseInt(e.target.value)
+                                  );
+                                  props.setFieldValue(
+                                    (props.values.saldo_awal[index].kredit =
+                                      parseInt(e.target.value))
+                                  );
 
-                                  const total_kredit = props.values.saldo_awal.reduce((a, b) => (a = a + b.kredit), 0);
-                                  props.setFieldValue((props.values.total_kredit = total_kredit));
-                                  props.setFieldValue("total_kredit", total_kredit);
+                                  const total_kredit =
+                                    props.values.saldo_awal.reduce(
+                                      (a, b) => (a = a + b.kredit),
+                                      0
+                                    );
+                                  props.setFieldValue(
+                                    (props.values.total_kredit = total_kredit)
+                                  );
+                                  props.setFieldValue(
+                                    "total_kredit",
+                                    total_kredit
+                                  );
                                 }}
                               />
                             </TableCell>
@@ -178,20 +230,24 @@ export default function test({ list }) {
                 <TableFooter>
                   <TableRow>
                     <TableCell />
-                    <TableCell align='right'>
-                      <h4 className='text-black font-semibold'>Total</h4>
+                    <TableCell align="right">
+                      <h4 className="text-black font-semibold">Total</h4>
                     </TableCell>
                     <TableCell>
-                      <h4 className='text-black font-semibold'>Rp. {props.values.total_debit}</h4>
+                      <h4 className="text-black font-semibold">
+                        Rp. {props.values.total_debit}
+                      </h4>
                     </TableCell>
                     <TableCell>
-                      <h4 className='text-black font-semibold'>Rp. {props.values.total_kredit}</h4>
+                      <h4 className="text-black font-semibold">
+                        Rp. {props.values.total_kredit}
+                      </h4>
                     </TableCell>
                   </TableRow>
                 </TableFooter>
               </Tables>
             </TableContainer>
-            <div class='flex items-center justify-center mt-4'>
+            {/* <div class='flex items-center justify-center mt-4'>
               <TablePagination
                 onPrevChange={handlePrevChange}
                 onNextChange={handleNextChange}
@@ -201,9 +257,12 @@ export default function test({ list }) {
                 lastIndex={parseInt(list.length / rowsPerPage)}
                 currentPage={page}
               />
-            </div>
-            <div className='d-flex justify-content-end mt-4'>
-              <button class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none' onClick={props.handleSubmit}>
+            </div> */}
+            <div className="d-flex justify-content-end mt-4">
+              <button
+                class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none"
+                onClick={props.handleSubmit}
+              >
                 Terbitkan
               </button>
             </div>

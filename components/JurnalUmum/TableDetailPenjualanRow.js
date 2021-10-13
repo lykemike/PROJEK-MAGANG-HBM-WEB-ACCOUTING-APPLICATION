@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import merge from "lodash/merge";
 import _ from "lodash";
 
-export default function TableDetailRow({ data, index, label = "Sales Invoice", tipe = "penjualan", setgrandtotal }) {
+export default function TableDetailRow({ data, index, label = "Sales Invoice", tipe = "penjualan" }) {
   const [open, setOpen] = useState(false);
   const onClick = () => {
     setOpen(!open);
@@ -24,8 +24,6 @@ export default function TableDetailRow({ data, index, label = "Sales Invoice", t
       return data.JurnalPenjualan;
     }
   }, [tipe]);
-
-  setgrandtotal(detail.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0));
 
   const result = 1 + 1;
 
