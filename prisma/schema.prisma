@@ -138,6 +138,7 @@ model Akun {
 
   DetailSaldoAwal DetailSaldoAwal[]
   DetailBankStatement DetailBankStatement[]
+  JurnalBankStatement JurnalBankStatement[]
 }
 
 model HeaderSaldoAwal {
@@ -887,4 +888,19 @@ model DetailBankStatement {
  kredit               Int
  saldo                Int
  status               String
+
+ JurnalBankStatement JurnalBankStatement[]
+}
+
+model JurnalBankStatement {
+ id                       Int     @id @default(autoincrement())
+ detail_bank_statement    DetailBankStatement @relation(fields: [detail_bank_statement_id], references: [id])
+ detail_bank_statement_id Int
+ akun                     Akun    @relation(fields: [akun_id], references: [id]) 
+ akun_id                  Int    
+ deskripsi                String
+ nominal                  Int
+ tipe_saldo               String
+ tgl_transaksi            String 
+ tipe_transaksi           String
 }

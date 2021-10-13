@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
-import {
-  Form,
-  Row,
-  Col,
-  FormControl,
-  Button,
-  FormGroup,
-} from "react-bootstrap";
+import { Form, Row, Col, FormControl, Button, FormGroup } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import PlaylistAddIcon from "@material-ui/icons/Add";
 import Link from "next/link";
@@ -31,24 +24,24 @@ export default function create_jurnal({ data, data2 }) {
 
   const [idInvoice, setIdInvoice] = useState(id);
 
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
+
   function SelectField(FieldProps) {
     return (
       <Select
         options={data}
         isClearable={false}
-        onChange={(option) =>
-          FieldProps.form.setFieldValue(FieldProps.field.name, option.value)
-        }
+        onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
       />
     );
   }
-
   return (
     <Layout>
       <Formik
         initialValues={{
           no_transaksi: id,
-          tgl_transaksi: "",
+          tgl_transaksi: current,
           total_debit: "",
           total_kredit: "",
           fileattachment: [],
@@ -76,9 +69,7 @@ export default function create_jurnal({ data, data2 }) {
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) =>
-            formData.append("file", i)
-          );
+          Array.from(values.fileattachment).map((i) => formData.append("file", i));
           console.log(values);
           Axios.post(url, formData, {
             headers: {
@@ -128,12 +119,7 @@ export default function create_jurnal({ data, data2 }) {
 
             <Row>
               <Col sm="2">
-                <Form.Control
-                  placeholder={"Auto"}
-                  name="no_transaksi"
-                  onChange={props.handleChange}
-                  disabled
-                />
+                <Form.Control placeholder={"Auto"} name="no_transaksi" onChange={props.handleChange} disabled />
               </Col>
               <Col sm="1" />
               <Col sm="2">
@@ -143,10 +129,10 @@ export default function create_jurnal({ data, data2 }) {
                   aria-label="date"
                   onChange={props.handleChange}
                   name="tgl_transaksi"
+                  value={current}
+                  disabled
                 />
-                {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? (
-                  <div>{props.errors.tgl_transaksi}</div>
-                ) : null}
+                {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
               </Col>
             </Row>
 
@@ -169,9 +155,7 @@ export default function create_jurnal({ data, data2 }) {
                     <Col m="2">
                       <p className="font-semibold">Kredit</p>
                     </Col>
-                    <Col sm="2">
-                      <p className="font-semibold">Action</p>
-                    </Col>
+                    <Col sm="2">{/* <p className="font-semibold">Action</p> */}</Col>
                   </Row>
 
                   <FieldArray name="detail_jurnal">
@@ -182,11 +166,7 @@ export default function create_jurnal({ data, data2 }) {
                             <div key={index} name="detail_jurnal">
                               <Form.Group as={Row} controlId="formPlaintext">
                                 <Col sm="3">
-                                  <Field
-                                    options={data}
-                                    name={`detail_jurnal.${index}.akun_id`}
-                                    component={SelectField}
-                                  />
+                                  <Field options={data} name={`detail_jurnal.${index}.akun_id`} component={SelectField} />
                                   {/* <Form.Control
                                     as='select'
                                     name={`detail_jurnal.${index}.akun_id`}
@@ -209,10 +189,7 @@ export default function create_jurnal({ data, data2 }) {
                                     placeholder="-"
                                     name="deskripsi"
                                     onChange={(e) => {
-                                      props.setFieldValue(
-                                        `detail_jurnal.${index}.deskripsi`,
-                                        e.target.value
-                                      );
+                                      props.setFieldValue(`detail_jurnal.${index}.deskripsi`, e.target.value);
                                     }}
                                   />
                                 </Col>
@@ -221,10 +198,7 @@ export default function create_jurnal({ data, data2 }) {
                                     placeholder="-"
                                     name="tag"
                                     onChange={(e) => {
-                                      props.setFieldValue(
-                                        `detail_jurnal.${index}.tag`,
-                                        e.target.value
-                                      );
+                                      props.setFieldValue(`detail_jurnal.${index}.tag`, e.target.value);
                                     }}
                                   />
                                 </Col>
@@ -232,75 +206,28 @@ export default function create_jurnal({ data, data2 }) {
                                   <Form.Control
                                     type="number"
                                     placeholder="Rp. 0,00"
-                                    disabled={
-                                      props.values.detail_jurnal[index]
-                                        .debit_disable
-                                    }
+                                    disabled={props.values.detail_jurnal[index].debit_disable}
                                     name={`detail_jurnal.${index}.debit`}
                                     onChange={(e) => {
                                       if (e.target.value.length > 0) {
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.kredit_disable`,
-                                          true
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.debit`,
-                                          parseInt(e.target.value)
-                                        );
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit_disable`, true);
+                                        props.setFieldValue(`detail_jurnal.${index}.debit`, parseInt(e.target.value));
 
                                         let debit = parseInt(e.target.value);
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].debit = debit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].nominal = debit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].tipe_saldo = "Debit")
-                                        );
+                                        props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Debit"));
 
-                                        const total_debit =
-                                          props.values.detail_jurnal.reduce(
-                                            (a, b) => (a = a + b.debit),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.total_debit =
-                                            total_debit)
-                                        );
-                                        props.setFieldValue(
-                                          "total_debit",
-                                          total_debit
-                                        );
+                                        const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
+                                        props.setFieldValue((props.values.total_debit = total_debit));
+                                        props.setFieldValue("total_debit", total_debit);
 
-                                        if (
-                                          (props.values.total_debit /
-                                            props.values.total_kredit) %
-                                          0
-                                        ) {
-                                          let balance =
-                                            props.values.total_debit -
-                                            props.values.total_kredit;
-                                          props.setFieldValue(
-                                            (balance = "Balance")
-                                          );
-                                          props.setFieldValue(
-                                            "balance",
-                                            balance
-                                          );
-                                        } else if (
-                                          props.values.total_kredit >
-                                          props.values.total_debit
-                                        ) {
-                                          let balance =
-                                            props.values.total_kredit -
-                                            props.values.total_debit;
+                                        if ((props.values.total_debit / props.values.total_kredit) % 0) {
+                                          let balance = props.values.total_debit - props.values.total_kredit;
+                                          props.setFieldValue((balance = "Balance"));
+                                          props.setFieldValue("balance", balance);
+                                        } else if (props.values.total_kredit > props.values.total_debit) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
                                           props.setFieldValue(
                                             (balance =
                                               "Debit kurang: Rp. " +
@@ -308,14 +235,9 @@ export default function create_jurnal({ data, data2 }) {
                                                 minimumFractionDigits: 0,
                                               }))
                                           );
-                                          props.setFieldValue(
-                                            "balance",
-                                            balance
-                                          );
+                                          props.setFieldValue("balance", balance);
                                         } else {
-                                          let balance =
-                                            props.values.total_kredit -
-                                            props.values.total_debit;
+                                          let balance = props.values.total_kredit - props.values.total_debit;
                                           props.setFieldValue(
                                             (balance =
                                               "Kredit kurang: Rp. " +
@@ -323,55 +245,21 @@ export default function create_jurnal({ data, data2 }) {
                                                 minimumFractionDigits: 0,
                                               }))
                                           );
-                                          props.setFieldValue(
-                                            "balance",
-                                            balance
-                                          );
+                                          props.setFieldValue("balance", balance);
                                         }
                                       } else {
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.kredit_disable`,
-                                          false
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.kredit`,
-                                          0
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.debit`,
-                                          0
-                                        );
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit_disable`, false);
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit`, 0);
+                                        props.setFieldValue(`detail_jurnal.${index}.debit`, 0);
 
                                         let debit = 0;
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].debit = debit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].nominal = debit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].tipe_saldo = "Debit")
-                                        );
+                                        props.setFieldValue((props.values.detail_jurnal[index].debit = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = debit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Debit"));
 
-                                        const total_debit =
-                                          props.values.detail_jurnal.reduce(
-                                            (a, b) => (a = a + b.debit),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.total_debit =
-                                            total_debit)
-                                        );
-                                        props.setFieldValue(
-                                          "total_debit",
-                                          total_debit
-                                        );
+                                        const total_debit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.debit), 0);
+                                        props.setFieldValue((props.values.total_debit = total_debit));
+                                        props.setFieldValue("total_debit", total_debit);
                                       }
                                     }}
                                   />
@@ -381,74 +269,27 @@ export default function create_jurnal({ data, data2 }) {
                                     type="number"
                                     placeholder="Rp. 0,00"
                                     name="kredit"
-                                    disabled={
-                                      props.values.detail_jurnal[index]
-                                        .kredit_disable
-                                    }
+                                    disabled={props.values.detail_jurnal[index].kredit_disable}
                                     onChange={(e) => {
                                       if (e.target.value.length > 0) {
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.debit_disable`,
-                                          true
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.kredit`,
-                                          parseInt(e.target.value)
-                                        );
+                                        props.setFieldValue(`detail_jurnal.${index}.debit_disable`, true);
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit`, parseInt(e.target.value));
 
                                         let kredit = parseInt(e.target.value);
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].kredit = kredit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].nominal = kredit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].tipe_saldo = "Kredit")
-                                        );
+                                        props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Kredit"));
 
-                                        const total_kredit =
-                                          props.values.detail_jurnal.reduce(
-                                            (a, b) => (a = a + b.kredit),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.total_kredit =
-                                            total_kredit)
-                                        );
-                                        props.setFieldValue(
-                                          "total_kredit",
-                                          total_kredit
-                                        );
+                                        const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
+                                        props.setFieldValue((props.values.total_kredit = total_kredit));
+                                        props.setFieldValue("total_kredit", total_kredit);
 
-                                        if (
-                                          props.values.total_kredit /
-                                            props.values.total_debit ==
-                                          1
-                                        ) {
-                                          let balance =
-                                            props.values.total_kredit -
-                                            props.values.total_debit;
-                                          props.setFieldValue(
-                                            (balance = "Balance")
-                                          );
-                                          props.setFieldValue(
-                                            "balance",
-                                            balance
-                                          );
-                                        } else if (
-                                          props.values.total_debit >
-                                          props.values.total_kredit
-                                        ) {
-                                          let balance =
-                                            props.values.total_kredit -
-                                            props.values.total_debit;
+                                        if (props.values.total_kredit / props.values.total_debit == 1) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
+                                          props.setFieldValue((balance = "Balance"));
+                                          props.setFieldValue("balance", balance);
+                                        } else if (props.values.total_debit > props.values.total_kredit) {
+                                          let balance = props.values.total_kredit - props.values.total_debit;
                                           props.setFieldValue(
                                             (balance =
                                               "Kredit kurang: Rp. " +
@@ -456,14 +297,9 @@ export default function create_jurnal({ data, data2 }) {
                                                 minimumFractionDigits: 0,
                                               }))
                                           );
-                                          props.setFieldValue(
-                                            "balance",
-                                            balance
-                                          );
+                                          props.setFieldValue("balance", balance);
                                         } else {
-                                          let balance =
-                                            props.values.total_kredit -
-                                            props.values.total_debit;
+                                          let balance = props.values.total_kredit - props.values.total_debit;
                                           props.setFieldValue(
                                             (balance =
                                               "Debit kurang: Rp. " +
@@ -471,64 +307,27 @@ export default function create_jurnal({ data, data2 }) {
                                                 minimumFractionDigits: 0,
                                               }))
                                           );
-                                          props.setFieldValue(
-                                            "balance",
-                                            balance
-                                          );
+                                          props.setFieldValue("balance", balance);
                                         }
                                       } else {
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.debit_disable`,
-                                          false
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.debit`,
-                                          0
-                                        );
-                                        props.setFieldValue(
-                                          `detail_jurnal.${index}.kredit`,
-                                          0
-                                        );
+                                        props.setFieldValue(`detail_jurnal.${index}.debit_disable`, false);
+                                        props.setFieldValue(`detail_jurnal.${index}.debit`, 0);
+                                        props.setFieldValue(`detail_jurnal.${index}.kredit`, 0);
 
                                         let kredit = 0;
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].kredit = kredit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].nominal = kredit)
-                                        );
-                                        props.setFieldValue(
-                                          (props.values.detail_jurnal[
-                                            index
-                                          ].tipe_saldo = "Kredit")
-                                        );
+                                        props.setFieldValue((props.values.detail_jurnal[index].kredit = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].nominal = kredit));
+                                        props.setFieldValue((props.values.detail_jurnal[index].tipe_saldo = "Kredit"));
 
-                                        const total_kredit =
-                                          props.values.detail_jurnal.reduce(
-                                            (a, b) => (a = a + b.kredit),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.total_kredit =
-                                            total_kredit)
-                                        );
-                                        props.setFieldValue(
-                                          "total_kredit",
-                                          total_kredit
-                                        );
+                                        const total_kredit = props.values.detail_jurnal.reduce((a, b) => (a = a + b.kredit), 0);
+                                        props.setFieldValue((props.values.total_kredit = total_kredit));
+                                        props.setFieldValue("total_kredit", total_kredit);
                                       }
                                     }}
                                   />
                                 </Col>
                                 <Col sm="2">
-                                  <Button
-                                    variant="primary"
-                                    onClick={() => remove(index)}
-                                  >
+                                  <Button variant="danger" onClick={() => remove(index)}>
                                     Remove
                                   </Button>
                                 </Col>
@@ -588,9 +387,7 @@ export default function create_jurnal({ data, data2 }) {
                       <Form.File
                         type="file"
                         name="fileattachment"
-                        onChange={(e) =>
-                          props.setFieldValue("fileattachment", e.target.files)
-                        }
+                        onChange={(e) => props.setFieldValue("fileattachment", e.target.files)}
                       />
                     </Col>
                   </Form.Group>
@@ -598,19 +395,16 @@ export default function create_jurnal({ data, data2 }) {
               </div>
             </div>
             <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
-              <button
-                onclick="openModal(false)"
-                class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none ml-4 mr-2"
-              >
-                Batal
-              </button>
-
-              <button
-                class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none"
-                onClick={props.handleSubmit}
-              >
-                Submit
-              </button>
+              <Button variant="danger">Batal</Button>
+              {props.values.total_debit == props.values.total_kredit ? (
+                <Button variant="success" onClick={props.handleSubmit}>
+                  Submit
+                </Button>
+              ) : (
+                <Button variant="success" disabled>
+                  Submit
+                </Button>
+              )}
             </div>
           </Forms>
         )}

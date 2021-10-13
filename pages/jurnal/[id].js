@@ -11,8 +11,6 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-// import 'date-fns';
-// import {KeyboardDatePicker} from '@material-ui/pickers';
 
 export default function edit_jurnal({ data, data2, header, jurnal }) {
   const url = "http://localhost:3000/api/jurnal/createJurnal";
@@ -64,36 +62,37 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
             .catch(function (error) {
               console.log(error);
             });
-        }}>
+        }}
+      >
         {(props) => (
           <Forms noValidate>
             <h1>Jurnal</h1>
             <Form>
-              <Form.Group as={Row} controlId='formPlaintext'>
-                <Form.Label column sm='2'>
+              <Form.Group as={Row} controlId="formPlaintext">
+                <Form.Label column sm="2">
                   No. Transaksi
                 </Form.Label>
-                <Form.Label column sm='2'>
+                <Form.Label column sm="2">
                   Tgl.Transaksi
                 </Form.Label>
               </Form.Group>
-              <Form.Group as={Row} controlId='formPlaintext'>
-                <Col sm='2'>
+              <Form.Group as={Row} controlId="formPlaintext">
+                <Col sm="2">
                   <Form.Control
                     placeholder={"Auto " + "(" + id + ")"}
-                    name='no_transaksi'
+                    name="no_transaksi"
                     onChange={props.handleChange}
                     value={props.values.no_transaksi}
                     disabled
                   />
                 </Col>
-                <Col sm='2'>
+                <Col sm="2">
                   <FormControl
-                    placeholder='Pick date'
-                    type='date'
-                    aria-label='date'
+                    placeholder="Pick date"
+                    type="date"
+                    aria-label="date"
                     onChange={props.handleChange}
-                    name='tgl_transaksi'
+                    name="tgl_transaksi"
                     value={props.values.tgl_transaksi}
                     disabled
                   />
@@ -103,40 +102,40 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
               </Form.Group>
             </Form>
 
-            <div className='card'>
-              <div className='card-body'>
+            <div className="card">
+              <div className="card-body">
                 <Form>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Form.Label column sm='2'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Form.Label column sm="2">
                       Akun
                     </Form.Label>
-                    <Form.Label column sm='2'>
+                    <Form.Label column sm="2">
                       Deskripsi
                     </Form.Label>
-                    <Form.Label column sm='1'>
+                    <Form.Label column sm="1">
                       Tag
                     </Form.Label>
-                    <Form.Label column sm='2'>
+                    <Form.Label column sm="2">
                       Debit
                     </Form.Label>
-                    <Form.Label column sm='2'>
+                    <Form.Label column sm="2">
                       Kredit
                     </Form.Label>
-                    <Form.Label column sm='2'>
+                    <Form.Label column sm="2">
                       Action
                     </Form.Label>
                   </Form.Group>
 
-                  <FieldArray name='detail_jurnal'>
+                  <FieldArray name="detail_jurnal">
                     {({ insert, remove, push }) => (
                       <div>
                         {props.values.detail_jurnal.length > 0 &&
                           props.values.detail_jurnal.map((i, index) => (
-                            <div key={index} name='detail_jurnal'>
-                              <Form.Group as={Row} controlId='formPlaintext'>
-                                <Col sm='2'>
+                            <div key={index} name="detail_jurnal">
+                              <Form.Group as={Row} controlId="formPlaintext">
+                                <Col sm="2">
                                   <Form.Control
-                                    as='select'
+                                    as="select"
                                     name={`detail_jurnal.${index}.akun_id`}
                                     value={props.values.detail_jurnal[index].akun_id}
                                     onChange={(e) => {
@@ -144,8 +143,9 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                       let hasil2 = data.filter((i) => {
                                         return i.id === parseInt(e.target.value);
                                       });
-                                    }}>
-                                    <option value='kosong'>Pilih</option>
+                                    }}
+                                  >
+                                    <option value="kosong">Pilih</option>
                                     {data.map((namaAkun) => (
                                       <option key={namaAkun.id} value={namaAkun.id}>
                                         {namaAkun.nama_akun}
@@ -153,29 +153,29 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                     ))}
                                   </Form.Control>
                                 </Col>
-                                <Col sm='2'>
+                                <Col sm="2">
                                   <Form.Control
-                                    placeholder='Isi Deskripsi'
-                                    name='deskripsi'
+                                    placeholder="Isi Deskripsi"
+                                    name="deskripsi"
                                     value={props.values.detail_jurnal[index].deskripsi}
                                     onChange={(e) => {
                                       props.setFieldValue(`detail_jurnal.${index}.deskripsi`, e.target.value);
                                     }}
                                   />
                                 </Col>
-                                <Col sm='1'>
+                                <Col sm="1">
                                   <Form.Control
-                                    placeholder=''
-                                    name='tag'
+                                    placeholder=""
+                                    name="tag"
                                     value={props.values.detail_jurnal[index].tag}
                                     onChange={(e) => {
                                       props.setFieldValue(`detail_jurnal.${index}.tag`, e.target.value);
                                     }}
                                   />
                                 </Col>
-                                <Col sm='2'>
+                                <Col sm="2">
                                   <Form.Control
-                                    placeholder='Isi Debit'
+                                    placeholder="Isi Debit"
                                     name={`detail_jurnal.${index}.debit`}
                                     disabled={props.values.detail_jurnal[index].debit_disable}
                                     value={props.values.detail_jurnal[index].debit}
@@ -227,10 +227,10 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                     }}
                                   />
                                 </Col>
-                                <Col sm='2'>
+                                <Col sm="2">
                                   <Form.Control
-                                    placeholder='Isi Kredit'
-                                    name='kredit'
+                                    placeholder="Isi Kredit"
+                                    name="kredit"
                                     disabled={props.values.detail_jurnal[index].kredit_disable}
                                     value={props.values.detail_jurnal[index].kredit}
                                     onChange={(e) => {
@@ -281,8 +281,8 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                                     }}
                                   />
                                 </Col>
-                                <Col sm='2'>
-                                  <Button variant='primary' onClick={() => remove(index)}>
+                                <Col sm="2">
+                                  <Button variant="primary" onClick={() => remove(index)}>
                                     Remove
                                   </Button>
                                 </Col>
@@ -291,7 +291,7 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                           ))}
 
                         <Button
-                          variant='primary ml-2'
+                          variant="primary ml-2"
                           onClick={() =>
                             push({
                               akun_id: "",
@@ -300,31 +300,32 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                               debit: "",
                               kredit: "",
                             })
-                          }>
-                          <PlaylistAddIcon fontSize='medium' /> Tambah Data
+                          }
+                        >
+                          <PlaylistAddIcon fontSize="medium" /> Tambah Data
                         </Button>
                       </div>
                     )}
                   </FieldArray>
 
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='3'></Col>
-                    <Col sm='3'></Col>
-                    <Col sm='3' name='total_debit'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="3"></Col>
+                    <Col sm="3"></Col>
+                    <Col sm="3" name="total_debit">
                       Total Debit <br />
                       Rp. {props.values.total_debit}
                     </Col>
-                    <Col sm='3' name='total_kredit'>
+                    <Col sm="3" name="total_kredit">
                       Total Kredit <br />
                       Rp. {props.values.total_kredit}
                     </Col>
                   </Form.Group>
-                  <Form.Group as={Row} controlId='formPlaintext'>
-                    <Col sm='3'>
+                  <Form.Group as={Row} controlId="formPlaintext">
+                    <Col sm="3">
                       File Attachment <br />
                       <Form.File
-                        type='file'
-                        name='fileattachment'
+                        type="file"
+                        name="fileattachment"
                         onChange={(e) => props.setFieldValue("fileattachment", e.target.files)}
                       />
                     </Col>
@@ -332,16 +333,18 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                 </Form>
               </div>
             </div>
-            <div class='left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3'>
+            <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
               <button
-                onclick='openModal(false)'
-                class='bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none ml-4 mr-2'>
+                onclick="openModal(false)"
+                class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none ml-4 mr-2"
+              >
                 Batal
               </button>
 
               <button
-                class='bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none'
-                onClick={props.handleSubmit}>
+                class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none"
+                onClick={props.handleSubmit}
+              >
                 Submit
               </button>
             </div>

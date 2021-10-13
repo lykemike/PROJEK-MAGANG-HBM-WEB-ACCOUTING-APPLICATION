@@ -1,16 +1,23 @@
 import React from "react";
+import Head from "next/head";
+import Link from "next/link";
 import Layout from "../../components/Layout";
+
 import { Form, Row, Col, Button } from "react-bootstrap";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+import { Breadcrumbs, Typography } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import { Formik, Form as Forms, Field } from "formik";
+
 import Axios from "axios";
 import { useRouter } from "next/router";
 
 export default function addRole() {
   const RoleSchema = Yup.object().shape({
-    role_type: Yup.string().required(" required"),
+    role_type: Yup.string()
+      .min(2, " characters must be more than 1")
+      .max(30, " characters must be less than 30")
+      .required(" required"),
   });
 
   const url = "http://localhost:3000/api/role/createRole";
@@ -22,29 +29,40 @@ export default function addRole() {
 
   return (
     <Layout>
+      <Head>
+        <title>Buat Role Baru</title>
+      </Head>
       <Formik
         initialValues={{
           role_type: "",
-          role_desc: "",
+          role_desc: "-",
           menu: [],
         }}
         validationSchema={RoleSchema}
         onSubmit={async (values) => {
           Axios.post(url, values)
             .then(function (response) {
-              console.log(response);
               router.push("../role/tabel-role");
             })
             .catch(function (error) {
               console.log(error);
-              console.log(JSON.stringify(values, null, 2));
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <div className="border-b border-gray-200">
+              <Breadcrumbs aria-label="breadcrumb">
+                <Link color="inherit" href="../role/tabel-role">
+                  Role list
+                </Link>
+                <Typography color="textPrimary">Buat role baru</Typography>
+              </Breadcrumbs>
+
+              <h2>Buat role baru</h2>
+            </div>
+
             <div>
-              <h4>Buat Role Baru</h4>
               <div class="mt-12 container">
                 <Form>
                   <Row className="mb-2">
@@ -53,16 +71,13 @@ export default function addRole() {
                     </Col>
                     <Col sm="4">
                       <Form.Control
-                        placeholder="Role Name"
+                        placeholder="Administrator"
                         name="role_type"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                       />
                       {props.errors.role_type && props.touched.role_type ? (
-                        <div class="text-red-500 text-sm">
-                          <ErrorOutlineIcon />
-                          {props.errors.role_type}
-                        </div>
+                        <div class="text-red-500 text-sm">*{props.errors.role_type}</div>
                       ) : null}
                     </Col>
                   </Row>
@@ -73,13 +88,12 @@ export default function addRole() {
                     </Col>
                     <Col sm="4">
                       <Form.Control
-                        placeholder="Role Desc"
+                        placeholder="-"
                         name="role_desc"
                         onChange={props.handleChange}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                       />
-                      {/* {props.errors.role_desc && props.touched.role_desc ? <div class="text-red-500 text-sm"><ErrorOutlineIcon />{props.errors.role_desc}</div> : null} */}
                     </Col>
                   </Row>
                   <Row>
@@ -91,55 +105,47 @@ export default function addRole() {
                       <div role="group" aria-labelledby="checkbox-group">
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="1" />
-                            Dashboard
+                            <Field type="checkbox" name="menu" value="1" /> Dashboard
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="2" />
-                            Jurnal
+                            <Field type="checkbox" name="menu" value="2" /> Jurnal
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="3" />
-                            User
+                            <Field type="checkbox" name="menu" value="3" /> User
                           </label>
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="4" />
-                            Role
-                          </label>
-                        </Row>
-
-                        <Row>
-                          <label>
-                            <Field type="checkbox" name="menu" value="5" />
-                            Daftar Akun
+                            <Field type="checkbox" name="menu" value="4" /> Role
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="6" />
-                            Kontak
+                            <Field type="checkbox" name="menu" value="5" /> Daftar Akun
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="7" />
-                            Laporan
+                            <Field type="checkbox" name="menu" value="6" /> Kontak
+                          </label>
+                        </Row>
+
+                        <Row>
+                          <label>
+                            <Field type="checkbox" name="menu" value="7" /> Laporan
                           </label>
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="15" />
-                            Reimbursement
+                            <Field type="checkbox" name="menu" value="15" /> Reimbursement
                           </label>
                         </Row>
                       </div>
@@ -149,15 +155,13 @@ export default function addRole() {
                       <div role="group" aria-labelledby="checkbox-group">
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="8" />
-                            Pajak
+                            <Field type="checkbox" name="menu" value="8" /> Pajak
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="9" />
-                            Produk
+                            <Field type="checkbox" name="menu" value="9" /> Produk
                           </label>
                         </Row>
 
@@ -169,35 +173,30 @@ export default function addRole() {
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="11" />
-                            Penjualan
+                            <Field type="checkbox" name="menu" value="11" /> Penjualan
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="12" />
-                            Pembelian
+                            <Field type="checkbox" name="menu" value="12" /> Pembelian
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="13" />
-                            Biaya
+                            <Field type="checkbox" name="menu" value="13" /> Biaya
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="14" />
-                            Pengaturan
+                            <Field type="checkbox" name="menu" value="14" /> Pengaturan
                           </label>
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="15" />
-                            Aset
+                            <Field type="checkbox" name="menu" value="16" /> Aset
                           </label>
                         </Row>
                       </div>

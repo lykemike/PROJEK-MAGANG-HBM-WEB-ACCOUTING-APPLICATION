@@ -54,7 +54,7 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
             <TableCell>Rp. {label == "incoming" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "0, 00"}</TableCell>
             <TableCell>Rp. {label == "outgoing" ? i.total.toLocaleString({ minimumFractionDigits: 0 }) : "0, 00"}</TableCell>
             <TableCell>
-              Rp. {label == "outgoing" ? i.sisa_saldo_akuntransfer.toLocaleString({ minimumFractionDigits: 0 }) : i.sisa_saldo_akunsetor.toLocaleString({ minimumFractionDigits: 0 })}
+              {/* Rp. {label == "outgoing" ? i.sisa_saldo_akuntransfer.toLocaleString({ minimumFractionDigits: 0 }) : i.sisa_saldo_akunsetor.toLocaleString({ minimumFractionDigits: 0 })} */}
             </TableCell>
             <TableCell>
               {i.status == "Belum terekonsiliasi" ? (
