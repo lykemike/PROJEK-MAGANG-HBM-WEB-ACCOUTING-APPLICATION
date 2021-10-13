@@ -16,14 +16,21 @@ export default function reimbursement() {
   const url = "http://localhost:3000/api/reimbursement/createReimbursement";
   const router = useRouter();
 
+  const ReimburseSchema = Yup.object().shape({
+    nama_pegawai: Yup.string().required("*Nama Harap Diisi"),
+    yang_mengetahui: Yup.string().required("*Nama Harap Diisi"),
+    yang_menyetujui: Yup.string().required("*Nama Harap Diisi"),
+    periode: Yup.string().required("*Periode Harap Diisi"),
+  });
+
   return (
     <div>
       <Layout>
         <Formik
           initialValues={{
-            nama_pegawai: "-",
-            yang_mengetahui: "-",
-            yang_menyetujui: "-",
+            nama_pegawai: "",
+            yang_mengetahui: "",
+            yang_menyetujui: "",
             periode: "",
             status: "Process",
             detail_reimburse: [
@@ -36,6 +43,7 @@ export default function reimbursement() {
               },
             ],
           }}
+          validationSchema={ReimburseSchema}
           onSubmit={(values) => {
             console.log(values);
             Axios.post(url, values)
@@ -88,6 +96,12 @@ export default function reimbursement() {
                           );
                         }}
                       />
+                      {props.errors.nama_pegawai &&
+                      props.touched.nama_pegawai ? (
+                        <div class="text-red-500 text-sm">
+                          {props.errors.nama_pegawai}
+                        </div>
+                      ) : null}
                     </Col>
                     <Col sm="3">
                       <Form.Label>Periode Reimbursement</Form.Label>
@@ -111,6 +125,11 @@ export default function reimbursement() {
                         <option value="November">November</option>
                         <option value="Desember">Desember</option>
                       </Form.Control>
+                      {props.errors.periode && props.touched.periode ? (
+                        <div class="text-red-500 text-sm">
+                          {props.errors.periode}
+                        </div>
+                      ) : null}
                     </Col>
                   </Row>
                 </div>
@@ -249,6 +268,12 @@ export default function reimbursement() {
                           );
                         }}
                       />
+                      {props.errors.yang_mengetahui &&
+                      props.touched.yang_mengetahui ? (
+                        <div class="text-red-500 text-sm">
+                          {props.errors.yang_mengetahui}
+                        </div>
+                      ) : null}
                     </Col>
                     <Col sm="3">
                       <Form.Label>Yang Menyetujui</Form.Label>
@@ -265,6 +290,12 @@ export default function reimbursement() {
                           );
                         }}
                       />
+                      {props.errors.yang_menyetujui &&
+                      props.touched.yang_menyetujui ? (
+                        <div class="text-red-500 text-sm">
+                          {props.errors.yang_menyetujui}
+                        </div>
+                      ) : null}
                     </Col>
                     <Col></Col>
                   </Row>

@@ -1,7 +1,8 @@
-import React, { useRef , useState,useMemo,useCallback} from "react";
+import React, { useRef, useState, useMemo, useCallback } from "react";
 import Layout from "../../components/layout";
 import TableDetailRow from "../../components/JurnalUmum/TableDetailRow";
 import TableDetailPenjualanRow from "../../components/JurnalUmum/TableDetailPenjualanRow";
+import Test2 from "../../components/Test2";
 import Link from "next/link";
 import {
   Button,
@@ -15,6 +16,8 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
+import { flatten } from "lodash";
+import _ from "lodash";
 const prisma = new PrismaClient();
 export default function laporanjurnalumum({
   header,
@@ -23,20 +26,18 @@ export default function laporanjurnalumum({
   header4,
   header5,
   header6,
+  debit,
+  kredit,
 }) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
   const onClick = () => {
     // Axios.get()
   };
-  console.log(header);
-  let debitAkhir = [];
+  console.log(header2);
+  // const totalJournalEntry = header.reduce((a, b) => (a = a + b.total_debit), 0);
+  // const totalJournalEntry = header.reduce((a, b) => (a = a + b.total_debit), 0);
 
-  const [grandtotaldebit, setgrandtotaldebit] = useState(0);
-
-  const setGrandTotalDebit = useCallback((nilai) => {
-   debitAkhir.push({nilai})
-  },[])
   return (
     <Layout>
       <div variant="container">
@@ -109,7 +110,6 @@ export default function laporanjurnalumum({
                   tipe="jurnal"
                   view="view2"
                   label="Journal Entry"
-                  setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -120,7 +120,6 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -133,7 +132,6 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -146,7 +144,6 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -159,7 +156,6 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                  setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -172,7 +168,6 @@ export default function laporanjurnalumum({
                   data={data}
                   index={index}
                   view="view2"
-                   setgrandtotal = {setGrandTotalDebit}
                 />
               );
             })}
@@ -193,9 +188,12 @@ export default function laporanjurnalumum({
               <td class="px-2 py-1" align="right">
                 Grand Total
               </td>
-              <td class='px-2 py-1'>Rp. {console.log(debitAkhir)}</td>
-
-
+              <td class="px-2 py-1">
+                Rp. {debit.toLocaleString({ minimumFractionDigits: 0 })}
+              </td>
+              <td class="px-2 py-1">
+                Rp. {kredit.toLocaleString({ minimumFractionDigits: 0 })}
+              </td>
               {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td> */}
             </tr>
           </tfoot>
@@ -206,7 +204,107 @@ export default function laporanjurnalumum({
 }
 
 export async function getServerSideProps() {
-  const header = await prisma.headerJurnal.findMany({
+  // const header = await prisma.headerJurnal.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     DetailJurnal: {
+  //       include: {
+  //         akun: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const getPenjualan = await prisma.headerPenjualan.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalPenjualan: {
+  //       include: {
+  //         akun: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const getPembelian = await prisma.headerPembelian.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalPembelian: {
+  //       include: {
+  //         akun: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const getKirimUang = await prisma.headerKirimUang.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalKirimUang: {
+  //       include: {
+  //         akun: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const getTransferUang = await prisma.transferUang.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalTransferUang: {
+  //       include: {
+  //         akun: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const getTerimaUang = await prisma.headerTerimaUang.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalTerimaUang: {
+  //       include: {
+  //         akun: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const getBiaya = await prisma.headerBiaya.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalBiaya: {
+  //       include: {
+  //         akun1: true,
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const getPembelian = await prisma.headerPembelian.findMany({
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  //   include: {
+  //     JurnalPembelian: true,
+  //   },
+  // });
+
+  const getJournal = await prisma.headerJurnal.findMany({
     orderBy: {
       id: "asc",
     },
@@ -284,37 +382,111 @@ export async function getServerSideProps() {
     },
   });
 
-  // const getBiaya = await prisma.headerBiaya.findMany({
-  //   orderBy: {
-  //     id: "asc",
-  //   },
-  //   include: {
-  //     JurnalBiaya: {
-  //       include: {
-  //         akun1: true,
-  //       },
-  //     },
-  //   },
-  // });
+  //Journal Entry
+  const total_journal_debit = flatten(
+    getJournal.map((i) => {
+      return i.DetailJurnal.filter((j) => j.tipe_saldo === "Debit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
 
-  // const getPembelian = await prisma.headerPembelian.findMany({
-  //   orderBy: {
-  //     id: "asc",
-  //   },
-  //   include: {
-  //     JurnalPembelian: true,
-  //   },
-  // });
+  const total_journal_kredit = flatten(
+    getJournal.map((i) => {
+      return i.DetailJurnal.filter((j) => j.tipe_saldo === "Kredit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  //Sales Invoice
+  const total_penjualan_debit = flatten(
+    getPenjualan.map((i) => {
+      return i.JurnalPenjualan.filter((j) => j.tipe_saldo === "Debit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  const total_penjualan_kredit = flatten(
+    getPenjualan.map((i) => {
+      return i.JurnalPenjualan.filter((j) => j.tipe_saldo === "Kredit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  //Purchase Invoice
+  const total_pembelian_debit = flatten(
+    getPembelian.map((i) => {
+      return i.JurnalPembelian.filter((j) => j.tipe_saldo === "Debit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  const total_pembelian_kredit = flatten(
+    getPembelian.map((i) => {
+      return i.JurnalPembelian.filter((j) => j.tipe_saldo === "Kredit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  //Kirim Uang Invoice
+  const total_kirimuang_debit = flatten(
+    getKirimUang.map((i) => {
+      return i.JurnalKirimUang.filter((j) => j.tipe_saldo === "Debit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  const total_kirimuang_kredit = flatten(
+    getKirimUang.map((i) => {
+      return i.JurnalKirimUang.filter((j) => j.tipe_saldo === "Kredit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  //Terima Uang Invoice
+  const total_terimauang_debit = flatten(
+    getTerimaUang.map((i) => {
+      return i.JurnalTerimaUang.filter((j) => j.tipe_saldo === "Debit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  const total_terimauang_kredit = flatten(
+    getTerimaUang.map((i) => {
+      return i.JurnalTerimaUang.filter((j) => j.tipe_saldo === "Kredit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  //Transfer Uang Invoice
+  const total_transferuang_debit = flatten(
+    getTransferUang.map((i) => {
+      return i.JurnalTransferUang.filter((j) => j.tipe_saldo === "Debit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  const total_transferuang_kredit = flatten(
+    getTransferUang.map((i) => {
+      return i.JurnalTransferUang.filter((j) => j.tipe_saldo === "Kredit");
+    })
+  ).reduce((a, b) => a + b.nominal, 0);
+
+  const grandtotaldebit =
+    total_kirimuang_debit +
+    total_pembelian_debit +
+    total_penjualan_debit +
+    total_terimauang_debit +
+    total_transferuang_debit +
+    total_journal_debit;
+
+  const grandtotalkredit =
+    total_kirimuang_kredit +
+    total_pembelian_kredit +
+    total_penjualan_kredit +
+    total_terimauang_kredit +
+    total_transferuang_kredit +
+    total_journal_kredit;
 
   return {
     props: {
-      header: header,
+      header: getJournal,
       header2: getPenjualan,
       header3: getPembelian,
       header4: getKirimUang,
       header5: getTransferUang,
       header6: getTerimaUang,
       // header7: getBiaya,
+      debit: grandtotaldebit,
+      kredit: grandtotalkredit,
     },
   };
 }

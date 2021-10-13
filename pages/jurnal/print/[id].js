@@ -32,12 +32,12 @@ export default function jurnalentry({ data, data2 }) {
               </Col>
               <Col sm="3"></Col>
               <Col sm="3">
-                <button
+                {/* <button
                   type="button"
                   class="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
                 >
                   Cetak
-                </button>
+                </button> */}
               </Col>
             </Form.Group>
           </Form>
@@ -108,13 +108,13 @@ export default function jurnalentry({ data, data2 }) {
           <Form.Group as={Row} controlId="formPlaintext">
             <Col sm="3">
               <div class="px-0 py-3">
-                <button
+                {/* <button
                   type="button"
                   class="focus:outline-none text-white text-sm py-2 px-4 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg"
                   onClick={edit}
                 >
                   Edit
-                </button>
+                </button> */}
               </div>
             </Col>
             <Col sm="3"></Col>

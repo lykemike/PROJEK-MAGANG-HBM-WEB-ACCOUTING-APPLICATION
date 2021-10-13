@@ -89,6 +89,7 @@ export default function penagihanpenjualan({
           tag: "-",
           boolean: false,
           tgl_kontrak: "",
+          custom_invoice: custom_invoice,
           produks: [
             {
               produk_id: "",
@@ -367,6 +368,15 @@ export default function penagihanpenjualan({
                       name="tgl_jatuh_tempo"
                       onChange={props.handleChange}
                       value={props.values.tgl_jatuh_tempo}
+                    />
+                  </div>
+                  <div className="mb-2">
+                    <label>Nomor Invoice Custom</label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Auto"
+                      name="no_invoice_custom"
+                      disabled
                     />
                   </div>
                 </Col>

@@ -66,11 +66,15 @@ export default function TableDetailBBRow({ data, index }) {
                 tipe_saldo={data.JurnalPenjualan[0]?.tipe_saldo || "-"}
               />
               {/* <JournalEntry
-                tgl_transaksi={data.DetailJurnal[0]?.header_jurnal.tgl_transaksi || '-'}
-                no_transaksi={data.DetailJurnal[0]?.header_jurnal.no_transaksi || '-'}
-                debit={data.DetailJurnal[0]?.debit || '0'}
-                kredit={data.DetailJurnal[0]?.kredit || '0'}
-            /> */}
+                tgl_transaksi={
+                  data.DetailJurnal[0]?.header_jurnal.tgl_transaksi || "-"
+                }
+                no_transaksi={
+                  data.DetailJurnal[0]?.header_jurnal.no_transaksi || "-"
+                }
+                nominal={data.DetailJurnal[0]?.nominal || "0"}
+                tipe_saldo={data.DetailJurnal[0]?.tipe_saldo || "-"}
+              /> */}
               <KirimUang
                 tgl_transaksi={
                   data.JurnalKirimUang[0]?.header_kirim_uang.tgl_transaksi ||
@@ -114,8 +118,7 @@ export default function TableDetailBBRow({ data, index }) {
                 </td>
                 <td class="px-2 py-1">
                   Rp.{" "}
-                  {
-                    // data.DetailJurnal &&
+                  {data.DetailJurnal &&
                     (
                       data.JurnalPenjualan &&
                       data.JurnalKirimUang &&
@@ -123,8 +126,7 @@ export default function TableDetailBBRow({ data, index }) {
                       data.JurnalTransferUang
                     )
                       .reduce((a, b) => (a = a + b.debit), 0)
-                      .toLocaleString({ minimumFractionDigits: 0 })
-                  }
+                      .toLocaleString({ minimumFractionDigits: 0 })}
                 </td>
                 <td class="px-2 py-1">
                   Rp.{" "}
