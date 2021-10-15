@@ -82,7 +82,8 @@ export default function create_jurnal({ data, data2 }) {
           })
             .then(function (response) {
               console.log(response);
-              router.push(`view-jurnal/${idInvoice}`);
+              // router.push(`view-jurnal/${idInvoice}`);
+              router.push(`view-jurnal/${response.data[0].id.id}`);
             })
             .catch(function (error) {
               console.log(error);

@@ -1,26 +1,24 @@
 import React, { useState, useMemo } from "react";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Collapse from "@material-ui/core/Collapse";
-import IconButton from "@material-ui/core/IconButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+
+import {
+  Box,
+  Breadcrumbs,
+  Typography,
+  Collapse,
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableFooter,
+  TableBody,
+  IconButton,
+} from "@material-ui/core";
+
+import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons/";
 
 export default function Test2({ data, index, label = "Sales Invoice", tipe = "penjualan" }) {
   const [open, setOpen] = useState(false);
-  const onClick = () => {
-    setOpen(!open);
-  };
+
   const detail = useMemo(() => {
     if (tipe == "pembelian") {
       return data.JurnalPembelian;
@@ -45,7 +43,7 @@ export default function Test2({ data, index, label = "Sales Invoice", tipe = "pe
         <TableRow>
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">

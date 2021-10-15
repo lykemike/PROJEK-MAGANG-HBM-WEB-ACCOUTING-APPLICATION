@@ -97,13 +97,7 @@ export default function test({ list }) {
 
             <div class="mt-4 mb-4">
               <h5>Tanggal Konversi</h5>
-              <TextField
-                id="date"
-                type="date"
-                defaultValue={date}
-                name="tgl_konversi"
-                onChange={props.handleChange}
-              />
+              <TextField id="date" type="date" defaultValue={date} name="tgl_konversi" onChange={props.handleChange} />
             </div>
 
             <TableContainer component={Paper}>
@@ -121,18 +115,12 @@ export default function test({ list }) {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography
-                        className="text-white font-bold"
-                        align="center"
-                      >
+                      <Typography className="text-white font-bold" align="center">
                         Debit
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography
-                        className="text-white font-bold"
-                        align="center"
-                      >
+                      <Typography className="text-white font-bold" align="center">
                         Kredit
                       </Typography>
                     </TableCell>
@@ -147,76 +135,38 @@ export default function test({ list }) {
                             <TableCell component="th" scope="row" align="left">
                               {props.values.saldo_awal[index].kode_akun}
                             </TableCell>
-                            <TableCell align="left">
-                              {props.values.saldo_awal[index].nama_akun}
-                            </TableCell>
+                            <TableCell align="left">{props.values.saldo_awal[index].nama_akun}</TableCell>
                             <TableCell align="center">
                               <Form.Control
                                 size="sm"
-                                disabled={
-                                  props.values.saldo_awal[index].tipe_saldo ===
-                                  "Kredit"
-                                }
+                                disabled={props.values.saldo_awal[index].tipe_saldo === "Kredit"}
                                 type="number"
                                 min="0"
                                 name={`saldo_awal.${index}.debit`}
                                 onChange={(e) => {
-                                  props.setFieldValue(
-                                    `saldo_awal.${index}.debit`,
-                                    parseInt(e.target.value)
-                                  );
-                                  props.setFieldValue(
-                                    (props.values.saldo_awal[index].debit =
-                                      parseInt(e.target.value))
-                                  );
+                                  props.setFieldValue(`saldo_awal.${index}.debit`, parseInt(e.target.value));
+                                  props.setFieldValue((props.values.saldo_awal[index].debit = parseInt(e.target.value)));
 
-                                  const total_debit =
-                                    props.values.saldo_awal.reduce(
-                                      (a, b) => (a = a + b.debit),
-                                      0
-                                    );
-                                  props.setFieldValue(
-                                    (props.values.total_debit = total_debit)
-                                  );
-                                  props.setFieldValue(
-                                    "total_debit",
-                                    total_debit
-                                  );
+                                  const total_debit = props.values.saldo_awal.reduce((a, b) => (a = a + b.debit), 0);
+                                  props.setFieldValue((props.values.total_debit = total_debit));
+                                  props.setFieldValue("total_debit", total_debit);
                                 }}
                               />
                             </TableCell>
                             <TableCell align="center">
                               <Form.Control
                                 size="sm"
-                                disabled={
-                                  props.values.saldo_awal[index].tipe_saldo ===
-                                  "Debit"
-                                }
+                                disabled={props.values.saldo_awal[index].tipe_saldo === "Debit"}
                                 type="number"
                                 min="0"
                                 name={`saldo_awal.${index}.kredit`}
                                 onChange={(e) => {
-                                  props.setFieldValue(
-                                    `saldo_awal.${index}.kredit`,
-                                    parseInt(e.target.value)
-                                  );
-                                  props.setFieldValue(
-                                    (props.values.saldo_awal[index].kredit =
-                                      parseInt(e.target.value))
-                                  );
+                                  props.setFieldValue(`saldo_awal.${index}.kredit`, parseInt(e.target.value));
+                                  props.setFieldValue((props.values.saldo_awal[index].kredit = parseInt(e.target.value)));
 
-                                  const total_kredit =
-                                    props.values.saldo_awal.reduce(
-                                      (a, b) => (a = a + b.kredit),
-                                      0
-                                    );
-                                  props.setFieldValue(
-                                    (props.values.total_kredit = total_kredit)
-                                  );
-                                  props.setFieldValue(
-                                    "total_kredit",
-                                    total_kredit
-                                  );
+                                  const total_kredit = props.values.saldo_awal.reduce((a, b) => (a = a + b.kredit), 0);
+                                  props.setFieldValue((props.values.total_kredit = total_kredit));
+                                  props.setFieldValue("total_kredit", total_kredit);
                                 }}
                               />
                             </TableCell>
@@ -235,12 +185,12 @@ export default function test({ list }) {
                     </TableCell>
                     <TableCell>
                       <h4 className="text-black font-semibold">
-                        Rp. {props.values.total_debit}
+                        Rp. {props.values.total_debit.toLocaleString({ minimumFractionDigits: 0 })}
                       </h4>
                     </TableCell>
                     <TableCell>
                       <h4 className="text-black font-semibold">
-                        Rp. {props.values.total_kredit}
+                        Rp. {props.values.total_kredit.toLocaleString({ minimumFractionDigits: 0 })}
                       </h4>
                     </TableCell>
                   </TableRow>
@@ -259,12 +209,15 @@ export default function test({ list }) {
               />
             </div> */}
             <div className="d-flex justify-content-end mt-4">
-              <button
-                class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none"
-                onClick={props.handleSubmit}
-              >
-                Terbitkan
-              </button>
+              {props.values.total_debit == props.values.total_kredit ? (
+                <Button variant="success" onClick={props.handleSubmit}>
+                  Terbitkan
+                </Button>
+              ) : (
+                <Button variant="success" disabled>
+                  Terbitkan
+                </Button>
+              )}
             </div>
           </Forms>
         )}

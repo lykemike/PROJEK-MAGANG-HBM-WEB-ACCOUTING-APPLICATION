@@ -138,6 +138,7 @@ export default function DaftarAkun({ data }) {
               </TableRow>
             </TableHead>
             <TableBody>
+              {console.log(data)}
               {data.slice(firstIndex, lastIndex).map((i) => (
                 <TableRow>
                   <TableCell component="th" scope="row">
@@ -146,9 +147,14 @@ export default function DaftarAkun({ data }) {
                   <TableCell>{i.nama_akun}</TableCell>
                   <TableCell>{i.kategori_akun.name}</TableCell>
                   <TableCell>
-                    Rp. 0,00
-                    {/* {i.DetailSaldoAwal[0].debit > 0
+                    Rp.
+                    {/* {Object.entries(i.DetailSaldoAwal[0]).length === 0 && i.DetailSaldoAwal[0] === Object
+                      ? "0, 00"
+                      : i.DetailSaldoAwal[0].debit > 0
                       ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })
+                      : i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 })} */}
+                    {/* {i.DetailSaldoAwal[0].debit > 0
+                    ? i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })
                       : i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 })} */}
                   </TableCell>
                   <TableCell align="right">

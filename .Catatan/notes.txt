@@ -1066,19 +1066,24 @@ Testing dan Perbaikan
   - Select2 = 100%
 
   Jurnal Menu
-  - Perbaikan UI = 90%
+  - Perbaikan UI = 100%
   - Validation frontend = 99%
   - Select2 = 100%
   - menu jurnal, ngak ada validasi balance = 100%
-  - menu jurnal, edit jurnal, tidak tersubmit - data tidak terubah = 90%
+  - menu jurnal, edit jurnal, tidak tersubmit - data tidak terubah = 100%
     -- file tidak ada = 
   - menu jurnal, tidak ada fitur hapus
   - menu jurnal, tanggal transaksi auto = 100%
-      -- dan bisa diubah = 
+      -- dan bisa diubah = 100%
   - menu jurnal, fitur cetak = 100%
+  - memperbaiki pas redirect ke invoice = 100%
 
   Daftar Akun Menu
-  - Atur Saldo Awal harus balance untuk di terbitkan
+  - Atur Saldo Awal harus balance untuk di terbitkan = 100%
+
+  Laporan
+  - Jurnal Umum perbaikan UI = 100%
+  - Filter Date = 20%
 
 
 view list
