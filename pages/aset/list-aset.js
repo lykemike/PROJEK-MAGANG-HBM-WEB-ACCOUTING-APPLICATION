@@ -24,6 +24,8 @@ import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import AddIcon from "@material-ui/icons/Add";
 import { PrismaClient } from "@prisma/client";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 const prisma = new PrismaClient();
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
@@ -50,7 +52,17 @@ export default function listaset({ data }) {
     <div>
       <Layout>
         <div class="text-md font-medium text-gray-900 mb-2">
-          <h4> Aset Tetap</h4>
+          <div className="border-b border-gray-200">
+            <Breadcrumbs aria-label="breadcrumb">
+              <Typography color="textPrimary">Aset</Typography>
+            </Breadcrumbs>
+            <Row>
+              <Col sm="8">
+                <h2 className="text-blue-600">Aset List</h2>
+              </Col>
+              <Col sm="4" />
+            </Row>
+          </div>
 
           <Row>
             <Col></Col>
