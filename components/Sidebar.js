@@ -44,7 +44,7 @@ const Sidebar = () => {
     {
       id: 2,
       menu: "Jurnal",
-      href: "/jurnal/create-jurnal",
+      href: "/jurnal/tabel-jurnal",
       icon: <MenuBookIcon />,
     },
     {
