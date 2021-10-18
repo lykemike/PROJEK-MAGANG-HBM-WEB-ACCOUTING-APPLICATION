@@ -14,7 +14,6 @@ import {
   TableRow,
   TableCell,
   TableHead,
-  TableSortLabel,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
