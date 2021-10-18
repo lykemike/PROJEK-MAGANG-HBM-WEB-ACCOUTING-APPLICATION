@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import Link from "next/Link";
+import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
-import { Row, Col, FormControl } from "react-bootstrap";
+import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
 import {
   Breadcrumbs,
   Typography,
@@ -15,12 +17,53 @@ import {
   TableSortLabel,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import Link from "next/Link";
+
+import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+function MyVerticallyCenteredModal(props) {
+  const router = useRouter();
+  const api_delete = "http://localhost:3000/api/jual/deletePenjualan";
+
+  const handle_delete = async () => {
+    Axios.delete(api_delete, {
+      data: {
+        header_penjualan_id: props.id,
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        router.push(`../jual/penjualan`);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Penjualan Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Are you sure you want to delete the current penjualan?</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handle_delete}>
+          Confirm Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
 export default function penjualan({ data }) {
   const [open, setOpen] = useState(false);
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, kontak: " " });
   const onClick = () => {
     setOpen(!open);
   };
@@ -34,6 +77,7 @@ export default function penjualan({ data }) {
 
   return (
     <Layout>
+      <MyVerticallyCenteredModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Transaksi</Typography>
@@ -135,7 +179,14 @@ export default function penjualan({ data }) {
             </TableRow>
           </TableHead>
           {data.map((data, index) => (
-            <TableReusable data={data} index={index} label="Sales Invoice" label2="Penerimaan Pembayaran" view="jual" />
+            <TableReusable
+              data={data}
+              index={index}
+              label="Sales Invoice"
+              label2="Penerimaan Pembayaran"
+              view="jual"
+              modalDelete={() => setModalShow({ open: true, id: data.id })}
+            />
           ))}
         </Table>
       </TableContainer>

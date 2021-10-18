@@ -15,7 +15,7 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { TableFooter } from "@material-ui/core";
-export default function Table2({ data, index, label, label2, view }) {
+export default function Table2({ data, index, label, label2, view, modalDelete }) {
   const [open, setOpen] = useState(false);
   const onClick = () => {
     setOpen(!open);
@@ -167,7 +167,7 @@ export default function Table2({ data, index, label, label2, view }) {
                   <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
                 </a>
               </Link>
-              <DeleteOutlineIcon color="secondary" fontSize="small" />
+              <DeleteOutlineIcon className="cursor-pointer" color="secondary" fontSize="small" onClick={modalDelete} />
             </TableCell>
           </TableRow>
           <TableRow>

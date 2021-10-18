@@ -1098,6 +1098,10 @@ Testing dan Perbaikan
   Biaya Menu
   - Perbaikan UI = 80%
 
+  Penjualan
+  - Perbaikan UI = 80%
+  - Delete Confirmation = 100%
+
 
 view list
 

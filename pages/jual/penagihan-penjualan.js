@@ -130,7 +130,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
           })
             .then(function (response) {
               console.log(response);
-              router.push(`view/${response.data[0].id.id}`);
+              // router.push(`view/${response.data[0].id.id}`);
             })
             .catch(function (error) {
               console.log(error);

@@ -274,12 +274,7 @@ export default function Kontak({ data, data2 }) {
                           <Typography className="text-white font-bold">No. Handphone</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Saldo</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold" align="right">
-                            Action
-                          </Typography>
+                          <Typography className="text-white font-bold">Action</Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -300,7 +295,6 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell>{i.kontak.email}</TableCell>
                             <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>Rp.</TableCell>
                             <TableCell>
                               <Link href={`${i.kontak.id}`}>
                                 <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
@@ -395,12 +389,7 @@ export default function Kontak({ data, data2 }) {
                           <Typography className="text-white font-bold">No. Handphone</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Saldo</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold" align="right">
-                            Action
-                          </Typography>
+                          <Typography className="text-white font-bold">Action</Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -421,7 +410,6 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell>{i.kontak.email}</TableCell>
                             <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>Rp.</TableCell>
                             <TableCell>
                               <Link href={`${i.kontak.id}`}>
                                 <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
@@ -516,12 +504,7 @@ export default function Kontak({ data, data2 }) {
                           <Typography className="text-white font-bold">No. Handphone</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Saldo</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold" align="right">
-                            Action
-                          </Typography>
+                          <Typography className="text-white font-bold">Action</Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -542,7 +525,6 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell>{i.kontak.email}</TableCell>
                             <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>Rp.</TableCell>
                             <TableCell>
                               <Link href={`${i.kontak.id}`}>
                                 <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
@@ -637,12 +619,7 @@ export default function Kontak({ data, data2 }) {
                           <Typography className="text-white font-bold">No. Handphone</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Saldo</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold" align="right">
-                            Action
-                          </Typography>
+                          <Typography className="text-white font-bold">Action</Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -663,7 +640,6 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell>{i.kontak.email}</TableCell>
                             <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>Rp.</TableCell>
                             <TableCell>
                               <Link href={`${i.kontak.id}`}>
                                 <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
