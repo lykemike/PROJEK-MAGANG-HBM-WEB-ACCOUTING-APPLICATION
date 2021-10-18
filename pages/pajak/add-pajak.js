@@ -39,7 +39,7 @@ export default function addpajak({ data, data2 }) {
   return (
     <Layout>
       <Head>
-        <title>Create New Pajak</title>
+        <title>Buat Pajak Baru</title>
       </Head>
 
       <div className="border-b border-gray-200">

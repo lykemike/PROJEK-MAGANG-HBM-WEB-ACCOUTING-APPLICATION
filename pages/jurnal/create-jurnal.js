@@ -73,6 +73,10 @@ export default function create_jurnal({ data, data2 }) {
               formData.append(`${key}`, `${values[key]}`);
             }
           }
+          // if (values.fileattachment.length > 0) {
+          //   Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          // }
+
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
           console.log(values);
           Axios.post(url, formData, {

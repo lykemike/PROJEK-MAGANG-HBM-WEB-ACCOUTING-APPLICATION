@@ -168,7 +168,7 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
                           props.values.detail_jurnal.map((i, index) => (
                             <div key={index} name="detail_jurnal">
                               <Form.Group as={Row} controlId="formPlaintext">
-                                <Col sm="2">
+                                <Col sm="3">
                                   {/* <Field options={jurnal} name={`detail_jurnal.${index}.akun_id`} component={SelectField} /> */}
                                   <Form.Control
                                     as="select"

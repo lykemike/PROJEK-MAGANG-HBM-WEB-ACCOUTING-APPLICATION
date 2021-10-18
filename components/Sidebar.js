@@ -14,8 +14,8 @@ import PaymentIcon from "@material-ui/icons/Payment";
 import SettingsIcon from "@material-ui/icons/Settings";
 import FaceIcon from "@material-ui/icons/Face";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import BusinessIcon from '@material-ui/icons/Business';
-import MoneyIcon from '@material-ui/icons/Money';
+import BusinessIcon from "@material-ui/icons/Business";
+import MoneyIcon from "@material-ui/icons/Money";
 
 const Sidebar = () => {
   const [previlleges, setPrevilleges] = useState([]);
@@ -29,7 +29,7 @@ const Sidebar = () => {
     {
       id: 2,
       menu: "Jurnal",
-      href: "/jurnal/create-jurnal",
+      href: "/jurnal/tabel-jurnal",
       icon: <MenuBookIcon />,
     },
     {
@@ -126,15 +126,15 @@ const Sidebar = () => {
 
   return (
     <div>
-      <div className='fixed flex flex-col top-0 left-0 w-64 bg-dark h-full '>
-        <div className='flex items-center justify-center h-14'>
+      <div className="fixed flex flex-col top-0 left-0 w-64 bg-dark h-full ">
+        <div className="flex items-center justify-center h-14">
           <div />
         </div>
-        <div className='overflow-y-auto overflow-x-hidden flex-grow'>
-          <ul className='flex flex-col py-4 space-y-1'>
-            <li className='px-7'>
-              <div className='flex flex-row items-center h-8'>
-                <div className='text-lg font-light tracking-wide text-white'>Menu</div>
+        <div className="overflow-y-auto overflow-x-hidden flex-grow">
+          <ul className="flex flex-col py-4 space-y-1">
+            <li className="px-7">
+              <div className="flex flex-row items-center h-8">
+                <div className="text-lg font-light tracking-wide text-white">Menu</div>
               </div>
             </li>
             {previlleges.length > 0
@@ -143,11 +143,11 @@ const Sidebar = () => {
                     .filter((i) => i.id === j.menu_id)
                     .map((k) => {
                       return (
-                        <li key='index'>
+                        <li key="index">
                           <Link href={k.href}>
-                            <a className='relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-600 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6'>
-                              <span className='inline-flex justify-center items-center ml-4'>{k.icon}</span>
-                              <span className='ml-2 text-sm tracking-wide truncate'>{k.menu}</span>
+                            <a className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-600 text-white hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
+                              <span className="inline-flex justify-center items-center ml-4">{k.icon}</span>
+                              <span className="ml-2 text-sm tracking-wide truncate">{k.menu}</span>
                             </a>
                           </Link>
                         </li>

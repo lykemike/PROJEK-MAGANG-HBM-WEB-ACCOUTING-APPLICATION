@@ -44,7 +44,7 @@ export default function update({ data, data2, data3 }) {
   return (
     <Layout>
       <Head>
-        <title>Create New Pajak</title>
+        <title>Update Pajak</title>
       </Head>
 
       <div className="border-b border-gray-200">

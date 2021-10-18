@@ -44,7 +44,7 @@ export default function update({ data, data2 }) {
   return (
     <Layout>
       <Head>
-        <title>Edit User</title>
+        <title>Update User</title>
       </Head>
       <Formik
         enableReinitialize={true}

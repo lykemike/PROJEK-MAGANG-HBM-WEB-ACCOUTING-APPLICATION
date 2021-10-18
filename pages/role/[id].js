@@ -34,7 +34,7 @@ export default function updateRole({ data }) {
   return (
     <Layout>
       <Head>
-        <title>Edit Role</title>
+        <title>Update Role</title>
       </Head>
       <Formik
         enableReinitialize={true}

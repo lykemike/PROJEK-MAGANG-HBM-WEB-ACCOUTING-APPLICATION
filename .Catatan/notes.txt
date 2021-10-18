@@ -1018,6 +1018,13 @@ Kalau Kredit dropdown Beban Lainnya
   BCA (2321321)		          Rp. 5, 000
 
 
+Meeting 15/10/2021
+- muncul tombol download di tiap invoice
+- laporan jurnal Umum
+- terima, kirim, transfer di redirect ke invoice masing''
+- testing & bug fix ada di bagian testing dan perbaikan
+- bahas requirements
+
 Testing dan Perbaikan
   Role Menu
   - Perbaikin UI = 100%
@@ -1054,6 +1061,7 @@ Testing dan Perbaikan
   - Select2 = 100%
   - Validation frontend = 100%
   - Hapus saldo =
+  - Tambah Bank Maximal 3 =
   !On Process
   - Filter = 0%
 
@@ -1077,6 +1085,8 @@ Testing dan Perbaikan
       -- dan bisa diubah = 100%
   - menu jurnal, fitur cetak = 100%
   - memperbaiki pas redirect ke invoice = 100%
+  - membuat tabel = 100%
+  - 
 
   Daftar Akun Menu
   - Atur Saldo Awal harus balance untuk di terbitkan = 100%
@@ -1084,6 +1094,9 @@ Testing dan Perbaikan
   Laporan
   - Jurnal Umum perbaikan UI = 100%
   - Filter Date = 20%
+
+  Biaya Menu
+  - Perbaikan UI = 80%
 
 
 view list
