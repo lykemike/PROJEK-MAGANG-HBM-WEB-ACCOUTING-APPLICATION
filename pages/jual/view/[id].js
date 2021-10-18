@@ -83,6 +83,13 @@ export default function salesInvoice({ data, header }) {
               {header[0].email}
             </Row>
           </Col>
+
+          <Col>
+            <div className="d-flex justify-content-end">
+              <h3>Total Amount</h3>
+              <h3 className=" text-blue-600 ml-2">Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+            </div>
+          </Col>
         </Row>
       </div>
 

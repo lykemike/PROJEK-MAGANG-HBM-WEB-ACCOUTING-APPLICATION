@@ -2,246 +2,225 @@ import React from "react";
 import Layout from "../../../components/Layout";
 
 import { Row, Col, Button } from "react-bootstrap";
+import Head from "next/head";
 import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
+
+import {
+  Breadcrumbs,
+  Typography,
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+  TableFooter,
+} from "@material-ui/core";
+
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function salesInvoice({ header, detail, jurnal }) {
+export default function salesInvoice({ header, data }) {
   const router = useRouter();
   const { id } = router.query;
 
-  const jurnal_penerimaan_pembayaran = jurnal.reduce(
+  const jurnal_penerimaan_pembayaran = header[0].JurnalPenerimaanPembayaran.filter((i) => i.tipe_saldo === "Debit").reduce(
     (a, b) => (a = a + b.nominal),
     0
   );
 
   return (
     <div className="container">
-      <Row>
-        <Col>
-          <h5>Transaksi</h5>
-          <h3 className="text-blue-600">Sales Invoice #{id}</h3>
-        </Col>
-        <Col>
-          <h3 className="mt-2 mb-3 float-right">Terbayar Sebagian</h3>
-        </Col>
-      </Row>
+      <Head>
+        <title>PrintSales Invoice</title>
+      </Head>
 
-      <hr />
-
-      {header.map((i) => (
+      <div className="border-b border-gray-200">
         <Row>
-          <Col sm="4">
-            <Row>
-              <p className="font-medium">Pelanggan: </p>
-              <p className="ml-2">{i.kontak.nama}</p>
-            </Row>
+          <Col sm="8">
+            <h2 className="text-blue-600">Sales Invoice #{id}</h2>
           </Col>
           <Col sm="4">
-            <Row>
-              <p className="font-medium">Email: </p>
-              <p className="ml-2">{i.email}</p>
-            </Row>
+            <div className="d-flex justify-content-end">
+              {header[0].sisa_tagihan > 0 ? <h3>Terbayar Sebagian</h3> : <h3 className="text-green-500">Lunas</h3>}
+            </div>
           </Col>
-          <Col sm="4">
-            <Row className="mt-2 mb-3 float-right">
-              <h3>Total Amount</h3>
-              <h3 className=" text-blue-600 ml-2">
-                Rp.{" "}
-                {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
-              </h3>
-            </Row>
-          </Col>
-        </Row>
-      ))}
-
-      <hr />
-
-      {header.map((i) => (
-        <Row>
-          <Col sm="4">
-            <Row>
-              <p className="font-medium">Alamat Penagihan: </p>
-            </Row>
-            <p className="ml-2">{i.alamat_supplier}</p>
-          </Col>
-
-          <Col sm="4">
-            <Row>
-              <p className="font-medium">Tanggal Transaksi: </p>
-              <p className="ml-2">{i.tgl_transaksi}</p>
-            </Row>
-            <Row>
-              <p className="font-medium">Tanggal Jatuh Tempo: </p>
-              <p className="ml-2">{i.tgl_jatuh_tempo}</p>
-            </Row>
-            <Row>
-              <p className="font-medium">Syarat Pembayaran: </p>
-              <p className="ml-2">{i.syarat_pembayaran}</p>
-            </Row>
-          </Col>
-
-          <Col sm="4">
-            <Row>
-              <p className="font-medium">No. Transaksi:</p>
-              <p className="ml-2">{i.custom_invoice}</p>
-            </Row>
-            <Row>
-              <p className="font-medium">Tag: </p>
-              <p className="ml-2">{i.tag}</p>
-            </Row>
-            <Row>
-              <p className="font-medium">No. Kontrak: </p>
-              <p className="ml-2">{i.no_ref_penagihan}</p>
-            </Row>
-          </Col>
-        </Row>
-      ))}
-
-      <table class="min-w-full table-auto mt-12">
-        <thead class="justify-between">
-          <tr class="bg-dark">
-            <th class="px-2 py-2">
-              <span class="text-gray-300">Produk</span>
-            </th>
-            <th class="px-2 py-2">
-              <span class="text-gray-300">Deskripsi</span>
-            </th>
-            <th class="px-2 py-2">
-              <span class="text-gray-300">Kuantitas</span>
-            </th>
-            <th class="px-2 py-2">
-              <span class="text-gray-300">Satuan</span>
-            </th>
-            <th class="px-2 py-2">
-              <span class="text-gray-300">Harga Satuan</span>
-            </th>
-            <th class="px-2 py-2">
-              <span class="text-gray-300">Diskon</span>
-            </th>
-            <th class="px-2 py-2">
-              <span class="text-gray-300">Jumlah</span>
-            </th>
-          </tr>
-        </thead>
-
-        {detail.map((i) => (
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr>
-              <td class="px-2 py-2 whitespace-nowrap">
-                <div class="text-sm text-gray-900">{i.produk.nama}</div>
-              </td>
-              <td class="px-2 py-2 whitespace-nowrap">
-                <div class="text-sm text-gray-900">{i.deskripsi}</div>
-              </td>
-              <td class="px-2 py-2 whitespace-nowrap">
-                <div class="text-sm text-gray-900">{i.kuantitas}</div>
-              </td>
-              <td class="px-2 py-2 whitespace-nowrap">
-                <div class="text-sm text-gray-900">{i.satuan}</div>
-              </td>
-              <td class="px-2 py-2 whitespace-nowrap">
-                <div class="text-sm text-gray-900">
-                  Rp.{" "}
-                  {i.harga_satuan.toLocaleString({ minimumFractionDigits: 0 })}
-                </div>
-              </td>
-              <td class="px-2 py-2 whitespace-nowrap">
-                <div class="text-sm text-gray-900">{i.diskon}%</div>
-              </td>
-              <td class="px-2 py-2 whitespace-nowrap">
-                <div class="text-sm text-gray-900">
-                  Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        ))}
-      </table>
-
-      <hr />
-
-      {header.map((i) => (
-        <Row>
-          <Col sm="4"></Col>
-          <Col sm="2"></Col>
-          <Col sm="6">
-            <Row>
-              <Col>
-                <p className="font-medium d-flex justify-content-end">
-                  Subtotal
-                </p>
-                <p className="font-medium d-flex justify-content-end">Diskon</p>
-                <p className="font-medium d-flex justify-content-end">Total</p>
-                <p className="font-medium d-flex justify-content-end">
-                  Jumlah Pemotongan
-                </p>
-                <p className="font-medium d-flex justify-content-end">
-                  Sudah Dibayar
-                </p>
-                <h5 className="font-medium d-flex justify-content-end mt-12">
-                  Sisa Tagihan
-                </h5>
-              </Col>
-              <Col>
-                <p className="ml-2">
-                  Rp. {i.subtotal.toLocaleString({ minimumFractionDigits: 0 })}
-                </p>
-                <p className="ml-2">
-                  Rp.{" "}
-                  {(i.total_diskon + i.total_diskon_per_baris).toLocaleString({
-                    minimumFractionDigits: 0,
-                  })}
-                </p>
-                <p className="ml-2">
-                  Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}
-                </p>
-                <p className="ml-2">
-                  Rp.{" "}
-                  {i.pemotongan.toLocaleString({ minimumFractionDigits: 0 })}
-                </p>
-                <p className="ml-2">
-                  Rp.{" "}
-                  {(i.uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({
-                    minimumFractionDigits: 0,
-                  })}
-                </p>
-                <h5 className="ml-2 mt-12">
-                  Rp.{" "}
-                  {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
-                </h5>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      ))}
-
-      <hr />
-      <div>
-        <Row>
-          <Col>
-            <Row className="float-left"></Row>
-          </Col>
-          {/* <Col>
-              <Row>
-                <Button variant="primary" className="mr-6">
-                  Cetak
-                </Button>
-                <Button variant="primary" onClick={pembayaran}>Terima Pembayaran</Button>
-              </Row>
-            </Col>
-            <Col>
-              <Row className="float-right">
-                <Button variant="danger" className="mr-6">
-                  Kembali
-                </Button>
-                <Button variant="success"  onClick={edit}>Ubah</Button>
-              </Row>
-            </Col> */}
         </Row>
       </div>
+
+      <div className="py-2 border-b border-gray-200">
+        <Row>
+          <Col sm="4">
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">Pelanggan:</p>
+              {header[0].kontak.nama}
+            </Row>
+          </Col>
+          <Col sm="4">
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">Email:</p>
+              {header[0].email}
+            </Row>
+          </Col>
+
+          <Col>
+            <div className="d-flex justify-content-end">
+              <h4>Total Amount</h4>
+              <h4 className=" text-blue-600 ml-2">Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h4>
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <div className="py-2 border-b border-gray-200">
+        <Row>
+          <Col sm="4">
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">Alamat Penagihan:</p>
+              {header[0].alamat_supplier}
+            </Row>
+          </Col>
+
+          <Col sm="4">
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">Tanggal Transaksi:</p>
+              {header[0].tgl_transaksi}
+            </Row>
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">Tanggal Jatuh Tempo:</p>
+              {header[0].tgl_jatuh_tempo}
+            </Row>
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">Syarat Pembayaran:</p>
+              {data.nama_pembayaran}
+            </Row>
+          </Col>
+
+          <Col sm="4">
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">No. Transaksi:</p>
+              {header[0].custom_invoice}
+            </Row>
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">Tag:</p>
+              {header[0].tag}
+            </Row>
+            <Row class="row no-gutters">
+              <p className="font-medium mr-2">No. Kontrak:</p>
+              {header[0].no_ref_penagihan}
+            </Row>
+          </Col>
+        </Row>
+      </div>
+
+      <TableContainer className="mt-4" component={Paper}>
+        <Table size="small" aria-label="a dense table">
+          <TableHead className="bg-dark">
+            <TableRow>
+              <TableCell>
+                <Typography className="text-white font-bold">Produk</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Deskripsi</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Kuantitas</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Satuan</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Harga Satuan</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Diskon</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Jumlah</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {header[0].DetailPenjualan.map((i, index) => (
+              <TableRow key={index}>
+                <TableCell>{i.produk.nama}</TableCell>
+                <TableCell>{i.desk_produk}</TableCell>
+                <TableCell>{i.kuantitas}</TableCell>
+                <TableCell>{i.satuan}</TableCell>
+                <TableCell>
+                  Rp.{" "}
+                  {i.harga_satuan.toLocaleString({
+                    minimumFractionDigits: 0,
+                  })}
+                </TableCell>
+                <TableCell>{i.diskon}%</TableCell>
+                <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">SubTotal</TableCell>
+            <TableCell>Rp. {header[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">Diskon</TableCell>
+            <TableCell>
+              Rp. {(header[0].total_diskon + header[0].total_diskon_per_baris).toLocaleString({ minimumFractionDigits: 0 })}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">Total</TableCell>
+            <TableCell>Rp. {header[0].total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">Jumlah Pemotongan</TableCell>
+            <TableCell>Rp. {header[0].pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">Sudah Dibayar</TableCell>
+            <TableCell>
+              Rp. {(header[0].uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">Sisa Tagihan</TableCell>
+            <TableCell>Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
@@ -255,33 +234,26 @@ export async function getServerSideProps(context) {
     },
     include: {
       kontak: true,
-    },
-  });
-
-  const detail = await prisma.detailPenjualan.findMany({
-    where: {
-      header_penjualan_id: parseInt(id),
-    },
-    include: {
-      header_penjualan: true,
-      produk: true,
-      pajak: true,
-    },
-  });
-
-  const jurnal_penerimaan_pembayaran =
-    await prisma.jurnalPenerimaanPembayaran.findMany({
-      where: {
-        header_penjualan_id: parseInt(id),
-        tipe_saldo: "Debit",
+      DetailPenjualan: {
+        include: {
+          produk: true,
+          pajak: true,
+        },
       },
-    });
+      JurnalPenerimaanPembayaran: true,
+    },
+  });
+
+  const find_syarat_pembayaran = await prisma.syaratPembayaran.findFirst({
+    where: {
+      value: parseInt(header[0].syarat_pembayaran),
+    },
+  });
 
   return {
     props: {
       header: header,
-      detail: detail,
-      jurnal: jurnal_penerimaan_pembayaran,
+      data: find_syarat_pembayaran,
     },
   };
 }
