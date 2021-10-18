@@ -52,7 +52,7 @@ export default function jurnalentry({ data }) {
     setPage(parseInt(data.length / rowsPerPage));
   };
 
-  console.log(data);
+  console.log(data[0].DetailSaldoAwal[0].sisa_saldo);
 
   return (
     <Layout>
@@ -128,8 +128,8 @@ export default function jurnalentry({ data }) {
                   </TableCell>
                   <TableCell>
                     Rp.{" "}
-                    {i.DetailSaldoAwal[0] >= 0
-                      ? i.DetailSaldoAwal[0].debit.toLocaleString({
+                    {i.DetailSaldoAwal[0].sisa_saldo >= 0
+                      ? i.DetailSaldoAwal[0].sisa_saldo.toLocaleString({
                           minimumFractionDigits: 0,
                         })
                       : "0, 00"}
