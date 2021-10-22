@@ -1,4 +1,5 @@
 import { PrismaClient } from ".prisma/client";
+import { create } from "lodash";
 import multer from "multer";
 import { extname } from "path";
 const prisma = new PrismaClient();
@@ -37,29 +38,28 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
-    const createProduk = await prisma.produk.createMany({
-      data: [
-        {
-          image: req.file.filename,
-          nama: req.body.nama,
-          kode_sku: req.body.kode_sku,
-          kategori_produk_id: parseInt(req.body.kategori_produk),
-          quantity: parseInt(req.body.quantity),
-          unit: parseInt(req.body.unit),
-          deskripsi: req.body.deskripsi,
-          harga_beli_satuan: parseInt(req.body.hbs),
-          akun_pembelian: parseInt(req.body.akun_pembelian),
+    const createProduk = await prisma.produk.create({
+      data: {
+        image: req.file.filename,
+        nama: req.body.nama,
+        kode_sku: req.body.kode_sku,
+        kategori_produk: req.body.kategori_produk,
+        quantity: parseInt(req.body.quantity),
+        satuan: req.body.unit,
+        deskripsi: req.body.deskripsi,
+        harga_beli_satuan: parseInt(req.body.hbs),
+        akun_pembelian: parseInt(req.body.akun_pembelian),
 
-          harga_jual_satuan: parseInt(req.body.hjs),
-          akun_penjualan: parseInt(req.body.akun_penjualan),
-        },
-      ],
-      skipDuplicates: true,
+        harga_jual_satuan: parseInt(req.body.hjs),
+        akun_penjualan: parseInt(req.body.akun_penjualan),
+        beli_disabled: req.body.beli_disable,
+        jual_disabled: req.body.jual_disable,
+      },
     });
 
     const update_kategori_produk = await prisma.kategoriProduk.update({
       where: {
-        id: parseInt(req.body.kategori_produk),
+        id: parseInt(req.body.kategori_produk_id),
       },
       data: {
         jumlah: {
@@ -68,7 +68,7 @@ export default async (req, res) => {
       },
     });
 
-    res.status(201).json({ message: "success!", data: createProduk }, { message: "success!", data: update_kategori_produk });
+    res.status(201).json({ message: "success!", data: createProduk });
   } catch (error) {
     res.status(400).json({ data: "error", error });
     console.log(error);

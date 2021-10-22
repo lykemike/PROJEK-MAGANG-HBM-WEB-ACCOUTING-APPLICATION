@@ -447,7 +447,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
                                       });
                                       props.setFieldValue(`produks.${index}.deskripsi_produk`, hasil1[0].deskripsi),
                                         props.setFieldValue(`produks.${index}.harga_satuan`, hasil1[0].harga_jual_satuan);
-                                      props.setFieldValue(`produks.${index}.satuan`, hasil1[0].satuan.satuan);
+                                      props.setFieldValue(`produks.${index}.satuan`, hasil1[0].satuan);
                                       props.setFieldValue(
                                         `produks.${index}.nama_produk`,
                                         data3.filter((i) => i.id === parseInt(e.target.value))[0].nama
@@ -1404,13 +1404,8 @@ export async function getServerSideProps() {
   });
 
   const produks = await prisma.produk.findMany({
-    orderBy: [
-      {
-        id: "asc",
-      },
-    ],
-    include: {
-      satuan: true,
+    orderBy: {
+      id: "asc",
     },
   });
 

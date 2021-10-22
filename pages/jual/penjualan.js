@@ -63,6 +63,22 @@ function MyVerticallyCenteredModal(props) {
 export default function penjualan({ data }) {
   const [open, setOpen] = useState(false);
   const [modalShow, setModalShow] = useState({ open: false, id: 0, kontak: " " });
+
+  const [search, setSearch] = useState([]);
+  const [penjualan, setPenjualan] = useState(data);
+  const handleChange = (e) => {
+    e.preventDefault();
+    if (e.target.value !== "") {
+      setSearch(penjualan.filter((i) => i.kontak.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+    } else {
+      setSearch([]);
+    }
+  };
+
+  const handleList = () => {
+    return search.length > 0 ? search : penjualan;
+  };
+
   const onClick = () => {
     setOpen(!open);
   };
@@ -138,7 +154,7 @@ export default function penjualan({ data }) {
             <h3>Transaksi Penjualan</h3>
           </Col>
           <Col sm="3" className="d-flex justify-content-end">
-            <FormControl type="text" placeholder="Search . . . ." />
+            <FormControl type="text" placeholder="Search . . . ." onChange={(e) => handleChange(e)} />
           </Col>
         </Row>
       </div>
@@ -177,7 +193,7 @@ export default function penjualan({ data }) {
               </TableCell>
             </TableRow>
           </TableHead>
-          {data.map((data, index) => (
+          {handleList().map((data, index) => (
             <TableReusable
               data={data}
               index={index}

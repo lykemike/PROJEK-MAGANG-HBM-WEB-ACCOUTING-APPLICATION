@@ -12,6 +12,7 @@ import {
   Row,
   FormCheck,
   Pagination,
+  Modal,
 } from "react-bootstrap";
 import TablePagination from "../../components/TablePagination";
 import {
@@ -26,15 +27,53 @@ import {
   TableHead,
   TableBody,
 } from "@material-ui/core";
-import SettingsIcon from "@material-ui/icons/Settings";
-import SearchIcon from "@material-ui/icons/Search";
-import AddIcon from "@material-ui/icons/Add";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+
+import { Add, SettingsOutlined, SearchOutlined, VisibilityOutlined, EditOutlined, DeleteOutlined } from "@material-ui/icons/";
+
 import { CSVLink, CSVDownload } from "react-csv";
+import Axios from "axios";
+import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+
+function DeleteModal(props) {
+  const router = useRouter();
+  const api_delete_produk = "http://localhost:3000/api/produk/deleteProduk";
+
+  const handle_delete = async () => {
+    Axios.delete(api_delete_produk, {
+      data: {
+        id: props.id,
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        router.push("tabel-produk");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Produk Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Are you sure you want to delete the current Produk?</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handle_delete}>
+          Confirm Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
 
 let active = 2;
 let items = [];
@@ -45,7 +84,6 @@ for (let number = 1; number <= 5; number++) {
     </Pagination.Item>
   );
 }
-
 export default function tabelProduk({ data }) {
   const [search, setSearch] = useState([]);
   const [product, setProduct] = useState(data);
@@ -56,6 +94,7 @@ export default function tabelProduk({ data }) {
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
+  const [modalShow, setModalShow] = useState({ open: false, id: 0 });
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
@@ -112,6 +151,7 @@ export default function tabelProduk({ data }) {
 
   return (
     <Layout>
+      <DeleteModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Tabel Produk</Typography>
@@ -125,24 +165,22 @@ export default function tabelProduk({ data }) {
             <div className="d-flex justify-content-end">
               <Link href="/produk/add-produk">
                 <a>
-                  <button
-                    type="button"
-                    className="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
-                  >
-                    <AddIcon fontSize="small" />
+                  <Button type="button" variant="primary">
+                    <Add fontSize="small" />
                     Buat Baru
-                  </button>
+                  </Button>
                 </a>
               </Link>
             </div>
           </Col>
         </Row>
       </div>
-      <div>
-        <Row className="mt-4 mb-8 ">
+
+      <div className="mt-4 mb-8 ">
+        <Row>
           <Col>
             <Row>
-              <SettingsIcon fontSize="medium" className="mt-1" />
+              <SettingsOutlined fontSize="medium" className="mt-1" />
               <h4>Barang & Jasa</h4>
             </Row>
           </Col>
@@ -173,7 +211,7 @@ export default function tabelProduk({ data }) {
               <InputGroup>
                 <InputGroup.Prepend>
                   <InputGroup.Text id="basic-addon1">
-                    <SearchIcon />
+                    <SearchOutlined />
                   </InputGroup.Text>
                 </InputGroup.Prepend>
                 <FormControl
@@ -230,20 +268,27 @@ export default function tabelProduk({ data }) {
                       <TableCell>{i.kode_sku}</TableCell>
                       <TableCell>{i.nama}</TableCell>
                       <TableCell align="center">{i.quantity}</TableCell>
-                      <TableCell>{i.satuan.satuan}</TableCell>
+                      <TableCell>{i.satuan}</TableCell>
                       <TableCell>Rp. {i.harga_beli_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                       <TableCell>Rp. {i.harga_jual_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                       <TableCell>
                         <Link href={`../produk/view/${i.id}`}>
                           <a>
-                            <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
+                            <VisibilityOutlined color="primary" fontSize="small" className="mr-2" />
                           </a>
                         </Link>
                         <Link href={`${i.id}`}>
                           <a>
-                            <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                            <EditOutlined color="action" fontSize="small" className="mr-2" />
                           </a>
                         </Link>
+
+                        <DeleteOutlined
+                          className="cursor-pointer"
+                          onClick={() => setModalShow({ open: true, id: i.id })}
+                          color="secondary"
+                          fontSize="small"
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -274,10 +319,8 @@ export async function getServerSideProps() {
       id: "asc",
     },
     include: {
-      kategori_produk: true,
       pembelian: true,
       penjualan: true,
-      satuan: true,
     },
   });
 

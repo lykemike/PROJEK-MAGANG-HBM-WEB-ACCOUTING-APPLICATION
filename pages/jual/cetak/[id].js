@@ -35,7 +35,7 @@ export default function salesInvoice({ header, data }) {
   return (
     <div className="container">
       <Head>
-        <title>PrintSales Invoice</title>
+        <title>Sales Invoice #{id}</title>
       </Head>
 
       <div className="border-b border-gray-200">
@@ -64,13 +64,6 @@ export default function salesInvoice({ header, data }) {
               <p className="font-medium mr-2">Email:</p>
               {header[0].email}
             </Row>
-          </Col>
-
-          <Col>
-            <div className="d-flex justify-content-end">
-              <h4>Total Amount</h4>
-              <h4 className=" text-blue-600 ml-2">Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h4>
-            </div>
           </Col>
         </Row>
       </div>
@@ -221,6 +214,11 @@ export default function salesInvoice({ header, data }) {
           </TableRow>
         </Table>
       </TableContainer>
+
+      <div className="mt-4 d-flex justify-content-end">
+        <h4>Sisa Tagihan</h4>
+        <h4 className=" text-blue-600 ml-2">Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h4>
+      </div>
     </div>
   );
 }

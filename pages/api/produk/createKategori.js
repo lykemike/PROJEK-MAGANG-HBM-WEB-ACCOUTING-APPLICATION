@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
-    const createKategoriProduk = await prisma.kategoriProduk.createMany({
+    const create_kategori_produk = await prisma.kategoriProduk.createMany({
       data: [
         {
           nama: req.body.nama,
@@ -13,9 +13,9 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "CREATE KATEGORI PRODUK SUCCESSFUL!", data: createKategoriProduk });
+    res.status(201).json({ message: "Create kategori produk success!", data: create_kategori_produk });
   } catch (error) {
-    res.status(400).json({ data: "CREATE KATEGORI PRODUK FAILED!", error });
+    res.status(400).json({ data: "Create kategori produk failed!", error });
     console.log(error);
   }
 };

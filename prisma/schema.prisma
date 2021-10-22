@@ -171,15 +171,12 @@ model KategoriProduk {
   id     Int      @id @default(autoincrement())
   nama   String
   jumlah Int
-  Produk Produk[]
 }
 
 // Satuan Produk
 model SatuanProduk {
   id     Int    @id @default(autoincrement())
   satuan String
-
-  Produk Produk[]
 }
 
 // Kontak Table
@@ -234,20 +231,22 @@ model Produk {
   nama               String
   image              String
   kode_sku           String
-  kategori_produk    KategoriProduk @relation(fields: [kategori_produk_id], references: [id])
-  kategori_produk_id Int
-  satuan             SatuanProduk   @relation(fields: [unit], references: [id])
-  unit               Int
+
+  kategori_produk    String
+  satuan             String
+
   deskripsi          String
   quantity           Int
 
   harga_beli_satuan Int
   pembelian         Akun @relation("akunPembelian", fields: [akun_pembelian], references: [id])
-  akun_pembelian    Int
+  akun_pembelian    Int 
 
   harga_jual_satuan Int
   penjualan         Akun @relation("akunPenjualan", fields: [akun_penjualan], references: [id])
   akun_penjualan    Int
+  beli_disabled     String
+  jual_disabled     String
 
   DetailPenjualan DetailPenjualan[]
   DetailPembelian DetailPembelian[]

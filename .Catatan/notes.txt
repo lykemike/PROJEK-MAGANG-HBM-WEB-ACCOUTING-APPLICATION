@@ -1086,7 +1086,6 @@ Testing dan Perbaikan
   - menu jurnal, fitur cetak = 100%
   - memperbaiki pas redirect ke invoice = 100%
   - membuat tabel = 100%
-  - 
 
   Daftar Akun Menu
   - Atur Saldo Awal harus balance untuk di terbitkan = 100%
@@ -1101,14 +1100,30 @@ Testing dan Perbaikan
   Penjualan
   - Perbaikan UI = 80%
   - Delete Confirmation = 100%
+  - Searching di Tabel Penjualan = 100%
 
+  Penjualan
+  - Perbaikan UI = 80%
+  - Delete Confirmation = 100%
 
-view list
+  User & Role
+  - Ketika hapus role, user yang berkaitan dengan role tersebut akan ikut terhapus
 
-
-On Proccess
-List Data Tutup Buku (On Process, butuh meeting)
-Action date tutup buku (On Process, butuh meeting)
-Action View Laporan Tutup Buku (On Process, butuh meeting)
-
+  Produk
+  - satuan
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - kategori
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - view detail produk = 100%
+  - perbaikan DB kategori dan satuan di hilangkan relasi dengan produk = 100%
+  - edit produk = 100%
+  - delete produk = 100%
+  
+TANYA
+  - masih ada bug gabisa null di bagian pemilihan akun jual/beli
+  - delete confirmation setelah success tidak refresh/redirect
 

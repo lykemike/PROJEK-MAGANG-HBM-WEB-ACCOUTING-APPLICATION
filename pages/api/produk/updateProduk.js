@@ -35,7 +35,7 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
-    const updateProduk = await prisma.produk.update({
+    const update_produk = await prisma.produk.update({
       where: {
         id: parseInt(req.body.id),
       },
@@ -43,22 +43,23 @@ export default async (req, res) => {
         image: req.file.filename,
         nama: req.body.nama,
         kode_sku: req.body.kode_sku,
-        kategori_produk_id: parseInt(req.body.kategori_produk),
+        kategori_produk: req.body.kategori_produk,
         quantity: parseInt(req.body.quantity),
-        unit: parseInt(req.body.unit),
+        satuan: req.body.unit,
         deskripsi: req.body.deskripsi,
-
         harga_beli_satuan: parseInt(req.body.hbs),
         akun_pembelian: parseInt(req.body.akun_pembelian),
 
         harga_jual_satuan: parseInt(req.body.hjs),
         akun_penjualan: parseInt(req.body.akun_penjualan),
+        beli_disabled: req.body.beli_disable,
+        jual_disabled: req.body.jual_disable,
       },
     });
 
-    res.status(201).json({ message: "UPDATE PRODUK SUCCESS!", data: updateProduk });
+    res.status(201).json({ message: "Update produk success!", data: update_produk });
   } catch (error) {
-    res.status(400).json({ data: "UPDATE PRODUK FAILED!", error });
+    res.status(400).json({ data: "Update produk failed!", error });
     console.log(error);
   }
 };
