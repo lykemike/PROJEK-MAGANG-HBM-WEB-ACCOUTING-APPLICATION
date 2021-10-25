@@ -32,8 +32,7 @@ export default function list({ data }) {
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
-  const deleteReimbursement =
-    "http://localhost:3000/api/reimbursement/deleteReimbursement";
+  const deleteReimbursement = "http://localhost:3000/api/reimbursement/deleteReimbursement";
 
   const handleDelete = async (id) => {
     Axios.delete(deleteReimbursement, {
@@ -124,29 +123,19 @@ export default function list({ data }) {
           <TableHead className="bg-dark">
             <TableRow>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  No Reimbursement
-                </Typography>
+                <Typography className="text-white font-bold">No Reimbursement</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  Periode
-                </Typography>
+                <Typography className="text-white font-bold">Periode</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  Nama Pegawai
-                </Typography>
+                <Typography className="text-white font-bold">Nama Pegawai</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  Yang Mengetahui
-                </Typography>
+                <Typography className="text-white font-bold">Yang Mengetahui</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  Yang Menyetujui
-                </Typography>
+                <Typography className="text-white font-bold">Yang Menyetujui</Typography>
               </TableCell>
               <TableCell>
                 <Typography className="text-white font-bold">Status</Typography>
@@ -158,37 +147,29 @@ export default function list({ data }) {
               </TableCell>
             </TableRow>
           </TableHead>
-          {data.map((data) => (
+          {data.map((i) => (
             <TableBody>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  {data.id}
+                  {i.id}
                 </TableCell>
-                <TableCell>{data.periode}</TableCell>
-                <TableCell>{data.nama_pegawai}</TableCell>
-                <TableCell>{data.yang_mengetahui}</TableCell>
-                <TableCell>{data.yang_menyetujui}</TableCell>
-                <TableCell>{data.status}</TableCell>
+                <TableCell>{i.periode}</TableCell>
+                <TableCell>{i.nama_pegawai}</TableCell>
+                <TableCell>{i.yang_mengetahui}</TableCell>
+                <TableCell>{i.yang_menyetujui}</TableCell>
+                <TableCell>{i.status}</TableCell>
                 <TableCell align="right">
-                  <Link href={`../../reimbursement/view/${data.id}`}>
+                  <Link href={`../../reimbursement/view/${i.id}`}>
                     <a>
-                      <VisibilityOutlinedIcon
-                        color="primary"
-                        fontSize="small"
-                        className="mr-2"
-                      />
+                      <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
                     </a>
                   </Link>
-                  <EditOutlinedIcon
-                    color="action"
-                    fontSize="small"
-                    className="mr-2"
-                  />
-                  <DeleteOutlineIcon
-                    color="secondary"
-                    fontSize="small"
-                    onClick={() => handleDelete(data.id)}
-                  />
+                  <Link href={`../../reimbursement/${i.id}`}>
+                    <a>
+                      <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                    </a>
+                  </Link>
+                  <DeleteOutlineIcon color="secondary" fontSize="small" onClick={() => handleDelete(i.id)} />
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -200,7 +181,6 @@ export default function list({ data }) {
 }
 
 export async function getServerSideProps() {
-  // Get Roles from API
   const reimbursement = await prisma.headerReimburse.findMany({
     orderBy: {
       id: "asc",

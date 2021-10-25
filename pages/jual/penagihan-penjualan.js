@@ -146,7 +146,7 @@ export default function penagihanpenjualan({ data, data2, data3, data4, data5, d
               <Typography color="textPrimary">Penagihan Penjualan</Typography>
             </Breadcrumbs>
 
-            <h2>Buat Penagihan Penjualan</h2>
+            <h2 className="text-blue-600">Buat Penagihan Penjualan</h2>
             <div className="border-t border-gray-200">
               <Form>
                 <Row className="mt-2">

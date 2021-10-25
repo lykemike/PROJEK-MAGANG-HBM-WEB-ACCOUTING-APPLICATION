@@ -74,7 +74,7 @@ export default function User({ data }) {
                 <Typography color="textPrimary">Buat User Baru</Typography>
               </Breadcrumbs>
 
-              <h2>Buat User Baru</h2>
+              <h2 className="text-blue-600">Buat User Baru</h2>
             </div>
 
             <div class="mt-12 container">

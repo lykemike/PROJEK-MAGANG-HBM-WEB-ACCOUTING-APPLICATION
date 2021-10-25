@@ -1107,7 +1107,7 @@ Testing dan Perbaikan
   - Delete Confirmation = 100%
 
   User & Role
-  - Ketika hapus role, user yang berkaitan dengan role tersebut akan ikut terhapus
+  - Ketika hapus role, user yang berkaitan dengan role tersebut akan ikut terhapus = 10%
 
   Produk
   - satuan

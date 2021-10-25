@@ -23,6 +23,10 @@ export default function reimbursement() {
     periode: Yup.string().required("*Periode Harap Diisi"),
   });
 
+  function cancelButton() {
+    router.push("../reimbursement/tabel-reimbursement");
+  }
+
   return (
     <div>
       <Layout>
@@ -60,15 +64,10 @@ export default function reimbursement() {
             <Forms noValidate>
               <div className="border-b border-gray-200">
                 <Breadcrumbs aria-label="breadcrumb">
-                  <Link
-                    color="inherit"
-                    href="../reimbursement/tabel-reimbursement"
-                  >
-                    Reimbursement
+                  <Link color="inherit" href="../reimbursement/tabel-reimbursement">
+                    Tabel Reimbursement
                   </Link>
-                  <Typography color="textPrimary">
-                    Pembuatan Reimbursement
-                  </Typography>
+                  <Typography color="textPrimary">Pembuatan Reimbursement</Typography>
                 </Breadcrumbs>
                 <Row>
                   <Col sm="8">
@@ -89,28 +88,17 @@ export default function reimbursement() {
                         name="nama_pegawai"
                         onChange={(e) => {
                           let name = e.target.value;
-                          let name2 =
-                            name.charAt(0).toUpperCase() + name.slice(1);
-                          props.setFieldValue(
-                            (props.values.nama_pegawai = name2)
-                          );
+                          let name2 = name.charAt(0).toUpperCase() + name.slice(1);
+                          props.setFieldValue((props.values.nama_pegawai = name2));
                         }}
                       />
-                      {props.errors.nama_pegawai &&
-                      props.touched.nama_pegawai ? (
-                        <div class="text-red-500 text-sm">
-                          {props.errors.nama_pegawai}
-                        </div>
+                      {props.errors.nama_pegawai && props.touched.nama_pegawai ? (
+                        <div class="text-red-500 text-sm">{props.errors.nama_pegawai}</div>
                       ) : null}
                     </Col>
                     <Col sm="3">
                       <Form.Label>Periode Reimbursement</Form.Label>
-                      <Form.Control
-                        placeholder="-"
-                        as="select"
-                        name="periode"
-                        onChange={props.handleChange}
-                      >
+                      <Form.Control placeholder="-" as="select" name="periode" onChange={props.handleChange}>
                         <option value="kosong">Pilih Periode Bulan</option>
                         <option value="Januari">Januari</option>
                         <option value="Februari">Februari</option>
@@ -126,9 +114,7 @@ export default function reimbursement() {
                         <option value="Desember">Desember</option>
                       </Form.Control>
                       {props.errors.periode && props.touched.periode ? (
-                        <div class="text-red-500 text-sm">
-                          {props.errors.periode}
-                        </div>
+                        <div class="text-red-500 text-sm">{props.errors.periode}</div>
                       ) : null}
                     </Col>
                   </Row>
@@ -166,10 +152,7 @@ export default function reimbursement() {
                                         name="tanggal"
                                         aria-label="date"
                                         onChange={(e) => {
-                                          props.setFieldValue(
-                                            `detail_reimburse.${index}.tanggal`,
-                                            e.target.value
-                                          );
+                                          props.setFieldValue(`detail_reimburse.${index}.tanggal`, e.target.value);
                                         }}
                                       />
                                     </Col>
@@ -179,10 +162,7 @@ export default function reimbursement() {
                                         placeholder="-"
                                         name="tempat"
                                         onChange={(e) => {
-                                          props.setFieldValue(
-                                            `detail_reimburse.${index}.tempat`,
-                                            e.target.value
-                                          );
+                                          props.setFieldValue(`detail_reimburse.${index}.tempat`, e.target.value);
                                         }}
                                       />
                                     </Col>
@@ -192,10 +172,7 @@ export default function reimbursement() {
                                         placeholder="-"
                                         name="biaya"
                                         onChange={(e) => {
-                                          props.setFieldValue(
-                                            `detail_reimburse.${index}.biaya`,
-                                            e.target.value
-                                          );
+                                          props.setFieldValue(`detail_reimburse.${index}.biaya`, e.target.value);
                                         }}
                                       />
                                     </Col>
@@ -205,10 +182,7 @@ export default function reimbursement() {
                                         placeholder="-"
                                         name="keterangan"
                                         onChange={(e) => {
-                                          props.setFieldValue(
-                                            `detail_reimburse.${index}.keterangan`,
-                                            e.target.value
-                                          );
+                                          props.setFieldValue(`detail_reimburse.${index}.keterangan`, e.target.value);
                                         }}
                                       />
                                     </Col>
@@ -216,12 +190,10 @@ export default function reimbursement() {
                                       <Form.Control
                                         type="number"
                                         placeholder="Rp. 0, 00"
+                                        min="0"
                                         name="jumlah"
                                         onChange={(e) => {
-                                          props.setFieldValue(
-                                            `detail_reimburse.${index}.jumlah`,
-                                            parseInt(e.target.value)
-                                          );
+                                          props.setFieldValue(`detail_reimburse.${index}.jumlah`, parseInt(e.target.value));
                                         }}
                                       />
                                     </Col>
@@ -261,18 +233,12 @@ export default function reimbursement() {
                         type="text"
                         onChange={(e) => {
                           let name = e.target.value;
-                          let name2 =
-                            name.charAt(0).toUpperCase() + name.slice(1);
-                          props.setFieldValue(
-                            (props.values.yang_mengetahui = name2)
-                          );
+                          let name2 = name.charAt(0).toUpperCase() + name.slice(1);
+                          props.setFieldValue((props.values.yang_mengetahui = name2));
                         }}
                       />
-                      {props.errors.yang_mengetahui &&
-                      props.touched.yang_mengetahui ? (
-                        <div class="text-red-500 text-sm">
-                          {props.errors.yang_mengetahui}
-                        </div>
+                      {props.errors.yang_mengetahui && props.touched.yang_mengetahui ? (
+                        <div class="text-red-500 text-sm">{props.errors.yang_mengetahui}</div>
                       ) : null}
                     </Col>
                     <Col sm="3">
@@ -283,18 +249,12 @@ export default function reimbursement() {
                         type="text"
                         onChange={(e) => {
                           let name = e.target.value;
-                          let name2 =
-                            name.charAt(0).toUpperCase() + name.slice(1);
-                          props.setFieldValue(
-                            (props.values.yang_menyetujui = name2)
-                          );
+                          let name2 = name.charAt(0).toUpperCase() + name.slice(1);
+                          props.setFieldValue((props.values.yang_menyetujui = name2));
                         }}
                       />
-                      {props.errors.yang_menyetujui &&
-                      props.touched.yang_menyetujui ? (
-                        <div class="text-red-500 text-sm">
-                          {props.errors.yang_menyetujui}
-                        </div>
+                      {props.errors.yang_menyetujui && props.touched.yang_menyetujui ? (
+                        <div class="text-red-500 text-sm">{props.errors.yang_menyetujui}</div>
                       ) : null}
                     </Col>
                     <Col></Col>
@@ -302,14 +262,10 @@ export default function reimbursement() {
                 </div>
 
                 <div className="float-right mb-10">
-                  <Button variant="danger mr-2">
+                  <Button variant="danger mr-2" onClick={cancelButton}>
                     <HighlightOffIcon fontSize="medium" /> Batal
                   </Button>
-                  <Button
-                    variant="success"
-                    type="submit"
-                    onClick={props.handleSubmit}
-                  >
+                  <Button variant="success" type="submit" onClick={props.handleSubmit}>
                     <CheckCircleIcon fontSize="medium" /> Buat Reimbursement
                   </Button>
                 </div>
