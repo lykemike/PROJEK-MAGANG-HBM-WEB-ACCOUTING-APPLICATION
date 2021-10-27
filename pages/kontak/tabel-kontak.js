@@ -253,7 +253,7 @@ export default function Kontak({ data, data2 }) {
                 </Col>
               </Row>
 
-              <div style={{ height: "30rem" }} className="mt-4">
+              <div style={{ height: "30rem", overflowX: "auto" }} className="mt-4">
                 <TableContainer className="mt-8" component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableHead className="bg-dark">
