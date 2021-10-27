@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import Link from "next/Link";
+import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
-import { Row, Col, FormControl } from "react-bootstrap";
+import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
 
 import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
@@ -13,12 +15,69 @@ import Paper from "@material-ui/core/Paper";
 import AddIcon from "@material-ui/icons/Add";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 
-import Link from "next/Link";
+import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+function MyVerticallyCenteredModal(props) {
+  const router = useRouter();
+  const api_delete = "http://localhost:3000/api/beli/deletebeli";
+
+  const handle_delete = async () => {
+    Axios.delete(api_delete, {
+      data: {
+        header_pembelian_id: props.id,
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        props.onHide;
+        router.push(`../beli/pembelian`);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Pembelian Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>Are you sure you want to delete the current pembelian?</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handle_delete}>
+          Confirm Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
 export default function pembelian({ data }) {
   const [open, setOpen] = useState(false);
+  const [modalShow, setModalShow] = useState({
+    open: false,
+    id: 0,
+    kontak: " ",
+  });
+  const [search, setSearch] = useState([]);
+  const [pembelian, setPembelian] = useState(data);
+  const handleChange = (e) => {
+    e.preventDefault();
+    if (e.target.value !== "") {
+      setSearch(pembelian.filter((i) => i.kontak.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+    } else {
+      setSearch([]);
+    }
+  };
+  const handleList = () => {
+    return search.length > 0 ? search : pembelian;
+  };
   const onClick = () => {
     setOpen(!open);
   };
@@ -92,7 +151,7 @@ export default function pembelian({ data }) {
             <h3>Transaksi Pembelian</h3>
           </Col>
           <Col sm="3" className="d-flex justify-content-end">
-            <FormControl type="text" placeholder="Search . . . ." />
+            <FormControl type="text" placeholder="Search . . . ." onChange={(e) => handleChange(e)} />
           </Col>
         </Row>
       </div>
@@ -143,7 +202,7 @@ export async function getServerSideProps() {
   const pembelians = await prisma.headerPembelian.findMany({
     orderBy: [
       {
-        id: "asc",
+        tgl_jatuh_tempo: "asc",
       },
     ],
     include: {
