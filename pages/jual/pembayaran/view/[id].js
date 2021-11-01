@@ -1,208 +1,145 @@
-import React from 'react';
-import Layout from '../../../../components/Layout';
-import { Row, Col, Form, Button, FormCheck } from 'react-bootstrap';
-import AddIcon from '@material-ui/icons/Add';
-import Link from 'next/Link';
-
-
+import React from "react";
+import Layout from "../../../../components/Layout";
+import { Row, Col, Form, Table } from "react-bootstrap";
+import Link from "next/Link";
+import {
+  Breadcrumbs,
+  Table as Tables,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  TableFooter,
+} from "@material-ui/core/";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+export default function BayarNanti({ data2 }) {
+  return (
+    <Layout>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link color="inherit" href="../../../jual/penjualan">
+          Tabel Penjualan
+        </Link>
+        <Typography color="textPrimary">Penerimaan Pembayaran</Typography>
+      </Breadcrumbs>
+      <h2 className="text-blue-600">Penerimaan Pembayaran</h2>
+      <div className="border-t border-gray-200">
+        <Row sm="12" className="py-2">
+          <Col sm="3">
+            <label>Pelanggan: {data2[0].header_penjualan.kontak.nama}</label>
+          </Col>
 
-export default function BayarNanti({data ,data2}) {
-	
-	return (
-		<Layout>
-			<div>
-				<h4>Transaksi</h4>
-				<h4>Penerimaan Pembayaran</h4>
-				<hr />
-			</div>
-			{data.map((i) => (
-			<Form>
-				<Row sm="12">
-					<Col sm="3">
-						<Form.Label className="font-medium">Pelanggan : {i.kontak.nama}</Form.Label>
+          <Col sm="3">
+            <label>Setor Ke: {data2[0].akun.nama_akun}</label>
+          </Col>
 
-					</Col>
+          <Col className="d-flex justify-content-end mr-3">
+            <Row>
+              <h4 className="mr-2">Total</h4>
+              <h4>Rp. {data2[0].jumlah.toLocaleString({ minimumFractionDigits: 0 })}</h4>
+            </Row>
+          </Col>
+        </Row>
+      </div>
 
-					<Col sm="3">
-					{data2.map((i) => (
-						<Form.Label className="font-medium">Setor Ke : {i.akun.nama_akun} </Form.Label>
-						))}
-					</Col>
+      <div className="border-t border-b border-gray-200">
+        <Row sm="12" className="py-2">
+          <Col sm="3">
+            <label>Cara Pembayaran: {data2[0].cara_pembayaran} </label>
+          </Col>
 
-					<Col className="d-flex justify-content-end mr-3">
-						<Row>
-							<h4 className="mr-2">Total</h4>
-					
-							{data2.map((i) => (
-								<h4>Rp. {i.jumlah}</h4>
-							))}
-						</Row>
-					</Col>
-				</Row>
+          <Col sm="3">
+            <label>Tanggal Pembayaran: {data2[0].tgl_pembayaran} </label>
+          </Col>
 
-				<hr />
-				{data.map((i) => (
-				<div class="mb-14">
-					<Row sm="12">
-					{data2.map((i) => (
-						<Col sm="3">
-							<Form.Label className="font-medium">Cara Pembayaran : {i.cara_pembayaran} </Form.Label>
-						</Col>
-					))}
-				
-						<Col sm="3">
-							<Form.Label className="font-medium">Tanggal Pembayaran : {i.tgl_transaksi} </Form.Label>
-						</Col>
+          <Col sm="3">
+            <label>Tanggal Jatuh Tempo: {data2[0].tgl_jauth_tempo}</label>
+          </Col>
 
-						<Col sm="3">
-							<Form.Label className="font-medium">Tanggal Jatuh Tempo : {i.tgl_jatuh_tempo}</Form.Label>
-						</Col>
-						
-						<Col sm="3">
-							<Form.Label className="font-medium">No. Transaksi : {i.no_transaksi} </Form.Label>
-						</Col>
-					
-					</Row>
-				</div>
-				))}
-				<hr />
+          <Col sm="3">
+            <label>No. Transaksi: {data2[0].id} </label>
+          </Col>
+        </Row>
+      </div>
 
-				<div class="mb-10">
-					<Row sm="12">
-						<Col sm="2">
-							<Form.Label className="font-medium">Nomor</Form.Label>
-						</Col>
-
-						<Col sm="2">
-							<Form.Label className="font-medium">Deskripsi</Form.Label>
-						</Col>
-
-						<Col sm="2">
-							<Form.Label className="font-medium">Tgl Jatuh Tempo</Form.Label>
-						</Col>
-
-						<Col sm="2">
-							<Form.Label className="font-medium">Total</Form.Label>
-						</Col>
-
-						<Col sm="2">
-							<Form.Label className="font-medium">Sisa Tagihan</Form.Label>
-						</Col>
-
-						<Col sm="2">
-							<Form.Label className="font-medium">Jumlah</Form.Label>
-						</Col>
-					</Row>
-
-					<hr />
-				{data2.map((i) => (
-					<Row className="mb-12">
-						<Col sm="2">
-							<p>Sales Invoice #{i.id}</p>
-						</Col>
-
-						<Col sm="2">
-							<p></p>
-						</Col>
-						
-						{data.map((i) => (
-						<Col sm="2">
-							<p>{i.tgl_jatuh_tempo}</p>
-						</Col>
-					))}
-
-					{data.map((i) => (
-						<Col sm="2">
-							<p>Rp. {i.total}</p>
-						</Col>
-					))}
-
-					{data.map((i) => (
-						<Col sm="2">
-							<p>Rp. {i.sisa_tagihan}</p>
-						</Col>
-					))}
-					
-						<Col sm="2">{i.jumlah}</Col>
-
-						<Col sm="2"></Col>
-					</Row>
-					))}
-				</div>
-				
-				{/* <Button variant="primary">
-					<AddIcon fontSize="small" />Tambah data
-				</Button> */}
-
-				<div class="mt-20">
-					<Row sm="12">
-						<Col sm="3" />
-
-						<Col sm="3" />
-
-						<Col sm="3">
-							<h4>Total</h4>
-						</Col>
-
-						{data2.map((i) => (
-						<Col sm="2">
-							<h4>Rp. {i.jumlah}</h4>
-						</Col>
-					))}
-					</Row>
-				</div>
-
-				{/* <Row>
-					<Col className="d-flex justify-content-end mt-10">
-						
-						<Link href="/jual/penerimaan-pembayaran">
-							<Button variant="danger mr-2">Batal</Button>
-						</Link>
-						<Link href="/jual/penjualan">
-							<Button variant="success">Buat Transferan</Button>
-						</Link>
-					</Col>
-				</Row> */}
-			</Form>
-			  ))}
-		</Layout>
-	);
+      <TableContainer className="mt-8" component={Paper}>
+        <Table size="small" aria-label="a dense table">
+          <TableHead className="bg-dark">
+            <TableRow>
+              <TableCell>
+                <Typography className="text-white font-bold">Nomor</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Deskripsi</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Tanggal Jatuh Tempo</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Total</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Sisa Tagihan</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Jumlah</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data2.map((i, index) => (
+              <TableRow>
+                <TableCell>Penerimaan Pembayaran Invoice #{i.id}</TableCell>
+                <TableCell> {i.header_penjualan.memo}</TableCell>
+                <TableCell>{i.header_penjualan.tgl_jatuh_tempo}</TableCell>
+                <TableCell>Rp. {i.header_penjualan.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                <TableCell>Rp. {i.header_penjualan.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell />
+              <TableCell align="right">Total</TableCell>
+              <TableCell>
+                Rp. {data2.reduce((a, b) => (a = a + b.jumlah), 0).toLocaleString({ minimumFractionDigits: 0 })}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </Layout>
+  );
 }
 
-
-
 export async function getServerSideProps(context) {
-	const { id } = context.query;
-  
-	const header = await prisma.headerPenjualan.findMany({
-	  where: {
-		id: parseInt(id),
-	  },
-	  include: {
-		kontak: true,
-		DetailPenjualan: true,
-	  },
-	});
-  
-	const detail = await prisma.penerimaanPembayaran.findMany({
-	  where: {
-		header_penjualan_id: parseInt(id),
-	  },
-	  include: {
-		header_penjualan: true,
-		akun: true
-	  },
-	});
-  
-  
-	return {
-	  props: {
-		data: header,
-		data2: detail,
-	  },
-	};
-  }
-  
+  const { id } = context.query;
+
+  const detail = await prisma.penerimaanPembayaran.findMany({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      header_penjualan: {
+        include: {
+          kontak: true,
+        },
+      },
+      akun: true,
+    },
+  });
+
+  return {
+    props: {
+      data2: detail,
+    },
+  };
+}

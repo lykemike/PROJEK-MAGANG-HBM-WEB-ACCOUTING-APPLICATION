@@ -49,7 +49,9 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
   }, []);
 
   let autoIncrement = 1;
-
+  {
+    console.log(detail);
+  }
   return (
     <>
       {view == "biaya" ? (
@@ -192,7 +194,7 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
                           <TableCell component="th" scope="row" align="center">
                             {autoIncrement++}
                           </TableCell>
-                          <Link href={`../../${view}/pembayaran/view/${data.id}`}>
+                          <Link href={`../../${view}/pembayaran/view/${i.id}`}>
                             <TableCell className="cursor-pointer hover:text-blue-600">{i.cara_pembayaran}</TableCell>
                           </Link>
                           <TableCell>{i.tgl_pembayaran}</TableCell>

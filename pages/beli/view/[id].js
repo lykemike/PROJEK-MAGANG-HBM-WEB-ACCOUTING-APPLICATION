@@ -3,7 +3,6 @@ import Head from "next/head";
 import Layout from "../../../components/Layout";
 import { Row, Col, Button } from "react-bootstrap";
 import { useRouter } from "next/router";
-import { PrismaClient } from "@prisma/client";
 import {
   Breadcrumbs,
   Typography,
@@ -16,6 +15,7 @@ import {
   TableBody,
   TableFooter,
 } from "@material-ui/core";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function purchaseInvoice({ header, data }) {
@@ -38,9 +38,10 @@ export default function purchaseInvoice({ header, data }) {
     router.push(`../cetak2/${id}`);
   }
 
-  const jurnal_pengiriman_pembayaran = header[0].JurnalPengirimanBayaran.filter(
-    (i) => i.tipe_saldo === "Debit"
-  ).reduce((a, b) => (a = a + b.nominal), 0);
+  const jurnal_pengiriman_pembayaran = header[0].JurnalPengirimanBayaran.filter((i) => i.tipe_saldo === "Debit").reduce(
+    (a, b) => (a = a + b.nominal),
+    0
+  );
   return (
     <Layout>
       <Head>
@@ -57,11 +58,7 @@ export default function purchaseInvoice({ header, data }) {
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
-              {header[0].sisa_tagihan > 0 ? (
-                <h3>Terbayar Sebagian</h3>
-              ) : (
-                <h3 className="text-green-500">Lunas</h3>
-              )}
+              {header[0].sisa_tagihan > 0 ? <h3>Terbayar Sebagian</h3> : <h3 className="text-green-500">Lunas</h3>}
             </div>
           </Col>
         </Row>
@@ -144,22 +141,16 @@ export default function purchaseInvoice({ header, data }) {
                 <Typography className="text-white font-bold">Produk</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  Deskripsi
-                </Typography>
+                <Typography className="text-white font-bold">Deskripsi</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  Kuantitas
-                </Typography>
+                <Typography className="text-white font-bold">Kuantitas</Typography>
               </TableCell>
               <TableCell>
                 <Typography className="text-white font-bold">Satuan</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">
-                  Harga Satuan
-                </Typography>
+                <Typography className="text-white font-bold">Harga Satuan</Typography>
               </TableCell>
               <TableCell>
                 <Typography className="text-white font-bold">Diskon</Typography>
@@ -183,9 +174,7 @@ export default function purchaseInvoice({ header, data }) {
                   })}
                 </TableCell>
                 <TableCell>{i.diskon}%</TableCell>
-                <TableCell>
-                  Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}
-                </TableCell>
+                <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -196,10 +185,7 @@ export default function purchaseInvoice({ header, data }) {
             <TableCell />
             <TableCell />
             <TableCell align="right">SubTotal</TableCell>
-            <TableCell>
-              Rp.{" "}
-              {header[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}
-            </TableCell>
+            <TableCell>Rp. {header[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell />
@@ -209,10 +195,7 @@ export default function purchaseInvoice({ header, data }) {
             <TableCell />
             <TableCell align="right">Diskon</TableCell>
             <TableCell>
-              Rp.{" "}
-              {(
-                header[0].total_diskon + header[0].total_diskon_per_baris
-              ).toLocaleString({ minimumFractionDigits: 0 })}
+              Rp. {(header[0].total_diskon + header[0].total_diskon_per_baris).toLocaleString({ minimumFractionDigits: 0 })}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -222,9 +205,7 @@ export default function purchaseInvoice({ header, data }) {
             <TableCell />
             <TableCell />
             <TableCell align="right">Total</TableCell>
-            <TableCell>
-              Rp. {header[0].total.toLocaleString({ minimumFractionDigits: 0 })}
-            </TableCell>
+            <TableCell>Rp. {header[0].total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell />
@@ -248,10 +229,7 @@ export default function purchaseInvoice({ header, data }) {
             <TableCell />
             <TableCell align="right">Sudah Dibayar</TableCell>
             <TableCell>
-              Rp.{" "}
-              {(
-                header[0].uang_muka + jurnal_pengiriman_pembayaran
-              ).toLocaleString({ minimumFractionDigits: 0 })}
+              Rp. {(header[0].uang_muka + jurnal_pengiriman_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}
             </TableCell>
           </TableRow>
           <TableRow>

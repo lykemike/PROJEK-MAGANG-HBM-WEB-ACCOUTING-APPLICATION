@@ -1124,6 +1124,14 @@ Testing dan Perbaikan
   - delete produk = 100%
   
 TANYA
+  - optional upload file
   - masih ada bug gabisa null di bagian pemilihan akun jual/beli
-  - delete confirmation setelah success tidak refresh/redirect
+  - delete confirmation setelah success tidak resfresh/redirect
+  - bug ui select2 ketika Updates
+  - show current file
+  - status bug, sisa tagihan 0 dan tanggal lewat jatuh tempo sehaursnya tetap complete
+  - cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
+  - menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan
+  - alert success, failed
+  - merge data yang sama
 

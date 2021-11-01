@@ -106,12 +106,9 @@ export default function penjualan({ data }) {
             <div className="d-flex justify-content-end">
               <Link href="/jual/penagihan-penjualan">
                 <a>
-                  <button
-                    type="button"
-                    className="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
-                  >
+                  <Button variant="primary">
                     <AddIcon fontSize="small" /> Buat Penjualan Baru
-                  </button>
+                  </Button>
                 </a>
               </Link>
             </div>

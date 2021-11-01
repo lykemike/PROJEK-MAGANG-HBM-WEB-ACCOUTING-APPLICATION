@@ -45,7 +45,6 @@ export default function salesInvoice({ data, header }) {
     0
   );
 
-  console.log(header);
   return (
     <Layout>
       <Head>
@@ -251,9 +250,11 @@ export default function salesInvoice({ data, header }) {
             <Button variant="primary" className="mr-2" onClick={cetak}>
               Cetak
             </Button>
-            <Button variant="primary" onClick={pembayaran}>
-              Terima Pembayaran
-            </Button>
+            {header[0].sisa_tagihan > 0 ? (
+              <Button variant="primary" onClick={pembayaran}>
+                Terima Pembayaran
+              </Button>
+            ) : null}
           </Row>
         </Col>
         <Col sm="4">

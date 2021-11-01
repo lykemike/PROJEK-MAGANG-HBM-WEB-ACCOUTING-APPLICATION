@@ -1,18 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../../components/layout";
 import Link from "next/link";
-import {
-  Button,
-  Table,
-  DropdownButton,
-  Dropdown,
-  Row,
-  Col,
-  Form,
-  Card,
-  InputGroup,
-  FormControl,
-} from "react-bootstrap";
+import { Button, Table, DropdownButton, Dropdown, Row, Col, Form, Card, InputGroup, FormControl } from "react-bootstrap";
 import AttachmentIcon from "@material-ui/icons/Attachment";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -36,10 +25,8 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
 
   const url = "http://localhost:3000/api/kasbank/createKirimUang";
 
-  const id = data5 != undefined ? parseInt(data5.id) + 1 : 1;
-  // const id = 1;
-
-  const [idInvoice, setIdInvoice] = useState(id);
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
 
   return (
     <Layout>
@@ -47,8 +34,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
         initialValues={{
           akun_bayar_id: "",
           kontak_id: "",
-          tgl_transaksi: "",
-          no_transaksi: id,
+          tgl_transaksi: current,
           tag: "",
           memo: "",
           subtotal: 0,
@@ -81,9 +67,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) =>
-            formData.append("file", i)
-          );
+          Array.from(values.fileattachment).map((i) => formData.append("file", i));
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -101,21 +85,14 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
         {(props) => (
           <Forms noValidate>
             <div variant="container">
-              <div class="text-md font-medium text-gray-900 mb-2">
-                Transaksi
-              </div>
+              <div class="text-md font-medium text-gray-900 mb-2">Transaksi</div>
               <h4 class="mt-2 mb-5">Kirim Uang</h4>
 
               <div class="mb-10">
                 <Row>
                   <Col>
                     <Form.Label>Bayar dari</Form.Label>
-                    <Form.Control
-                      as="select"
-                      name="akun_bayar_id"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                    >
+                    <Form.Control as="select" name="akun_bayar_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value="kosong">Pilih</option>
                       {data.map((akun, index) => (
                         <option key={index} value={akun.id}>
@@ -123,18 +100,12 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                         </option>
                       ))}
                     </Form.Control>
-                    {props.errors.akun_bayar_id &&
-                    props.touched.akun_bayar_id ? (
-                      <div>{props.errors.akun_bayar_id}</div>
-                    ) : null}
+                    {props.errors.akun_bayar_id && props.touched.akun_bayar_id ? <div>{props.errors.akun_bayar_id}</div> : null}
                   </Col>
                   <Col></Col>
                   <Col>
                     <h3>Total Amount</h3>
-                    <h2 class="text-purple-700 text-opacity-100 ">
-                      {" "}
-                      Rp.{props.values.total}
-                    </h2>
+                    <h2 class="text-purple-700 text-opacity-100 "> Rp.{props.values.total}</h2>
                   </Col>
                 </Row>
               </div>
@@ -143,12 +114,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                 <Row>
                   <Col>
                     <Form.Label>Penerima</Form.Label>
-                    <Form.Control
-                      as="select"
-                      name="kontak_id"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                    >
+                    <Form.Control as="select" name="kontak_id" onChange={props.handleChange} onBlur={props.handleBlur}>
                       <option value="kosong">Pilih</option>
                       {data2.map((i, index) => (
                         <option key={index} value={i.id}>
@@ -156,44 +122,32 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                         </option>
                       ))}
                     </Form.Control>
-                    {props.errors.kontak_id && props.touched.kontak_id ? (
-                      <div>{props.errors.kontak_id}</div>
-                    ) : null}
+                    {props.errors.kontak_id && props.touched.kontak_id ? <div>{props.errors.kontak_id}</div> : null}
                   </Col>
 
                   <Col>
                     <Form.Label>Tanggal Transaksi</Form.Label>
                     <InputGroup className="mb-3">
                       <FormControl
+                        value={props.values.tgl_transaksi}
                         placeholder="Pick date"
                         type="date"
                         aria-label="date"
                         name="tgl_transaksi"
                         onChange={props.handleChange}
                       />
-                      {props.errors.tgl_transaksi &&
-                      props.touched.tgl_transaksi ? (
-                        <div>{props.errors.tgl_transaksi}</div>
-                      ) : null}
+                      {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
                     </InputGroup>
                   </Col>
 
                   <Col>
                     <Form.Label>Nomor Transaksi</Form.Label>
-                    <Form.Control
-                      placeholder={"Auto"}
-                      name="no_transaksi"
-                      disabled
-                    />
+                    <Form.Control placeholder={"Auto"} name="no_transaksi" disabled />
                   </Col>
 
                   <Col>
                     <Form.Label>Tag</Form.Label>
-                    <Form.Control
-                      placeholder="Tag"
-                      name="tag"
-                      onChange={props.handleChange}
-                    />
+                    <Form.Control placeholder="Tag" name="tag" onChange={props.handleChange} />
                   </Col>
 
                   <div class="float-right mt-2 mb-8">
@@ -205,26 +159,14 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                         if (e.target.checked == true) {
                           props.setFieldValue((props.values.boolean = true));
 
-                          const jumlah_total =
-                            props.values.detail_kirim_uang.reduce(
-                              (a, b) => (a = a + b.jumlah),
-                              0
-                            );
-                          const pajak_total =
-                            props.values.detail_kirim_uang.reduce(
-                              (a, b) => (a = a + b.hasil_pajak),
-                              0
-                            );
+                          const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                          const pajak_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
                           let harga_termasuk_pajak = jumlah_total - pajak_total;
-                          props.setFieldValue(
-                            (props.values.subtotal = harga_termasuk_pajak)
-                          );
+                          props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
                           props.setFieldValue("subtotal", harga_termasuk_pajak);
 
-                          props.setFieldValue(
-                            (props.values.hasil_pajak = pajak_total)
-                          );
+                          props.setFieldValue((props.values.hasil_pajak = pajak_total));
                           props.setFieldValue("hasil_pajak", pajak_total);
 
                           let total = jumlah_total;
@@ -232,29 +174,14 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                           props.setFieldValue("total", total);
                         } else {
                           props.setFieldValue((props.values.boolean = false));
-                          const jumlah_total =
-                            props.values.detail_kirim_uang.reduce(
-                              (a, b) => (a = a + b.jumlah),
-                              0
-                            );
-                          const pajak_total =
-                            props.values.detail_kirim_uang.reduce(
-                              (a, b) => (a = a + b.hasil_pajak),
-                              0
-                            );
+                          const jumlah_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                          const pajak_total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.hasil_pajak), 0);
 
                           let harga_tidak_termasuk_pajak = jumlah_total;
-                          props.setFieldValue(
-                            (props.values.subtotal = harga_tidak_termasuk_pajak)
-                          );
-                          props.setFieldValue(
-                            "subtotal",
-                            harga_tidak_termasuk_pajak
-                          );
+                          props.setFieldValue((props.values.subtotal = harga_tidak_termasuk_pajak));
+                          props.setFieldValue("subtotal", harga_tidak_termasuk_pajak);
 
-                          props.setFieldValue(
-                            (props.values.hasil_pajak = pajak_total)
-                          );
+                          props.setFieldValue((props.values.hasil_pajak = pajak_total));
                           props.setFieldValue("hasil_pajak", pajak_total);
 
                           let total = jumlah_total + pajak_total;
@@ -289,25 +216,14 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                     as="select"
                                     name={`detail_kirim_uang.${index}.akun_id`}
                                     onChange={(e) => {
-                                      props.setFieldValue(
-                                        `detail_kirim_uang.${index}.akun_id`,
-                                        e.target.value
-                                      );
+                                      props.setFieldValue(`detail_kirim_uang.${index}.akun_id`, e.target.value);
                                       let hasil2 = data3.filter((i) => {
-                                        return (
-                                          i.id === parseInt(e.target.value)
-                                        );
+                                        return i.id === parseInt(e.target.value);
                                       });
-                                      props.setFieldValue(
-                                        `detail_kirim_uang.${index}.akun_id`,
-                                        hasil2[0].id
-                                      );
+                                      props.setFieldValue(`detail_kirim_uang.${index}.akun_id`, hasil2[0].id);
                                       props.setFieldValue(
                                         `detail_kirim_uang.${index}.nama_akun`,
-                                        data3.filter(
-                                          (i) =>
-                                            i.id === parseInt(e.target.value)
-                                        )[0].nama_akun
+                                        data3.filter((i) => i.id === parseInt(e.target.value))[0].nama_akun
                                       );
                                     }}
                                   >
@@ -325,10 +241,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                     placeholder="Isi Deskripsi"
                                     name={`detail_kirim_uang.${index}.deskripsi`}
                                     onChange={(e) => {
-                                      props.setFieldValue(
-                                        `detail_kirim_uang.${index}.deskripsi`,
-                                        e.target.value
-                                      );
+                                      props.setFieldValue(`detail_kirim_uang.${index}.deskripsi`, e.target.value);
                                     }}
                                   />
                                 </td>
@@ -338,163 +251,72 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                     as="select"
                                     name={`detail_kirim_uang.${index}.pajak_id`}
                                     onChange={(e) => {
-                                      props.setFieldValue(
-                                        `detail_kirim_uang.${index}.pajak_id`,
-                                        e.target.value
-                                      );
+                                      props.setFieldValue(`detail_kirim_uang.${index}.pajak_id`, e.target.value);
                                       let hasil2 = data4.filter((i) => {
-                                        return (
-                                          i.id === parseInt(e.target.value)
-                                        );
+                                        return i.id === parseInt(e.target.value);
                                       });
 
                                       if (props.values.boolean == false) {
-                                        props.setFieldValue(
-                                          `detail_kirim_uang.${index}.pajak_persen`,
-                                          hasil2[0].presentasaAktif
-                                        );
-                                        props.setFieldValue(
-                                          `detail_kirim_uang.${index}.pajak_nama`,
-                                          hasil2[0].nama
-                                        );
-                                        props.setFieldValue(
-                                          `detail_kirim_uang.${index}.pajak_beli_id`,
-                                          hasil2[0].kategori2.id
-                                        );
+                                        props.setFieldValue(`detail_kirim_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                        props.setFieldValue(`detail_kirim_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                        props.setFieldValue(`detail_kirim_uang.${index}.pajak_beli_id`, hasil2[0].kategori2.id);
 
-                                        let jumlah =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah;
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah = jumlah)
+                                        let jumlah = props.values.detail_kirim_uang[index].jumlah;
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah = jumlah));
+                                        const jumlah_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.jumlah),
+                                          0
                                         );
-                                        const jumlah_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.jumlah),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.subtotal = jumlah_total)
-                                        );
-                                        props.setFieldValue(
-                                          "subtotal",
-                                          jumlah_total
-                                        );
+                                        props.setFieldValue((props.values.subtotal = jumlah_total));
+                                        props.setFieldValue("subtotal", jumlah_total);
 
                                         let pajak =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah *
-                                          (hasil2[0].presentasaAktif / 100);
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].hasil_pajak = pajak)
+                                          props.values.detail_kirim_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.hasil_pajak),
+                                          0
                                         );
-                                        const pajak_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.hasil_pajak),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.hasil_pajak =
-                                            pajak_total)
-                                        );
-                                        props.setFieldValue(
-                                          "hasil_pajak",
-                                          pajak_total
-                                        );
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah - pajak;
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah2 = jumlah2)
-                                        );
+                                        let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak;
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah2 = jumlah2));
 
                                         let total = jumlah_total + pajak_total;
-                                        props.setFieldValue(
-                                          (props.values.total = total)
-                                        );
+                                        props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
-                                        props.setFieldValue(
-                                          `detail_kirim_uang.${index}.pajak_persen`,
-                                          hasil2[0].presentasaAktif
-                                        );
-                                        props.setFieldValue(
-                                          `detail_kirim_uang.${index}.pajak_nama`,
-                                          hasil2[0].nama
-                                        );
-                                        props.setFieldValue(
-                                          `detail_kirim_uang.${index}.pajak_beli_id`,
-                                          hasil2[0].kategori2.id
-                                        );
+                                        props.setFieldValue(`detail_kirim_uang.${index}.pajak_persen`, hasil2[0].presentasaAktif);
+                                        props.setFieldValue(`detail_kirim_uang.${index}.pajak_nama`, hasil2[0].nama);
+                                        props.setFieldValue(`detail_kirim_uang.${index}.pajak_beli_id`, hasil2[0].kategori2.id);
 
-                                        let jumlah =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah;
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah = jumlah)
+                                        let jumlah = props.values.detail_kirim_uang[index].jumlah;
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah = jumlah));
+                                        const jumlah_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.jumlah),
+                                          0
                                         );
-                                        const jumlah_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.jumlah),
-                                            0
-                                          );
 
                                         let pajak =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah *
-                                          (hasil2[0].presentasaAktif / 100);
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].hasil_pajak = pajak)
+                                          props.values.detail_kirim_uang[index].jumlah * (hasil2[0].presentasaAktif / 100);
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.hasil_pajak),
+                                          0
                                         );
-                                        const pajak_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.hasil_pajak),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.hasil_pajak =
-                                            pajak_total)
-                                        );
-                                        props.setFieldValue(
-                                          "hasil_pajak",
-                                          pajak_total
-                                        );
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah - pajak;
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah2 = jumlah2)
-                                        );
+                                        let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak;
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah2 = jumlah2));
 
-                                        let harga_termasuk_pajak =
-                                          jumlah_total - pajak_total;
-                                        props.setFieldValue(
-                                          (props.values.subtotal =
-                                            harga_termasuk_pajak)
-                                        );
-                                        props.setFieldValue(
-                                          "subtotal",
-                                          harga_termasuk_pajak
-                                        );
+                                        let harga_termasuk_pajak = jumlah_total - pajak_total;
+                                        props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                        props.setFieldValue("subtotal", harga_termasuk_pajak);
 
                                         let total = jumlah_total;
-                                        props.setFieldValue(
-                                          (props.values.total = total)
-                                        );
+                                        props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
                                     }}
@@ -513,131 +335,62 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                     placeholder="Jumlah Uang"
                                     name={`detail_kirim_uang.${index}.jumlah`}
                                     onChange={(e) => {
-                                      props.setFieldValue(
-                                        `detail_kirim_uang.${index}.jumlah`,
-                                        parseInt(e.target.value)
-                                      );
+                                      props.setFieldValue(`detail_kirim_uang.${index}.jumlah`, parseInt(e.target.value));
 
                                       if (props.values.boolean == false) {
                                         let jumlah = parseInt(e.target.value);
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah = jumlah)
-                                        );
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah = jumlah));
 
-                                        const jumlah_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.jumlah),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.subtotal = jumlah_total)
+                                        const jumlah_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.jumlah),
+                                          0
                                         );
-                                        props.setFieldValue(
-                                          "subtotal",
-                                          jumlah_total
-                                        );
+                                        props.setFieldValue((props.values.subtotal = jumlah_total));
+                                        props.setFieldValue("subtotal", jumlah_total);
 
                                         let pajak =
-                                          parseInt(e.target.value) *
-                                          (props.values.detail_kirim_uang[index]
-                                            .pajak_persen /
-                                            100);
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].hasil_pajak = pajak)
+                                          parseInt(e.target.value) * (props.values.detail_kirim_uang[index].pajak_persen / 100);
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.hasil_pajak),
+                                          0
                                         );
-                                        const pajak_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.hasil_pajak),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.hasil_pajak =
-                                            pajak_total)
-                                        );
-                                        props.setFieldValue(
-                                          "hasil_pajak",
-                                          pajak_total
-                                        );
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah - pajak;
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah2 = jumlah2)
-                                        );
+                                        let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak;
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah2 = jumlah2));
 
                                         let total = jumlah_total + pajak_total;
-                                        props.setFieldValue(
-                                          (props.values.total = total)
-                                        );
+                                        props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       } else {
                                         let jumlah = parseInt(e.target.value);
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah = jumlah)
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah = jumlah));
+                                        const jumlah_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.jumlah),
+                                          0
                                         );
-                                        const jumlah_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.jumlah),
-                                            0
-                                          );
 
                                         let pajak =
-                                          parseInt(e.target.value) *
-                                          (props.values.detail_kirim_uang[index]
-                                            .pajak_persen /
-                                            100);
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].hasil_pajak = pajak)
+                                          parseInt(e.target.value) * (props.values.detail_kirim_uang[index].pajak_persen / 100);
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].hasil_pajak = pajak));
+                                        const pajak_total = props.values.detail_kirim_uang.reduce(
+                                          (a, b) => (a = a + b.hasil_pajak),
+                                          0
                                         );
-                                        const pajak_total =
-                                          props.values.detail_kirim_uang.reduce(
-                                            (a, b) => (a = a + b.hasil_pajak),
-                                            0
-                                          );
-                                        props.setFieldValue(
-                                          (props.values.hasil_pajak =
-                                            pajak_total)
-                                        );
-                                        props.setFieldValue(
-                                          "hasil_pajak",
-                                          pajak_total
-                                        );
+                                        props.setFieldValue((props.values.hasil_pajak = pajak_total));
+                                        props.setFieldValue("hasil_pajak", pajak_total);
 
-                                        let jumlah2 =
-                                          props.values.detail_kirim_uang[index]
-                                            .jumlah - pajak;
-                                        props.setFieldValue(
-                                          (props.values.detail_kirim_uang[
-                                            index
-                                          ].jumlah2 = jumlah2)
-                                        );
+                                        let jumlah2 = props.values.detail_kirim_uang[index].jumlah - pajak;
+                                        props.setFieldValue((props.values.detail_kirim_uang[index].jumlah2 = jumlah2));
 
-                                        let harga_termasuk_pajak =
-                                          jumlah_total - pajak_total;
-                                        props.setFieldValue(
-                                          (props.values.subtotal =
-                                            harga_termasuk_pajak)
-                                        );
-                                        props.setFieldValue(
-                                          "subtotal",
-                                          harga_termasuk_pajak
-                                        );
+                                        let harga_termasuk_pajak = jumlah_total - pajak_total;
+                                        props.setFieldValue((props.values.subtotal = harga_termasuk_pajak));
+                                        props.setFieldValue("subtotal", harga_termasuk_pajak);
 
                                         let total = jumlah_total;
-                                        props.setFieldValue(
-                                          (props.values.total = total)
-                                        );
+                                        props.setFieldValue((props.values.total = total));
                                         props.setFieldValue("total", total);
                                       }
                                     }}
@@ -645,11 +398,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                                 </td>
 
                                 <td>
-                                  <Button
-                                    variant="primary"
-                                    onClick={() => remove(index)}
-                                    onChange={(e) => {}}
-                                  >
+                                  <Button variant="primary" onClick={() => remove(index)} onChange={(e) => {}}>
                                     Remove
                                   </Button>
                                 </td>
@@ -688,16 +437,8 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                     <Form.Group controlId="exampleForm.ControlTextarea1">
                       <Form.Label>Memo</Form.Label>
                       <Form.Group controlId="exampleForm.ControlTextarea1">
-                        <Form.Control
-                          as="textarea"
-                          rows={3}
-                          name="memo"
-                          placeholder="Isi Memo"
-                          onChange={props.handleChange}
-                        />
-                        {props.errors.memo && props.touched.memo ? (
-                          <div>{props.errors.memo}</div>
-                        ) : null}
+                        <Form.Control as="textarea" rows={3} name="memo" placeholder="Isi Memo" onChange={props.handleChange} />
+                        {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
                       </Form.Group>
                     </Form.Group>
                   </Col>
@@ -744,12 +485,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                         <Form.File
                           type="file"
                           name="fileattachment"
-                          onChange={(e) =>
-                            props.setFieldValue(
-                              "fileattachment",
-                              e.target.files
-                            )
-                          }
+                          onChange={(e) => props.setFieldValue("fileattachment", e.target.files)}
                         />
                       </Card>
                     </div>
@@ -775,11 +511,7 @@ export default function kirim_uang({ data, data2, data3, data4, data5 }) {
                   <HighlightOffIcon fontSize="medium" /> Batal
                 </Button>
 
-                <Button
-                  variant="success"
-                  type="submit"
-                  onClick={props.handleSubmit}
-                >
+                <Button variant="success" type="submit" onClick={props.handleSubmit}>
                   <CheckCircleIcon fontSize="medium" /> Buat Transferan
                 </Button>
               </div>
@@ -806,8 +538,8 @@ export async function getServerSideProps() {
 
   const namaAkun = await prisma.akun.findMany({
     where: {
-      nama_akun: {
-        contains: "Utang",
+      kategoriId: {
+        in: [8, 10, 11],
       },
     },
   });

@@ -679,7 +679,6 @@ model HeaderKirimUang {
   kontak            Kontak @relation(fields: [kontak_id], references: [id])
   kontak_id         Int
 
-  no_transaksi    Int
   tgl_transaksi   String
   tag             String
   memo            String

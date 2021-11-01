@@ -40,7 +40,7 @@ export default async (req, res) => {
     const frontend_data = {
       logo: req.file.filename,
       tampilkan_logo: req.body.boolean,
-      nama_perushaan: req.body.nama_perushaaan,
+      nama_perushaan: req.body.nama_perusahaan,
       alamat: req.body.alamat,
       alamat_pengiriman: req.body.alamat_pengiriman,
       telepon: req.body.telepon,

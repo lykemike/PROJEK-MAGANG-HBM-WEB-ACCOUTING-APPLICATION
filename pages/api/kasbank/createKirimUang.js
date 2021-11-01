@@ -56,7 +56,6 @@ export default async (req, res) => {
     const frontend_data = {
       akun_bayar_id: parseInt(req.body.akun_bayar_id),
       kontak_id: parseInt(req.body.kontak_id),
-      no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
       memo: req.body.memo,
@@ -154,7 +153,15 @@ export default async (req, res) => {
       data: akun_bayar,
     });
 
-    res.status(201).json({ message: "Create Kirim Uang Success!", id: find_latest, create_akun_bayar, create_list_pajak, create_akun_pembayaran });
+    res
+      .status(201)
+      .json({
+        message: "Create Kirim Uang Success!",
+        id: find_latest,
+        create_akun_bayar,
+        create_list_pajak,
+        create_akun_pembayaran,
+      });
   } catch (error) {
     res.status(400).json({ data: "Failed to create kirim uang!", error });
     console.log(error);

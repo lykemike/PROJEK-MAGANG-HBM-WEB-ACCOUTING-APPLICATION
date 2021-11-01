@@ -266,3 +266,123 @@ Testing dan Perbaikan
   -- edit reimbursement udah bisa = 100%
 
 SIT Web Aplikasi Akuntansi (14 Bug fix, 4 Requirements Added)
+
+Employee Mike
+Laporan 📄*
+• ⏱️ _Waktu
+In	 : 09.00
+Out	 : 17.30
+Lokasi : wfo
+🗓️ Tanggal 27 October, Rabu
+Testing dan Perbaikan
+  Laporan
+  - Jurnal Umum perbaikan UI = 100%
+  - Trial Balance, saldo awal, penyesuaian, dan saldo akhir sudah muncul semua = 100%
+  - Filter Date = 20%
+
+  Penjualan
+  - Perbaikan UI update, masih error kalau pake select2 = 80%
+  - Delete Confirmation = 100%
+  - Searching di Tabel Penjualan = 100%
+  - Delete Confirmation = 100%
+
+  User & Role
+  - Ketika hapus role, user yang berkaitan dengan role tersebut akan ikut terhapus = 100%
+
+  Produk
+  - satuan
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - kategori
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - view detail produk = 100%
+  - perbaikan DB kategori dan satuan di hilangkan relasi dengan produk = 100%
+  - edit produk = 100%
+  - delete produk = 100%
+
+ - Reimbursement
+  -- tombol button udah bisa = 100%
+  -- edit reimbursement udah bisa = 100%
+
+SIT Web Aplikasi Akuntansi (18 Bug fix, 4 Requirements Added)
+
+🗓️ Tanggal 28 October, Kamis
+Testing dan Perbaikan
+  Laporan
+  - Jurnal Umum perbaikan UI = 100%
+  - Trial Balance, saldo awal, penyesuaian, dan saldo akhir sudah muncul semua = 100%
+  - Filter Date = 20%
+
+  Penjualan
+  - Perbaikan UI update, masih error kalau pake select2 = 80%
+  - Delete Confirmation = 100%
+  - Searching di Tabel Penjualan = 100%
+  - Delete Confirmation = 100%
+  - Penerimaan Pembayaran backend frontend fix = 80%
+
+  User & Role
+  - Ketika hapus role, user yang berkaitan dengan role tersebut akan ikut terhapus = 100%
+
+  Produk
+  - satuan
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - kategori
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - view detail produk = 100%
+  - perbaikan DB kategori dan satuan di hilangkan relasi dengan produk = 100%
+  - edit produk = 100%
+  - delete produk = 100%
+
+ - Reimbursement
+  -- tombol button udah bisa = 100%
+  -- edit reimbursement udah bisa = 100%
+
+SIT Web Aplikasi Akuntansi (18 Bug fix, 4 Requirements Added)
+
+🗓️ Tanggal 29 October, Jumat
+Testing dan Perbaikan
+  Laporan
+  - Jurnal Umum perbaikan UI = 100%
+  - Trial Balance, saldo awal, penyesuaian, dan saldo akhir sudah muncul semua = 100%
+  - Filter Date = 20%
+
+  Penjualan
+  - Perbaikan UI update, masih error kalau pake select2 = 80%
+  - Delete Confirmation = 100%
+  - Searching di Tabel Penjualan = 100%
+  - Delete Confirmation = 100%
+  - Penerimaan Pembayaran backend frontend fix = 80%
+
+  User & Role
+  - Ketika hapus role, user yang berkaitan dengan role tersebut akan ikut terhapus = 100%
+
+  Produk
+  - satuan
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - kategori
+   -- edit = 100%
+   -- delete, delete confirmation = 100%
+   -- create (perbuahan UI pake modal) = 100%
+  - view detail produk = 100%
+  - perbaikan DB kategori dan satuan di hilangkan relasi dengan produk = 100%
+  - edit produk = 100%
+  - delete produk = 100%
+  - detail produk = 100%
+
+ - Reimbursement
+  -- tombol button udah bisa = 100%
+  -- edit reimbursement udah bisa = 100%
+
+ -  Setting Perushaan
+  -- data sudah bisa muncul = 100%
+
+SIT Web Aplikasi Akuntansi (20 Bug fix, 4 Requirements Added)

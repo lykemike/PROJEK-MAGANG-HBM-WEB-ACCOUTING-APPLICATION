@@ -1,9 +1,22 @@
 import React from "react";
 import Layout from "../../../components/Layout";
-import { Row, Col, Form, Button, FormCheck } from "react-bootstrap";
+import { Row, Col, Form, Button, FormCheck, Table, InputGroup } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
 
+import {
+  Breadcrumbs,
+  Table as Tables,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from "@material-ui/core/";
+
+import Select from "react-select";
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
 import { useRouter } from "next/router";
@@ -43,184 +56,165 @@ export default function pembayaran_jual({ data, data2 }) {
             .catch(function (error) {
               console.log(error);
             });
-        }}>
+        }}
+      >
         {(props) => (
           <Forms noValidate>
-            <Row>
-              <Col>
-                <h5>Transaksi</h5>
-                <h3 className='text-blue-600'>Penerimaan Pembayaran</h3>
-              </Col>
-            </Row>
-            <hr />
-            <Form>
-              <Row sm='12'>
-                {data.map((i) => (
-                  <Col sm='3'>
-                    <Form.Label className='font-medium'>Pelanggan</Form.Label>
-                    <Form.Control placeholder={i.kontak.nama} disabled />
-                  </Col>
-                ))}
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link color="inherit" href="../jual/penjualan">
+                Transaksi
+              </Link>
+              <Typography color="textPrimary">Penerimaan Pembayaran</Typography>
+            </Breadcrumbs>
+            <h2 className="text-blue-600">Penerimaan Pembayaran</h2>
 
-                <Col sm='3'>
-                  <Form.Label className='font-medium'>Setor Ke</Form.Label>
-                  <Form.Control as='select' name='setor_ke' onChange={props.handleChange}>
-                    <option value='kosong'>Pilih</option>
-                    {data2.map((akun) => (
-                      <option key={akun.id} value={akun.id}>
-                        {akun.nama_akun}
-                      </option>
-                    ))}
-                  </Form.Control>
-                </Col>
-                <Col className='d-flex justify-content-end mr-3'>
-                  <Row>
-                    <h4 className='mr-2'>Total</h4>
-                    <h4 name='total'>Rp. {props.values.jumlah}</h4>
-                  </Row>
-                </Col>
-              </Row>
+            <div className="border-t border-gray-200">
+              <Form>
+                <Row className="mt-2">
+                  {data.map((i) => (
+                    <Col sm="3">
+                      <label>Pelanggan</label>
+                      <Form.Control placeholder={i.kontak.nama} disabled />
+                    </Col>
+                  ))}
 
-              <hr />
-
-              <Row sm='12'>
-                <Col sm='3'>
-                  <Form.Label className='font-medium'>Cara Pembayaran</Form.Label>
-                  <Form.Control as='select' name='carapembayaran' onChange={props.handleChange}>
-                    <option value='kosong'>Pilih</option>
-                    <option value='Kas Tunai'>Kas Tunai</option>
-                    <option value='Cek dan Giro'>Cek dan Giro</option>
-                    <option value='Transfer Bank'>Transfer Bank</option>
-                    <option value='Kartu Kredit'>Kartu Kredit</option>
-                  </Form.Control>
-                </Col>
-
-                <Col sm='3'>
-                  <Form.Label className='font-medium'>Tanggal Pembayaran</Form.Label>
-                  <Form.Control placeholder='' type='date' name='tgl_pembayaran' onChange={props.handleChange} />
-                </Col>
-
-                <Col sm='3'>
-                  <Form.Label className='font-medium'>Tanggal Jatuh Tempo</Form.Label>
-                  <Form.Control placeholder='' type='date' name='tgl_jatuh_tempo' onChange={props.handleChange} />
-                </Col>
-
-                {data.map((i) => (
-                  <Col sm='3'>
-                    <Form.Label className='font-medium'>No. Transaksi</Form.Label>
-                    <Form.Control placeholder={i.no_transaksi} disabled />
-                  </Col>
-                ))}
-              </Row>
-
-              <Row sm='12'>
-                <Col />
-                <Col />
-                <Col />
-
-                {data.map((i) => (
-                  <Col sm='3'>
-                    <Form.Label className='font-medium'>Tag</Form.Label>
-                    <Form.Control placeholder={i.tag} disabled />
-                  </Col>
-                ))}
-              </Row>
-
-              <hr />
-
-              <Row sm='12'>
-                <Col sm='2'>
-                  <Form.Label className='font-medium'>Nomor</Form.Label>
-                </Col>
-
-                <Col sm='2'>
-                  <Form.Label className='font-medium'>Deskripsi</Form.Label>
-                </Col>
-
-                <Col sm='2'>
-                  <Form.Label className='font-medium'>Tgl Jatuh Tempo</Form.Label>
-                </Col>
-
-                <Col sm='2'>
-                  <Form.Label className='font-medium'>Total</Form.Label>
-                </Col>
-
-                <Col sm='2'>
-                  <Form.Label className='font-medium'>Sisa Tagihan</Form.Label>
-                </Col>
-
-                <Col sm='2'>
-                  <Form.Label className='font-medium'>Jumlah</Form.Label>
-                </Col>
-              </Row>
-
-              <hr />
-              {data.map((i) => (
-                <Row className='mb-12'>
-                  <Col sm='2'>
-                    <p>Purchase Invoice #{i.id}</p>
-                  </Col>
-
-                  <Col sm='2'>
-                    <p>{i.memo}</p>
-                  </Col>
-
-                  <Col sm='2'>
-                    <p>{i.tgl_jatuh_tempo}</p>
-                  </Col>
-
-                  <Col sm='2'>
-                    <p>Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                  </Col>
-
-                  <Col sm='2'>
-                    <p>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</p>
-                  </Col>
-
-                  <Col sm='2'>
-                    <Form.Control
-                      type='number'
-                      placeholder=''
-                      name='jumlah'
+                  <Col sm="3">
+                    <label>Setor Ke</label>
+                    <Select
+                      options={data2}
+                      name="setor_ke"
                       onChange={(e) => {
-                        props.setFieldValue("jumlah", e.target.value);
-                        const total = i.sisa_tagihan - e.target.value;
-
-                        props.setFieldValue("total", parseInt(total));
+                        props.setFieldValue("setor_ke", e.value);
                       }}
                     />
                   </Col>
+                  <Col className="d-flex justify-content-end mr-3">
+                    <Row className="mt-4">
+                      <h4 className="mr-2">Total</h4>
+                      <h4 name="total">Rp. {props.values.jumlah}</h4>
+                    </Row>
+                  </Col>
                 </Row>
-              ))}
 
-              <Row sm='12' className='mt-7'>
-                <Col sm='3' />
+                <hr />
 
-                <Col sm='3' />
+                <Row sm="12">
+                  <Col sm="3">
+                    <label>Cara Pembayaran</label>
+                    <Form.Control as="select" name="carapembayaran" onChange={props.handleChange}>
+                      <option value="kosong">Pilih</option>
+                      <option value="Kas Tunai">Kas Tunai</option>
+                      <option value="Cek dan Giro">Cek dan Giro</option>
+                      <option value="Transfer Bank">Transfer Bank</option>
+                      <option value="Kartu Kredit">Kartu Kredit</option>
+                    </Form.Control>
+                  </Col>
 
-                <Col sm='3'>
-                  <h5>Total</h5>
-                </Col>
+                  <Col sm="3">
+                    <label>Tanggal Pembayaran</label>
+                    <Form.Control placeholder="" type="date" name="tgl_pembayaran" onChange={props.handleChange} />
+                  </Col>
 
-                <Col sm='3'>
-                  <h5 name='total'>Rp. {parseInt(props.values.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h5>
-                </Col>
-              </Row>
+                  <Col sm="3">
+                    <label>Tanggal Jatuh Tempo</label>
+                    <Form.Control placeholder="" type="date" name="tgl_jatuh_tempo" onChange={props.handleChange} />
+                  </Col>
 
-              <Row>
-                <Col className='d-flex justify-content-end mt-10'>
-                  {/* <Button variant='primary mr-2' onClick={pembayaran}>
+                  <Col sm="3">
+                    <label>No. Transaksi</label>
+                    <Form.Control placeholder={"Purchase Invoice #" + data[0].id} disabled />
+                  </Col>
+                </Row>
+
+                <Row sm="12">
+                  <Col />
+                  <Col />
+                  <Col />
+
+                  <Col sm="3">
+                    <label>Tag</label>
+                    <Form.Control placeholder={data[0].tag} disabled />
+                  </Col>
+                </Row>
+
+                <hr />
+
+                <Table responsive>
+                  <thead className="bg-blue-500 text-white">
+                    <tr>
+                      <th>Nomor</th>
+                      <th>Deskripsi</th>
+                      <th>Tanggal Jatuh Tempo</th>
+                      <th>Total Tagihan</th>
+                      <th>Sisa Tagihan</th>
+                      <th>Jumlah</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((i, index) => (
+                      <tr key={index}>
+                        <td>Purchase Invoice #{i.id}</td>
+                        <td>{i.memo}</td>
+                        <td>{i.tgl_jatuh_tempo}</td>
+                        <td>Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                        <td>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                        <td>
+                          <InputGroup>
+                            <InputGroup.Append>
+                              <InputGroup.Text>Rp. </InputGroup.Text>
+                            </InputGroup.Append>
+                            <Form.Control
+                              type="number"
+                              name="jumlah"
+                              min="0"
+                              onChange={(e) => {
+                                props.setFieldValue("jumlah", e.target.value);
+                                const total = i.sisa_tagihan - e.target.value;
+
+                                props.setFieldValue("total", parseInt(total));
+                              }}
+                            />
+                          </InputGroup>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+
+                <hr />
+
+                <Row className="mt-7">
+                  <Col sm="4" />
+
+                  <Col sm="4" />
+
+                  <Col sm="4">
+                    <Row>
+                      <Col sm="8" className="d-flex justify-content-end">
+                        <h5>Total</h5>
+                      </Col>
+                      <Col sm="4">
+                        <h5 name="total">Rp. {parseInt(props.values.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h5>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col className="d-flex justify-content-end mt-10">
+                    {/* <Button variant='primary mr-2' onClick={pembayaran}>
                     Invoice
                   </Button> */}
-                  <Link href='/jual/penjualan'>
-                    <Button variant='danger mr-2'>Batal</Button>
-                  </Link>
-                  <Button variant='success' onClick={props.handleSubmit}>
-                    Bayar
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
+                    <Link href="/jual/penjualan">
+                      <Button variant="danger mr-2">Batal</Button>
+                    </Link>
+                    <Button variant="success" onClick={props.handleSubmit}>
+                      Bayar
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </div>
           </Forms>
         )}
       </Formik>
@@ -241,16 +235,24 @@ export async function getServerSideProps(context) {
     },
   });
 
-  const akunKasBank = await prisma.akun.findMany({
+  const get_akun_setor_ke = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
     },
   });
 
+  let akun_setor_ke = [];
+  get_akun_setor_ke.map((i) => {
+    akun_setor_ke.push({
+      value: i.id,
+      label: i.nama_akun,
+    });
+  });
+
   return {
     props: {
       data: header,
-      data2: akunKasBank,
+      data2: akun_setor_ke,
     },
   };
 }
