@@ -392,6 +392,11 @@ export default function akundetail({ data, bank }) {
                       <TableCell>
                         <Typography className="text-white font-bold">Status</Typography>
                       </TableCell>
+                      <TableCell>
+                        <Typography className="text-white font-bold" align="center">
+                          Actions
+                        </Typography>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   {data.map((data, index) => (

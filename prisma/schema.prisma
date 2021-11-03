@@ -595,7 +595,6 @@ model TransferUang {
   akun_setor_id Int
   total         Int
   memo          String
-  no_transaksi  Int
   tgl_transaksi String
   tag           String
   status        String
@@ -623,7 +622,6 @@ model HeaderTerimaUang {
   kontak            Kontak @relation(fields: [kontak_id], references: [id])
   kontak_id         Int
 
-  no_transaksi    Int
   tgl_transaksi   String
   tag             String
   memo            String

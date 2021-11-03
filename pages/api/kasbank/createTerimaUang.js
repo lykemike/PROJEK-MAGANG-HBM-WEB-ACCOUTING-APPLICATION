@@ -56,7 +56,6 @@ export default async (req, res) => {
     const frontend_data = {
       akun_setor_id: parseInt(req.body.akun_setor_id),
       kontak_id: parseInt(req.body.kontak_id),
-      no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
       memo: req.body.memo,
@@ -154,7 +153,9 @@ export default async (req, res) => {
       data: list_pajak,
     });
 
-    res.status(201).json({ message: "Create Header, Detail, Jurnal Terima Uang Sucess!", akun_terima, bool, detail });
+    res
+      .status(201)
+      .json({ message: "Create Header, Detail, Jurnal Terima Uang Sucess!", akun_terima, bool, detail, id: find_latest });
   } catch (error) {
     res.status(400).json({ data: "Failed Header, Detail, Jurnal Terima Uang!", error });
     console.log(error);

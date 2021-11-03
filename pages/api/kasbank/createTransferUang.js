@@ -42,7 +42,6 @@ export default async (req, res) => {
       akun_setor_id: parseInt(req.body.akun_setor),
       total: parseInt(req.body.total),
       memo: req.body.memo,
-      no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       tag: req.body.tag,
       status: "Belum terekonsiliasi",
@@ -76,15 +75,6 @@ export default async (req, res) => {
     const find_latest = await prisma.transferUang.findFirst({
       orderBy: {
         id: "desc",
-      },
-    });
-
-    const update_no_transaksi = await prisma.transferUang.update({
-      where: {
-        id: find_latest.id,
-      },
-      data: {
-        no_transaksi: find_latest.id,
       },
     });
 

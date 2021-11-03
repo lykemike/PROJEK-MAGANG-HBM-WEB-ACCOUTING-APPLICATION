@@ -28,7 +28,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function addProduk({ data, data2, data3, data5, kategori, satuan, akun_jual, akun_beli }) {
-  // Form Validation
   const ProdukSchema = Yup.object().shape({
     nama: Yup.string()
       .min(5, "* must be more than 5 characters")

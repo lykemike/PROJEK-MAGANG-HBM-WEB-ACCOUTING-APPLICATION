@@ -1,8 +1,6 @@
 import React from "react";
 import Layout from "../../../components/layout";
-
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { Button, Row, Col, Form } from "react-bootstrap";
@@ -18,10 +16,12 @@ import {
   TableBody,
   TableFooter,
 } from "@material-ui/core";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import PrintIcon from "@material-ui/icons/Print";
 
-export default function view_kirim({ data, data2 }) {
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+export default function InvoiceKirimuang({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
 
@@ -29,10 +29,11 @@ export default function view_kirim({ data, data2 }) {
     router.push(`../cetak-kirim/${id}`);
   }
 
-  console.log(data);
-  console.log(data2);
   return (
     <Layout>
+      <Head>
+        <title>Invoice Kirim Uang</title>
+      </Head>
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Transaksi</Typography>
@@ -148,16 +149,13 @@ export default function view_kirim({ data, data2 }) {
           <Button variant="danger">Hapus</Button>
         </Col>
         <Col sm="4">
-          <Button variant="primary">
+          <Button variant="primary" onClick={cetak}>
             <PrintIcon fontSize="medium" /> Cetak
           </Button>
         </Col>
         <Col sm="4">
           <div className="d-flex justify-content-end">
-            <Button variant="secondary mr-2">
-              <ArrowBackIosIcon fontSize="medium" />
-              Kembali
-            </Button>
+            <Button variant="secondary mr-2">Kembali</Button>
           </div>
         </Col>
       </Row>

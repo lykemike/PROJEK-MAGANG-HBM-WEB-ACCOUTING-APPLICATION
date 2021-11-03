@@ -1,24 +1,22 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Table, Row, Col } from "react-bootstrap";
-import ImportExportIcon from "@material-ui/icons/ImportExport";
-import RotateLeftIcon from "@material-ui/icons/RotateLeft";
-import CachedIcon from "@material-ui/icons/Cached";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
-import Typography from "@material-ui/core/Typography";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
-import Tables from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+
+import {
+  Breadcrumbs,
+  Typography,
+  Checkbox,
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+  TableSortLabel,
+} from "@material-ui/core";
+import { VisibilityOutlined } from "@material-ui/icons/";
+
 export default function TransaksiJurnal({ data, index, bankid, label, view, contact, selectedTransactions, handleSelectOne }) {
   const detail = useMemo(() => {
     if (view == "kirimuang") {
@@ -32,12 +30,14 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
     }
   }, [view]);
 
-  console.log(data.JurnalTransferUang);
   return (
     <>
       <TableBody>
         {detail.map((i, index) => (
-          <TableRow key={JSON.stringify({ id: i.id, tipe: view })} selected={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}>
+          <TableRow
+            key={JSON.stringify({ id: i.id, tipe: view })}
+            selected={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
+          >
             <TableCell>
               <Checkbox
                 checked={selectedTransactions.indexOf(JSON.stringify({ id: i.id, tipe: view })) !== -1}
@@ -62,6 +62,36 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
               ) : (
                 <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{i.status}</span>
               )}
+            </TableCell>
+            <TableCell align="center">
+              {view == "kirimuang" ? (
+                <Link href={`view-kirim/${i.id}`}>
+                  <a>
+                    <VisibilityOutlined className="cursor-pointer" color="primary" fontSize="small" />
+                  </a>
+                </Link>
+              ) : null}
+              {view == "terimauang" ? (
+                <Link href={`view-terima/${i.id}`}>
+                  <a>
+                    <VisibilityOutlined className="cursor-pointer" color="primary" fontSize="small" />
+                  </a>
+                </Link>
+              ) : null}
+              {view == "transferuang1" ? (
+                <Link href={`view-transfer/${i.id}`}>
+                  <a>
+                    <VisibilityOutlined className="cursor-pointer" color="primary" fontSize="small" />
+                  </a>
+                </Link>
+              ) : null}
+              {view == "transferuang2" ? (
+                <Link href={`view-transfer/${i.id}`}>
+                  <a>
+                    <VisibilityOutlined className="cursor-pointer" color="primary" fontSize="small" />
+                  </a>
+                </Link>
+              ) : null}
             </TableCell>
           </TableRow>
         ))}
