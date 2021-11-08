@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
-import { Row, Col, Button, InputGroup, FormControl, FormCheck } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Button,
+  InputGroup,
+  FormControl,
+  FormCheck,
+} from "react-bootstrap";
 import Link from "next/link";
 
 import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
@@ -30,7 +37,11 @@ export default function Pengeluaran({ data }) {
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
-      setSearch(product.filter((i) => i.kontak.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+      setSearch(
+        product.filter((i) =>
+          i.kontak.nama.toLowerCase().includes(e.target.value.toLowerCase())
+        )
+      );
     } else {
       setSearch([]);
     }
@@ -70,21 +81,24 @@ export default function Pengeluaran({ data }) {
 
   return (
     <Layout>
-      <div className='border-b border-gray-200'>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Typography color='textPrimary'>Biaya</Typography>
+      <div className="border-b border-gray-200">
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography color="textPrimary">Biaya</Typography>
         </Breadcrumbs>
 
         <Row>
-          <Col sm='8'>
-            <h2 className='text-blue-600'>Pengeluaran</h2>
+          <Col sm="8">
+            <h2 className="text-blue-600">Pengeluaran</h2>
           </Col>
-          <Col sm='4'>
-            <div className='d-flex justify-content-end'>
-              <Link href='/biaya/buat-biaya'>
+          <Col sm="4">
+            <div className="d-flex justify-content-end">
+              <Link href="/biaya/buat-biaya">
                 <a>
-                  <button type='button' className='focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg'>
-                    <AddIcon fontSize='small' /> Buat Biaya Baru
+                  <button
+                    type="button"
+                    className="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
+                  >
+                    <AddIcon fontSize="small" /> Buat Biaya Baru
                   </button>
                 </a>
               </Link>
@@ -93,82 +107,118 @@ export default function Pengeluaran({ data }) {
         </Row>
       </div>
 
-      <div className='mt-4 mb-8'>
-        <Row sm='12'>
-          <Col sm='4'>
-            <div class='bg-white rounded-sm overflow-hidden shadow-md hover:shadow-lg transform transition duration-500 hover:scale-105'>
-              <div class='px-4 py-2 bg-blue-300 flex items-center justify-between'>
-                <h3 class='text-xl font-gray-700 font-bold'>Total Biaya Bulan Ini</h3>
+      <div className="mt-4 mb-8">
+        <Row sm="12">
+          <Col sm="4">
+            <div class="bg-white rounded-sm overflow-hidden shadow-md hover:shadow-lg transform transition duration-500 hover:scale-105">
+              <div class="px-4 py-2 bg-blue-300 flex items-center justify-between">
+                <h3 class="text-xl font-gray-700 font-bold">
+                  Total Biaya Bulan Ini
+                </h3>
               </div>
-              <div class='px-4 py-2 flex space-x-2 mt-2'>
-                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. {data.reduce((a, b) => (a = a + b.total), 0).toLocaleString({ minimumFractionDigits: 0 })}</h3>
+              <div class="px-4 py-2 flex space-x-2 mt-2">
+                <h3 class="text-lg text-gray-600 font-semibold mb-2">
+                  Rp.{" "}
+                  {data
+                    .reduce((a, b) => (a = a + b.total), 0)
+                    .toLocaleString({ minimumFractionDigits: 0 })}
+                </h3>
               </div>
             </div>
           </Col>
-          <Col sm='4'>
-            <div class='bg-white rounded-sm overflow-hidden shadow-md hover:shadow-lg transform transition duration-500 hover:scale-105'>
-              <div class='px-4 py-2 bg-red-300 flex items-center justify-between'>
-                <h1 class='text-xl font-gray-700 font-bold'>Biaya Belum Dibayar</h1>
+          <Col sm="4">
+            <div class="bg-white rounded-sm overflow-hidden shadow-md hover:shadow-lg transform transition duration-500 hover:scale-105">
+              <div class="px-4 py-2 bg-red-300 flex items-center justify-between">
+                <h1 class="text-xl font-gray-700 font-bold">
+                  Biaya Belum Dibayar
+                </h1>
               </div>
-              <div class='px-4 py-2 flex space-x-2 mt-2'>
-                <h3 class='text-lg text-gray-600 font-semibold mb-2'>Rp. {data.reduce((a, b) => (a = a + b.sisa_tagihan), 0).toLocaleString({ minimumFractionDigits: 0 })}</h3>
+              <div class="px-4 py-2 flex space-x-2 mt-2">
+                <h3 class="text-lg text-gray-600 font-semibold mb-2">
+                  Rp.{" "}
+                  {data
+                    .reduce((a, b) => (a = a + b.sisa_tagihan), 0)
+                    .toLocaleString({ minimumFractionDigits: 0 })}
+                </h3>
               </div>
             </div>
           </Col>
         </Row>
       </div>
 
-      <div className='border-t border-gray-200 justify-end'>
-        <Row className='mt-2 mb-2'>
-          <Col sm='9'>
+      <div className="border-t border-gray-200 justify-end">
+        <Row className="mt-2 mb-2">
+          <Col sm="9">
             <h3>Daftar Biaya</h3>
           </Col>
-          <Col sm='3' className='d-flex justify-content-end'>
-            <FormControl placeholder='Search . . . .' aria-label='cari' aria-describedby='basic-addon1' onChange={(e) => handleChange(e)} />
+          <Col sm="3" className="d-flex justify-content-end">
+            <FormControl
+              placeholder="Search . . . ."
+              aria-label="cari"
+              aria-describedby="basic-addon1"
+              onChange={(e) => handleChange(e)}
+            />
           </Col>
         </Row>
       </div>
 
       <TableContainer component={Paper}>
-        <Table aria-label='collapsible table'>
-          <TableHead className='bg-dark'>
+        <Table aria-label="collapsible table">
+          <TableHead className="bg-dark">
             <TableRow>
               <TableCell />
               <TableCell>
-                <Typography className='text-white font-bold'>Tanggal Transaksi</Typography>
+                <Typography className="text-white font-bold">
+                  Tanggal Transaksi
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Nomor</Typography>
+                <Typography className="text-white font-bold">Nomor</Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Akun Pembayaran</Typography>
+                <Typography className="text-white font-bold">
+                  Akun Pembayaran
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Penerima</Typography>
+                <Typography className="text-white font-bold">
+                  Penerima
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Tag</Typography>
+                <Typography className="text-white font-bold">Tag</Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Status</Typography>
+                <Typography className="text-white font-bold">Status</Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Sisa Tagihan</Typography>
+                <Typography className="text-white font-bold">
+                  Sisa Tagihan
+                </Typography>
               </TableCell>
               <TableCell>
-                <Typography className='text-white font-bold'>Total</Typography>
+                <Typography className="text-white font-bold">Total</Typography>
               </TableCell>
-              <TableCell align='center'>
-                <Typography className='text-white font-bold'>Actions</Typography>
+              <TableCell align="center">
+                <Typography className="text-white font-bold">
+                  Actions
+                </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
-          {data.slice(firstIndex, lastIndex).map((data, index) => (
-            <TableReusable data={data} index={index} label='Expense' label2='Pengiriman Biaya' view='biaya' />
+          {handleList().map((data, index) => (
+            <TableReusable
+              data={data}
+              index={index}
+              label="Expense"
+              label2="Pengiriman Biaya"
+              view="biaya"
+              modalDelete={() => setModalShow({ open: true, id: data.id })}
+            />
           ))}
         </Table>
       </TableContainer>
-      <div class='flex items-center justify-center mt-4'>
+      <div class="flex items-center justify-center mt-4">
         <TablePagination
           onPrevChange={handlePrevChange}
           onNextChange={handleNextChange}
