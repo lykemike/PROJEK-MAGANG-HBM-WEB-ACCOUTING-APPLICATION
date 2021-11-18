@@ -96,13 +96,27 @@ export default async (req, res) => {
       },
     });
 
-    const setting_pembelian_cogs = get_setting_pembelian.filter((i) => i.nama_setting === "pembelian_cogs");
-    const setting_pemotongan = get_setting_pembelian.filter((i) => i.nama_setting === "pemotongan");
-    const setting_uang_muka_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "uang_muka_pembelian");
-    const setting_hutang_blm_ditagih = get_setting_pembelian.filter((i) => i.nama_setting === "hutang_blm_ditagih");
-    const setting_pajak_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "pajak_pembelian");
-    const diskon_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "diskon_pembelian");
-    const total_diskon = parseInt(req.body.total_diskon_per_baris) + parseInt(req.body.total_diskon);
+    const setting_pembelian_cogs = get_setting_pembelian.filter(
+      (i) => i.nama_setting === "pembelian_cogs"
+    );
+    const setting_pemotongan = get_setting_pembelian.filter(
+      (i) => i.nama_setting === "pemotongan"
+    );
+    const setting_uang_muka_pembelian = get_setting_pembelian.filter(
+      (i) => i.nama_setting === "uang_muka_pembelian"
+    );
+    const setting_hutang_blm_ditagih = get_setting_pembelian.filter(
+      (i) => i.nama_setting === "hutang_blm_ditagih"
+    );
+    const setting_pajak_pembelian = get_setting_pembelian.filter(
+      (i) => i.nama_setting === "pajak_pembelian"
+    );
+    const diskon_pembelian = get_setting_pembelian.filter(
+      (i) => i.nama_setting === "diskon_pembelian"
+    );
+    const total_diskon =
+      parseInt(req.body.total_diskon_per_baris) +
+      parseInt(req.body.total_diskon);
 
     let detail = [];
     req.body.produks &&
@@ -186,11 +200,26 @@ export default async (req, res) => {
       data: list_pajak,
     });
 
-    const pembayaran_di_muka = parseInt(req.body.uang_muka) >= 0 ? akunUangMuka[0].id : akunUangMuka[0].id;
-    const hutang_blm_ditagih = parseInt(req.body.sisa_tagihan) >= 0 ? setting_hutang_blm_ditagih[0].akun_id : setting_hutang_blm_ditagih[0].akun_id;
-    const nilai_diskon_penjualan = parseInt(total_diskon) >= 0 ? diskon_pembelian[0].akun_id : diskon_pembelian[0].akun_id;
-    const pemotongan = parseInt(req.body.pemotongan) >= 0 ? akunPemotongan[0].id : akunPemotongan[0].id;
-    const pendapatan_pembelian = parseInt(req.body.subtotal) >= 0 ? setting_pembelian_cogs[0].akun_id : setting_pembelian_cogs[0].akun_id;
+    const pembayaran_di_muka =
+      parseInt(req.body.uang_muka) >= 0
+        ? akunUangMuka[0].id
+        : akunUangMuka[0].id;
+    const hutang_blm_ditagih =
+      parseInt(req.body.sisa_tagihan) >= 0
+        ? setting_hutang_blm_ditagih[0].akun_id
+        : setting_hutang_blm_ditagih[0].akun_id;
+    const nilai_diskon_penjualan =
+      parseInt(total_diskon) >= 0
+        ? diskon_pembelian[0].akun_id
+        : diskon_pembelian[0].akun_id;
+    const pemotongan =
+      parseInt(req.body.pemotongan) >= 0
+        ? akunPemotongan[0].id
+        : akunPemotongan[0].id;
+    const pendapatan_pembelian =
+      parseInt(req.body.subtotal) >= 0
+        ? setting_pembelian_cogs[0].akun_id
+        : setting_pembelian_cogs[0].akun_id;
 
     const create_kredit_jurnal = await prisma.jurnalPembelian.createMany({
       data: [
