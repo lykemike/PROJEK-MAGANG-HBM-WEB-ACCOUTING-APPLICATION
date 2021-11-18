@@ -54,10 +54,8 @@ export default function salesInvoice({ header, data }) {
       <div className="py-2 border-b border-gray-200">
         <Row>
           <Col sm="4">
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Pelanggan:</p>
-              {header[0].kontak.nama}
-            </Row>
+            <label className="font-medium mr-2">Pelanggan:</label>
+            <label>{header[0].kontak.nama}</label>
           </Col>
           <Col sm="4">
             <Row class="row no-gutters">
@@ -71,10 +69,10 @@ export default function salesInvoice({ header, data }) {
       <div className="py-2 border-b border-gray-200">
         <Row>
           <Col sm="4">
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Alamat Penagihan:</p>
-              {header[0].alamat_supplier}
-            </Row>
+            <Col sm="4">
+              <label className="font-medium mr-2">Alamat Penagihan:</label>
+              <label>{header[0].alamat_supplier}</label>
+            </Col>
           </Col>
 
           <Col sm="4">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -19,13 +19,14 @@ import {
   TableHead,
   TableBody,
 } from "@material-ui/core";
-import { Add, Search, EditOutlined, DeleteOutline } from "@material-ui/icons/";
+import { Add, Search, Delete } from "@material-ui/icons/";
+
 import * as Yup from "yup";
 import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-function ModalCreate(props) {
+function CreateModal(props) {
   const KategoriSchema = Yup.object().shape({
     nama: Yup.string()
       .min(1, "* must be atleast 1 characters")
@@ -54,16 +55,16 @@ function ModalCreate(props) {
     >
       {(formikProps) => (
         <Forms noValidate>
-          <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+          <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">Tambah Kategori</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Row className="mb-2">
-                <Col className="mt-1" sm="1">
-                  <Form.Label>Kategori</Form.Label>
+                <Col xs={2} className="mt-1">
+                  <label className="font-medium">Kategori</label>
                 </Col>
-                <Col sm="4">
+                <Col xs={8}>
                   <Form.Control
                     placeholder="Nama kategori"
                     name="nama"
@@ -77,16 +78,18 @@ function ModalCreate(props) {
               </Row>
 
               <Row className="mb-2">
-                <Col className="mt-1" sm="1">
-                  <Form.Label>Jumlah</Form.Label>
+                <Col xs={2} className="mt-1">
+                  <label className="font-medium">Jumlah</label>
                 </Col>
-                <Col sm="4">
+                <Col xs={8}>
                   <Form.Control placeholder="Auto (0)" name="jumlah" disabled />
                 </Col>
               </Row>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={props.onHide}>Close</Button>
+              <Button variant="secondary" onClick={props.onHide}>
+                Close
+              </Button>
               <Button variant="success" onClick={formikProps.handleSubmit}>
                 Tambah
               </Button>
@@ -98,7 +101,7 @@ function ModalCreate(props) {
   );
 }
 
-function ModalDelete(props) {
+function DeleteModal(props) {
   const router = useRouter();
   const api_delete_kategori = "http://localhost:3000/api/produk/deleteKategori";
 
@@ -110,26 +113,28 @@ function ModalDelete(props) {
     })
       .then(function (response) {
         console.log(response);
-        router.push("../satuan/tabel-satuan");
+        router.push("../kategori/tabel-kategori");
       })
       .catch(function (error) {
         console.log(error);
       });
   };
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Delete Kategori Confirmation</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure you want to delete the current kategori?</p>
+        <p>
+          Are you sure you want to delete <label className="font-medium">{props.nama}</label> ?
+        </p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handle_delete}>
-          Confirm Delete
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
         </Button>
       </Modal.Footer>
     </Modal>
@@ -146,7 +151,7 @@ export default function tabelKategori({ data }) {
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
   const [modalCreate, setModalCreate] = useState(false);
-  const [modalDelete, setModalDelete] = useState({ open: false, id: 0 });
+  const [modalDelete, setModalDelete] = useState({ open: false, id: 0, nama: "" });
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -190,23 +195,27 @@ export default function tabelKategori({ data }) {
   };
   return (
     <Layout>
-      <ModalCreate show={modalCreate} onHide={() => setModalCreate(false)} />
-      <ModalDelete id={modalDelete.id} show={modalDelete.open} onHide={() => setModalDelete({ open: false, id: 0 })} />
+      <CreateModal backdrop="static" keyboard={false} show={modalCreate} onHide={() => setModalCreate(false)} />
+      <DeleteModal
+        id={modalDelete.id}
+        show={modalDelete.open}
+        nama={modalDelete.nama}
+        backdrop="static"
+        keyboard={false}
+        onHide={() => setModalDelete({ open: false, id: 0, nama: "" })}
+      />
       <Head>
         <title>Kategori Produk</title>
       </Head>
 
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" href="../tabel-produk">
-            Tabel Produk
-          </Link>
-          <Typography color="textPrimary">Tabel Kategori Produk</Typography>
+          <Typography color="textPrimary">Kategori Produk</Typography>
         </Breadcrumbs>
 
         <Row>
           <Col sm="8">
-            <h2 className="text-blue-600">Menambahkan Kategori Produk Baru</h2>
+            <h2 className="text-blue-600">Menambahkan Kategori Baru</h2>
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
@@ -228,12 +237,7 @@ export default function tabelKategori({ data }) {
                   <Search />
                 </InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl
-                placeholder="Search . . . ."
-                aria-label="cari"
-                aria-describedby="basic-addon1"
-                onChange={(e) => handleChange(e)}
-              />
+              <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
             </InputGroup>
           </Col>
         </Row>
@@ -250,11 +254,7 @@ export default function tabelKategori({ data }) {
                 <TableCell>
                   <Typography className="text-white font-bold">Jumlah</Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography className="text-white font-bold" align="right">
-                    Actions
-                  </Typography>
-                </TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -265,15 +265,16 @@ export default function tabelKategori({ data }) {
                     <TableCell>{i.nama}</TableCell>
                     <TableCell>{i.jumlah}</TableCell>
                     <TableCell align="right">
-                      <Link href={`../kategori/${i.id}`}>
-                        <EditOutlined color="action" fontSize="small" className="mr-2 cursor-pointer" />
-                      </Link>
-                      <DeleteOutline
+                      {/* <DeleteOutline
                         onClick={() => setModalDelete({ open: true, id: i.id })}
                         color="secondary"
                         fontSize="small"
                         className="cursor-pointer"
-                      />
+                      /> */}
+
+                      <Button variant="danger" size="sm" onClick={() => setModalDelete({ open: true, id: i.id, nama: i.nama })}>
+                        <Delete className="text-white" fontSize="small" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

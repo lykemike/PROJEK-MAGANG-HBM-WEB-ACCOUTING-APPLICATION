@@ -71,16 +71,12 @@ export default function salesInvoice({ data, header }) {
       <div className="py-2 border-b border-gray-200">
         <Row>
           <Col sm="4">
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Pelanggan:</p>
-              {header[0].kontak.nama}
-            </Row>
+            <label className="font-medium mr-2">Pelanggan:</label>
+            <label>{header[0].kontak.nama}</label>
           </Col>
           <Col sm="4">
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Email:</p>
-              {header[0].email}
-            </Row>
+            <label className="font-medium mr-2">Email:</label>
+            <label>{header[0].email}</label>
           </Col>
 
           <Col>
@@ -95,40 +91,41 @@ export default function salesInvoice({ data, header }) {
       <div className="py-2 border-b border-gray-200">
         <Row>
           <Col sm="4">
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Alamat Penagihan:</p>
-              {header[0].alamat_supplier}
-            </Row>
+            <label className="font-medium mr-2">Alamat Penagihan:</label>
           </Col>
-
           <Col sm="4">
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Tanggal Transaksi:</p>
-              {header[0].tgl_transaksi}
-            </Row>
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Tanggal Jatuh Tempo:</p>
-              {header[0].tgl_jatuh_tempo}
-            </Row>
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Syarat Pembayaran:</p>
-              {data.nama_pembayaran}
-            </Row>
+            <label className="font-medium mr-2">Tanggal Transaksi:</label>
+            <label>{header[0].tgl_jatuh_tempo}</label>
           </Col>
-
           <Col sm="4">
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">No. Transaksi:</p>
-              {header[0].custom_invoice}
-            </Row>
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">Tag:</p>
-              {header[0].tag}
-            </Row>
-            <Row class="row no-gutters">
-              <p className="font-medium mr-2">No. Kontrak:</p>
-              {header[0].no_ref_penagihan}
-            </Row>
+            <label className="font-medium mr-2">No. Transaksi:</label>
+            <label>{header[0].custom_invoice}</label>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col sm="4">
+            <label>{header[0].alamat_supplier}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Tanggal Jatuh Tempo:</label>
+            <label>{header[0].tgl_jatuh_tempo}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Tag:</label>
+            <label>{header[0].tag}</label>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col sm="4" />
+          <Col sm="4">
+            <label className="font-medium mr-2">Syarat Pembayaran:</label>
+            <label>{header[0].syarat_pembayaran}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">No. Kontrak:</label>
+            <label>{header[0].no_ref_penagihan}</label>
           </Col>
         </Row>
       </div>

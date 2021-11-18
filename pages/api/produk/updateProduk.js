@@ -1,4 +1,5 @@
 import { PrismaClient } from ".prisma/client";
+import { create } from "lodash";
 import multer from "multer";
 import { extname } from "path";
 const prisma = new PrismaClient();
@@ -13,6 +14,8 @@ export const editFileName = (req, file, callback) => {
   callback(null, `${name}-${randomName}${fileExtName}`);
 };
 
+// Returns a Multer instance that provides several methods for generating
+// middleware that process files uploaded in multipart/form-data format.
 const upload = multer({
   storage: multer.diskStorage({
     destination: "./public/uploads",
@@ -40,26 +43,20 @@ export default async (req, res) => {
         id: parseInt(req.body.id),
       },
       data: {
-        image: req.file.filename,
+        file_attachment: req.file.filename,
         nama: req.body.nama,
-        kode_sku: req.body.kode_sku,
-        kategori_produk: req.body.kategori_produk,
-        quantity: parseInt(req.body.quantity),
-        satuan: req.body.unit,
+        kategori_id: parseInt(req.body.kategori_id),
+        kategori_name: req.body.kategori_name,
         deskripsi: req.body.deskripsi,
-        harga_beli_satuan: parseInt(req.body.hbs),
-        akun_pembelian: parseInt(req.body.akun_pembelian),
-
-        harga_jual_satuan: parseInt(req.body.hjs),
-        akun_penjualan: parseInt(req.body.akun_penjualan),
-        beli_disabled: req.body.beli_disable,
-        jual_disabled: req.body.jual_disable,
+        harga: parseInt(req.body.harga),
+        akun_id: parseInt(req.body.akun_penjualan_id),
+        akun_penjualan_name: req.body.akun_penjualan_name,
       },
     });
 
-    res.status(201).json({ message: "Update produk success!", data: update_produk });
+    res.status(201).json({ message: "Update produk produk success!", data: update_produk });
   } catch (error) {
-    res.status(400).json({ data: "Update produk failed!", error });
+    res.status(400).json({ data: "error", error });
     console.log(error);
   }
 };

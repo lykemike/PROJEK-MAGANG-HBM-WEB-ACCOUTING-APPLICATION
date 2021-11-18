@@ -52,8 +52,6 @@ export default function jurnalentry({ data }) {
     setPage(parseInt(data.length / rowsPerPage));
   };
 
-  console.log(data[0].DetailSaldoAwal[0].sisa_saldo);
-
   return (
     <Layout>
       <div className="border-b border-gray-200">
@@ -67,22 +65,10 @@ export default function jurnalentry({ data }) {
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
-              <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Buat Transaksi">
-                <Dropdown.Item>
-                  <Link href="/kasbank/transferuang">
-                    <a>Transfer Uang</a>
-                  </Link>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Link href="/kasbank/terimauang">
-                    <a>Terima Uang</a>
-                  </Link>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Link href="/kasbank/kirimuang">
-                    <a>Kirim Uang</a>
-                  </Link>
-                </Dropdown.Item>
+              <DropdownButton id="dropdown-basic-button" title="Buat transaksi">
+                <Dropdown.Item href="/kasbank/transferuang">Transfer Uang</Dropdown.Item>
+                <Dropdown.Item href="/kasbank/terimauang">Terima Uang</Dropdown.Item>
+                <Dropdown.Item href="/kasbank/kirimuang">Kirim Uang</Dropdown.Item>
               </DropdownButton>
             </div>
           </Col>
@@ -117,12 +103,12 @@ export default function jurnalentry({ data }) {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    Rp.{" "}
-                    {i.DetailSaldoAwal[0].sisa_saldo >= 0
+                    Rp. 0, 00
+                    {/* {i.DetailSaldoAwal[0].sisa_saldo >= 0
                       ? i.DetailSaldoAwal[0].sisa_saldo.toLocaleString({
                           minimumFractionDigits: 0,
                         })
-                      : "0, 00"}
+                      : "0, 00"} */}
                   </TableCell>
                 </TableRow>
               ))}

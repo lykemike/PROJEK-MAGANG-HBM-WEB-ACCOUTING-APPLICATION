@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import Head from "next/head";
 import Layout from "../../components/Layout";
 import {
   Card,
@@ -27,9 +28,9 @@ import {
   TableHead,
   TableBody,
 } from "@material-ui/core";
+import { Add, SearchOutlined, ErrorOutline, Visibility, Edit, Delete } from "@material-ui/icons/";
 
-import { Add, SettingsOutlined, SearchOutlined, VisibilityOutlined, EditOutlined, DeleteOutlined } from "@material-ui/icons/";
-
+import * as XLSX from "xlsx";
 import { CSVLink, CSVDownload } from "react-csv";
 import Axios from "axios";
 import { useRouter } from "next/router";
@@ -56,19 +57,21 @@ function DeleteModal(props) {
   };
 
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Delete Produk Confirmation</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure you want to delete the current Produk?</p>
+        <p>
+          Are you sure you want to delete <label className="font-medium">{props.nama}</label> ?
+        </p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handle_delete}>
-          Confirm Delete
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
         </Button>
       </Modal.Footer>
     </Modal>
@@ -94,7 +97,7 @@ export default function tabelProduk({ data }) {
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
-  const [modalShow, setModalShow] = useState({ open: false, id: 0 });
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
@@ -108,18 +111,18 @@ export default function tabelProduk({ data }) {
     return search.length > 0 ? search : product;
   };
 
-  const restructure = (data) => {
-    let result = [];
-    data.map((i) => {
-      result.push({
-        Nama: i.nama,
-        "Kode SKU": i.kode_sku,
-        "Kategori Akun": i.kategori_produk.nama,
-        Unit: i.satuan.satuan,
-      });
-    });
-    return result;
-  };
+  // const restructure = (data) => {
+  //   let result = [];
+  //   data.map((i) => {
+  //     result.push({
+  //       "Nama Produk & Jasa": i.nama,
+  //       Kategori: i.kategori.nama,
+  //       Harga: "Rp. " + i.harga.toLocaleString({ minimumFractionDigits: 0 }),
+  //       "Akun Penjualan": i.akun.nama_akun,
+  //     });
+  //   });
+  //   return result;
+  // };
 
   const handlePrevChange = () => {
     if (page < 1) {
@@ -151,7 +154,17 @@ export default function tabelProduk({ data }) {
 
   return (
     <Layout>
-      <DeleteModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
+      <Head>
+        <title>Tabel Produk & Jasa</title>
+      </Head>
+      <DeleteModal
+        id={modalShow.id}
+        show={modalShow.open}
+        nama={modalShow.nama}
+        backdrop="static"
+        keyboard={false}
+        onHide={() => setModalShow({ open: false, id: 0, nama: "" })}
+      />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Tabel Produk</Typography>
@@ -179,33 +192,41 @@ export default function tabelProduk({ data }) {
       <div className="mt-4 mb-8 ">
         <Row>
           <Col>
-            <Row>
-              <SettingsOutlined fontSize="medium" className="mt-1" />
-              <h4>Barang & Jasa</h4>
-            </Row>
+            <h4 className="text-gray-700">Barang & Jasa</h4>
           </Col>
 
           <Col className="d-flex justify-content-end">
-            <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Tambah">
-              <Dropdown.Item>
-                <a>
-                  <Link href="kategori/tabel-kategori">Kategori Produk</Link>
-                </a>
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <a>
-                  <Link href="satuan/tabel-satuan">Satuan Produk</Link>
-                </a>
-              </Dropdown.Item>
-            </DropdownButton>
+            <Link href="kategori/tabel-kategori">
+              <Button variant="primary">Kategori</Button>
+            </Link>
 
             <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Ekspor">
-              <Dropdown.Item></Dropdown.Item>
-              <Dropdown.Item eventKey="1" as="button">
-                <CSVLink data={restructure(data)} filename="product.csv">
+              <Dropdown.Item
+                as="button"
+                onClick={() => {
+                  let produks = [];
+                  data.map((i) => {
+                    produks.push({
+                      "Nama Produk & Jasa": i.nama,
+                      Kategori: i.kategori.nama,
+                      Harga: "Rp. " + i.harga.toLocaleString({ minimumFractionDigits: 0 }),
+                      "Akun Penjualan": i.akun.nama_akun,
+                    });
+                  });
+                  const header_excel = produks;
+                  var ws = XLSX.utils.json_to_sheet(header_excel);
+                  var wb = XLSX.utils.book_new();
+                  XLSX.utils.book_append_sheet(wb, ws, "List Produk & Jasa");
+                  XLSX.writeFile(wb, "list_produk_jasa.xlsx");
+                }}
+              >
+                XLSX
+              </Dropdown.Item>
+              {/* <Dropdown.Item as="button">
+                <CSVLink data={restructure(data)} filename="list_produk_jasa.csv">
                   CSV
                 </CSVLink>
-              </Dropdown.Item>
+              </Dropdown.Item> */}
             </DropdownButton>
             <Col sm="6">
               <InputGroup>
@@ -214,12 +235,7 @@ export default function tabelProduk({ data }) {
                     <SearchOutlined />
                   </InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl
-                  placeholder="cari"
-                  aria-label="cari"
-                  aria-describedby="basic-addon1"
-                  onChange={(e) => handleChange(e)}
-                />
+                <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
               </InputGroup>
             </Col>
           </Col>
@@ -233,28 +249,21 @@ export default function tabelProduk({ data }) {
                     <FormCheck />
                   </TableCell>
                   <TableCell>
-                    <Typography className="text-white font-bold">Kode Produk</Typography>
-                  </TableCell>
-                  <TableCell>
                     <Typography className="text-white font-bold">Nama Produk</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className="text-white font-bold" align="center">
-                      Quantity
-                    </Typography>
+                    <Typography className="text-white font-bold">Kategori Produk</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className="text-white font-bold">Satuan</Typography>
+                    <Typography className="text-white font-bold">Deskripsi</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className="text-white font-bold">Harga Beli Satuan</Typography>
+                    <Typography className="text-white font-bold">Harga</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className="text-white font-bold">Harga Jual Satuan</Typography>
+                    <Typography className="text-white font-bold">Akun Penjualan</Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography className="text-white font-bold">Action</Typography>
-                  </TableCell>
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -262,33 +271,40 @@ export default function tabelProduk({ data }) {
                   .slice(firstIndex, lastIndex)
                   .map((i, index) => (
                     <TableRow key={index}>
-                      <TableCell component="th">
+                      <TableCell style={{ minWidth: 50, width: 50 }}>
                         <FormCheck />
                       </TableCell>
-                      <TableCell>{i.kode_sku}</TableCell>
-                      <TableCell>{i.nama}</TableCell>
-                      <TableCell align="center">{i.quantity}</TableCell>
-                      <TableCell>{i.satuan}</TableCell>
-                      <TableCell>Rp. {i.harga_beli_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                      <TableCell>Rp. {i.harga_jual_satuan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                      <TableCell>
+                      <TableCell style={{ minWidth: 350, width: 350 }}>
+                        {i.nama.length > 40 ? i.nama.slice(0, 40) + "..." : i.nama}
+                      </TableCell>
+                      <TableCell style={{ minWidth: 250, width: 250 }}>{i.kategori.nama}</TableCell>
+                      <TableCell style={{ minWidth: 300, width: 300 }}>
+                        {i.deskripsi.length > 40 ? i.deskripsi.slice(0, 40) + "..." : i.deskripsi}
+                      </TableCell>
+                      <TableCell style={{ minWidth: 150, width: 150 }}>
+                        Rp. {i.harga.toLocaleString({ minimumFractionDigits: 0 })}
+                      </TableCell>
+                      <TableCell style={{ minWidth: 250, width: 250 }}>{i.akun.nama_akun}</TableCell>
+                      <TableCell style={{ minWidth: 200, width: 200 }} align="right">
                         <Link href={`../produk/view/${i.id}`}>
                           <a>
-                            <VisibilityOutlined color="primary" fontSize="small" className="mr-2" />
-                          </a>
-                        </Link>
-                        <Link href={`${i.id}`}>
-                          <a>
-                            <EditOutlined color="action" fontSize="small" className="mr-2" />
+                            <Button variant="primary" size="sm" className="mr-2">
+                              <Visibility className="text-white" fontSize="small" />
+                            </Button>
                           </a>
                         </Link>
 
-                        <DeleteOutlined
-                          className="cursor-pointer"
-                          onClick={() => setModalShow({ open: true, id: i.id })}
-                          color="secondary"
-                          fontSize="small"
-                        />
+                        <Link href={`../produk/${i.id}`}>
+                          <a>
+                            <Button variant="success" size="sm" className="mr-2">
+                              <Edit className="text-white" fontSize="small" />
+                            </Button>
+                          </a>
+                        </Link>
+
+                        <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.id, nama: i.nama })}>
+                          <Delete className="text-white" fontSize="small" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -313,14 +329,13 @@ export default function tabelProduk({ data }) {
 }
 
 export async function getServerSideProps() {
-  // Get Produk from API
   const products = await prisma.produk.findMany({
     orderBy: {
-      id: "asc",
+      nama: "asc",
     },
     include: {
-      pembelian: true,
-      penjualan: true,
+      akun: true,
+      kategori: true,
     },
   });
 

@@ -44,6 +44,7 @@ export default function pembayaran_jual({ data, data2 }) {
           tgl_pembayaran: "",
           tgl_jatuh_tempo: "",
           jumlah: 0,
+          validation_button: false,
         }}
         // validationSchema={UserSchema}
         onSubmit={async (values) => {
@@ -91,7 +92,7 @@ export default function pembayaran_jual({ data, data2 }) {
                   <Col className="d-flex justify-content-end mr-3">
                     <Row className="mt-4">
                       <h4 className="mr-2">Total</h4>
-                      <h4 name="total">Rp. {props.values.jumlah}</h4>
+                      <h4 name="total">Rp. {props.values.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</h4>
                     </Row>
                   </Col>
                 </Row>
@@ -151,33 +152,36 @@ export default function pembayaran_jual({ data, data2 }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((i, index) => (
-                      <tr key={index}>
-                        <td>Purchase Invoice #{i.id}</td>
-                        <td>{i.memo}</td>
-                        <td>{i.tgl_jatuh_tempo}</td>
-                        <td>Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</td>
-                        <td>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</td>
-                        <td>
-                          <InputGroup>
-                            <InputGroup.Append>
-                              <InputGroup.Text>Rp. </InputGroup.Text>
-                            </InputGroup.Append>
-                            <Form.Control
-                              type="number"
-                              name="jumlah"
-                              min="0"
-                              onChange={(e) => {
-                                props.setFieldValue("jumlah", e.target.value);
-                                const total = i.sisa_tagihan - e.target.value;
+                    <tr>
+                      <td>Purchase Invoice #{data[0].id}</td>
+                      <td>{data[0].memo}</td>
+                      <td>{data[0].tgl_jatuh_tempo}</td>
+                      <td>Rp. {data[0].total.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                      <td>Rp. {data[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                      <td>
+                        <InputGroup>
+                          <InputGroup.Append>
+                            <InputGroup.Text>Rp. </InputGroup.Text>
+                          </InputGroup.Append>
+                          <Form.Control
+                            type="number"
+                            name="jumlah"
+                            min="0"
+                            onChange={(e) => {
+                              props.setFieldValue("jumlah", e.target.value);
+                              const total = data[0].sisa_tagihan - e.target.value;
+                              props.setFieldValue("total", parseInt(total));
 
-                                props.setFieldValue("total", parseInt(total));
-                              }}
-                            />
-                          </InputGroup>
-                        </td>
-                      </tr>
-                    ))}
+                              if (e.target.value <= data[0].sisa_tagihan) {
+                                props.setFieldValue((props.values.validation_button = false));
+                              } else {
+                                props.setFieldValue((props.values.validation_button = true));
+                              }
+                            }}
+                          />
+                        </InputGroup>
+                      </td>
+                    </tr>
                   </tbody>
                 </Table>
 
@@ -190,10 +194,10 @@ export default function pembayaran_jual({ data, data2 }) {
 
                   <Col sm="4">
                     <Row>
-                      <Col sm="8" className="d-flex justify-content-end">
+                      <Col sm="6" className="d-flex justify-content-end">
                         <h5>Total</h5>
                       </Col>
-                      <Col sm="4">
+                      <Col sm="6">
                         <h5 name="total">Rp. {parseInt(props.values.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h5>
                       </Col>
                     </Row>
@@ -208,7 +212,7 @@ export default function pembayaran_jual({ data, data2 }) {
                     <Link href="/jual/penjualan">
                       <Button variant="danger mr-2">Batal</Button>
                     </Link>
-                    <Button variant="success" onClick={props.handleSubmit}>
+                    <Button variant="success" onClick={props.handleSubmit} disabled={props.values.validation_button}>
                       Bayar
                     </Button>
                   </Col>

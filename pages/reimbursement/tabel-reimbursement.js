@@ -7,27 +7,42 @@ import TablePagination from "../../components/TablePagination";
 import { Formik, Form as Forms } from "formik";
 import Axios from "axios";
 import { useRouter } from "next/router";
-import Typography from "@material-ui/core/Typography";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-// import { PrismaClient } from '@prisma/client'
-// const prisma = new PrismaClient()
-
-import Tables from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import {
+  Breadcrumbs,
+  Typography,
+  Checkbox,
+  Paper,
+  TableContainer,
+  Table as Tables,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHead,
+} from "@material-ui/core";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function list({ data }) {
+export default function TabelReimbursement({ data }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [search, setSearch] = useState([]);
+  const [reimbursement, setReimbursement] = useState(data);
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    if (e.target.value !== "") {
+      setSearch(reimbursement.filter((i) => i.nama_pegawai.toLowerCase().includes(e.target.value.toLowerCase())));
+    } else {
+      setReimbursement([]);
+    }
+  };
+
+  const handleList = () => {
+    return search.length > 0 ? search : reimbursement;
+  };
 
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
@@ -118,64 +133,79 @@ export default function list({ data }) {
         </Row>
       </div>
 
-      <TableContainer className="mt-8" component={Paper}>
-        <Tables size="small" aria-label="a dense table">
-          <TableHead className="bg-dark">
-            <TableRow>
-              <TableCell>
-                <Typography className="text-white font-bold">No Reimbursement</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Periode</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Nama Pegawai</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Yang Mengetahui</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Yang Menyetujui</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Status</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold" align="right">
-                  Actions
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          {data.map((i) => (
-            <TableBody>
+      <div style={{ height: "30rem" }}>
+        <TableContainer className="mt-8" component={Paper}>
+          <Tables size="small" aria-label="a dense table">
+            <TableHead className="bg-dark">
               <TableRow>
-                <TableCell component="th" scope="row">
-                  {i.id}
+                <TableCell>
+                  <Typography className="text-white font-bold">No Reimbursement</Typography>
                 </TableCell>
-                <TableCell>{i.periode}</TableCell>
-                <TableCell>{i.nama_pegawai}</TableCell>
-                <TableCell>{i.yang_mengetahui}</TableCell>
-                <TableCell>{i.yang_menyetujui}</TableCell>
-                <TableCell>{i.status}</TableCell>
-                <TableCell align="right">
-                  <Link href={`../../reimbursement/view/${i.id}`}>
-                    <a>
-                      <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
-                    </a>
-                  </Link>
-                  <Link href={`../../reimbursement/${i.id}`}>
-                    <a>
-                      <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
-                    </a>
-                  </Link>
-                  <DeleteOutlineIcon color="secondary" fontSize="small" onClick={() => handleDelete(i.id)} />
+                <TableCell>
+                  <Typography className="text-white font-bold">Periode</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Nama Pegawai</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Yang Mengetahui</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Yang Menyetujui</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Status</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold" align="right">
+                    Actions
+                  </Typography>
                 </TableCell>
               </TableRow>
-            </TableBody>
-          ))}
-        </Tables>
-      </TableContainer>
+            </TableHead>
+            {handleList()
+              .slice(firstIndex, lastIndex)
+              .map((i) => (
+                <TableBody>
+                  <TableRow>
+                    <TableCell component="th" scope="row">
+                      {i.id}
+                    </TableCell>
+                    <TableCell>{i.periode}</TableCell>
+                    <TableCell>{i.nama_pegawai}</TableCell>
+                    <TableCell>{i.yang_mengetahui}</TableCell>
+                    <TableCell>{i.yang_menyetujui}</TableCell>
+                    <TableCell>{i.status}</TableCell>
+                    <TableCell align="right">
+                      <Link href={`../../reimbursement/view/${i.id}`}>
+                        <a>
+                          <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
+                        </a>
+                      </Link>
+                      <Link href={`../../reimbursement/${i.id}`}>
+                        <a>
+                          <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                        </a>
+                      </Link>
+                      <DeleteOutlineIcon color="secondary" fontSize="small" onClick={() => handleDelete(i.id)} />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              ))}
+          </Tables>
+        </TableContainer>
+      </div>
+      <div class="flex items-center justify-center mt-4">
+        <TablePagination
+          onPrevChange={handlePrevChange}
+          onNextChange={handleNextChange}
+          onFirstPage={handleFirstPage}
+          onLastPage={handleLastPage}
+          onClickPage={handleClickPage}
+          lastIndex={parseInt(data.length / rowsPerPage)}
+          currentPage={page}
+        />
+      </div>
     </Layout>
   );
 }

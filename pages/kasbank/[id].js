@@ -337,7 +337,7 @@ export default function akundetail({ data, bank }) {
       </div>
 
       <div variant="container" className="mt-4">
-        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+        <Tabs defaultActiveKey="transaksiJurnal" id="uncontrolled-tab-example">
           <Tab eventKey="transaksiJurnal" title="Transaksi Jurnal" />
           <Tab eventKey="bankStatement" title="Bank Statement" />
           <Tab eventKey="pemetaanKas" title="Pemetaan Kas" />

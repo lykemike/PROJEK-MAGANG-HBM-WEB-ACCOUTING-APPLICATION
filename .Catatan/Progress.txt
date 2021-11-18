@@ -1,0 +1,61 @@
+Produk & Jasa
+- Add produk/jasa perubahan UI sesuai requirements = 100%
+- Update produk/jasa perubahan UI sesuai requirements = 100%
+- Perubahan database produk/jasa & kategori = 100%
+- Validasi = 100%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Detail Produk & Jasa = 100%
+- Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+
+Kontak
+- Add kontak perubahan UI sesuai requirements = 100%
+- Update kontak perubahan UI sesuai requirements = 
+- Perubahan database kontak & tipe kontak =
+- Validasi = 50%
+- Delete confirmation update UI = 
+- Api create, update, delete = 
+- View Detail kontak =
+- Tabel Kontak = 40%
+
+Penjualan
+- Switch button Negeri / Swasta = 100%
+- Remove diskon tambahan = 100%
+- Pajak per invoice, bukan per produk = 100%
+
+- Database Structure
+    [HEADER]
+    client_id
+    no_kontrak
+    tgl_kontrak_mulai
+    tgl_kontrak_expired
+    no_invoice
+    tipe_perusahaan (false: negeri, true: swasta)
+    pesan
+    file_attachment
+    subtotal
+    pajak_id
+    pajak_persen
+    pajak_name
+    pajak_hasil
+    total
+    sisa_tagihan
+    
+    [DETAIL]
+    header_penjualan_id
+    produk_id
+    produk_name
+    produk_deskripsi
+    produk_harga
+
+TANYA 
+    - optional upload file
+    - tampilkan file attactment dan replace
+    - show current file
+    - delete confirmation setelah success tidak resfresh/redirect
+    - [DONE] bug ui select2 ketika update, tampilannya ga berubah
+    - status bug, sisa tagihan 0 dan tanggal lewat jatuh tempo sehaursnya tetap complete
+    - cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
+    - menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan
+    - alert success, failed
+    - merge data yang sama

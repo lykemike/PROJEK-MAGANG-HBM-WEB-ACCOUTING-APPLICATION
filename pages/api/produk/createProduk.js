@@ -38,28 +38,22 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
-    const createProduk = await prisma.produk.create({
+    const create_produk = await prisma.produk.create({
       data: {
-        image: req.file.filename,
+        file_attachment: req.file.filename,
         nama: req.body.nama,
-        kode_sku: req.body.kode_sku,
-        kategori_produk: req.body.kategori_produk,
-        quantity: parseInt(req.body.quantity),
-        satuan: req.body.unit,
+        kategori_id: parseInt(req.body.kategori_id),
+        kategori_name: req.body.kategori_name,
         deskripsi: req.body.deskripsi,
-        harga_beli_satuan: parseInt(req.body.hbs),
-        akun_pembelian: parseInt(req.body.akun_pembelian),
-
-        harga_jual_satuan: parseInt(req.body.hjs),
-        akun_penjualan: parseInt(req.body.akun_penjualan),
-        beli_disabled: req.body.beli_disable,
-        jual_disabled: req.body.jual_disable,
+        harga: parseInt(req.body.harga),
+        akun_id: parseInt(req.body.akun_penjualan_id),
+        akun_penjualan_name: req.body.akun_penjualan_name,
       },
     });
 
     const update_kategori_produk = await prisma.kategoriProduk.update({
       where: {
-        id: parseInt(req.body.kategori_produk_id),
+        id: parseInt(req.body.kategori_id),
       },
       data: {
         jumlah: {
@@ -68,7 +62,7 @@ export default async (req, res) => {
       },
     });
 
-    res.status(201).json({ message: "success!", data: createProduk });
+    res.status(201).json({ message: "Create produk produk success!", data: create_produk });
   } catch (error) {
     res.status(400).json({ data: "error", error });
     console.log(error);

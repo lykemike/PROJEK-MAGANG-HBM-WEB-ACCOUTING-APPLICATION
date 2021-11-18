@@ -33,11 +33,7 @@ import {
 } from "@material-ui/core/";
 
 import * as XLSX from "xlsx";
-import SearchIcon from "@material-ui/icons/Search";
-import SettingsIcon from "@material-ui/icons/Settings";
-import AddIcon from "@material-ui/icons/Add";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import { Add, SearchOutlined, Visibility, Edit, Delete } from "@material-ui/icons/";
 
 import { useRouter } from "next/router";
 import Axios from "axios";
@@ -120,7 +116,7 @@ export default function Kontak({ data, data2 }) {
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
-      setSearch(kontak.filter((i) => i.kontak.nama_panggilan.toLowerCase().includes(e.target.value.toLowerCase())));
+      setSearch(kontak.filter((i) => i.kontak.nama_perusahaan.toLowerCase().includes(e.target.value.toLowerCase())));
     } else {
       setSearch([]);
     }
@@ -194,7 +190,7 @@ export default function Kontak({ data, data2 }) {
                 <Link href="/kontak/add-kontak">
                   <a>
                     <Button variant="primary">
-                      <AddIcon fontSize="small" />
+                      <Add fontSize="small" />
                       Kontak Baru
                     </Button>
                   </a>
@@ -206,20 +202,18 @@ export default function Kontak({ data, data2 }) {
       </div>
 
       <div variant="container" className="mt-4">
-        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
-          <Tab eventKey="pelanggan" title="Pelanggan" />
+        <Tabs defaultActiveKey="client" id="uncontrolled-tab-example">
+          <Tab eventKey="client" title="Client" />
           <Tab eventKey="supplier" title="Supplier" />
+          <Tab eventKey="principle" title="Principle" />
           <Tab eventKey="karyawan" title="Karyawan" />
           <Tab eventKey="lainnya" title="Lainnya" />
 
-          <div eventKey="pelanggan">
+          <div eventKey="client">
             <div class="mt-4">
               <Row>
                 <Col sm="8">
-                  <h4>
-                    <SettingsIcon fontSize="large" />
-                    Daftar Pelanggan
-                  </h4>
+                  <h4>Daftar Client</h4>
                 </Col>
                 <Col sm="4">
                   <div className="d-flex justify-content-end">
@@ -229,83 +223,92 @@ export default function Kontak({ data, data2 }) {
                           onClick={() => {
                             let detail = [];
                             data2
-                              .filter((i) => i.kontak_type_id == 2)
+                              .filter((i) => i.kontak_type_id == 1)
                               .map((i) => {
                                 detail.push({
                                   Nama: i.kontak.nama,
                                   "Nama Perushaaan": i.kontak.nama_perusahaan,
                                   Email: i.kontak.email,
                                   "No. Handphone": i.kontak.nomor_hp,
+                                  "No. NPWP": i.kontak.nomor_npwp,
                                 });
                               });
                             var ws = XLSX.utils.json_to_sheet(detail);
                             var wb = XLSX.utils.book_new();
-                            XLSX.utils.book_append_sheet(wb, ws, "Bank Statement");
-                            XLSX.writeFile(wb, "data_pelanggan.xlsx");
+                            XLSX.utils.book_append_sheet(wb, ws, "Daftar Client");
+                            XLSX.writeFile(wb, "data_client.xlsx");
                           }}
                         >
-                          Excel
+                          XLSX
                         </span>
                       </Dropdown.Item>
                     </DropdownButton>
-                    <FormControl type="text" placeholder="Search . . . ." onChange={(e) => handleChange(e)} />
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text>
+                          <SearchOutlined />
+                        </InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
+                    </InputGroup>
                   </div>
                 </Col>
               </Row>
 
               <div style={{ height: "30rem", overflowX: "auto" }} className="mt-4">
-                <TableContainer className="mt-8" component={Paper}>
+                <TableContainer component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableHead className="bg-dark">
                       <TableRow>
                         <TableCell>
-                          <Typography className="text-white font-bold">Nama</Typography>
-                        </TableCell>
-                        <TableCell>
                           <Typography className="text-white font-bold">Nama Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Alamat</Typography>
+                          <Typography className="text-white font-bold">Alamat Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
                           <Typography className="text-white font-bold">Email</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">No. Handphone</Typography>
+                          <Typography className="text-white font-bold">NPWP</Typography>
                         </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold">Action</Typography>
-                        </TableCell>
+                        <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {handleList()
-                        .filter((i) => i.kontak_type_id == 2)
+                        .filter((i) => i.kontak_type_id == 1)
                         .slice(firstIndex, lastIndex)
                         .map((i, index) => (
                           <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {i.kontak.nama_panggilan}
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
+                            <TableCell style={{ minWidth: 600, width: 600 }}>
+                              {i.kontak.alamat_perusahaan.length > 80
+                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
+                                : i.kontak.alamat_perusahaan}
                             </TableCell>
-                            <TableCell>{i.kontak.nama_perusahaan}</TableCell>
-                            <TableCell>
-                              {i.kontak.alamat_pengiriman.length > 30
-                                ? i.kontak.alamat_pengiriman.slice(0, 30) + "..."
-                                : i.kontak.alamat_pengiriman}
-                            </TableCell>
-                            <TableCell>{i.kontak.email}</TableCell>
-                            <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>
-                              <Link href={`${i.kontak.id}`}>
-                                <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
-                              </Link>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
+                            <TableCell align="right">
+                              {/* <Link href={`../produk/view/${i.id}`}>
+                                <a> */}
+                              <Button variant="primary" size="sm" className="mr-2">
+                                <Visibility className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                              </Link> */}
 
-                              <DeleteOutlineIcon
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id })}
-                                color="secondary"
-                                fontSize="small"
-                                className="cursor-pointer"
-                              />
+                              {/* <Link href={`../produk/${i.id}`}>
+                          <a> */}
+                              <Button variant="success" size="sm" className="mr-2">
+                                <Edit className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                        </Link> */}
+
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                                <Delete className="text-white" fontSize="small" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -331,10 +334,7 @@ export default function Kontak({ data, data2 }) {
             <div class="mt-4">
               <Row>
                 <Col sm="8">
-                  <h4>
-                    <SettingsIcon fontSize="large" />
-                    Daftar Supplier
-                  </h4>
+                  <h4>Daftar Supplier</h4>
                 </Col>
                 <Col sm="4">
                   <div className="d-flex justify-content-end">
@@ -344,83 +344,92 @@ export default function Kontak({ data, data2 }) {
                           onClick={() => {
                             let detail = [];
                             data2
-                              .filter((i) => i.kontak_type_id == 1)
+                              .filter((i) => i.kontak_type_id == 2)
                               .map((i) => {
                                 detail.push({
                                   Nama: i.kontak.nama,
                                   "Nama Perushaaan": i.kontak.nama_perusahaan,
                                   Email: i.kontak.email,
                                   "No. Handphone": i.kontak.nomor_hp,
+                                  "No. NPWP": i.kontak.nomor_npwp,
                                 });
                               });
                             var ws = XLSX.utils.json_to_sheet(detail);
                             var wb = XLSX.utils.book_new();
-                            XLSX.utils.book_append_sheet(wb, ws, "Bank Statement");
+                            XLSX.utils.book_append_sheet(wb, ws, "Daftar Supplier");
                             XLSX.writeFile(wb, "data_supplier.xlsx");
                           }}
                         >
-                          Excel
+                          XLSX
                         </span>
                       </Dropdown.Item>
                     </DropdownButton>
-                    <FormControl type="text" placeholder="Search . . . ." onChange={(e) => handleChange(e)} />
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text>
+                          <SearchOutlined />
+                        </InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
+                    </InputGroup>
                   </div>
                 </Col>
               </Row>
 
-              <div style={{ height: "30rem" }} className="mt-4">
-                <TableContainer className="mt-8" component={Paper}>
+              <div style={{ height: "30rem", overflowX: "auto" }} className="mt-4">
+                <TableContainer component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableHead className="bg-dark">
                       <TableRow>
                         <TableCell>
-                          <Typography className="text-white font-bold">Nama</Typography>
-                        </TableCell>
-                        <TableCell>
                           <Typography className="text-white font-bold">Nama Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Alamat</Typography>
+                          <Typography className="text-white font-bold">Alamat Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
                           <Typography className="text-white font-bold">Email</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">No. Handphone</Typography>
+                          <Typography className="text-white font-bold">NPWP</Typography>
                         </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold">Action</Typography>
-                        </TableCell>
+                        <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {handleList()
-                        .filter((i) => i.kontak_type_id == 1)
+                        .filter((i) => i.kontak_type_id == 2)
                         .slice(firstIndex, lastIndex)
                         .map((i, index) => (
                           <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {i.kontak.nama_panggilan}
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
+                            <TableCell style={{ minWidth: 600, width: 600 }}>
+                              {i.kontak.alamat_perusahaan.length > 80
+                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
+                                : i.kontak.alamat_perusahaan}
                             </TableCell>
-                            <TableCell>{i.kontak.nama_perusahaan}</TableCell>
-                            <TableCell>
-                              {i.kontak.alamat_pengiriman.length > 30
-                                ? i.kontak.alamat_pengiriman.slice(0, 30) + "..."
-                                : i.kontak.alamat_pengiriman}
-                            </TableCell>
-                            <TableCell>{i.kontak.email}</TableCell>
-                            <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>
-                              <Link href={`${i.kontak.id}`}>
-                                <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
-                              </Link>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
+                            <TableCell align="right">
+                              {/* <Link href={`../produk/view/${i.id}`}>
+                                <a> */}
+                              <Button variant="primary" size="sm" className="mr-2">
+                                <Visibility className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                              </Link> */}
 
-                              <DeleteOutlineIcon
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id })}
-                                color="secondary"
-                                fontSize="small"
-                                className="cursor-pointer"
-                              />
+                              {/* <Link href={`../produk/${i.id}`}>
+                          <a> */}
+                              <Button variant="success" size="sm" className="mr-2">
+                                <Edit className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                        </Link> */}
+
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                                <Delete className="text-white" fontSize="small" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -428,28 +437,25 @@ export default function Kontak({ data, data2 }) {
                   </Table>
                 </TableContainer>
               </div>
-              <div class="flex items-center justify-center mt-4">
-                <TablePagination
-                  onPrevChange={handlePrevChange}
-                  onNextChange={handleNextChange}
-                  onFirstPage={handleFirstPage}
-                  onLastPage={handleLastPage}
-                  onClickPage={handleClickPage}
-                  lastIndex={parseInt(data.length / rowsPerPage)}
-                  currentPage={page}
-                />
-              </div>
+            </div>
+            <div class="flex items-center justify-center mt-4">
+              <TablePagination
+                onPrevChange={handlePrevChange}
+                onNextChange={handleNextChange}
+                onFirstPage={handleFirstPage}
+                onLastPage={handleLastPage}
+                onClickPage={handleClickPage}
+                lastIndex={parseInt(data.length / rowsPerPage)}
+                currentPage={page}
+              />
             </div>
           </div>
 
-          <div eventKey="karyawan">
+          <div eventKey="principle">
             <div class="mt-4">
               <Row>
                 <Col sm="8">
-                  <h4>
-                    <SettingsIcon fontSize="large" />
-                    Daftar Karywan
-                  </h4>
+                  <h4>Daftar Principle</h4>
                 </Col>
                 <Col sm="4">
                   <div className="d-flex justify-content-end">
@@ -466,46 +472,49 @@ export default function Kontak({ data, data2 }) {
                                   "Nama Perushaaan": i.kontak.nama_perusahaan,
                                   Email: i.kontak.email,
                                   "No. Handphone": i.kontak.nomor_hp,
+                                  "No. NPWP": i.kontak.nomor_npwp,
                                 });
                               });
                             var ws = XLSX.utils.json_to_sheet(detail);
                             var wb = XLSX.utils.book_new();
-                            XLSX.utils.book_append_sheet(wb, ws, "Bank Statement");
-                            XLSX.writeFile(wb, "data_karyawan.xlsx");
+                            XLSX.utils.book_append_sheet(wb, ws, "Daftar Principle");
+                            XLSX.writeFile(wb, "data_principle.xlsx");
                           }}
                         >
-                          Excel
+                          XLSX
                         </span>
                       </Dropdown.Item>
                     </DropdownButton>
-                    <FormControl type="text" placeholder="Search . . . ." onChange={(e) => handleChange(e)} />
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text>
+                          <SearchOutlined />
+                        </InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
+                    </InputGroup>
                   </div>
                 </Col>
               </Row>
 
-              <div style={{ height: "30rem" }} className="mt-4">
-                <TableContainer className="mt-8" component={Paper}>
+              <div style={{ height: "30rem", overflowX: "auto" }} className="mt-4">
+                <TableContainer component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableHead className="bg-dark">
                       <TableRow>
                         <TableCell>
-                          <Typography className="text-white font-bold">Nama</Typography>
-                        </TableCell>
-                        <TableCell>
                           <Typography className="text-white font-bold">Nama Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Alamat</Typography>
+                          <Typography className="text-white font-bold">Alamat Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
                           <Typography className="text-white font-bold">Email</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">No. Handphone</Typography>
+                          <Typography className="text-white font-bold">NPWP</Typography>
                         </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold">Action</Typography>
-                        </TableCell>
+                        <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -514,28 +523,34 @@ export default function Kontak({ data, data2 }) {
                         .slice(firstIndex, lastIndex)
                         .map((i, index) => (
                           <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {i.kontak.nama_panggilan}
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
+                            <TableCell style={{ minWidth: 600, width: 600 }}>
+                              {i.kontak.alamat_perusahaan.length > 80
+                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
+                                : i.kontak.alamat_perusahaan}
                             </TableCell>
-                            <TableCell>{i.kontak.nama_perusahaan}</TableCell>
-                            <TableCell>
-                              {i.kontak.alamat_pengiriman.length > 30
-                                ? i.kontak.alamat_pengiriman.slice(0, 30) + "..."
-                                : i.kontak.alamat_pengiriman}
-                            </TableCell>
-                            <TableCell>{i.kontak.email}</TableCell>
-                            <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>
-                              <Link href={`${i.kontak.id}`}>
-                                <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
-                              </Link>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
+                            <TableCell align="right">
+                              {/* <Link href={`../produk/view/${i.id}`}>
+                                <a> */}
+                              <Button variant="primary" size="sm" className="mr-2">
+                                <Visibility className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                              </Link> */}
 
-                              <DeleteOutlineIcon
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id })}
-                                color="secondary"
-                                fontSize="small"
-                                className="cursor-pointer"
-                              />
+                              {/* <Link href={`../produk/${i.id}`}>
+                          <a> */}
+                              <Button variant="success" size="sm" className="mr-2">
+                                <Edit className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                        </Link> */}
+
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                                <Delete className="text-white" fontSize="small" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -543,28 +558,25 @@ export default function Kontak({ data, data2 }) {
                   </Table>
                 </TableContainer>
               </div>
-              <div class="flex items-center justify-center mt-4">
-                <TablePagination
-                  onPrevChange={handlePrevChange}
-                  onNextChange={handleNextChange}
-                  onFirstPage={handleFirstPage}
-                  onLastPage={handleLastPage}
-                  onClickPage={handleClickPage}
-                  lastIndex={parseInt(data.length / rowsPerPage)}
-                  currentPage={page}
-                />
-              </div>
+            </div>
+            <div class="flex items-center justify-center mt-4">
+              <TablePagination
+                onPrevChange={handlePrevChange}
+                onNextChange={handleNextChange}
+                onFirstPage={handleFirstPage}
+                onLastPage={handleLastPage}
+                onClickPage={handleClickPage}
+                lastIndex={parseInt(data.length / rowsPerPage)}
+                currentPage={page}
+              />
             </div>
           </div>
 
-          <div eventKey="lainnya">
+          <div eventKey="karyawan">
             <div class="mt-4">
               <Row>
                 <Col sm="8">
-                  <h4>
-                    <SettingsIcon fontSize="large" />
-                    Daftar Lainnya
-                  </h4>
+                  <h4>Daftar Karyawan</h4>
                 </Col>
                 <Col sm="4">
                   <div className="d-flex justify-content-end">
@@ -581,46 +593,49 @@ export default function Kontak({ data, data2 }) {
                                   "Nama Perushaaan": i.kontak.nama_perusahaan,
                                   Email: i.kontak.email,
                                   "No. Handphone": i.kontak.nomor_hp,
+                                  "No. NPWP": i.kontak.nomor_npwp,
                                 });
                               });
                             var ws = XLSX.utils.json_to_sheet(detail);
                             var wb = XLSX.utils.book_new();
-                            XLSX.utils.book_append_sheet(wb, ws, "Bank Statement");
-                            XLSX.writeFile(wb, "data_lainnya.xlsx");
+                            XLSX.utils.book_append_sheet(wb, ws, "Daftar Karyawan");
+                            XLSX.writeFile(wb, "data_karyawan.xlsx");
                           }}
                         >
-                          Excel
+                          XLSX
                         </span>
                       </Dropdown.Item>
                     </DropdownButton>
-                    <FormControl type="text" placeholder="Search . . . ." onChange={(e) => handleChange(e)} />
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text>
+                          <SearchOutlined />
+                        </InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
+                    </InputGroup>
                   </div>
                 </Col>
               </Row>
 
-              <div style={{ height: "30rem" }} className="mt-4">
-                <TableContainer className="mt-8" component={Paper}>
+              <div style={{ height: "30rem", overflowX: "auto" }} className="mt-4">
+                <TableContainer component={Paper}>
                   <Table size="small" aria-label="a dense table">
                     <TableHead className="bg-dark">
                       <TableRow>
                         <TableCell>
-                          <Typography className="text-white font-bold">Nama</Typography>
-                        </TableCell>
-                        <TableCell>
                           <Typography className="text-white font-bold">Nama Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">Alamat</Typography>
+                          <Typography className="text-white font-bold">Alamat Perusahaan</Typography>
                         </TableCell>
                         <TableCell>
                           <Typography className="text-white font-bold">Email</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">No. Handphone</Typography>
+                          <Typography className="text-white font-bold">NPWP</Typography>
                         </TableCell>
-                        <TableCell>
-                          <Typography className="text-white font-bold">Action</Typography>
-                        </TableCell>
+                        <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -629,28 +644,34 @@ export default function Kontak({ data, data2 }) {
                         .slice(firstIndex, lastIndex)
                         .map((i, index) => (
                           <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                              {i.kontak.nama_panggilan}
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
+                            <TableCell style={{ minWidth: 600, width: 600 }}>
+                              {i.kontak.alamat_perusahaan.length > 80
+                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
+                                : i.kontak.alamat_perusahaan}
                             </TableCell>
-                            <TableCell>{i.kontak.nama_perusahaan}</TableCell>
-                            <TableCell>
-                              {i.kontak.alamat_pengiriman.length > 30
-                                ? i.kontak.alamat_pengiriman.slice(0, 30) + "..."
-                                : i.kontak.alamat_pengiriman}
-                            </TableCell>
-                            <TableCell>{i.kontak.email}</TableCell>
-                            <TableCell>{i.kontak.nomor_hp}</TableCell>
-                            <TableCell>
-                              <Link href={`${i.kontak.id}`}>
-                                <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
-                              </Link>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
+                            <TableCell align="right">
+                              {/* <Link href={`../produk/view/${i.id}`}>
+                                <a> */}
+                              <Button variant="primary" size="sm" className="mr-2">
+                                <Visibility className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                              </Link> */}
 
-                              <DeleteOutlineIcon
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id })}
-                                color="secondary"
-                                fontSize="small"
-                                className="cursor-pointer"
-                              />
+                              {/* <Link href={`../produk/${i.id}`}>
+                          <a> */}
+                              <Button variant="success" size="sm" className="mr-2">
+                                <Edit className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                        </Link> */}
+
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                                <Delete className="text-white" fontSize="small" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -658,17 +679,138 @@ export default function Kontak({ data, data2 }) {
                   </Table>
                 </TableContainer>
               </div>
-              <div class="flex items-center justify-center mt-4">
-                <TablePagination
-                  onPrevChange={handlePrevChange}
-                  onNextChange={handleNextChange}
-                  onFirstPage={handleFirstPage}
-                  onLastPage={handleLastPage}
-                  onClickPage={handleClickPage}
-                  lastIndex={parseInt(data.length / rowsPerPage)}
-                  currentPage={page}
-                />
+            </div>
+            <div class="flex items-center justify-center mt-4">
+              <TablePagination
+                onPrevChange={handlePrevChange}
+                onNextChange={handleNextChange}
+                onFirstPage={handleFirstPage}
+                onLastPage={handleLastPage}
+                onClickPage={handleClickPage}
+                lastIndex={parseInt(data.length / rowsPerPage)}
+                currentPage={page}
+              />
+            </div>
+          </div>
+
+          <div eventKey="lainnya">
+            <div class="mt-4">
+              <Row>
+                <Col sm="8">
+                  <h4>Daftar Lainnya</h4>
+                </Col>
+                <Col sm="4">
+                  <div className="d-flex justify-content-end">
+                    <DropdownButton variant="primary mr-2" id="dropdown-basic-button" title="Ekspor">
+                      <Dropdown.Item>
+                        <span
+                          onClick={() => {
+                            let detail = [];
+                            data2
+                              .filter((i) => i.kontak_type_id == 5)
+                              .map((i) => {
+                                detail.push({
+                                  Nama: i.kontak.nama,
+                                  "Nama Perushaaan": i.kontak.nama_perusahaan,
+                                  Email: i.kontak.email,
+                                  "No. Handphone": i.kontak.nomor_hp,
+                                  "No. NPWP": i.kontak.nomor_npwp,
+                                });
+                              });
+                            var ws = XLSX.utils.json_to_sheet(detail);
+                            var wb = XLSX.utils.book_new();
+                            XLSX.utils.book_append_sheet(wb, ws, "Daftar Lainnya");
+                            XLSX.writeFile(wb, "data_lainnya.xlsx");
+                          }}
+                        >
+                          XLSX
+                        </span>
+                      </Dropdown.Item>
+                    </DropdownButton>
+                    <InputGroup>
+                      <InputGroup.Prepend>
+                        <InputGroup.Text>
+                          <SearchOutlined />
+                        </InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
+                    </InputGroup>
+                  </div>
+                </Col>
+              </Row>
+
+              <div style={{ height: "30rem", overflowX: "auto" }} className="mt-4">
+                <TableContainer component={Paper}>
+                  <Table size="small" aria-label="a dense table">
+                    <TableHead className="bg-dark">
+                      <TableRow>
+                        <TableCell>
+                          <Typography className="text-white font-bold">Nama Perusahaan</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">Alamat Perusahaan</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">Email</Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography className="text-white font-bold">NPWP</Typography>
+                        </TableCell>
+                        <TableCell />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {handleList()
+                        .filter((i) => i.kontak_type_id == 5)
+                        .slice(firstIndex, lastIndex)
+                        .map((i, index) => (
+                          <TableRow key={index}>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
+                            <TableCell style={{ minWidth: 600, width: 600 }}>
+                              {i.kontak.alamat_perusahaan.length > 80
+                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
+                                : i.kontak.alamat_perusahaan}
+                            </TableCell>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
+                            <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
+                            <TableCell align="right">
+                              {/* <Link href={`../produk/view/${i.id}`}>
+                                <a> */}
+                              <Button variant="primary" size="sm" className="mr-2">
+                                <Visibility className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                              </Link> */}
+
+                              {/* <Link href={`../produk/${i.id}`}>
+                          <a> */}
+                              <Button variant="success" size="sm" className="mr-2">
+                                <Edit className="text-white" fontSize="small" />
+                              </Button>
+                              {/* </a>
+                        </Link> */}
+
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                                <Delete className="text-white" fontSize="small" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </div>
+            </div>
+            <div class="flex items-center justify-center mt-4">
+              <TablePagination
+                onPrevChange={handlePrevChange}
+                onNextChange={handleNextChange}
+                onFirstPage={handleFirstPage}
+                onLastPage={handleLastPage}
+                onClickPage={handleClickPage}
+                lastIndex={parseInt(data.length / rowsPerPage)}
+                currentPage={page}
+              />
             </div>
           </div>
         </Tabs>

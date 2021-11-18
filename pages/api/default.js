@@ -167,7 +167,7 @@ export default async (req, res) => {
     });
 
     const createKategoriKontak = await prisma.kategoriKontak.createMany({
-      data: [{ nama: "Supplier" }, { nama: "Pelanggan" }, { nama: "Karyawan" }, { nama: "Lainnya" }],
+      data: [{ nama: "Client" }, { nama: "Supplier" }, { nama: "Principle" }, { nama: "Karyawan" }, { nama: "Lainnya" }],
       skipDuplicates: true,
     });
 
@@ -1815,15 +1815,8 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const createSatuanProduk = await prisma.satuanProduk.createMany({
-      data: [
-        { satuan: "pcs" },
-        { satuan: "box" },
-        { satuan: "lusin" },
-        { satuan: "buah" },
-        { satuan: "lembar" },
-        { satuan: "biji" },
-      ],
+    const createKategoriProduk = await prisma.kategoriProduk.createMany({
+      data: [{ nama: "Jasa", jumlah: 0 }, [{ nama: "Software", jumlah: 0 }]],
       skipDuplicates: true,
     });
 

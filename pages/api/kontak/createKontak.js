@@ -4,31 +4,25 @@ const prisma = new PrismaClient();
 export default async (req, res) => {
   try {
     const frontend_data = {
-      nama_panggilan: req.body.namaPanggilan,
-
       gelar: req.body.gelar,
       nama: req.body.nama,
-      nomor_hp: req.body.nomorHp,
-      tipe_identitas: req.body.tipeIdentitas,
-      nomor_identitas: req.body.nomorIdentitas,
+      nomor_hp: req.body.nomor_hp,
       email: req.body.email,
-      info_lain: req.body.infoLain,
-      nama_perusahaan: req.body.namaPerusahaan,
-      nomor_telepon: req.body.nomorTelepon,
-      nomor_fax: req.body.nomorFax,
-      nomor_npwp: req.body.nomorNpwp,
-      alamat_pembayaran: req.body.alamatPembayaran,
-      alamat_pengiriman: req.body.alamatPengiriman,
-
-      nama_bank: req.body.namaBank,
-      kantor_cabang_bank: req.body.kantorCabangBank,
-      pemegang_akun_bank: req.body.pemegangAkunBank,
-      nomor_rekening: req.body.nomorRekening,
-
-      akun_piutang: parseInt(req.body.akunPiutang),
-      akun_hutang: parseInt(req.body.akunHutang),
-
-      syarat_pembayaran_utama: req.body.syaratPembayaranUtama,
+      jabatan: req.body.jabatan,
+      nama_perusahaan: req.body.nama_perusahaan,
+      nomor_telepon: req.body.nomor_telepon,
+      nomor_fax: req.body.nomor_fax,
+      nomor_npwp: req.body.nomor_npwp,
+      alamat_perusahaan: req.body.alamat_perusahaan,
+      nama_bank: req.body.nama_bank,
+      kantor_cabang_bank: req.body.kantor_cabang_bank,
+      nomor_rekening: req.body.nomor_rekening,
+      atas_nama: req.body.atas_nama,
+      akun_piutang_id: parseInt(req.body.akun_piutang_id),
+      akun_piutang_name: req.body.akun_piutang_name,
+      akun_hutang_id: parseInt(req.body.akun_hutang_id),
+      akun_hutang_name: req.body.akun_hutang_name,
+      syarat_pembayaran: req.body.syarat_pembayaran,
     };
 
     const create_kontak = await prisma.kontak.createMany({
@@ -36,19 +30,16 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    const find_kontak = await prisma.kontak.findFirst({
+    const find_latest_kontak = await prisma.kontak.findFirst({
       orderBy: {
         id: "desc",
-      },
-      where: {
-        id: frontend_data.id,
       },
     });
 
     let detail = [];
     req.body.menu.map((i) => {
       detail.push({
-        kontak_id: find_kontak.id,
+        kontak_id: find_latest_kontak.id,
         kontak_type_id: parseInt(i),
       });
     });
@@ -58,7 +49,7 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create Kontak Success!", data: create_kontak_detail });
+    res.status(201).json({ message: "Create Kontak Success!", data: create_kontak });
   } catch (error) {
     res.status(400).json({ data: "Create kontak failed!", error });
     console.log(error);

@@ -146,13 +146,13 @@ export default function DaftarAkun({ data }) {
                   <TableCell>{i.nama_akun}</TableCell>
                   <TableCell>{i.kategori_akun.name}</TableCell>
                   <TableCell>
-                    Rp.
-                    {
+                    Rp. 0, 00
+                    {/* {
                       (i.DetailSaldoAwal.length == 0
                         ? " 0, 00"
                         : i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 }),
                       i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 }))
-                    }
+                    } */}
                   </TableCell>
                   <TableCell align="right">
                     <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />

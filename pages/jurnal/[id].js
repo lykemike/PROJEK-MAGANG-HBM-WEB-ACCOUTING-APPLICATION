@@ -28,16 +28,6 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
     router.push("");
   }
 
-  // function SelectField(FieldProps) {
-  //   return (
-  //     <Select
-  //       options={jurnal}
-  //       isClearable={false}
-  //       onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
-  //     />
-  //   );
-  // }
-
   return (
     <Layout>
       <Head>
@@ -47,6 +37,7 @@ export default function edit_jurnal({ data, data2, header, jurnal }) {
         enableReinitialize={true}
         innerRef={formik}
         initialValues={{
+          id: id,
           no_transaksi: header[0].no_transaksi,
           tgl_transaksi: header[0].tgl_transaksi,
           total_debit: header[0].total_debit,

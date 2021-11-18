@@ -1,16 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import Head from "next/head";
-import Layout from "../../components/Layout";
-import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
-import LocalMallIcon from "@material-ui/icons/LocalMall";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import Select from "react-select";
 import { useRouter } from "next/router";
-import * as Yup from "yup";
-import { Formik, Form as Forms, Field } from "formik";
-import Axios from "axios";
+import Layout from "../../components/Layout";
 
+import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
 import {
   Breadcrumbs,
   Typography,
@@ -24,60 +18,60 @@ import {
   TableBody,
 } from "@material-ui/core";
 
+import * as Yup from "yup";
+import { Formik, Form as Forms, Field } from "formik";
+import Select from "react-select";
+import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function updateProduk({
-  produk,
-  satuan,
-  curr_satuan,
-  kategori,
-  curr_kategori,
-  akun_beli,
-  curr_akun_beli,
-  akun_jual,
-  curr_akun_jual,
-}) {
+export default function addProduk({ data, data2, data3 }) {
+  const ProdukSchema = Yup.object().shape({
+    nama: Yup.string()
+      .min(2, "* must be more than 5 characters")
+      .max(50, "* must be less than 50 characters")
+      .required("* required"),
+    kategori_id: Yup.string().required("* required"),
+    harga: Yup.number().required("* required"),
+    akun_penjualan_id: Yup.string().required("* required"),
+  });
+
+  // Produk Api
+  const url = "http://localhost:3000/api/produk/updateProduk";
+
+  // Redirect
   const router = useRouter();
-  const { id } = router.query;
 
-  const api_update_produk = "http://localhost:3000/api/produk/updateProduk";
-
+  // Batal Button Function
   function cancelButton() {
     router.push("../produk/tabel-produk");
   }
-
-  console.log(Boolean(produk[0].beli_disabled));
 
   return (
     <Layout>
       <Formik
         initialValues={{
-          id: id,
-          file_upload: [],
-          nama: produk[0].nama,
-          kode_sku: produk[0].kode_sku,
-          kategori_produk: curr_kategori[0].label,
-          unit: curr_satuan[0].label,
-          quantity: produk[0].quantity,
-          deskripsi: produk[0].deskripsi,
-          hbs: produk[0].harga_beli_satuan,
-          akun_pembelian: curr_akun_beli[0].value,
-          akun_pembelian_nama: curr_akun_beli[0].label,
-          hjs: produk[0].harga_jual_satuan,
-          akun_penjualan: curr_akun_jual[0].value,
-          akun_penjualan_nama: curr_akun_jual[0].label,
-          beli_disable: Boolean(produk[0].beli_disabled),
-          jual_disable: Boolean(produk[0].jual_disabled),
+          id: data3[0].id,
+          file_attachment: "",
+          nama: data3[0].nama,
+          kategori_id: data3[0].kategoriId,
+          kategori_name: data3[0].kategori_name,
+          deskripsi: data3[0].deskripsi,
+          harga: data3[0].harga,
+          akun_penjualan_id: data3[0].akun_penjualan,
+          akun_penjualan_name: data3[0].akun_penjualan_name,
         }}
-        // validationSchema={ProdukSchema}
+        validationSchema={ProdukSchema}
         onSubmit={async (values) => {
           let formData = new FormData();
+
           for (var key in values) {
             formData.append(`${key}`, `${values[key]}`);
           }
-          Array.from(values.file_upload).map((i) => formData.append("file", i));
-          Axios.put(api_update_produk, formData, {
+
+          Array.from(values.file_attachment).map((i) => formData.append("file", i));
+
+          Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -94,23 +88,21 @@ export default function updateProduk({
         {(props) => (
           <Forms noValidate>
             <Head>
-              <title>Update Produk</title>
+              <title>Update Produk / Jasa</title>
             </Head>
 
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="../tabel-produk">
-                  Tabel Produk
-                </Link>
                 <Typography color="textPrimary">Update Produk & Jasa</Typography>
               </Breadcrumbs>
 
               <Row>
                 <Col sm="8">
-                  <h2 className="text-blue-600">Update Produk & Jasa</h2>
+                  <h2 className="text-blue-600">Update Produk / Jasa Baru</h2>
                 </Col>
               </Row>
             </div>
+
             <Card className="mt-4">
               <Card.Body>
                 <Row className="mb-2">
@@ -120,9 +112,9 @@ export default function updateProduk({
                   <Col sm="4">
                     <Form.File
                       type="file"
-                      name="file_upload"
+                      name="file_attachment"
                       accept="image/*"
-                      onChange={(e) => props.setFieldValue("file_upload", e.target.files)}
+                      onChange={(e) => props.setFieldValue(`file_attachment`, e.target.files)}
                     />
                   </Col>
                 </Row>
@@ -132,188 +124,102 @@ export default function updateProduk({
                     <label>Nama</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control className="mb-2" placeholder={produk[0].nama} name="nama" onChange={props.handleChange} />
-                    {props.errors.nama && props.touched.nama ? (
-                      <div class="text-red-500 text-sm">
-                        <ErrorOutlineIcon />
-                        {props.errors.nama}
-                      </div>
-                    ) : null}
+                    <Form.Control
+                      className="mb-2"
+                      placeholder=""
+                      name="nama"
+                      value={props.values.nama}
+                      onChange={(e) => {
+                        let name = e.target.value;
+                        let name2 = name.charAt(0).toUpperCase() + name.slice(1);
+                        props.setFieldValue((props.values.nama = name2));
+                      }}
+                    />
                   </Col>
+                  {props.errors.nama && props.touched.nama ? (
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama}</span>
+                  ) : null}
                 </Row>
 
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <label>Kode / SKU</label>
-                  </Col>
-                  <Col sm="4">
-                    <Form.Control
-                      className="mb-2"
-                      placeholder={produk[0].kode_sku}
-                      name="kode_sku"
-                      onChange={props.handleChange}
-                    />
-                    {props.errors.kode_sku && props.touched.kode_sku ? (
-                      <div class="text-red-500 text-sm">
-                        <ErrorOutlineIcon />
-                        {props.errors.kode_sku}
-                      </div>
-                    ) : null}
-                  </Col>
-                </Row>
-
-                <Row className="mb-3">
                   <Col sm="2">
                     <label>Kategori</label>
                   </Col>
                   <Col sm="4">
                     <Select
-                      options={kategori}
-                      placeholder={props.values.kategori_produk}
-                      name="kategori_produk"
+                      options={data}
+                      defaultValue={{ value: parseInt(props.values.kategori_id), label: props.values.kategori_name }}
+                      name="kategori_id"
                       onChange={(e) => {
-                        props.setFieldValue("kategori_produk", e.label);
-                        props.setFieldValue("kategori_produk_id", e.value);
+                        props.setFieldValue(`kategori_id`, e.value);
+                        props.setFieldValue(`kategori_name`, e.label);
                       }}
                     />
                   </Col>
+                  {props.errors.kategori_id && props.touched.kategori_id ? (
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.kategori_id}</span>
+                  ) : null}
                 </Row>
 
-                <Row className="mb-3">
-                  <Col sm="2">
-                    <label>Unit</label>
-                  </Col>
-                  <Col sm="4">
-                    <Select
-                      options={satuan}
-                      placeholder={props.values.unit}
-                      type="number"
-                      min="0"
-                      name="unit"
-                      onChange={(e) => {
-                        props.setFieldValue("unit", e.label);
-                      }}
-                    />
-                  </Col>
-                </Row>
-
-                <Row className="mb-3">
-                  <Col sm="2">
-                    <label>Quantity</label>
-                  </Col>
-                  <Col sm="4">
-                    <Form.Control type="number" placeholder={produk[0].quantity} name="quantity" onChange={props.handleChange} />
-                  </Col>
-                </Row>
-
-                <Row className="mb-12">
+                <Row className="mb-2">
                   <Col sm="2">
                     <label>Deskripsi</label>
                   </Col>
                   <Col sm="4">
                     <Form.Control
                       className="mb-2"
-                      placeholder={produk[0].deskripsi}
+                      placeholder="-"
                       name="deskripsi"
-                      onChange={props.handleChange}
+                      value={props.values.deskripsi}
+                      onChange={(e) => {
+                        let name = e.target.value;
+                        let name2 = name.charAt(0).toLowerCase() + name.slice(1);
+                        props.setFieldValue((props.values.deskripsi = name2));
+                      }}
                     />
-                    {props.errors.deskripsi && props.touched.deskripsi ? (
-                      <div class="text-red-500 text-sm">
-                        <ErrorOutlineIcon />
-                        {props.errors.deskripsi}
-                      </div>
-                    ) : null}
                   </Col>
                 </Row>
 
-                <div>
-                  <h4>Harga</h4>
-                </div>
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <label>Harga</label>
+                  </Col>
+                  <Col sm="4">
+                    <Form.Control
+                      className="mb-2"
+                      type="number"
+                      min="0"
+                      name="harga"
+                      value={props.values.harga}
+                      onChange={props.handleChange}
+                    />
+                  </Col>
+                  {props.errors.harga && props.touched.harga ? (
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.harga}</span>
+                  ) : null}
+                </Row>
 
-                <div className="border-b border-gray-200">
-                  <Row className="px-4 py-2 border-t border-b border-gray-200">
-                    <FormCheck
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <label>Akun Penjualan</label>
+                  </Col>
+                  <Col sm="4">
+                    <Select
+                      options={data2}
+                      name="akun_penjualan_id"
+                      defaultValue={{ value: parseInt(props.values.akun_penjualan_id), label: props.values.akun_penjualan_name }}
                       onChange={(e) => {
-                        if (e.target.checked == true) {
-                          props.setFieldValue(`beli_disable`, false);
-                        } else {
-                          props.setFieldValue(`beli_disable`, true);
-                        }
+                        props.setFieldValue(`akun_penjualan_id`, e.value);
+                        props.setFieldValue(`akun_penjualan_name`, e.label);
                       }}
                     />
-                    <h5>Saya Beli Produk Ini</h5>
-                  </Row>
-
-                  <Row sm="12" className="mt-2 mb-2">
-                    <Col sm="2">
-                      <label>Harga Beli Satuan</label>
-                      <Form.Control
-                        disabled={props.values.beli_disable}
-                        type="number"
-                        min="0"
-                        placeholder={"Rp. " + props.values.hbs.toLocaleString({ minimumFractionDigits: 0 })}
-                        className="mb-2"
-                        name="hbs"
-                        onChange={props.handleChange}
-                      />
-                    </Col>
-                    <Col sm="3">
-                      <label>Akun Pembelian</label>
-                      <Select
-                        isDisabled={props.values.beli_disable}
-                        placeholder={props.values.akun_pembelian_nama}
-                        options={akun_beli}
-                        name="akun_pembelian"
-                        onChange={(e) => {
-                          props.setFieldValue("akun_pembelian", e.value);
-                        }}
-                      />
-                    </Col>
-                  </Row>
-
-                  <Row className="px-4 py-2 border-t border-b border-gray-200">
-                    <FormCheck
-                      onChange={(e) => {
-                        if (e.target.checked == true) {
-                          props.setFieldValue(`jual_disable`, false);
-                        } else {
-                          props.setFieldValue(`jual_disable`, true);
-                        }
-                      }}
-                    />
-                    <h5>Saya Jual Produk Ini</h5>
-                  </Row>
-
-                  <Row sm="12" className="mt-2 mb-2">
-                    <Col sm="2">
-                      <label>Harga Jual Satuan</label>
-                      <Form.Control
-                        disabled={props.values.jual_disable}
-                        className="mb-2"
-                        type="number"
-                        min="0"
-                        placeholder={"Rp. " + props.values.hjs.toLocaleString({ minimumFractionDigits: 0 })}
-                        name="hjs"
-                        onChange={props.handleChange}
-                      />
-                    </Col>
-                    <Col sm="3">
-                      <label>Akun Penjualan</label>
-                      <Select
-                        isDisabled={props.values.jual_disable}
-                        placeholder={props.values.akun_penjualan_nama}
-                        options={akun_jual}
-                        name="akun_penjualan"
-                        onChange={(e) => {
-                          props.setFieldValue("akun_penjualan", e.value);
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                </div>
+                  </Col>
+                  {props.errors.akun_penjualan_id && props.touched.akun_penjualan_id ? (
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_penjualan_id}</span>
+                  ) : null}
+                </Row>
               </Card.Body>
             </Card>
-
             <Row>
               <Col className="d-flex justify-content-end mt-10">
                 <Button variant="danger mr-2" onClick={cancelButton}>
@@ -338,71 +244,19 @@ export async function getServerSideProps(context) {
     where: {
       id: parseInt(id),
     },
-    include: {
-      pembelian: true,
-      penjualan: true,
-    },
   });
 
-  const get_satuan_produk = await prisma.satuanProduk.findMany({
-    orderBy: {
-      satuan: "asc",
-    },
-  });
+  const get_kategori_produks = await prisma.kategoriProduk.findMany({});
 
-  let satuan = [];
-  get_satuan_produk.map((i) => {
-    satuan.push({
-      value: i.id,
-      label: i.satuan,
-    });
-  });
-
-  let curr_satuan = [];
-  curr_satuan.push({
-    value: get_produk[0].satuan,
-    label: get_produk[0].satuan,
-  });
-
-  const get_kategori_produk = await prisma.kategoriProduk.findMany();
-
-  let kategori = [];
-  get_kategori_produk.map((i) => {
-    kategori.push({
+  let kategori_produk = [];
+  get_kategori_produks.map((i) => {
+    kategori_produk.push({
       value: i.id,
       label: i.nama,
     });
   });
 
-  let curr_kategori = [];
-  curr_kategori.push({
-    value: get_produk[0].kategori_produk,
-    label: get_produk[0].kategori_produk,
-  });
-
-  const get_akun_pembelian = await prisma.akun.findMany({
-    where: {
-      kategoriId: {
-        in: [15, 5],
-      },
-    },
-  });
-
-  let akun_pembelian = [];
-  get_akun_pembelian.map((i) => {
-    akun_pembelian.push({
-      value: i.id,
-      label: i.nama_akun,
-    });
-  });
-
-  let curr_akun_beli = [];
-  curr_akun_beli.push({
-    value: get_produk[0].akun_pembelian,
-    label: get_produk[0].pembelian.nama_akun,
-  });
-
-  const get_akun_penjualan = await prisma.akun.findMany({
+  const get_akun_penjualans = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [13],
@@ -411,32 +265,18 @@ export async function getServerSideProps(context) {
   });
 
   let akun_penjualan = [];
-  get_akun_penjualan.map((i) => {
+  get_akun_penjualans.map((i) => {
     akun_penjualan.push({
       value: i.id,
-      label: i.nama_akun,
+      label: i.kode_akun + " - " + i.nama_akun,
     });
-  });
-
-  let curr_akun_jual = [];
-  curr_akun_jual.push({
-    value: get_produk[0].akun_penjualan,
-    label: get_produk[0].penjualan.nama_akun,
   });
 
   return {
     props: {
-      data3: get_kategori_produk,
-
-      produk: get_produk,
-      kategori: kategori,
-      satuan: satuan,
-      curr_kategori: curr_kategori,
-      curr_satuan: curr_satuan,
-      akun_jual: akun_penjualan,
-      akun_beli: akun_pembelian,
-      curr_akun_jual: curr_akun_jual,
-      curr_akun_beli: curr_akun_beli,
+      data: kategori_produk,
+      data2: akun_penjualan,
+      data3: get_produk,
     },
   };
 }

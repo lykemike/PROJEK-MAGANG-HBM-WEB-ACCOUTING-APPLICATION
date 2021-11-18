@@ -1,16 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import Head from "next/head";
-import Layout from "../../components/Layout";
-import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
-import LocalMallIcon from "@material-ui/icons/LocalMall";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import Select from "react-select";
 import { useRouter } from "next/router";
-import * as Yup from "yup";
-import { Formik, Form as Forms, Field } from "formik";
-import Axios from "axios";
+import Layout from "../../components/Layout";
 
+import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
 import {
   Breadcrumbs,
   Typography,
@@ -24,27 +18,22 @@ import {
   TableBody,
 } from "@material-ui/core";
 
+import * as Yup from "yup";
+import { Formik, Form as Forms, Field } from "formik";
+import Select from "react-select";
+import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function addProduk({ data, data2, data3, data5, kategori, satuan, akun_jual, akun_beli }) {
+export default function addProduk({ data, data2 }) {
   const ProdukSchema = Yup.object().shape({
     nama: Yup.string()
-      .min(5, "* must be more than 5 characters")
+      .min(2, "* must be more than 5 characters")
       .max(50, "* must be less than 50 characters")
       .required("* required"),
-    kategori_produk: Yup.string().required("* required"),
-    unit: Yup.string().required("* required"),
-    // kode_sku: Yup.string().required("* required"),
-    // kategori_produk_id: Yup.string().required("required"),
-    // unit: Yup.number().integer().required("required"),
-    // deskripsi: Yup.string().required("required"),
-    // hbs: Yup.number().integer().required("required"),
-    // akun_pembelian: Yup.number().integer().required("required"),
-    // pajak_beli: Yup.string().required("required"),
-    // hjs: Yup.number().integer().required("required"),
-    // akun_penjualan: Yup.number().integer().required("required"),
-    // pajak_jual: Yup.string().required("required"),
+    kategori_id: Yup.string().required("* required"),
+    harga: Yup.number().required("* required"),
+    akun_penjualan_id: Yup.string().required("* required"),
   });
 
   // Produk Api
@@ -62,29 +51,25 @@ export default function addProduk({ data, data2, data3, data5, kategori, satuan,
     <Layout>
       <Formik
         initialValues={{
-          file_upload: [],
+          file_attachment: "",
           nama: "",
-          kode_sku: "-",
-          kategori_produk_id: "",
-          kategori_produk: "",
-          unit: "",
-          quantity: 0,
+          kategori_id: "",
+          kategori_name: "",
           deskripsi: "-",
-          hbs: 0,
-          akun_pembelian: 1,
-          hjs: 0,
-          akun_penjualan: 1,
-          beli_disable: true,
-          jual_disable: true,
+          harga: "",
+          akun_penjualan_id: "",
+          akun_penjualan_name: "",
         }}
         validationSchema={ProdukSchema}
         onSubmit={async (values) => {
           let formData = new FormData();
+
           for (var key in values) {
             formData.append(`${key}`, `${values[key]}`);
           }
-          Array.from(values.file_upload).map((i) => formData.append("file", i));
-          console.log(values);
+
+          Array.from(values.file_attachment).map((i) => formData.append("file", i));
+
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -102,20 +87,17 @@ export default function addProduk({ data, data2, data3, data5, kategori, satuan,
         {(props) => (
           <Forms noValidate>
             <Head>
-              <title>Add Produk</title>
+              <title>Add Produk / Jasa</title>
             </Head>
 
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="../tabel-produk">
-                  Tabel Produk
-                </Link>
-                <Typography color="textPrimary">Add Produk & Jasa Baru</Typography>
+                <Typography color="textPrimary">Add Produk & Jasa </Typography>
               </Breadcrumbs>
 
               <Row>
                 <Col sm="8">
-                  <h2 className="text-blue-600">Add Produk & Jasa Baru</h2>
+                  <h2 className="text-blue-600">Add Produk / Jasa Baru</h2>
                 </Col>
               </Row>
             </div>
@@ -129,9 +111,9 @@ export default function addProduk({ data, data2, data3, data5, kategori, satuan,
                   <Col sm="4">
                     <Form.File
                       type="file"
-                      name="file_upload"
+                      name="file_attachment"
                       accept="image/*"
-                      onChange={(e) => props.setFieldValue("file_upload", e.target.files)}
+                      onChange={(e) => props.setFieldValue(`file_attachment`, e.target.files)}
                     />
                   </Col>
                 </Row>
@@ -141,168 +123,89 @@ export default function addProduk({ data, data2, data3, data5, kategori, satuan,
                     <label>Nama</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control className="mb-2" placeholder="" name="nama" onChange={props.handleChange} />
+                    <Form.Control
+                      className="mb-2"
+                      placeholder=""
+                      name="nama"
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        let input2 = input.charAt(0).toUpperCase() + input.slice(1);
+                        props.setFieldValue((props.values.nama = input2));
+                      }}
+                    />
                   </Col>
                   {props.errors.nama && props.touched.nama ? (
-                    <div class="text-red-500 text-sm mt-2">{props.errors.nama}</div>
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama}</span>
                   ) : null}
                 </Row>
 
                 <Row className="mb-2">
                   <Col sm="2">
-                    <label>Kode / SKU</label>
-                  </Col>
-                  <Col sm="4">
-                    <Form.Control className="mb-2" placeholder="-" name="kode_sku" onChange={props.handleChange} />
-                  </Col>
-                </Row>
-
-                <Row className="mb-3">
-                  <Col sm="2">
                     <label>Kategori</label>
                   </Col>
                   <Col sm="4">
                     <Select
-                      options={kategori}
-                      name="kategori_produk"
+                      options={data}
+                      name="kategori_id"
                       onChange={(e) => {
-                        props.setFieldValue("kategori_produk", e.label);
-                        props.setFieldValue("kategori_produk_id", e.value);
+                        props.setFieldValue(`kategori_id`, e.value);
+                        props.setFieldValue(`kategori_name`, e.label);
                       }}
                     />
                   </Col>
-                  {props.errors.kategori_produk && props.touched.kategori_produk ? (
-                    <div class="text-red-500 text-sm mt-2">{props.errors.kategori_produk}</div>
+                  {props.errors.kategori_id && props.touched.kategori_id ? (
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.kategori_id}</span>
                   ) : null}
                 </Row>
 
-                <Row className="mb-3">
-                  <Col sm="2">
-                    <label>Unit</label>
-                  </Col>
-                  <Col sm="4">
-                    <Select
-                      options={satuan}
-                      name="unit"
-                      onChange={(e) => {
-                        props.setFieldValue("unit", e.label);
-                      }}
-                    />
-                  </Col>
-                  {props.errors.unit && props.touched.unit ? (
-                    <div class="text-red-500 text-sm mt-2">{props.errors.unit}</div>
-                  ) : null}
-                </Row>
-
-                <Row className="mb-3">
-                  <Col sm="2">
-                    <label>Quantity</label>
-                  </Col>
-                  <Col sm="4">
-                    <Form.Control type="number" min={0} name="quantity" onChange={props.handleChange} />
-                  </Col>
-                </Row>
-
-                <Row className="mb-12">
+                <Row className="mb-2">
                   <Col sm="2">
                     <label>Deskripsi</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control className="mb-2" placeholder="-" name="deskripsi" onChange={props.handleChange} />
+                    <Form.Control
+                      className="mb-2"
+                      placeholder="-"
+                      name="deskripsi"
+                      onChange={(e) => {
+                        let name = e.target.value;
+                        let name2 = name.charAt(0).toLowerCase() + name.slice(1);
+                        props.setFieldValue((props.values.deskripsi = name2));
+                      }}
+                    />
                   </Col>
                 </Row>
 
-                <div>
-                  <h4>Harga</h4>
-                </div>
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <label>Harga</label>
+                  </Col>
+                  <Col sm="4">
+                    <Form.Control className="mb-2" type="number" min="0" name="harga" onChange={props.handleChange} />
+                  </Col>
+                  {props.errors.harga && props.touched.harga ? (
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.harga}</span>
+                  ) : null}
+                </Row>
 
-                <div className="border-b border-gray-200">
-                  <Row className="px-4 py-2 border-t border-b border-gray-200">
-                    <FormCheck
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <label>Akun Penjualan</label>
+                  </Col>
+                  <Col sm="4">
+                    <Select
+                      options={data2}
+                      name="akun_penjualan_id"
                       onChange={(e) => {
-                        if (e.target.checked == true) {
-                          props.setFieldValue(`beli_disable`, false);
-                        } else {
-                          props.setFieldValue(`beli_disable`, true);
-                        }
+                        props.setFieldValue(`akun_penjualan_id`, e.value);
+                        props.setFieldValue(`akun_penjualan_name`, e.label);
                       }}
                     />
-                    <h5>Saya Beli Produk Ini</h5>
-                  </Row>
-
-                  <Row sm="12" className="mt-2 mb-2">
-                    <Col sm="2">
-                      <label>Harga Beli Satuan</label>
-                      <Form.Control
-                        disabled={props.values.beli_disable}
-                        className="mb-2"
-                        placeholder="Rp. 0,00"
-                        name="hbs"
-                        onChange={props.handleChange}
-                      />
-                      {props.errors.hbs && props.touched.hbs ? (
-                        <div class="text-red-500 text-sm">
-                          <ErrorOutlineIcon />
-                          {props.errors.hbs}
-                        </div>
-                      ) : null}
-                    </Col>
-                    <Col sm="3">
-                      <label>Akun Pembelian</label>
-                      <Select
-                        isDisabled={props.values.beli_disable}
-                        options={akun_beli}
-                        name="akun_pembelian"
-                        onChange={(e) => {
-                          props.setFieldValue("akun_pembelian", e.value);
-                        }}
-                      />
-                    </Col>
-                  </Row>
-
-                  <Row className="px-4 py-2 border-t border-b border-gray-200">
-                    <FormCheck
-                      onChange={(e) => {
-                        if (e.target.checked == true) {
-                          props.setFieldValue(`jual_disable`, false);
-                        } else {
-                          props.setFieldValue(`jual_disable`, true);
-                        }
-                      }}
-                    />
-                    <h5>Saya Jual Produk Ini</h5>
-                  </Row>
-
-                  <Row sm="12" className="mt-2 mb-2">
-                    <Col sm="2">
-                      <label>Harga Jual Satuan</label>
-                      <Form.Control
-                        disabled={props.values.jual_disable}
-                        className="mb-2"
-                        placeholder="Rp. 0,00"
-                        name="hjs"
-                        onChange={props.handleChange}
-                      />
-                      {props.errors.hjs && props.touched.hjs ? (
-                        <div class="text-red-500 text-sm">
-                          <ErrorOutlineIcon />
-                          {props.errors.hjs}
-                        </div>
-                      ) : null}
-                    </Col>
-                    <Col sm="3">
-                      <label>Akun Penjualan</label>
-                      <Select
-                        isDisabled={props.values.jual_disable}
-                        options={akun_jual}
-                        name="akun_penjualan"
-                        onChange={(e) => {
-                          props.setFieldValue("akun_penjualan", e.value);
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                </div>
+                  </Col>
+                  {props.errors.akun_penjualan_id && props.touched.akun_penjualan_id ? (
+                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_penjualan_id}</span>
+                  ) : null}
+                </Row>
               </Card.Body>
             </Card>
             <Row>
@@ -323,24 +226,17 @@ export default function addProduk({ data, data2, data3, data5, kategori, satuan,
 }
 
 export async function getServerSideProps() {
-  // Get kategori akun penjualan and pembelian from akun model
-  const get_akun_pembelian = await prisma.akun.findMany({
-    where: {
-      kategoriId: {
-        in: [15, 5],
-      },
-    },
-  });
+  const get_kategori_produks = await prisma.kategoriProduk.findMany({});
 
-  let akun_pembelian = [];
-  get_akun_pembelian.map((i) => {
-    akun_pembelian.push({
+  let kategori_produk = [];
+  get_kategori_produks.map((i) => {
+    kategori_produk.push({
       value: i.id,
-      label: i.nama_akun,
+      label: i.nama,
     });
   });
 
-  const get_akun_penjualan = await prisma.akun.findMany({
+  const get_akun_penjualans = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [13],
@@ -349,47 +245,17 @@ export async function getServerSideProps() {
   });
 
   let akun_penjualan = [];
-  get_akun_penjualan.map((i) => {
+  get_akun_penjualans.map((i) => {
     akun_penjualan.push({
       value: i.id,
-      label: i.nama_akun,
-    });
-  });
-
-  const get_satuan_produk = await prisma.satuanProduk.findMany({
-    orderBy: {
-      satuan: "asc",
-    },
-  });
-
-  let satuan = [];
-  get_satuan_produk.map((i) => {
-    satuan.push({
-      value: i.id,
-      label: i.satuan,
-    });
-  });
-
-  const get_kategori_produk = await prisma.kategoriProduk.findMany();
-
-  let kategori = [];
-  get_kategori_produk.map((i) => {
-    kategori.push({
-      value: i.id,
-      label: i.nama,
+      label: i.kode_akun + " - " + i.nama_akun,
     });
   });
 
   return {
     props: {
-      data: get_akun_pembelian,
-      data2: get_akun_penjualan,
-      data3: get_kategori_produk,
-      data5: get_satuan_produk,
-      kategori: kategori,
-      satuan: satuan,
-      akun_jual: akun_penjualan,
-      akun_beli: akun_pembelian,
+      data: kategori_produk,
+      data2: akun_penjualan,
     },
   };
 }

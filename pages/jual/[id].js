@@ -44,7 +44,7 @@ export default function penagihanpenjualan({
     tgl_kontrak: Yup.string().required("* required"),
   });
 
-  const url = "http://localhost:3000/api/jual/createpenjualan";
+  const url = "http://localhost:3000/api/jual/updatepenjualan";
   const router = useRouter();
   const formik = useRef(null);
 
@@ -87,6 +87,7 @@ export default function penagihanpenjualan({
         validationSchema={ValidationSchema}
         onSubmit={async (values) => {
           let formData = new FormData();
+          console.log(values);
           for (var key in values) {
             if (key == "produks") {
               formData.append(`${key}`, JSON.stringify(values[key]));
@@ -136,14 +137,13 @@ export default function penagihanpenjualan({
                     <Select
                       options={kontak}
                       name="nama_supplier"
-                      value={{ value: parseInt(props.values.nama_supplier), label: props.values.nama }}
+                      defaultValue={{ value: parseInt(props.values.nama_supplier), label: props.values.nama }}
                       onChange={(e) => {
                         props.setFieldValue("nama_supplier", e.value);
                         props.setFieldValue("email", e.email);
                         props.setFieldValue("alamat_supplier", e.alamat_pembayaran);
                       }}
                     />
-                    {props.values.nama_supplier}
                     {props.errors.nama_supplier && props.touched.nama_supplier ? (
                       <div class="text-red-500 text-sm mt-2">{props.errors.nama_supplier}</div>
                     ) : null}

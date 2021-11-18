@@ -1127,7 +1127,7 @@ TANYA
   - optional upload file
   - masih ada bug gabisa null di bagian pemilihan akun jual/beli
   - delete confirmation setelah success tidak resfresh/redirect
-  - bug ui select2 ketika Updates
+  DONE bug ui select2 ketika update, tampilannya ga berubah
   - show current file
   - status bug, sisa tagihan 0 dan tanggal lewat jatuh tempo sehaursnya tetap complete
   - cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan

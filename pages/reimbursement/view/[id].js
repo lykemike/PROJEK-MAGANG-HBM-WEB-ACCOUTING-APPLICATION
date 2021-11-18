@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import Layout from "../../../components/layout";
 import Link from "next/link";
+import { Button, DropdownButton, InputGroup, FormControl, Dropdown, Row, Col, Form, Card } from "react-bootstrap";
 import {
-  Button,
+  Breadcrumbs,
+  Typography,
+  Checkbox,
+  Paper,
+  TableContainer,
   Table,
-  DropdownButton,
-  InputGroup,
-  FormControl,
-  Dropdown,
-  Row,
-  Col,
-  Form,
-  Card,
-} from "react-bootstrap";
-import { Formik, Form as Forms } from "formik";
+  TableRow,
+  TableCell,
+  TableHead,
+  TableBody,
+  TableFooter,
+} from "@material-ui/core";
 import * as Yup from "yup";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -38,108 +39,93 @@ export default function invoice_reimbursement({ data, data2 }) {
   return (
     <div>
       <Layout>
-        <div variant="container">
-          <h4 class="mt-2 mb-5">Reimbursement #{id}</h4>
+        <div className="border-b border-gray-200">
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" href="../reimbursement/tabel-reimbursement">
+              Table Reimbursement
+            </Link>
+            <Typography color="textPrimary">Reimbursement Overview</Typography>
+          </Breadcrumbs>
+          <h2 className="text-blue-600">Reimbursement #{id}</h2>
+        </div>
 
-          {data.map((i) => (
-            <div class="mb-10">
-              <Row>
-                <Col>
-                  <p className="font-medium ml-2">Nama Pegawai: </p>
-                  <p className="ml-2">{i.nama_pegawai}</p>
-                </Col>
-                <Col>
-                  <p className="font-medium ml-2">Periode: </p>
-                  <p className="ml-2"> {i.periode}</p>
-                </Col>
-                <Col></Col>
-              </Row>
-            </div>
-          ))}
+        <div className="border-b border-gray-200">
+          <Row className="py-2">
+            <Col sm="3">
+              <label className="font-medium mr-2">Nama Pegawai:</label>
+              <label>{data[0].nama_pegawai}</label>
+            </Col>
+          </Row>
+        </div>
 
-          {/* ^^^^^ notes : tanya cara get bulan dari tanggal */}
+        <TableContainer className="mt-4" component={Paper}>
+          <Table size="small">
+            <TableHead className="bg-dark">
+              <TableRow>
+                <TableCell>
+                  <Typography className="text-white font-bold">Tanggal</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Tempat</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Biaya</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Keterangan</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Jumlah</Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data[0].DetailReimburse.map((i, index) => (
+                <TableRow key={index}>
+                  <TableCell>{i.tanggal}</TableCell>
+                  <TableCell>{i.tempat}</TableCell>
+                  <TableCell>{i.biaya}</TableCell>
+                  <TableCell>{i.keterangan}</TableCell>
+                  <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell />
+                <TableCell />
+                <TableCell />
+                <TableCell align="right">Total</TableCell>
+                <TableCell>
+                  Rp.{" "}
+                  {data[0].DetailReimburse.reduce((a, b) => (a = a + b.jumlah), 0).toLocaleString({ minimumFractionDigits: 0 })}
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
 
-          <div class="mb-12">
-            <Table class="table mt-4">
-              <thead className="thead-light">
-                <tr>
-                  <th scope="col">Tanggal</th>
-                  <th scope="col">Tempat</th>
-                  <th scope="col">Biaya</th>
-                  <th scope="col">Keterangan</th>
-                  <th scope="col">Jumlah</th>
-                </tr>
-              </thead>
+        <div className="mt-4 border-b border-t border-gray-200">
+          <Row className="py-2">
+            <Col sm="3">
+              <label className="font-medium mr-2">Pemohon:</label>
+              <label>{data[0].nama_pegawai}</label>
+            </Col>
+            <Col sm="3">
+              <label className="font-medium mr-2">Yang Mengetahui:</label>
+              <label>{data[0].yang_mengetahui}</label>
+            </Col>
+            <Col sm="3">
+              <label className="font-medium mr-2">Yang Menyetujui:</label>
+              <label>{data[0].yang_menyetujui}</label>
+            </Col>
+          </Row>
+        </div>
 
-              <tbody>
-                {data[0].DetailReimburse.map((i) => (
-                  <tr>
-                    <td>
-                      <p>{i.tanggal}</p>
-                    </td>
-                    <td>
-                      <p>{i.tempat}</p>
-                    </td>
-                    <td>
-                      <p>{i.biaya}</p>
-                    </td>
-                    <td>
-                      <p>{i.keterangan}</p>
-                    </td>
-                    <td>
-                      <p>
-                        Rp.{" "}
-                        {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}
-                      </p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td />
-                  <td />
-                  <td />
-                  <td>Total Reimbursement</td>
-                  <td>
-                    Rp.{" "}
-                    {data[0].DetailReimburse.reduce(
-                      (a, b) => (a = a + b.jumlah),
-                      0
-                    ).toLocaleString({ minimumFractionDigits: 0 })}
-                  </td>
-                </tr>
-              </tfoot>
-            </Table>
-            {/* <Button variant="primary ml-2"><PlaylistAddIcon fontSize="medium"/> Tambah Data</Button> */}
-          </div>
-          <hr />
-          <div>
-            {data.map((i) => (
-              <Row>
-                <Col sm="3">
-                  <p className="font-medium ml-2 mt-4">Pemohon </p>
-                  <p className="ml-2 mt-14">{i.nama_pegawai}</p>
-                </Col>
-
-                <Col sm="3">
-                  <p className="font-medium ml-2 mt-4">Yang Mengetahui </p>
-                  <p className="ml-2 mt-14">{i.yang_mengetahui}</p>
-                </Col>
-                <Col sm="3">
-                  <p className="font-medium ml-2 mt-4"> Yang Menyetujui </p>
-                  <p className="ml-2 mt-14">{i.yang_menyetujui}</p>
-                </Col>
-                <Col></Col>
-              </Row>
-            ))}
-          </div>
-
-          <div className="float-right mb-10">
-            <Button variant="primary" type="submit" onClick={print}>
-              Cetak
-            </Button>
-          </div>
+        <div className="mt-4 float-right">
+          <Button variant="primary" type="submit" onClick={print}>
+            Cetak
+          </Button>
         </div>
       </Layout>
     </div>

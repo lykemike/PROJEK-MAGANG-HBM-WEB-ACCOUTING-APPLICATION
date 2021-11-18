@@ -45,16 +45,16 @@ export default async (req, res) => {
       lampiran: "req.file.filename",
     };
 
-    const update_header_jurnal = await prisma.headerJurnal.updateMany({
+    const update_header_jurnal = await prisma.headerJurnal.update({
       where: {
         id: parseInt(req.body.id),
       },
       data: [frontend_data],
     });
 
-    const find_header_jurnal = await prisma.headerJurnal.findFirst({
+    const delete_old_jurnal = await prisma.detailJurnal.deleteMany({
       where: {
-        id: parseInt(req.body.id),
+        header_jurnal_id: parseInt(req.body.id),
       },
     });
 
@@ -73,10 +73,7 @@ export default async (req, res) => {
         });
       });
 
-    const update_detail_jurnal = await prisma.detailJurnal.update({
-      where: {
-        header_jurnal_id: parseInt(req.body.id),
-      },
+    const create_detail_jurnal = await prisma.detailJurnal.createMany({
       data: detail,
       skipDuplicates: true,
     });
