@@ -298,13 +298,13 @@ export default function Kontak({ data, data2 }) {
                               {/* </a>
                               </Link> */}
 
-                              {/* <Link href={`../produk/${i.id}`}>
-                          <a> */}
-                              <Button variant="success" size="sm" className="mr-2">
-                                <Edit className="text-white" fontSize="small" />
-                              </Button>
-                              {/* </a>
-                        </Link> */}
+                              <Link href={`../kontak/${i.id}`}>
+                                <a>
+                                  <Button variant="success" size="sm" className="mr-2">
+                                    <Edit className="text-white" fontSize="small" />
+                                  </Button>
+                                </a>
+                              </Link>
 
                               <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
                                 <Delete className="text-white" fontSize="small" />

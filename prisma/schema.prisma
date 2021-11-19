@@ -281,8 +281,7 @@ model Pajak {
 
 model SyaratPembayaran {
    id               Int    @id @default(autoincrement())
-   value            Int
-   nama_pembayaran  String
+   nama             String
 }
 
 // Header Penjualan Table

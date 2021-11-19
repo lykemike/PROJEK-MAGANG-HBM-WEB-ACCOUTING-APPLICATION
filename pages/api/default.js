@@ -1816,7 +1816,10 @@ export default async (req, res) => {
     });
 
     const createKategoriProduk = await prisma.kategoriProduk.createMany({
-      data: [{ nama: "Jasa", jumlah: 0 }, [{ nama: "Software", jumlah: 0 }]],
+      data: [
+        { nama: "Jasa", jumlah: 0 },
+        { nama: "Software", jumlah: 0 },
+      ],
       skipDuplicates: true,
     });
 
@@ -1931,32 +1934,13 @@ export default async (req, res) => {
     const create_syarat_pembayaran = await prisma.syaratPembayaran.createMany({
       data: [
         {
-          value: 0,
-          nama_pembayaran: "Tunai/Cash",
+          nama: "100% Diawal",
         },
         {
-          value: 0,
-          nama_pembayaran: "Kredit/Term of Payment",
+          nama: "100% Diakhir",
         },
         {
-          value: 7,
-          nama_pembayaran: "1 Minggu",
-        },
-        {
-          value: 10,
-          nama_pembayaran: "10 Hari",
-        },
-        {
-          value: 15,
-          nama_pembayaran: "15 Hari",
-        },
-        {
-          value: 30,
-          nama_pembayaran: "30 Hari",
-        },
-        {
-          value: 60,
-          nama_pembayaran: "60 Hari",
+          nama: "Bertahap",
         },
       ],
       skipDuplicates: true,
