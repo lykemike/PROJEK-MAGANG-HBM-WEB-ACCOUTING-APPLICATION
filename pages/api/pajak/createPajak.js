@@ -7,9 +7,9 @@ export default async (req, res) => {
       data: [
         {
           nama: req.body.nama,
-          presentasaAktif: parseInt(req.body.presentaseAktif),
-          akunPenjual: parseInt(req.body.akunPajakPenjualan),
-          akunPembeli: parseInt(req.body.akunPajakPembelian),
+          presentase_aktif: parseInt(req.body.persen),
+          akun_jual: parseInt(req.body.akun_jual),
+          akun_beli: parseInt(req.body.akun_beli),
         },
       ],
       skipDuplicates: true,

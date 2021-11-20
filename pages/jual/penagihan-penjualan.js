@@ -85,10 +85,13 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
           client_id: "",
           client_email: "",
           client_alamat_penagihan: "",
+          syarat_pembayaran_utama: "",
+          nomor_npwp: "",
           no_kontrak: "",
           tgl_kontrak_mulai: "",
           tgl_kontrak_jatuh_tempo: "",
           no_invoice: "",
+          custom_invoice: custom_invoice,
           tipe_perushaan: false,
           pesan: "",
           subtotal: "",
@@ -155,28 +158,28 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
         validationSchema={ValidationSchema}
         onSubmit={async (values) => {
           console.log(values);
-          let formData = new FormData();
-          for (var key in values) {
-            if (key == "produks") {
-              formData.append(`${key}`, JSON.stringify(values[key]));
-            } else {
-              formData.append(`${key}`, `${values[key]}`);
-            }
-          }
-          Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values);
-          Axios.post(url, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-            .then(function (response) {
-              console.log(response);
-              router.push(`view/${response.data[0].id.id}`);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          // let formData = new FormData();
+          // for (var key in values) {
+          //   if (key == "produks") {
+          //     formData.append(`${key}`, JSON.stringify(values[key]));
+          //   } else {
+          //     formData.append(`${key}`, `${values[key]}`);
+          //   }
+          // }
+          // Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          // console.log(values);
+          // Axios.post(url, formData, {
+          //   headers: {
+          //     "Content-Type": "multipart/form-data",
+          //   },
+          // })
+          //   .then(function (response) {
+          //     console.log(response);
+          //     router.push(`view/${response.data[0].id.id}`);
+          //   })
+          //   .catch(function (error) {
+          //     console.log(error);
+          //   });
         }}
       >
         {(props) => (
@@ -208,9 +211,12 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
                       options={kontak}
                       name="client_id"
                       onChange={(e) => {
-                        props.setFieldValue("client_id", e.value);
-                        props.setFieldValue("client_email", e.email);
-                        props.setFieldValue("client_alamat_penagihan", e.alamat_pembayaran);
+                        props.setFieldValue(`client_id`, e.value);
+                        props.setFieldValue(`client_email`, e.email);
+                        props.setFieldValue(`client_alamat_penagihan`, e.alamat_perusahaan);
+                        props.setFieldValue(`syarat_pembayaran_utama`, e.syarat_pembayaran);
+                        console.log(e.syarat_pembayaran);
+                        props.setFieldValue(`nomor_npwp`, e.nomor_npwp);
                       }}
                     />
                   </Col>
@@ -218,8 +224,9 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
                     <Form.Control
                       disabled
                       type="text"
-                      name="email"
-                      value={props.values.email}
+                      placeholder="Auto"
+                      name="client_email"
+                      value={props.values.client_email}
                       onChange={(e) => {
                         props.setFieldValue("client_email", e.target.value);
                       }}
@@ -248,7 +255,9 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
                     <FormControl
                       style={{ height: 115, resize: "none" }}
                       disabled
+                      placeholder="Auto"
                       as="textarea"
+                      className="italic"
                       name="client_alamat_penagihan"
                       value={props.values.client_alamat_penagihan}
                       onChange={(e) => {
@@ -280,8 +289,12 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
                   </div>
 
                   <div className="mb-2">
-                    <label className="font-medium">Nomor Invoice Custom</label>
-                    <Form.Control disabled placeholder="Auto" type="text" name="no_invoice_custom" />
+                    <label className="font-medium">Syarat Pembayaran</label>
+                    <Select
+                      options={syarat_pembayaran}
+                      defaultValue={{ value: props.values.syarat_pembayaran_utama, label: props.values.syarat_pembayaran_utama }}
+                      name="syarat_pembayaran_utama"
+                    />
                   </div>
                 </Col>
 
@@ -298,6 +311,11 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
                     {props.errors.tgl_jatuh_tempo && props.touched.tgl_jatuh_tempo ? (
                       <div class="text-red-500 text-sm mt-2">{props.errors.tgl_jatuh_tempo}</div>
                     ) : null}
+                  </div>
+
+                  <div className="mb-2">
+                    <label className="font-medium">NPWP</label>
+                    <Form.Control disabled placeholder="Auto" type="text" value={props.values.nomor_npwp} />
                   </div>
                 </Col>
               </Row>
@@ -593,7 +611,7 @@ export async function getServerSideProps() {
   const get_kontaks = await prisma.kontak.findMany({
     include: {
       KontakDetail: {
-        where: { kontak_type_id: 2 },
+        where: { kontak_type_id: 1 },
       },
     },
   });
@@ -602,9 +620,11 @@ export async function getServerSideProps() {
   get_kontaks.map((i) => {
     kontaks.push({
       value: i.id,
-      label: i.nama_panggilan,
+      label: i.nama_perusahaan,
       email: i.email,
-      alamat_pembayaran: i.alamat_pembayaran,
+      alamat_perusahaan: i.alamat_perusahaan,
+      syarat_pembayaran: i.syarat_pembayaran,
+      nomor_npwp: i.nomor_npwp,
     });
   });
 
@@ -632,9 +652,9 @@ export async function getServerSideProps() {
       value: i.id,
       label: i.nama + " - " + i.presentasaAktif + "%",
       label2: i.nama,
-      persen: i.presentasaAktif,
-      akun_jual: i.akunPenjual,
-      akun_beli: i.akunPembeli,
+      persen: i.presentase_aktif,
+      akun_jual: i.akun_jual,
+      akun_beli: i.akun_beli,
     });
   });
 
@@ -676,8 +696,7 @@ export async function getServerSideProps() {
   get_syarat_pembayarans.map((i) => {
     syarat_pembayarans.push({
       value: i.id,
-      label: i.nama_pembayaran,
-      days: i.value,
+      label: i.nama,
     });
   });
 

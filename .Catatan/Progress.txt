@@ -23,6 +23,16 @@ Penjualan
 - Switch button Negeri / Swasta = 100%
 - Remove diskon tambahan = 100%
 - Pajak per invoice, bukan per produk = 100%
+- Add penjualan perubahan UI sesuai requirements = 90%
+- Update Penjualan perubahan UI sesuai requirements = 0%
+- Perubahan database header & detail penjualan = 0%
+- Perubahan database jurnal penjualan, penerimaan pembayaran = 0%
+- Validasi = 10%
+- Delete confirmation update UI = 0%
+- Api create, update, delete = 0%
+- View Penjualan = 0%
+- Cetak
+- Tabel Penjualan = 100%
 
 - Database Structure
     [HEADER]

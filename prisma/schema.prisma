@@ -262,11 +262,11 @@ model Produk {
 model Pajak {
   id              Int    @id @default(autoincrement())
   nama            String
-  presentasaAktif Int
-  kategori1       Akun   @relation("akunPenjual", fields: [akunPenjual], references: [id])
-  akunPenjual     Int
-  kategori2       Akun   @relation("akunPembeli", fields: [akunPembeli], references: [id])
-  akunPembeli     Int
+  presentase_aktif Int
+  kategori1       Akun   @relation("akunPenjual", fields: [akun_jual], references: [id])
+  akun_jual        Int
+  kategori2       Akun   @relation("akunPembeli", fields: [akun_beli], references: [id])
+  akun_beli       Int
 
   DetailPenjualan DetailPenjualan[]
 

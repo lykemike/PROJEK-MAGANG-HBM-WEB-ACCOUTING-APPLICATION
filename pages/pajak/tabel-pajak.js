@@ -158,7 +158,7 @@ export default function list({ data }) {
                     <TableCell component="th" scope="row">
                       {i.nama}
                     </TableCell>
-                    <TableCell>{i.presentasaAktif} %</TableCell>
+                    <TableCell>{i.presentase_aktif} %</TableCell>
                     <TableCell>{i.kategori1.nama_akun}</TableCell>
                     <TableCell>{i.kategori2.nama_akun}</TableCell>
                     <TableCell>
