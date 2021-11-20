@@ -3,42 +3,36 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
-    const update_kontak = await prisma.kontak.updateMany({
+    const frontend_data = {
+      gelar: req.body.gelar,
+      nama: req.body.nama,
+      nomor_hp: req.body.nomor_hp,
+      email: req.body.email,
+      jabatan: req.body.jabatan,
+      nama_perusahaan: req.body.nama_perusahaan,
+      nomor_telepon: req.body.nomor_telepon,
+      nomor_fax: req.body.nomor_fax,
+      nomor_npwp: req.body.nomor_npwp,
+      alamat_perusahaan: req.body.alamat_perusahaan,
+      nama_bank: req.body.nama_bank,
+      kantor_cabang_bank: req.body.kantor_cabang_bank,
+      nomor_rekening: req.body.nomor_rekening,
+      atas_nama: req.body.atas_nama,
+      akun_piutang_id: parseInt(req.body.akun_piutang_id),
+      akun_piutang_name: req.body.akun_piutang_name,
+      akun_hutang_id: parseInt(req.body.akun_hutang_id),
+      akun_hutang_name: req.body.akun_hutang_name,
+      syarat_pembayaran: req.body.syarat_pembayaran,
+    };
+
+    const update_kontak = await prisma.kontak.update({
       where: {
         id: parseInt(req.body.id),
       },
-      data: {
-        nama_panggilan: req.body.namaPanggilan,
-
-        gelar: req.body.gelar,
-        nama: req.body.nama,
-        nomor_hp: req.body.nomorHp,
-        tipe_identitas: req.body.tipeIdentitas,
-        nomor_identitas: req.body.nomorIdentitas,
-        email: req.body.email,
-        info_lain: req.body.infoLain,
-        nama_perusahaan: req.body.namaPerusahaan,
-        nomor_telepon: req.body.nomorTelepon,
-        nomor_fax: req.body.nomorFax,
-        nomor_npwp: req.body.nomorNpwp,
-        alamat_pembayaran: req.body.alamatPembayaran,
-        alamat_pengiriman: req.body.alamatPengiriman,
-
-        nama_bank: req.body.namaBank,
-        kantor_cabang_bank: req.body.kantorCabangBank,
-        pemegang_akun_bank: req.body.pemegangAkunBank,
-        nomor_rekening: req.body.nomorRekening,
-
-        akun_piutang: parseInt(req.body.akunPiutang),
-        akun_hutang: parseInt(req.body.akunHutang),
-
-        syarat_pembayaran_utama: req.body.syaratPembayaranUtama,
-      },
+      data: frontend_data,
     });
 
-    const find_kontak = { id: parseInt(req.body.id) };
-
-    const delete_current_kontak_detail = await prisma.kontakDetail.deleteMany({
+    const delete_kontak_detail = await prisma.kontakDetail.deleteMany({
       where: {
         kontak_id: parseInt(req.body.id),
       },
@@ -47,7 +41,7 @@ export default async (req, res) => {
     let detail = [];
     req.body.menu.map((i) => {
       detail.push({
-        kontak_id: find_kontak.id,
+        kontak_id: parseInt(req.body.id),
         kontak_type_id: parseInt(i),
       });
     });
@@ -57,7 +51,7 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Update kontak success!", data: create_kontak_detail });
+    res.status(201).json({ message: "Update Kontak Success!", data: frontend_data });
   } catch (error) {
     res.status(400).json({ data: "Update kontak failed!", error });
     console.log(error);

@@ -31,7 +31,6 @@ import {
 import { Add, SearchOutlined, ErrorOutline, Visibility, Edit, Delete } from "@material-ui/icons/";
 
 import * as XLSX from "xlsx";
-import { CSVLink, CSVDownload } from "react-csv";
 import Axios from "axios";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
@@ -98,6 +97,7 @@ export default function tabelProduk({ data }) {
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
   const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
+
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {

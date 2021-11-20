@@ -10,13 +10,13 @@ Produk & Jasa
 
 Kontak
 - Add kontak perubahan UI sesuai requirements = 100%
-- Update kontak perubahan UI sesuai requirements = 0%
+- Update kontak perubahan UI sesuai requirements = 100%
 - Perubahan database kontak & tipe kontak = 100%
 - Validasi = 100%
-- Delete confirmation update UI = 0%
-- Api create, update, delete = 33%
-- View Profil kontak = 0%
-- View Transaksi kontak = 0%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Profil kontak = 100%
+- View Transaksi kontak = 100%
 - Tabel Kontak = 100%
 
 Penjualan

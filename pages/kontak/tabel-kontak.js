@@ -41,7 +41,7 @@ import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-function MyVerticallyCenteredModal(props) {
+function DeleteModal(props) {
   const router = useRouter();
   const api_delete = "http://localhost:3000/api/kontak/deletekontak";
 
@@ -61,35 +61,22 @@ function MyVerticallyCenteredModal(props) {
   };
 
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
-      {/* <Modal.Body>
-        <h4>Centered Modal</h4>
+      <Modal.Body>
         <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo
-          risus, porta ac consectetur ac, vestibulum at eros.
+          Are you sure you want to delete <label className="font-medium">{props.kontak}</label> ?
         </p>
-      </Modal.Body> */}
+      </Modal.Body>
       <Modal.Footer>
-        <div className="d-flex justify-content-end">
-          <button
-            class="mr-2 mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-red-500 hover:bg-red-600 active:bg-red-700 focus:ring-red-300"
-            type="button"
-            onClick={props.onHide}
-          >
-            Cancel
-          </button>
-
-          <button
-            class="mt-2 px-4 py-2 rounded-md text-sm font-medium border-0 focus:outline-none focus:ring transition text-white bg-green-500 hover:bg-green-600 active:bg-green-700 focus:ring-green-300"
-            type="button"
-            onClick={handle_delete}
-          >
-            Confirm
-          </button>
-        </div>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
+        </Button>
       </Modal.Footer>
     </Modal>
   );
@@ -109,9 +96,7 @@ export default function Kontak({ data, data2 }) {
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const [modalShow, setModalShow] = useState({ open: false, id: 0, kontak: " " });
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, kontak: "" });
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -124,21 +109,6 @@ export default function Kontak({ data, data2 }) {
 
   const handleList = () => {
     return search.length > 0 ? search : kontak;
-  };
-
-  const api_delete_kontak = "http://localhost:3000/api/kontak/deletekontak";
-  const handleDelete = (id) => {
-    Axios.delete(api_delete_kontak, {
-      data: {
-        kontakid: id,
-      },
-    })
-      .then(function (response) {
-        router.push("../kontak/tabel-kontak");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
   };
 
   const handlePrevChange = () => {
@@ -174,7 +144,14 @@ export default function Kontak({ data, data2 }) {
       <Head>
         <title>Tabel Kontak</title>
       </Head>
-      <MyVerticallyCenteredModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
+      <DeleteModal
+        id={modalShow.id}
+        show={modalShow.open}
+        kontak={modalShow.kontak}
+        backdrop="static"
+        keyboard={false}
+        onHide={() => setModalShow({ open: false, id: 0, kontak: "" })}
+      />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Kontak</Typography>
@@ -289,24 +266,26 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
-                            <TableCell align="right">
-                              {/* <Link href={`../produk/view/${i.id}`}>
-                                <a> */}
-                              <Button variant="primary" size="sm" className="mr-2">
-                                <Visibility className="text-white" fontSize="small" />
-                              </Button>
-                              {/* </a>
-                              </Link> */}
-
-                              <Link href={`../kontak/${i.id}`}>
+                            <TableCell align="right" style={{ minWidth: 250, width: 250 }}>
+                              <Link href={`../kontak/view/${i.kontak.id}`}>
+                                <a>
+                                  <Button variant="primary" size="sm" className="mr-2">
+                                    <Visibility className="text-white" fontSize="small" />
+                                  </Button>
+                                </a>
+                              </Link>
+                              <Link href={`../kontak/${i.kontak.id}`}>
                                 <a>
                                   <Button variant="success" size="sm" className="mr-2">
                                     <Edit className="text-white" fontSize="small" />
                                   </Button>
                                 </a>
                               </Link>
-
-                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
+                              >
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -410,8 +389,8 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
-                            <TableCell align="right">
-                              {/* <Link href={`../produk/view/${i.id}`}>
+                            <TableCell align="right" style={{ minWidth: 250, width: 250 }}>
+                              {/* <Link href={`../produk/view/${i.kontak.id}`}>
                                 <a> */}
                               <Button variant="primary" size="sm" className="mr-2">
                                 <Visibility className="text-white" fontSize="small" />
@@ -419,15 +398,19 @@ export default function Kontak({ data, data2 }) {
                               {/* </a>
                               </Link> */}
 
-                              {/* <Link href={`../produk/${i.id}`}>
-                          <a> */}
-                              <Button variant="success" size="sm" className="mr-2">
-                                <Edit className="text-white" fontSize="small" />
-                              </Button>
-                              {/* </a>
-                        </Link> */}
+                              <Link href={`../kontak/${i.kontak.id}`}>
+                                <a>
+                                  <Button variant="success" size="sm" className="mr-2">
+                                    <Edit className="text-white" fontSize="small" />
+                                  </Button>
+                                </a>
+                              </Link>
 
-                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
+                              >
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -531,8 +514,8 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
-                            <TableCell align="right">
-                              {/* <Link href={`../produk/view/${i.id}`}>
+                            <TableCell align="right" style={{ minWidth: 250, width: 250 }}>
+                              {/* <Link href={`../produk/view/${i.kontak.id}`}>
                                 <a> */}
                               <Button variant="primary" size="sm" className="mr-2">
                                 <Visibility className="text-white" fontSize="small" />
@@ -540,15 +523,19 @@ export default function Kontak({ data, data2 }) {
                               {/* </a>
                               </Link> */}
 
-                              {/* <Link href={`../produk/${i.id}`}>
-                          <a> */}
-                              <Button variant="success" size="sm" className="mr-2">
-                                <Edit className="text-white" fontSize="small" />
-                              </Button>
-                              {/* </a>
-                        </Link> */}
+                              <Link href={`../kontak/${i.kontak.id}`}>
+                                <a>
+                                  <Button variant="success" size="sm" className="mr-2">
+                                    <Edit className="text-white" fontSize="small" />
+                                  </Button>
+                                </a>
+                              </Link>
 
-                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
+                              >
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -652,8 +639,8 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
-                            <TableCell align="right">
-                              {/* <Link href={`../produk/view/${i.id}`}>
+                            <TableCell align="right" style={{ minWidth: 250, width: 250 }}>
+                              {/* <Link href={`../produk/view/${i.kontak.id}`}>
                                 <a> */}
                               <Button variant="primary" size="sm" className="mr-2">
                                 <Visibility className="text-white" fontSize="small" />
@@ -661,15 +648,19 @@ export default function Kontak({ data, data2 }) {
                               {/* </a>
                               </Link> */}
 
-                              {/* <Link href={`../produk/${i.id}`}>
-                          <a> */}
-                              <Button variant="success" size="sm" className="mr-2">
-                                <Edit className="text-white" fontSize="small" />
-                              </Button>
-                              {/* </a>
-                        </Link> */}
+                              <Link href={`../kontak/${i.kontak.id}`}>
+                                <a>
+                                  <Button variant="success" size="sm" className="mr-2">
+                                    <Edit className="text-white" fontSize="small" />
+                                  </Button>
+                                </a>
+                              </Link>
 
-                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
+                              >
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -773,8 +764,8 @@ export default function Kontak({ data, data2 }) {
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
-                            <TableCell align="right">
-                              {/* <Link href={`../produk/view/${i.id}`}>
+                            <TableCell align="right" style={{ minWidth: 250, width: 250 }}>
+                              {/* <Link href={`../produk/view/${i.kontak.id}`}>
                                 <a> */}
                               <Button variant="primary" size="sm" className="mr-2">
                                 <Visibility className="text-white" fontSize="small" />
@@ -782,15 +773,19 @@ export default function Kontak({ data, data2 }) {
                               {/* </a>
                               </Link> */}
 
-                              {/* <Link href={`../produk/${i.id}`}>
-                          <a> */}
-                              <Button variant="success" size="sm" className="mr-2">
-                                <Edit className="text-white" fontSize="small" />
-                              </Button>
-                              {/* </a>
-                        </Link> */}
+                              <Link href={`../kontak/${i.kontak.id}`}>
+                                <a>
+                                  <Button variant="success" size="sm" className="mr-2">
+                                    <Edit className="text-white" fontSize="small" />
+                                  </Button>
+                                </a>
+                              </Link>
 
-                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id })}>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
+                              >
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>

@@ -17,31 +17,14 @@ import * as Yup from "yup";
 import Axios from "axios";
 
 import { PrismaClient } from "@prisma/client";
+import { id } from "date-fns/locale";
 const prisma = new PrismaClient();
 
-export default function BuatKontakBaru({ data, data2, data3, data4 }) {
+export default function BuatKontakBaru({ data, data2, data3, data4, data5 }) {
   const router = useRouter();
+  const { id } = router.query;
 
-  const KontakSchema = Yup.object().shape({
-    email: Yup.string().email("* must be valid email").required("* required"),
-    nama_perusahaan: Yup.string()
-      .min(5, "* must be more than 4 characters")
-      .max(50, "* must be less than 50 characters")
-      .required("* required"),
-    nomor_telepon: Yup.string().required("* required"),
-    nomor_npwp: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
-    alamat_perusahaan: Yup.string().min(10, "* must be more than 10 characters").required("* required"),
-    nama_bank: Yup.string().min(3, "* must be more than 3 characters").required("* required"),
-    kantor_cabang_bank: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
-    nomor_rekening: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
-    atas_nama: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
-    akun_piutang_name: Yup.string().required("* required"),
-    akun_hutang_name: Yup.string().required("* required"),
-    syarat_pembayaran: Yup.string().required("* required"),
-    menu: Yup.array().min(1, "* must select atleast 1 tipe kontak"),
-  });
-
-  const api_create_kontak = "http://localhost:3000/api/kontak/createKontak";
+  const api_create_kontak = "http://localhost:3000/api/kontak/updatekontak";
 
   function cancelButton() {
     router.push("../kontak/tabel-kontak");
@@ -50,35 +33,35 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
   return (
     <Layout>
       <Head>
-        <title>Add Kontak Baru</title>
+        <title>Update Kontak</title>
       </Head>
       <Formik
         initialValues={{
-          gelar: "-",
-          nama: "-",
-          nomor_hp: "-",
-          email: "",
-          jabatan: "-",
-          nama_perusahaan: "",
-          nomor_telepon: "",
-          nomor_fax: "-",
-          nomor_npwp: "",
-          alamat_perusahaan: "",
-          nama_bank: "",
-          kantor_cabang_bank: "",
-          nomor_rekening: "",
-          atas_nama: "",
-          akun_piutang_id: "",
-          akun_piutang_name: "",
-          akun_hutang_id: "",
-          akun_hutang_name: "",
-          syarat_pembayaran: "",
-          menu: [],
+          id: id,
+          gelar: data5[0].gelar,
+          nama: data5[0].nama,
+          nomor_hp: data5[0].nomor_hp,
+          email: data5[0].email,
+          jabatan: data5[0].jabatan,
+          nama_perusahaan: data5[0].nama_perusahaan,
+          nomor_telepon: data5[0].nomor_telepon,
+          nomor_fax: data5[0].nomor_fax,
+          nomor_npwp: data5[0].nomor_npwp,
+          alamat_perusahaan: data5[0].alamat_perusahaan,
+          nama_bank: data5[0].nama_bank,
+          kantor_cabang_bank: data5[0].kantor_cabang_bank,
+          nomor_rekening: data5[0].nomor_rekening,
+          atas_nama: data5[0].atas_nama,
+          akun_piutang_id: data5[0].akun_piutang_id,
+          akun_piutang_name: data5[0].akun_piutang_name,
+          akun_hutang_id: data5[0].akun_hutang_id,
+          akun_hutang_name: data5[0].akun_hutang_name,
+          syarat_pembayaran: data5[0].syarat_pembayaran,
+          menu: data5[0].KontakDetail.map((i) => i.kontak_type_id.toString()),
         }}
-        validationSchema={KontakSchema}
         onSubmit={async (values) => {
           console.log(values);
-          Axios.post(api_create_kontak, values)
+          Axios.put(api_create_kontak, values)
             .then(function (response) {
               console.log(response);
               router.push("../kontak/tabel-kontak");
@@ -92,9 +75,9 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
           <Forms noValidate>
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
-                <Typography color="textPrimary">Kontak Baru</Typography>
+                <Typography color="textPrimary">Update Kontak</Typography>
               </Breadcrumbs>
-              <h2>Buat Kontak Baru</h2>
+              <h2>Update Kontak</h2>
             </div>
 
             <div>
@@ -161,6 +144,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                         <Row>
                           <Col sm="2">
                             <Select
+                              value={{ value: props.values.gelar, label: props.values.gelar }}
                               options={data3}
                               name="gelar"
                               onChange={(e) => {
@@ -170,7 +154,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                           </Col>
                           <Col>
                             <Form.Control
-                              placeholder="-"
+                              value={props.values.nama}
                               type="text"
                               name="nama"
                               onChange={(e) => {
@@ -192,6 +176,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       <Col sm="10">
                         <Form.Control
                           placeholder="-"
+                          value={props.values.nomor_hp}
                           type="text"
                           name="nomor_hp"
                           onChange={props.handleChange}
@@ -205,7 +190,12 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                         <label>Email</label>
                       </Col>
                       <Col sm="10">
-                        <Form.Control placeholder="-" name="email" onChange={props.handleChange} onBlur={props.handleBlur} />
+                        <Form.Control
+                          value={props.values.email}
+                          name="email"
+                          onChange={props.handleChange}
+                          onBlur={props.handleBlur}
+                        />
                         {props.errors.email && props.touched.email ? (
                           <span class="text-xs font-medium text-red-500 required-dot">{props.errors.email}</span>
                         ) : null}
@@ -218,7 +208,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.jabatan}
                           type="text"
                           name="jabatan"
                           onBlur={props.handleBlur}
@@ -237,7 +227,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.nama_perusahaan}
                           type="text"
                           name="nama_perusahaan"
                           onBlur={props.handleBlur}
@@ -259,7 +249,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.nomor_telepon}
                           type="text"
                           name="nomor_telepon"
                           onBlur={props.handleBlur}
@@ -277,7 +267,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.nomor_fax}
                           type="text"
                           name="nomor_fax"
                           onBlur={props.handleBlur}
@@ -292,7 +282,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.nomor_npwp}
                           type="text"
                           name="nomor_npwp"
                           onBlur={props.handleBlur}
@@ -310,7 +300,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.alamat_perusahaan}
                           as="textarea"
                           rows="2"
                           name="alamat_perusahaan"
@@ -348,7 +338,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.nama_bank}
                           type="text"
                           name="nama_bank"
                           onBlur={props.handleBlur}
@@ -370,7 +360,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.kantor_cabang_bank}
                           as="textarea"
                           rows="2"
                           name="kantor_cabang_bank"
@@ -393,7 +383,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.nomor_rekening}
                           type="text"
                           name="nomor_rekening"
                           onChange={props.handleChange}
@@ -411,7 +401,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control
-                          placeholder="-"
+                          value={props.values.atas_nama}
                           type="text"
                           name="atas_nama"
                           onBlur={props.handleBlur}
@@ -442,6 +432,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Select
+                          defaultValue={{ value: props.values.akun_piutang_id, label: props.values.akun_piutang_name }}
                           options={data}
                           onChange={(e) => {
                             props.setFieldValue(`akun_piutang_id`, e.value);
@@ -460,6 +451,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Select
+                          defaultValue={{ value: props.values.akun_hutang_id, label: props.values.akun_hutang_name }}
                           options={data2}
                           onChange={(e) => {
                             props.setFieldValue(`akun_hutang_id`, e.value);
@@ -478,6 +470,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Select
+                          defaultValue={{ value: props.values.syarat_pembayaran, label: props.values.syarat_pembayaran }}
                           options={data4}
                           name="syarat_pembayaran"
                           onChange={(e) => {
@@ -513,7 +506,9 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+
   const akun_piutang = await prisma.akun.findMany({
     where: {
       kategoriId: 1,
@@ -543,23 +538,42 @@ export async function getServerSideProps() {
   });
 
   const gelar = [
-    { value: 1, label: "Mr. " },
-    { value: 2, label: "Ms. " },
-    { value: 3, label: "Mrs. " },
+    { value: "Mr. ", label: "Mr. " },
+    { value: "Ms. ", label: "Ms. " },
+    { value: "Mrs. ", label: "Mrs. " },
   ];
 
-  const syarat_pembayaran = [
-    { value: 1, label: "100% Diawal" },
-    { value: 2, label: "100% Diakhir" },
-    { value: 3, label: "Bertahap" },
-  ];
+  const get_syarat_pembayaran = await prisma.syaratPembayaran.findMany();
 
+  let syarat_pembayaran = [];
+  get_syarat_pembayaran.map((i) => {
+    syarat_pembayaran.push({
+      value: i.nama,
+      label: i.nama,
+    });
+  });
+
+  const get_kontak = await prisma.kontak.findMany({
+    where: {
+      id: parseInt(id),
+    },
+    include: {
+      piutang: true,
+      hutang: true,
+      KontakDetail: {
+        select: {
+          kontak_type_id: true,
+        },
+      },
+    },
+  });
   return {
     props: {
       data: akun_piutang2,
       data2: akun_hutang2,
       data3: gelar,
       data4: syarat_pembayaran,
+      data5: get_kontak,
     },
   };
 }

@@ -543,9 +543,9 @@ export async function getServerSideProps() {
   });
 
   const gelar = [
-    { value: 1, label: "Mr. " },
-    { value: 2, label: "Ms. " },
-    { value: 3, label: "Mrs. " },
+    { value: "Mr. ", label: "Mr. " },
+    { value: "Ms. ", label: "Ms. " },
+    { value: "Mrs. ", label: "Mrs. " },
   ];
 
   const syarat_pembayaran = [

@@ -1175,3 +1175,67 @@ Penjualan
 - Switch button Negeri / Swasta = 100%
 - Remove diskon tambahan = 100%
 - Pajak per invoice, bukan per produk = 100%
+
+🗓️ Tanggal 19 November 2021, Jumat
+Laporan
+  - Jurnal Umum perbaikan UI = 100%
+  - Trial Balance, saldo awal, penyesuaian, dan saldo akhir sudah muncul semua = 100%
+
+  User & Role
+  - Ketika hapus role, user yang berkaitan dengan role tersebut akan ikut terhapus = 100%
+
+  Reimbursement
+  - tombol button udah bisa = 100%
+  - edit reimbursement udah bisa = 100%
+  - Perbaikan invoice
+
+  Setting Perushaan
+  -- data sudah bisa muncul = 100%
+  
+  Kas Bank
+  - Kirim Uang
+  -- perbaikan salah dropdown = 100%
+  -- perbaikan UI Invoice = 100%
+  -- perbaikan tanggal transaksi otomatis dan bs di ganti = 100%
+  -- perbaikan pajak agar hitugan di tampilin secara realtime = 100%
+  - Terima Uang
+  -- perbaikan UI Invoice = 100%
+  -- perbaikan tanggal transaksi otomatis dan bs di ganti = 100%
+  -- perbaikan pajak agar hitugan di tampilin secara realtime = 100%
+
+  Laporan
+  - Jurnal Umum = 100%
+  - Trial balance = 100%
+  - Buku Besar = 100%
+  - Neraca = 100%
+
+  Reimbursement
+  - UI Fix = 100%
+  - Pagination and Search = 100%
+
+## Perbaikan dan Tambahan Requirements baru ##
+  Produk & Jasa
+  - Add produk/jasa perubahan UI sesuai requirements = 100%
+  - Update produk/jasa perubahan UI sesuai requirements = 100%
+  - Perubahan database produk/jasa & kategori = 100%
+  - Validasi = 100%
+  - Delete confirmation update UI = 100%
+  - Api create, update, delete = 100%
+  - View Detail Produk & Jasa = 100%
+  - Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+
+  Kontak
+  - Add kontak perubahan UI sesuai requirements = 100%
+  - Update kontak perubahan UI sesuai requirements = 100%
+  - Perubahan database kontak & tipe kontak = 100%
+  - Validasi = 100%
+  - Delete confirmation update UI = 100%
+  - Api create, update, delete = 66%
+  - View Profil kontak = 0%
+  - View Transaksi kontak = 0%
+  - Tabel Kontak = 100%
+
+  Penjualan
+  - Switch button Negeri / Swasta = 100%
+  - Remove diskon tambahan = 100%
+  - Pajak per invoice, bukan per produk = 100%
