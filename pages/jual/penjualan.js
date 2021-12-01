@@ -1,27 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/Link";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
-import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
+import TablePenjualan from "../../components/PenjualanPembelianBiaya/TabelPenjualan";
 import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableHead, TableFooter, TableBody, TableRow, TableCell, Collapse, IconButton, Box } from "@material-ui/core";
+
+import { Add, SearchOutlined, ErrorOutline, Visibility, Edit, Delete, Icon, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons/";
 
 import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-function MyVerticallyCenteredModal(props) {
+function DeleteModal(props) {
   const router = useRouter();
   const api_delete = "http://localhost:3000/api/jual/deletePenjualan";
 
@@ -41,28 +33,29 @@ function MyVerticallyCenteredModal(props) {
   };
 
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Delete Penjualan Confirmation</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure you want to delete the current penjualan?</p>
+        <p className="text-sm">
+          Are you sure you want to delete <label className="font-medium">{props.nama}</label>?
+        </p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handle_delete}>
-          Confirm Delete
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
-
 export default function penjualan({ data }) {
   const [open, setOpen] = useState(false);
-  const [modalShow, setModalShow] = useState({ open: false, id: 0, kontak: " " });
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
 
   const [search, setSearch] = useState([]);
   const [penjualan, setPenjualan] = useState(data);
@@ -79,20 +72,34 @@ export default function penjualan({ data }) {
     return search.length > 0 ? search : penjualan;
   };
 
-  const onClick = () => {
-    setOpen(!open);
-  };
-
   const total_tagihan = data.reduce((a, b) => (a = a + b.sisa_tagihan), 0);
 
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
 
-  const due_date = data.filter((i) => i.tgl_jatuh_tempo < current).reduce((a, b) => (a = a + b.sisa_tagihan), 0);
+  const due_date = data.filter((i) => i.tgl_kontrak_expired < current).reduce((a, b) => (a = a + b.sisa_tagihan), 0);
+
+  const status = useCallback((tgl_kontrak_expired, status) => {
+    if (tgl_kontrak_expired < current) {
+      return <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Jatuh Tempo</span>;
+    } else if (status == "Complete") {
+      return <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Complete</span>;
+    } else if (status == "Active") {
+      return <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">Active</span>;
+    } else if (status == "Partial") {
+      return <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">Partial</span>;
+    } else {
+      null;
+    }
+  }, []);
 
   return (
     <Layout>
-      <MyVerticallyCenteredModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
+      <Head>
+        <title>Penjualan</title>
+      </Head>
+      <DeleteModal id={modalShow.id} show={modalShow.open} nama={modalShow.nama} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
+
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Transaksi</Typography>
@@ -107,7 +114,7 @@ export default function penjualan({ data }) {
               <Link href="/jual/penagihan-penjualan">
                 <a>
                   <Button variant="primary">
-                    <AddIcon fontSize="small" /> Buat Penjualan Baru
+                    <Add fontSize="small" /> Buat Penjualan Baru
                   </Button>
                 </a>
               </Link>
@@ -124,9 +131,7 @@ export default function penjualan({ data }) {
                 <h1 class="text-xl font-gray-700 font-bold">Penjualan Belum Dibayar</h1>
               </div>
               <div class="px-4 py-2 flex space-x-2 mt-2">
-                <h3 class="text-lg text-gray-600 font-semibold mb-2">
-                  Rp. {total_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
-                </h3>
+                <h3 class="text-lg text-gray-600 font-semibold mb-2">Rp. {total_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
               </div>
             </div>
           </Col>
@@ -136,9 +141,7 @@ export default function penjualan({ data }) {
                 <h1 class="text-xl font-gray-700 font-bold">Penjualan Jatuh Tempo</h1>
               </div>
               <div class="px-4 py-2 flex space-x-2 mt-2">
-                <h3 class="text-lg text-gray-600 font-semibold mb-2">
-                  Rp. {due_date > 0 ? due_date.toLocaleString({ minimumFractionDigits: 0 }) : "0,00"}
-                </h3>
+                <h3 class="text-lg text-gray-600 font-semibold mb-2">Rp. {due_date > 0 ? due_date.toLocaleString({ minimumFractionDigits: 0 }) : "0,00"}</h3>
               </div>
             </div>
           </Col>
@@ -162,7 +165,7 @@ export default function penjualan({ data }) {
             <TableRow>
               <TableCell />
               <TableCell>
-                <Typography className="text-white font-bold">Tanggal Transaksi</Typography>
+                <Typography className="text-white font-bold">Tanggal Mulai Kontrak</Typography>
               </TableCell>
               <TableCell>
                 <Typography className="text-white font-bold">Nomor</Typography>
@@ -171,10 +174,7 @@ export default function penjualan({ data }) {
                 <Typography className="text-white font-bold">Pelanggan</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">Tanggal Jatuh Tempo</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Tag</Typography>
+                <Typography className="text-white font-bold">Tanggal Habis Kontrak</Typography>
               </TableCell>
               <TableCell>
                 <Typography className="text-white font-bold">Status</Typography>
@@ -182,23 +182,11 @@ export default function penjualan({ data }) {
               <TableCell>
                 <Typography className="text-white font-bold">Sisa Tagihan</Typography>
               </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Total</Typography>
-              </TableCell>
-              <TableCell align="center">
-                <Typography className="text-white font-bold">Actions</Typography>
-              </TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
-          {handleList().map((data, index) => (
-            <TableReusable
-              data={data}
-              index={index}
-              label="Sales Invoice"
-              label2="Penerimaan Pembayaran"
-              view="jual"
-              modalDelete={() => setModalShow({ open: true, id: data.id })}
-            />
+          {handleList().map((data) => (
+            <TablePenjualan data={data} modalDelete={() => setModalShow({ open: true, id: data.id, nama: "Sales Invoice #" + data.id + " " + data.nama_perusahaan })} />
           ))}
         </Table>
       </TableContainer>
@@ -206,17 +194,14 @@ export default function penjualan({ data }) {
   );
 }
 export async function getServerSideProps() {
-  // Get kontak,produk,pajak from API
   const penjualans = await prisma.headerPenjualan.findMany({
     orderBy: [
       {
-        tgl_jatuh_tempo: "asc",
+        id: "asc",
       },
     ],
     include: {
       kontak: true,
-      akun1: true,
-      akun2: true,
       PenerimaanPembayaran: true,
     },
   });

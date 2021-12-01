@@ -1239,3 +1239,129 @@ Laporan
   - Switch button Negeri / Swasta = 100%
   - Remove diskon tambahan = 100%
   - Pajak per invoice, bukan per produk = 100%
+
+🗓️ Tanggal 22 November 2021, Senin
+  Produk & Jasa
+- Add produk/jasa perubahan UI sesuai requirements = 100%
+- Update produk/jasa perubahan UI sesuai requirements = 100%
+- Perubahan database produk/jasa & kategori = 100%
+- Validasi frontend = 100%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Detail Produk & Jasa = 100%
+- Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+
+Kontak
+- Add kontak perubahan UI sesuai requirements = 100%
+- Update kontak perubahan UI sesuai requirements = 100%
+- Perubahan database kontak & tipe kontak = 100%
+- Validasi frontend = 100%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Profil kontak = 100%
+- View Transaksi kontak = 100%
+- Tabel Kontak = 100%
+- Tipe Kontak (Client, Supplier, Principle, Karyawan, Lainnya) = 100%
+
+Penjualan
+- Add penjualan perubahan UI sesuai requirements = 100%
+  * Switch Button & Rumus hitungan buat Negara & Swasta = 100%
+  * Pajak Pertama per invoice (PPN) = 100%
+- Update Penjualan perubahan UI sesuai requirements = 0%
+- Perubahan database header & detail penjualan = 100%
+- Perubahan database penerimaan pembayaran = 0%
+- Validasi frontend = 50%
+- Validasi ketika invoice sudah dibuat dan sudah ada transaksi lebih 
+  dari 1 di invoice tersebut, maka invoice tersebut tidak bisa di 
+  ubah, cuman bisa hapus dan view invoice tersebut = 0%
+- Delete confirmation update UI = 0%
+- Api create, update, delete = 33%
+- View Penjualan = 0%
+- Pro forma invoice dan cetak = 10% 
+- Tabel Penjualan = 100%
+
+
+Produk & Jasa
+- Add produk/jasa perubahan UI sesuai requirements = 100%
+- Update produk/jasa perubahan UI sesuai requirements = 100%
+- Perubahan database produk/jasa & kategori = 100%
+- Validasi = 100%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Detail Produk & Jasa = 100%
+- Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+
+Kontak
+- Add kontak perubahan UI sesuai requirements = 100%
+- Update kontak perubahan UI sesuai requirements = 100%
+- Perubahan database kontak & tipe kontak = 100%
+- Validasi = 100%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Profil kontak = 100%
+- View Transaksi kontak = 100%
+- Tabel Kontak = 100%
+
+Penjualan
+- Add penjualan perubahan UI sesuai requirements = 100%
+  * Switch Button & Rumus hitungan buat Negara & Swasta = 100%
+  * Pajak Pertama per invoice (PPN) = 100%
+- Update Penjualan perubahan UI sesuai requirements = 0%
+- Perubahan database header & detail penjualan = 100%
+
+- Penerimaan Pembayaran UI sesua requirements = 90%
+- Rumus Penerimaan Pembayaran, PPN, PPH = 90%
+- Perubahan database penerimaan pembayaran = 0%
+- Validasi = 50%
+- Validasi ketika invoice sudah dibuat dan sudah ada transaksi lebih dari 1 di invoice tersebut, maka invoice tersebut tidak bisa di ubah
+- Delete confirmation update UI = 0%
+- Api create, update, delete = 0%
+- View Penjualan = 0%
+- Pro forma invoice dan cetak = 10% 
+- Tabel Penjualan = 100%
+
+
+🗓️ Tanggal 24 November 2021, Rabu
+Produk & Jasa
+- Add produk/jasa perubahan UI sesuai requirements = 100%
+- Update produk/jasa perubahan UI sesuai requirements = 100%
+- Perubahan database produk/jasa & kategori = 100%
+- Validasi = 100%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Detail Produk & Jasa = 100%
+- Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+
+Kontak
+- Add kontak perubahan UI sesuai requirements = 100%
+- Update kontak perubahan UI sesuai requirements = 100%
+- Perubahan database kontak & tipe kontak = 100%
+- Validasi = 100%
+- Delete confirmation update UI = 100%
+- Api create, update, delete = 100%
+- View Profil kontak = 100%
+- View Transaksi kontak = 100%
+- Tabel Kontak = 100%
+
+Penjualan
+- Add penjualan perubahan UI sesuai requirements = 100%
+  * Switch Button & Rumus hitungan buat Negara & Swasta = 100%
+  * Pajak Pertama per invoice (PPN) = 100%
+- Update Penjualan perubahan UI sesuai requirements = 0%
+- Perubahan database header & detail penjualan = 100%
+
+- Penerimaan Pembayaran UI sesua requirements = 90%
+- Rumus Penerimaan Pembayaran, PPN, PPH = 90%
+- Perubahan database penerimaan pembayaran = 60%
+- Jurnal Swasta dan Negeri = 60%
+- Validasi = 50%
+- Validasi ketika invoice sudah dibuat dan sudah ada transaksi lebih dari 1 di invoice tersebut, maka invoice tersebut tidak bisa di ubah
+- Delete confirmation update UI = 0%
+- Api create, update, delete = 0%
+- View Penjualan = 0%
+- Pro forma invoice dan cetak = 10% 
+- Tabel Penjualan = 100%
+
+Setting
+- Detail Bank UI = 100%
+- Create detail bank = 100%

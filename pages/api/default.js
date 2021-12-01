@@ -1946,7 +1946,25 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create Default API Success!", data: create_syarat_pembayaran });
+    const create_gelar = await prisma.gelar.createMany({
+      data: [
+        {
+          nama: "Mr. ",
+        },
+        {
+          nama: "Ms. ",
+        },
+        {
+          nama: "Mrs. ",
+        },
+        {
+          nama: "-",
+        },
+      ],
+      skipDuplicates: true,
+    });
+
+    res.status(201).json({ message: "Create Default API Success!", data: create_gelar });
   } catch (error) {
     res.status(400).json({ roleType: "Create Admin Role Failed!", error });
     console.log(error);

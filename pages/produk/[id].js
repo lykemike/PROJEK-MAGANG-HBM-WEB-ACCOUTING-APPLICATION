@@ -54,11 +54,11 @@ export default function addProduk({ data, data2, data3 }) {
           id: data3[0].id,
           file_attachment: "",
           nama: data3[0].nama,
-          kategori_id: data3[0].kategoriId,
+          kategori_id: data3[0].kategori_id,
           kategori_name: data3[0].kategori_name,
           deskripsi: data3[0].deskripsi,
           harga: data3[0].harga,
-          akun_penjualan_id: data3[0].akun_penjualan,
+          akun_penjualan_id: data3[0].akun_id,
           akun_penjualan_name: data3[0].akun_penjualan_name,
         }}
         validationSchema={ProdukSchema}

@@ -83,7 +83,7 @@ export default function BuatKontakBaru({ data, data2 }) {
                       <Col sm="4">
                         <label className="font-medium mr-2 ">Nama Kontak</label>
                         <br />
-                        <label>{data[0].nama}</label>
+                        <label>{data[0].gelar_id == 4 ? "-" : data[0].gelar.nama + data[0].nama}</label>
                       </Col>
                       <Col sm="4">
                         <label className="font-medium mr-2">Nama Perusahaan</label>
@@ -201,7 +201,7 @@ export default function BuatKontakBaru({ data, data2 }) {
                       <Col sm="4">
                         <label className="font-medium mr-2">Syarat Pembyaran Utama</label>
                         <br />
-                        <label>{data[0].syarat_pembayaran}</label>
+                        <label>{data[0].syarat_pembayaran.nama}</label>
                       </Col>
                     </Row>
                   </Card.Body>
@@ -279,6 +279,8 @@ export async function getServerSideProps(context) {
     include: {
       piutang: true,
       hutang: true,
+      syarat_pembayaran: true,
+      gelar: true,
     },
   });
 

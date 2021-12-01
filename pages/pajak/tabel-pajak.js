@@ -142,10 +142,10 @@ export default function list({ data }) {
                     <Typography className="text-white font-bold">Presentase Efektif</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className="text-white font-bold">Akun Pajak Penjualan</Typography>
+                    <Typography className="text-white font-bold">Akun Pajak Keluaran</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className="text-white font-bold">Akun Pajak Pembelian</Typography>
+                    <Typography className="text-white font-bold">Akun Pajak Masukan</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography className="text-white font-bold">Actions</Typography>

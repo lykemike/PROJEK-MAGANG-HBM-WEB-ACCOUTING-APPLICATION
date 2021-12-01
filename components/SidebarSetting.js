@@ -9,18 +9,12 @@ export default function SidebarSetting() {
     <div>
       <Link href="/setting/setting-perusahaan">
         <a>
-          <span class="ml-2 text-lg tracking-wide truncate text-black">
-            Perusahaan
-          </span>{" "}
-          <br />
+          <span class="ml-2 text-lg tracking-wide truncate text-black">Perusahaan</span> <br />
         </a>
       </Link>
       <Link href="/setting/pengingat-faktur">
         <a>
-          <span class="ml-2 text-lg tracking-wide truncate text-black">
-            Pengingat Faktur
-          </span>{" "}
-          <br />
+          <span class="ml-2 text-lg tracking-wide truncate text-black">Pengingat Faktur</span> <br />
         </a>
       </Link>
       <span class="ml-2 text-lg tracking-wide truncate">Template</span> <br />
@@ -44,10 +38,12 @@ export default function SidebarSetting() {
       </Link>
       <Link href="/setting/pemetaan-akun">
         <a>
-          <span class="ml-2 text-lg tracking-wide truncate text-black">
-            Pemetaan Akun
-          </span>{" "}
-          <br />
+          <span class="ml-2 text-lg tracking-wide truncate text-black">Pemetaan Akun</span> <br />
+        </a>
+      </Link>
+      <Link href="/setting/akun-bank">
+        <a>
+          <span class="ml-2 text-lg tracking-wide truncate text-black">Akun Bank</span> <br />
         </a>
       </Link>
     </div>

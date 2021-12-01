@@ -3,19 +3,16 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
-    const createSatuanProduk = await prisma.satuanProduk.createMany({
+    const create_gelar = await prisma.gelar.createMany({
       data: [
-        { satuan: "pcs" },
-        { satuan: "box" },
-        { satuan: "lusin" },
-        { satuan: "buah" },
-        { satuan: "lembar" },
-        { satuan: "biji" },
+        {
+          nama: "-",
+        },
       ],
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Testing Success!", createSatuanProduk });
+    res.status(201).json({ message: "Testing Success!", create_gelar });
   } catch (error) {
     res.status(400).json({ roleType: "TESTING FAILED", error });
     console.log(error);

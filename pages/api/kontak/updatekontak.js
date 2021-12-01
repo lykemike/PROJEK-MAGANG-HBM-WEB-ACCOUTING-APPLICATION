@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 export default async (req, res) => {
   try {
     const frontend_data = {
-      gelar: req.body.gelar,
+      gelar_id: parseInt(req.body.gelar_id),
       nama: req.body.nama,
       nomor_hp: req.body.nomor_hp,
       email: req.body.email,
@@ -22,7 +22,7 @@ export default async (req, res) => {
       akun_piutang_name: req.body.akun_piutang_name,
       akun_hutang_id: parseInt(req.body.akun_hutang_id),
       akun_hutang_name: req.body.akun_hutang_name,
-      syarat_pembayaran: req.body.syarat_pembayaran,
+      syarat_pembayaran_id: parseInt(req.body.syarat_pembayaran_id),
     };
 
     const update_kontak = await prisma.kontak.update({

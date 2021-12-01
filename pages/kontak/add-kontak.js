@@ -37,7 +37,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
     atas_nama: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
     akun_piutang_name: Yup.string().required("* required"),
     akun_hutang_name: Yup.string().required("* required"),
-    syarat_pembayaran: Yup.string().required("* required"),
+    syarat_pembayaran_id: Yup.string().required("* required"),
     menu: Yup.array().min(1, "* must select atleast 1 tipe kontak"),
   });
 
@@ -54,7 +54,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
       </Head>
       <Formik
         initialValues={{
-          gelar: "-",
+          gelar_id: data3[3].value,
           nama: "-",
           nomor_hp: "-",
           email: "",
@@ -72,7 +72,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
           akun_piutang_name: "",
           akun_hutang_id: "",
           akun_hutang_name: "",
-          syarat_pembayaran: "",
+          syarat_pembayaran_id: "",
           menu: [],
         }}
         validationSchema={KontakSchema}
@@ -162,9 +162,10 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                           <Col sm="2">
                             <Select
                               options={data3}
-                              name="gelar"
+                              name="gelar_id"
+                              defaultValue={{ value: data3[3].value, label: data3[3].label }}
                               onChange={(e) => {
-                                props.setFieldValue((props.values.gelar = e.label));
+                                props.setFieldValue(`gelar_id`, e.value);
                               }}
                             />
                           </Col>
@@ -479,13 +480,13 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       <Col sm="10">
                         <Select
                           options={data4}
-                          name="syarat_pembayaran"
+                          name="syarat_pembayaran_id"
                           onChange={(e) => {
-                            props.setFieldValue(`syarat_pembayaran`, e.label);
+                            props.setFieldValue(`syarat_pembayaran_id`, e.value);
                           }}
                         />
-                        {props.errors.syarat_pembayaran && props.touched.syarat_pembayaran ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.syarat_pembayaran}</span>
+                        {props.errors.syarat_pembayaran_id && props.touched.syarat_pembayaran_id ? (
+                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.syarat_pembayaran_id}</span>
                         ) : null}
                       </Col>
                     </Row>
@@ -519,7 +520,6 @@ export async function getServerSideProps() {
       kategoriId: 1,
     },
   });
-
   let akun_piutang2 = [];
   akun_piutang.map((i) => {
     akun_piutang2.push({
@@ -533,7 +533,6 @@ export async function getServerSideProps() {
       kategoriId: 8,
     },
   });
-
   let akun_hutang2 = [];
   akun_hutang.map((i) => {
     akun_hutang2.push({
@@ -542,17 +541,23 @@ export async function getServerSideProps() {
     });
   });
 
-  const gelar = [
-    { value: "Mr. ", label: "Mr. " },
-    { value: "Ms. ", label: "Ms. " },
-    { value: "Mrs. ", label: "Mrs. " },
-  ];
+  const get_gelar = await prisma.gelar.findMany({});
+  let gelar = [];
+  get_gelar.map((i) => {
+    gelar.push({
+      value: i.id,
+      label: i.nama,
+    });
+  });
 
-  const syarat_pembayaran = [
-    { value: 1, label: "100% Diawal" },
-    { value: 2, label: "100% Diakhir" },
-    { value: 3, label: "Bertahap" },
-  ];
+  const get_syarat_pembayaran = await prisma.syaratPembayaran.findMany({});
+  let syarat_pembayaran = [];
+  get_syarat_pembayaran.map((i) => {
+    syarat_pembayaran.push({
+      value: i.id,
+      label: i.nama,
+    });
+  });
 
   return {
     props: {

@@ -6,85 +6,199 @@ export default async (req, res) => {
     const frontend_data = {
       header_penjualan_id: parseInt(req.body.id),
       akun_id: parseInt(req.body.setor_ke),
-      cara_pembayaran: req.body.carapembayaran,
       tgl_pembayaran: req.body.tgl_pembayaran,
-      tgl_jauth_tempo: req.body.tgl_jatuh_tempo,
-      jumlah: parseInt(req.body.jumlah),
+      pajak_id: parseInt(req.body.pajak_id),
+      pajak_nama: req.body.pajak_nama,
+      pajak_persen: parseInt(req.body.pajak_persen),
+      presentase_penagihan: parseInt(req.body.presentase_penagihan),
+      tagihan_sebelum_pajak: parseInt(req.body.tagihan_sebelum_pajak),
+      pajak_total: parseInt(req.body.pajak_total),
+      tagihan_setelah_pajak: parseInt(req.body.tagihan_setelah_pajak),
+      say: req.body.say,
+      bank_id: parseInt(req.body.bank_id),
+      status: "-",
     };
 
     const create_penerimaan_pembayaran = await prisma.penerimaanPembayaran.createMany({
       data: [frontend_data],
-      skipDuplicates: true,
     });
 
-    const find_header_penjualan = await prisma.headerPenjualan.findUnique({
+    const find_latest = await prisma.penerimaanPembayaran.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    const get_header_penjualan = await prisma.headerPenjualan.findFirst({
       where: {
-        id: frontend_data.header_penjualan_id,
+        id: parseInt(req.body.id),
       },
-      select: {
-        sisa_tagihan: true,
+      include: {
+        kontak: true,
+        DetailPenjualan: {
+          include: {
+            produk: true,
+          },
+        },
+        pajak: {
+          include: {
+            kategori1: true,
+          },
+        },
       },
     });
 
-    const sisa = parseInt(find_header_penjualan.sisa_tagihan) - parseInt(req.body.jumlah);
+    const pajak_keluaran_persen = get_header_penjualan.pajak_persen;
+    const tipe_perusahaan = req.body.tipe_perusahaan;
 
-    if (sisa == 0) {
-      const update_sisa_tagihan = await prisma.headerPenjualan.update({
+    const get_pajak = await prisma.pajak.findFirst({
+      where: {
+        id: parseInt(req.body.pajak_id),
+      },
+      include: {
+        kategori2: true,
+      },
+    });
+
+    if (tipe_perusahaan == "false") {
+      // Perusahaan Negeri
+      let jumlah_sebelum_pajak = req.body.tagihan_sebelum_pajak;
+      let update_sisa_tagihan = get_header_penjualan.sisa_tagihan - parseInt(jumlah_sebelum_pajak);
+
+      const update_header_penjualan = await prisma.headerPenjualan.update({
         where: {
           id: parseInt(req.body.id),
         },
         data: {
-          sisa_tagihan: sisa,
-          status: "Complete",
-        },
-      });
-    } else {
-      const update_sisa_tagihan = await prisma.headerPenjualan.update({
-        where: {
-          id: parseInt(req.body.id),
-        },
-        data: {
-          sisa_tagihan: sisa,
+          sisa_tagihan: parseInt(update_sisa_tagihan),
           status: "Partial",
         },
       });
+
+      const update_penerimaan_pembayaran = await prisma.penerimaanPembayaran.updateMany({
+        where: {
+          header_penjualan_id: parseInt(req.body.id),
+        },
+        data: {
+          status: "Process",
+        },
+      });
+
+      // Nama Akun
+      let piutang = get_header_penjualan.kontak.akun_piutang_id;
+      let pajak_masukan = get_pajak.kategori2.id;
+      let pendapatan_bersih = get_header_penjualan.DetailPenjualan[0].produk.akun_id;
+
+      // Nominal Akun
+      let nominal_piutang = parseInt(req.body.tagihan_sebelum_pajak) - parseInt(req.body.pajak_total);
+      let nominal_pajak_masukan = parseInt(req.body.pajak_total);
+      let nominal_pendapatan_bersih = parseInt(req.body.tagihan_sebelum_pajak);
+
+      const create_jurnal = await prisma.jurnalPenerimaanPembayaran.createMany({
+        data: [
+          {
+            header_penjualan_id: parseInt(req.body.id),
+            penerimaan_pembayaran_id: find_latest.id,
+            akun_id: parseInt(piutang),
+            nominal: parseInt(nominal_piutang),
+            tipe_saldo: "Debit",
+          },
+          {
+            header_penjualan_id: parseInt(req.body.id),
+            penerimaan_pembayaran_id: find_latest.id,
+            akun_id: parseInt(pajak_masukan),
+            nominal: parseInt(nominal_pajak_masukan),
+            tipe_saldo: "Debit",
+          },
+          {
+            header_penjualan_id: parseInt(req.body.id),
+            penerimaan_pembayaran_id: find_latest.id,
+            akun_id: parseInt(pendapatan_bersih),
+            nominal: parseInt(nominal_pendapatan_bersih),
+            tipe_saldo: "Kredit",
+          },
+        ],
+      });
+    } else {
+      // Perusahaan Swasta
+      let nominal_sisa_tagihan = parseInt(req.body.tagihan_sebelum_pajak) + parseInt(req.body.tagihan_sebelum_pajak) * (pajak_keluaran_persen / 100);
+      let update_sisa_tagihan = get_header_penjualan.sisa_tagihan - parseInt(nominal_sisa_tagihan);
+
+      const update_header_penjualan = await prisma.headerPenjualan.update({
+        where: {
+          id: parseInt(req.body.id),
+        },
+        data: {
+          sisa_tagihan: parseInt(update_sisa_tagihan),
+          status: "Partial",
+        },
+      });
+
+      const update_penerimaan_pembayaran = await prisma.penerimaanPembayaran.update({
+        where: {
+          id: find_latest.id,
+        },
+        data: {
+          tagihan_setelah_pajak: nominal_sisa_tagihan,
+          status: "Process",
+        },
+      });
+
+      // Nama Akun
+      let piutang = get_header_penjualan.kontak.akun_piutang_id;
+      let pajak_masukan = get_pajak.kategori2.id;
+      let pajak_keluaran = get_header_penjualan.pajak.kategori1.id;
+      let pendapatan_bersih = get_header_penjualan.DetailPenjualan[0].produk.akun_id;
+
+      // Nominal Akun
+      let nominal_piutang = (pajak_keluaran_persen / 100) * parseInt(req.body.tagihan_sebelum_pajak) + parseInt(req.body.tagihan_sebelum_pajak) - parseInt(req.body.pajak_total);
+      let nominal_pajak_masukan = parseInt(req.body.pajak_total);
+      let nominal_pajak_keluaran = parseInt(req.body.tagihan_sebelum_pajak) * (pajak_keluaran_persen / 100);
+      let nominal_pendapatan_bersih = parseInt(req.body.tagihan_sebelum_pajak);
+
+      const create_jurnal = await prisma.jurnalPenerimaanPembayaran.createMany({
+        data: [
+          {
+            header_penjualan_id: parseInt(req.body.id),
+            penerimaan_pembayaran_id: find_latest.id,
+            akun_id: parseInt(piutang),
+            nominal: parseInt(nominal_piutang),
+            tipe_saldo: "Debit",
+          },
+          {
+            header_penjualan_id: parseInt(req.body.id),
+            penerimaan_pembayaran_id: find_latest.id,
+            akun_id: parseInt(pajak_masukan),
+            nominal: parseInt(nominal_pajak_masukan),
+            tipe_saldo: "Debit",
+          },
+          {
+            header_penjualan_id: parseInt(req.body.id),
+            penerimaan_pembayaran_id: find_latest.id,
+            akun_id: parseInt(pajak_keluaran),
+            nominal: parseInt(nominal_pajak_keluaran),
+            tipe_saldo: "Kredit",
+          },
+          {
+            header_penjualan_id: parseInt(req.body.id),
+            penerimaan_pembayaran_id: find_latest.id,
+            akun_id: parseInt(pendapatan_bersih),
+            nominal: parseInt(nominal_pendapatan_bersih),
+            tipe_saldo: "Kredit",
+          },
+        ],
+      });
     }
 
-    const find_akun_setor = await prisma.akun.findFirst({
-      where: {
-        id: parseInt(req.body.setor_ke),
+    res.status(201).json([
+      {
+        message: "Create Penerimaan Pembayaran Penjualan Success!",
+        data: frontend_data,
+        id: find_latest,
       },
-    });
-
-    const find_default_piutang = await prisma.settingDefault.findFirst({
-      where: {
-        id: 4,
-      },
-      include: {
-        akun: true,
-      },
-    });
-
-    const jurnal_penerimaan_pembayaran = await prisma.jurnalPenerimaanPembayaran.createMany({
-      data: [
-        {
-          header_penjualan_id: parseInt(req.body.id),
-          akun_id: find_akun_setor.id,
-          nominal: parseInt(req.body.jumlah),
-          tipe_saldo: "Debit",
-        },
-        {
-          header_penjualan_id: parseInt(req.body.id),
-          akun_id: find_default_piutang.akun.id,
-          nominal: parseInt(req.body.jumlah),
-          tipe_saldo: "Kredit",
-        },
-      ],
-    });
-
-    res.status(201).json([{ message: "Penerimaan Pembayaran Penjualan Success!", data: create_penerimaan_pembayaran }]);
+    ]);
   } catch (error) {
-    res.status(400).json([{ data: "Failed!", error }]);
+    res.status(400).json([{ data: "Create Penerimaan Pembayaran Penjualan Failed!", error }]);
     console.log(error);
   }
 };

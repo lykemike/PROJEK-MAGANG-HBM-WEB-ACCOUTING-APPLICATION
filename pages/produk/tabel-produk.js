@@ -2,32 +2,9 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/Layout";
-import {
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  InputGroup,
-  FormControl,
-  Col,
-  Row,
-  FormCheck,
-  Pagination,
-  Modal,
-} from "react-bootstrap";
+import { Card, Button, DropdownButton, Dropdown, InputGroup, FormControl, Col, Row, FormCheck, Pagination, Modal } from "react-bootstrap";
 import TablePagination from "../../components/TablePagination";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
 import { Add, SearchOutlined, ErrorOutline, Visibility, Edit, Delete } from "@material-ui/icons/";
 
 import * as XLSX from "xlsx";
@@ -60,7 +37,7 @@ function DeleteModal(props) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="text-sm">
         <p>
           Are you sure you want to delete <label className="font-medium">{props.nama}</label> ?
         </p>
@@ -111,19 +88,6 @@ export default function tabelProduk({ data }) {
     return search.length > 0 ? search : product;
   };
 
-  // const restructure = (data) => {
-  //   let result = [];
-  //   data.map((i) => {
-  //     result.push({
-  //       "Nama Produk & Jasa": i.nama,
-  //       Kategori: i.kategori.nama,
-  //       Harga: "Rp. " + i.harga.toLocaleString({ minimumFractionDigits: 0 }),
-  //       "Akun Penjualan": i.akun.nama_akun,
-  //     });
-  //   });
-  //   return result;
-  // };
-
   const handlePrevChange = () => {
     if (page < 1) {
       setPage(0);
@@ -157,14 +121,7 @@ export default function tabelProduk({ data }) {
       <Head>
         <title>Tabel Produk & Jasa</title>
       </Head>
-      <DeleteModal
-        id={modalShow.id}
-        show={modalShow.open}
-        nama={modalShow.nama}
-        backdrop="static"
-        keyboard={false}
-        onHide={() => setModalShow({ open: false, id: 0, nama: "" })}
-      />
+      <DeleteModal id={modalShow.id} show={modalShow.open} nama={modalShow.nama} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Tabel Produk</Typography>
@@ -274,21 +231,15 @@ export default function tabelProduk({ data }) {
                       <TableCell style={{ minWidth: 50, width: 50 }}>
                         <FormCheck />
                       </TableCell>
-                      <TableCell style={{ minWidth: 350, width: 350 }}>
-                        {i.nama.length > 40 ? i.nama.slice(0, 40) + "..." : i.nama}
-                      </TableCell>
+                      <TableCell style={{ minWidth: 350, width: 350 }}>{i.nama.length > 40 ? i.nama.slice(0, 40) + "..." : i.nama}</TableCell>
                       <TableCell style={{ minWidth: 250, width: 250 }}>{i.kategori.nama}</TableCell>
-                      <TableCell style={{ minWidth: 300, width: 300 }}>
-                        {i.deskripsi.length > 40 ? i.deskripsi.slice(0, 40) + "..." : i.deskripsi}
-                      </TableCell>
-                      <TableCell style={{ minWidth: 150, width: 150 }}>
-                        Rp. {i.harga.toLocaleString({ minimumFractionDigits: 0 })}
-                      </TableCell>
+                      <TableCell style={{ minWidth: 250, width: 250 }}>{i.deskripsi.length > 40 ? i.deskripsi.slice(0, 40) + "..." : i.deskripsi}</TableCell>
+                      <TableCell style={{ minWidth: 150, width: 150 }}>Rp. {i.harga.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                       <TableCell style={{ minWidth: 250, width: 250 }}>{i.akun.nama_akun}</TableCell>
                       <TableCell style={{ minWidth: 200, width: 200 }} align="right">
                         <Link href={`../produk/view/${i.id}`}>
                           <a>
-                            <Button variant="primary" size="sm" className="mr-2">
+                            <Button variant="info" size="sm" className="mr-2">
                               <Visibility className="text-white" fontSize="small" />
                             </Button>
                           </a>
@@ -296,7 +247,7 @@ export default function tabelProduk({ data }) {
 
                         <Link href={`../produk/${i.id}`}>
                           <a>
-                            <Button variant="success" size="sm" className="mr-2">
+                            <Button variant="warning" size="sm" className="mr-2">
                               <Edit className="text-white" fontSize="small" />
                             </Button>
                           </a>

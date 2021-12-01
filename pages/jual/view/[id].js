@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, DropdownButton, Dropdown, FormControl } from "react-bootstrap";
 
 import {
   Breadcrumbs,
@@ -37,7 +37,7 @@ export default function salesInvoice({ data, header }) {
   }
 
   function cetak2() {
-    router.push(`../cetak2/${id}`);
+    router.push(`../proforma-invoice/${id}`);
   }
 
   const jurnal_penerimaan_pembayaran = header[0].JurnalPenerimaanPembayaran.filter((i) => i.tipe_saldo === "Debit").reduce(
@@ -72,7 +72,7 @@ export default function salesInvoice({ data, header }) {
         <Row>
           <Col sm="4">
             <label className="font-medium mr-2">Pelanggan:</label>
-            <label>{header[0].kontak.nama}</label>
+            <label>{header[0].nama_perusahaan}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Email:</label>
@@ -94,39 +94,39 @@ export default function salesInvoice({ data, header }) {
             <label className="font-medium mr-2">Alamat Penagihan:</label>
           </Col>
           <Col sm="4">
-            <label className="font-medium mr-2">Tanggal Transaksi:</label>
-            <label>{header[0].tgl_jatuh_tempo}</label>
+            <label className="font-medium mr-2">Tanggal Mulai Kontrak:</label>
+            <label>{header[0].tgl_kontrak_mulai}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Nomor Kontrak:</label>
+            <label>{header[0].nomor_kontrak}</label>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col sm="4">
+            <label>{header[0].alamat_penagihan}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Tanggal Habis Kontrak:</label>
+            <label>{header[0].tgl_kontrak_expired}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Syarat Pembayaran:</label>
+            <label>{header[0].syarat_pembayaran.nama}</label>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col sm="4">
+            <label className="font-medium mr-2">NPWP:</label>
+            <label>{header[0].nomor_npwp}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">No. Transaksi:</label>
-            <label>{header[0].custom_invoice}</label>
+            <label>Sales Invoice #{header[0].id}</label>
           </Col>
-        </Row>
-
-        <Row>
-          <Col sm="4">
-            <label>{header[0].alamat_supplier}</label>
-          </Col>
-          <Col sm="4">
-            <label className="font-medium mr-2">Tanggal Jatuh Tempo:</label>
-            <label>{header[0].tgl_jatuh_tempo}</label>
-          </Col>
-          <Col sm="4">
-            <label className="font-medium mr-2">Tag:</label>
-            <label>{header[0].tag}</label>
-          </Col>
-        </Row>
-
-        <Row>
           <Col sm="4" />
-          <Col sm="4">
-            <label className="font-medium mr-2">Syarat Pembayaran:</label>
-            <label>{header[0].syarat_pembayaran}</label>
-          </Col>
-          <Col sm="4">
-            <label className="font-medium mr-2">No. Kontrak:</label>
-            <label>{header[0].no_ref_penagihan}</label>
-          </Col>
         </Row>
       </div>
 
@@ -141,94 +141,31 @@ export default function salesInvoice({ data, header }) {
                 <Typography className="text-white font-bold">Deskripsi</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">Kuantitas</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Satuan</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Harga Satuan</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Diskon</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Jumlah</Typography>
+                <Typography className="text-white font-bold">Harga</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {header[0].DetailPenjualan.map((i, index) => (
               <TableRow key={index}>
-                <TableCell>{i.produk.nama}</TableCell>
-                <TableCell>{i.desk_produk}</TableCell>
-                <TableCell>{i.kuantitas}</TableCell>
-                <TableCell>{i.satuan}</TableCell>
-                <TableCell>
-                  Rp.{" "}
-                  {i.harga_satuan.toLocaleString({
-                    minimumFractionDigits: 0,
-                  })}
-                </TableCell>
-                <TableCell>{i.diskon}%</TableCell>
-                <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                <TableCell>{i.produk_name}</TableCell>
+                <TableCell>{i.produk_deskripsi}</TableCell>
+                <TableCell>Rp. {i.produk_harga.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
             <TableCell />
             <TableCell align="right">SubTotal</TableCell>
             <TableCell>Rp. {header[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align="right">Diskon</TableCell>
-            <TableCell>
-              Rp. {(header[0].total_diskon + header[0].total_diskon_per_baris).toLocaleString({ minimumFractionDigits: 0 })}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
             <TableCell align="right">Total</TableCell>
             <TableCell>Rp. {header[0].total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
+
           <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align="right">Jumlah Pemotongan</TableCell>
-            <TableCell>Rp. {header[0].pemotongan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align="right">Sudah Dibayar</TableCell>
-            <TableCell>
-              Rp. {(header[0].uang_muka + jurnal_penerimaan_pembayaran).toLocaleString({ minimumFractionDigits: 0 })}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell />
             <TableCell />
             <TableCell align="right">Sisa Tagihan</TableCell>
             <TableCell>Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
@@ -238,30 +175,28 @@ export default function salesInvoice({ data, header }) {
 
       <Row className="mt-24">
         <Col sm="4">
-          <Button variant="primary" className="mr-2" onClick={cetak2}>
-            Proforma Invoice
-          </Button>
+          <DropdownButton variant="primary" id="dropdown-basic-button" title="Cetak">
+            <Dropdown.Item onClick={cetak2}>Proforma Invoice</Dropdown.Item>
+            <Dropdown.Item onClick={cetak}>Cetak</Dropdown.Item>
+          </DropdownButton>
         </Col>
         <Col sm="4">
-          <Row className="row no-gutters">
-            <Button variant="primary" className="mr-2" onClick={cetak}>
-              Cetak
+          {header[0].sisa_tagihan > 0 ? (
+            <Button variant="primary" onClick={pembayaran}>
+              Terima Pembayaran
             </Button>
-            {header[0].sisa_tagihan > 0 ? (
-              <Button variant="primary" onClick={pembayaran}>
-                Terima Pembayaran
-              </Button>
-            ) : null}
-          </Row>
+          ) : null}
         </Col>
         <Col sm="4">
           <Row className="float-right row no-gutters">
             <Button variant="danger" className="mr-2">
               Kembali
             </Button>
-            <Button variant="success" onClick={edit}>
-              Ubah
-            </Button>
+            {header[0].PenerimaanPembayaran.length > 0 ? null : (
+              <Button variant="success" onClick={edit}>
+                Ubah
+              </Button>
+            )}
           </Row>
         </Col>
       </Row>
@@ -281,23 +216,17 @@ export async function getServerSideProps(context) {
       DetailPenjualan: {
         include: {
           produk: true,
-          pajak: true,
         },
       },
+      PenerimaanPembayaran: true,
       JurnalPenerimaanPembayaran: true,
-    },
-  });
-
-  const find_syarat_pembayaran = await prisma.syaratPembayaran.findFirst({
-    where: {
-      value: parseInt(header[0].syarat_pembayaran),
+      syarat_pembayaran: true,
     },
   });
 
   return {
     props: {
       header: header,
-      data: find_syarat_pembayaran,
     },
   };
 }

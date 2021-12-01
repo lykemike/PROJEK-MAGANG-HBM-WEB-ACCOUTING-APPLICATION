@@ -38,7 +38,8 @@ export default function BuatKontakBaru({ data, data2, data3, data4, data5 }) {
       <Formik
         initialValues={{
           id: id,
-          gelar: data5[0].gelar,
+          gelar_id: data5[0].gelar.id,
+          gelar_nama: data5[0].gelar.nama,
           nama: data5[0].nama,
           nomor_hp: data5[0].nomor_hp,
           email: data5[0].email,
@@ -56,7 +57,8 @@ export default function BuatKontakBaru({ data, data2, data3, data4, data5 }) {
           akun_piutang_name: data5[0].akun_piutang_name,
           akun_hutang_id: data5[0].akun_hutang_id,
           akun_hutang_name: data5[0].akun_hutang_name,
-          syarat_pembayaran: data5[0].syarat_pembayaran,
+          syarat_pembayaran_id: data5[0].syarat_pembayaran_id,
+          syarat_pembayaran_nama: data5[0].syarat_pembayaran.nama,
           menu: data5[0].KontakDetail.map((i) => i.kontak_type_id.toString()),
         }}
         onSubmit={async (values) => {
@@ -79,7 +81,6 @@ export default function BuatKontakBaru({ data, data2, data3, data4, data5 }) {
               </Breadcrumbs>
               <h2>Update Kontak</h2>
             </div>
-
             <div>
               <Card className="mt-4">
                 <Card.Body>
@@ -144,11 +145,11 @@ export default function BuatKontakBaru({ data, data2, data3, data4, data5 }) {
                         <Row>
                           <Col sm="2">
                             <Select
-                              value={{ value: props.values.gelar, label: props.values.gelar }}
+                              defaultValue={{ value: props.values.gelar_id, label: props.values.gelar_nama }}
                               options={data3}
                               name="gelar"
                               onChange={(e) => {
-                                props.setFieldValue((props.values.gelar = e.label));
+                                props.setFieldValue((props.values.gelar_id = e.value));
                               }}
                             />
                           </Col>
@@ -470,15 +471,15 @@ export default function BuatKontakBaru({ data, data2, data3, data4, data5 }) {
                       </Col>
                       <Col sm="10">
                         <Select
-                          defaultValue={{ value: props.values.syarat_pembayaran, label: props.values.syarat_pembayaran }}
+                          defaultValue={{ value: props.values.syarat_pembayaran_id, label: props.values.syarat_pembayaran_nama }}
                           options={data4}
-                          name="syarat_pembayaran"
+                          name="syarat_pembayaran_id"
                           onChange={(e) => {
-                            props.setFieldValue(`syarat_pembayaran`, e.label);
+                            props.setFieldValue(`syarat_pembayaran_id`, e.value);
                           }}
                         />
-                        {props.errors.syarat_pembayaran && props.touched.syarat_pembayaran ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.syarat_pembayaran}</span>
+                        {props.errors.syarat_pembayaran_id && props.touched.syarat_pembayaran_id ? (
+                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.syarat_pembayaran_id}</span>
                         ) : null}
                       </Col>
                     </Row>
@@ -537,18 +538,20 @@ export async function getServerSideProps(context) {
     });
   });
 
-  const gelar = [
-    { value: "Mr. ", label: "Mr. " },
-    { value: "Ms. ", label: "Ms. " },
-    { value: "Mrs. ", label: "Mrs. " },
-  ];
+  const get_gelar = await prisma.gelar.findMany({});
+  let gelar = [];
+  get_gelar.map((i) => {
+    gelar.push({
+      value: i.id,
+      label: i.nama,
+    });
+  });
 
   const get_syarat_pembayaran = await prisma.syaratPembayaran.findMany();
-
   let syarat_pembayaran = [];
   get_syarat_pembayaran.map((i) => {
     syarat_pembayaran.push({
-      value: i.nama,
+      value: i.id,
       label: i.nama,
     });
   });
@@ -558,6 +561,8 @@ export async function getServerSideProps(context) {
       id: parseInt(id),
     },
     include: {
+      gelar: true,
+      syarat_pembayaran: true,
       piutang: true,
       hutang: true,
       KontakDetail: {
