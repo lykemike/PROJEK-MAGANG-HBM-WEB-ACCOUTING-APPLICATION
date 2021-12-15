@@ -25,7 +25,7 @@ function DeleteModal(props) {
     })
       .then(function (response) {
         console.log(response);
-        router.push("tabel-produk");
+        router.reload(window.location.pathname);
       })
       .catch(function (error) {
         console.log(error);
@@ -39,7 +39,7 @@ function DeleteModal(props) {
       </Modal.Header>
       <Modal.Body className="text-sm">
         <p>
-          Are you sure you want to delete <label className="font-medium">{props.nama}</label> ?
+          Are you sure you want to delete <label className="font-medium">{props.nama}</label>?
         </p>
       </Modal.Body>
       <Modal.Footer>
@@ -119,7 +119,7 @@ export default function tabelProduk({ data }) {
   return (
     <Layout>
       <Head>
-        <title>Tabel Produk & Jasa</title>
+        <title>Produk & Jasa</title>
       </Head>
       <DeleteModal id={modalShow.id} show={modalShow.open} nama={modalShow.nama} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
       <div className="border-b border-gray-200">

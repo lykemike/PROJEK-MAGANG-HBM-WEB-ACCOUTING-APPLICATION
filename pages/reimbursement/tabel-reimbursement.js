@@ -1,31 +1,105 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import Head from "next/head";
 import Layout from "../../components/Layout";
-import { Button, Row, Col, FormControl } from "react-bootstrap";
-import Add from "@material-ui/icons/Add";
-import TablePagination from "../../components/TablePagination";
-import { Formik, Form as Forms } from "formik";
-import Axios from "axios";
 import { useRouter } from "next/router";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table as Tables,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHead,
-} from "@material-ui/core";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import TablePagination from "../../components/TablePagination";
+
+import { Formik, Form as Forms } from "formik";
+import { Button, Row, Col, FormControl, Modal } from "react-bootstrap";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table as Tables, TableBody, TableRow, TableCell, TableHead } from "@material-ui/core";
+import { Add, Visibility, Edit, Delete, Icon, AssignmentTurnedIn } from "@material-ui/icons/";
+
+import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+function CompleteModal(props) {
+  const api_confirm = "http://localhost:3000/api/reimbursement/confirmReimbursement";
+  const router = useRouter();
+
+  const handle_confirm = async () => {
+    Axios.post(api_confirm, {
+      id: props.id,
+    })
+      .then(function (response) {
+        console.log(response);
+        router.reload(window.location.pathname);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Complete Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p className="text-sm">
+          Are you sure you want to complete <label className="font-medium">{props.nama}</label>? This will apply the current status to <label className="font-medium">"Done"</label>, and can't be{" "}
+          <label className="font-medium">Edited</label>.
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handle_confirm}>
+          Confirm, Done!
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
+function DeleteModal(props) {
+  const api_delete = "http://localhost:3000/api/reimbursement/deleteReimbursement";
+  const router = useRouter();
+
+  const handle_delete = async () => {
+    Axios.delete(api_delete, {
+      data: {
+        id: props.id,
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        router.reload(window.location.pathname);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p className="text-sm">
+          Are you sure you want to delete <label className="font-medium">{props.nama}</label>? Once confirmed this can't be undone.
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
 export default function TabelReimbursement({ data }) {
+  const [open, setOpen] = useState(false);
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
+  const [modalShow2, setModalShow2] = useState({ open: false, id: 0, nama: "" });
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState([]);
@@ -36,7 +110,7 @@ export default function TabelReimbursement({ data }) {
     if (e.target.value !== "") {
       setSearch(reimbursement.filter((i) => i.nama_pegawai.toLowerCase().includes(e.target.value.toLowerCase())));
     } else {
-      setReimbursement([]);
+      setSearch([]);
     }
   };
 
@@ -46,23 +120,6 @@ export default function TabelReimbursement({ data }) {
 
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
-
-  const deleteReimbursement = "http://localhost:3000/api/reimbursement/deleteReimbursement";
-
-  const handleDelete = async (id) => {
-    Axios.delete(deleteReimbursement, {
-      data: {
-        reimbursementId: id,
-      },
-    })
-      .then(function (response) {
-        console.log(response);
-        router.push("table-reimbursement");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
 
   const handlePrevChange = () => {
     if (page < 1) {
@@ -94,6 +151,11 @@ export default function TabelReimbursement({ data }) {
 
   return (
     <Layout>
+      <DeleteModal id={modalShow.id} show={modalShow.open} nama={modalShow.nama} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
+      <CompleteModal id={modalShow2.id} show={modalShow2.open} nama={modalShow2.nama} backdrop="static" keyboard={false} onHide={() => setModalShow2({ open: false, id: 0, nama: "" })} />
+      <Head>
+        <title>Reimbursement</title>
+      </Head>
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Reimbursement</Typography>
@@ -106,12 +168,9 @@ export default function TabelReimbursement({ data }) {
           <Col sm="4">
             <Link href="add-reimbursement">
               <div className="d-flex justify-content-end">
-                <button
-                  type="button"
-                  className="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
-                >
-                  <Add fontSize="small" /> Buat Reimbursement Baru
-                </button>
+                <Button variant="primary">
+                  <Add fontSize="small" /> Buat Baru
+                </Button>
               </div>
             </Link>
           </Col>
@@ -123,23 +182,18 @@ export default function TabelReimbursement({ data }) {
           <Col sm="9"></Col>
 
           <Col sm="3" className="float-right">
-            <FormControl
-              placeholder="Search . . . ."
-              aria-label="cari"
-              aria-describedby="basic-addon1"
-              onChange={(e) => handleChange(e)}
-            />
+            <FormControl placeholder="Cari" onChange={(e) => handleChange(e)} />
           </Col>
         </Row>
       </div>
 
       <div style={{ height: "30rem" }}>
-        <TableContainer className="mt-8" component={Paper}>
+        <TableContainer className="mt-4" component={Paper}>
           <Tables size="small" aria-label="a dense table">
             <TableHead className="bg-dark">
               <TableRow>
                 <TableCell>
-                  <Typography className="text-white font-bold">No Reimbursement</Typography>
+                  <Typography className="text-white font-bold">No. Reimbursement</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography className="text-white font-bold">Periode</Typography>
@@ -156,11 +210,7 @@ export default function TabelReimbursement({ data }) {
                 <TableCell>
                   <Typography className="text-white font-bold">Status</Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography className="text-white font-bold" align="right">
-                    Actions
-                  </Typography>
-                </TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             {handleList()
@@ -168,26 +218,54 @@ export default function TabelReimbursement({ data }) {
               .map((i) => (
                 <TableBody>
                   <TableRow>
-                    <TableCell component="th" scope="row">
-                      {i.id}
+                    <TableCell style={{ minWidth: 200, width: 200 }}>Reimbursement #{i.id}</TableCell>
+                    <TableCell style={{ minWidth: 150, width: 150 }}>{i.periode.nama}</TableCell>
+                    <TableCell style={{ minWidth: 250, width: 250 }}>{i.nama_pegawai}</TableCell>
+                    <TableCell style={{ minWidth: 250, width: 250 }}>{i.yang_mengetahui}</TableCell>
+                    <TableCell style={{ minWidth: 250, width: 250 }}>{i.yang_menyetujui}</TableCell>
+                    <TableCell style={{ minWidth: 200, width: 200 }}>
+                      {i.status == "Process" ? (
+                        <span class="bg-yellow-200 text-yellow-600 py-1 px-3 rounded text-xs">{i.status}</span>
+                      ) : (
+                        <span class="bg-green-200 text-green-600 py-1 px-3 rounded text-xs">{i.status}</span>
+                      )}
                     </TableCell>
-                    <TableCell>{i.periode}</TableCell>
-                    <TableCell>{i.nama_pegawai}</TableCell>
-                    <TableCell>{i.yang_mengetahui}</TableCell>
-                    <TableCell>{i.yang_menyetujui}</TableCell>
-                    <TableCell>{i.status}</TableCell>
-                    <TableCell align="right">
+                    <TableCell style={{ minWidth: 250, width: 250 }} align="right">
+                      <Button variant="success" size="sm" className="mr-2" onClick={() => setModalShow2({ open: true, id: i.id, nama: "Reimbursement #" + i.id })}>
+                        <a>
+                          <AssignmentTurnedIn className="text-white" fontSize="small" />
+                        </a>
+                      </Button>
+
                       <Link href={`../../reimbursement/view/${i.id}`}>
                         <a>
-                          <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
+                          <Button variant="info" size="sm" className="mr-2">
+                            <a>
+                              <Visibility className="text-white" fontSize="small" />
+                            </a>
+                          </Button>
                         </a>
                       </Link>
+
                       <Link href={`../../reimbursement/${i.id}`}>
                         <a>
-                          <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                          <Button variant="warning" size="sm" className="mr-2">
+                            <a>
+                              <Edit className="text-white" fontSize="small" />
+                            </a>
+                          </Button>
                         </a>
                       </Link>
-                      <DeleteOutlineIcon color="secondary" fontSize="small" onClick={() => handleDelete(i.id)} />
+
+                      <Link href="#">
+                        <a>
+                          <Button variant="danger" size="sm" className="mr-2" onClick={() => setModalShow({ open: true, id: i.id, nama: "Reimbursement #" + i.id })}>
+                            <a>
+                              <Delete className="text-white" fontSize="small" />
+                            </a>
+                          </Button>
+                        </a>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -214,6 +292,9 @@ export async function getServerSideProps() {
   const reimbursement = await prisma.headerReimburse.findMany({
     orderBy: {
       id: "asc",
+    },
+    include: {
+      periode: true,
     },
   });
 

@@ -25,7 +25,7 @@ function DeleteModal(props) {
     })
       .then(function (response) {
         console.log(response);
-        router.push(`../jual/penjualan`);
+        router.reload(window.location.pathname);
       })
       .catch(function (error) {
         console.log(error);
@@ -53,6 +53,7 @@ function DeleteModal(props) {
     </Modal>
   );
 }
+
 export default function penjualan({ data }) {
   const [open, setOpen] = useState(false);
   const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
@@ -62,7 +63,7 @@ export default function penjualan({ data }) {
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
-      setSearch(penjualan.filter((i) => i.kontak.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+      setSearch(penjualan.filter((i) => i.nama_perusahaan.toLowerCase().includes(e.target.value.toLowerCase())));
     } else {
       setSearch([]);
     }
@@ -76,8 +77,6 @@ export default function penjualan({ data }) {
 
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
-
-  const due_date = data.filter((i) => i.tgl_kontrak_expired < current).reduce((a, b) => (a = a + b.sisa_tagihan), 0);
 
   const status = useCallback((tgl_kontrak_expired, status) => {
     if (tgl_kontrak_expired < current) {
@@ -132,16 +131,6 @@ export default function penjualan({ data }) {
               </div>
               <div class="px-4 py-2 flex space-x-2 mt-2">
                 <h3 class="text-lg text-gray-600 font-semibold mb-2">Rp. {total_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
-              </div>
-            </div>
-          </Col>
-          <Col sm="4">
-            <div class="bg-white rounded-sm overflow-hidden shadow-md hover:shadow-lg transform transition duration-500 hover:scale-105">
-              <div class="px-4 py-2 bg-red-300 flex items-center justify-between">
-                <h1 class="text-xl font-gray-700 font-bold">Penjualan Jatuh Tempo</h1>
-              </div>
-              <div class="px-4 py-2 flex space-x-2 mt-2">
-                <h3 class="text-lg text-gray-600 font-semibold mb-2">Rp. {due_date > 0 ? due_date.toLocaleString({ minimumFractionDigits: 0 }) : "0,00"}</h3>
               </div>
             </div>
           </Col>

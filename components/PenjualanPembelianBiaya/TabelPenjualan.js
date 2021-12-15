@@ -1,20 +1,71 @@
 import React, { useState, useMemo, useCallback } from "react";
-import Box from "@material-ui/core/Box";
-import Collapse from "@material-ui/core/Collapse";
-import IconButton from "@material-ui/core/IconButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
 import Link from "next/Link";
-import { KeyboardArrowDown, KeyboardArrowUp, Visibility, Edit, Delete, Icon, Done } from "@material-ui/icons/";
+import { KeyboardArrowDown, KeyboardArrowUp, Visibility, Edit, Delete, Icon, AssignmentTurnedIn } from "@material-ui/icons/";
 import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
-import { TableFooter } from "@material-ui/core";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableHead, TableBody, TableFooter, TableRow, TableCell, Collapse, IconButton, Box } from "@material-ui/core";
+import { useRouter } from "next/router";
 import Axios from "axios";
-function DeleteDetail(props) {
+import { Formik, Form as Forms, FieldArray } from "formik";
+
+function CompleteInvoice(props) {
+  const api_confirm = "http://localhost:3000/api/jual/confirmInvoice";
+  const router = useRouter();
+
+  const day = new Date();
+  const current = day.toISOString().slice(0, 10);
+
+  return (
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Invoice Confirmation</Modal.Title>
+      </Modal.Header>
+
+      <Formik
+        initialValues={{
+          id: props.id,
+          tanggal: current,
+        }}
+        onSubmit={async (values) => {
+          console.log(values);
+          Axios.post(api_confirm, values)
+            .then(function (response) {
+              console.log(response);
+              router.reload(window.location.pathname);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }}
+      >
+        {(formikProps) => (
+          <>
+            <Modal.Body>
+              <label className="text-sm font-medium">Pick confirmation date:</label>
+              <FormControl type="date" name="tanggal_terima" value={formikProps.values.tanggal} onChange={(e) => formikProps.setFieldValue(`tanggal`, e.target.value)} />
+
+              <p className="text-sm mt-2">
+                Are you sure you want to complete this invoice? This current status will change to <label className="font-medium">"Done"</label>, and can't be{" "}
+                <label className="font-medium">Edited</label>.
+              </p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={props.onHide}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={formikProps.handleSubmit}>
+                Confirm, Done!
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Formik>
+    </Modal>
+  );
+}
+
+function DeleteInvoice(props) {
   const api_delete = "http://localhost:3000/api/jual/deletePenerimaanPembayaran";
+  const router = useRouter();
 
   const handle_delete = async () => {
     Axios.delete(api_delete, {
@@ -24,6 +75,7 @@ function DeleteDetail(props) {
     })
       .then(function (response) {
         console.log(response);
+        router.reload(window.location.pathname);
       })
       .catch(function (error) {
         console.log(error);
@@ -37,7 +89,7 @@ function DeleteDetail(props) {
       </Modal.Header>
       <Modal.Body>
         <p className="text-sm">
-          Are you sure you want to delete <label className="font-medium">{props.nama}</label>? These will revert the current "sisa tagihan" before this invoice.
+          Are you sure you want to delete <label className="font-medium">{props.nama}</label>? These will revert "jumlah" from the current invoice to sisa tagihan.
         </p>
       </Modal.Body>
       <Modal.Footer>
@@ -52,9 +104,10 @@ function DeleteDetail(props) {
   );
 }
 
-export default function Table2({ data, modalDelete }) {
+export default function TablePenjualan({ data, modalDelete }) {
   const [open, setOpen] = useState(false);
   const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
+  const [modalShow2, setModalShow2] = useState({ open: false, id: 0, nama: "" });
 
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
@@ -81,7 +134,8 @@ export default function Table2({ data, modalDelete }) {
     <>
       <TableBody>
         <TableRow>
-          <DeleteDetail id={modalShow.id} show={modalShow.open} nama={modalShow.nama} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
+          <DeleteInvoice id={modalShow.id} show={modalShow.open} nama={modalShow.nama} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
+          <CompleteInvoice id={modalShow2.id} show={modalShow2.open} nama={modalShow2.nama} backdrop="static" keyboard={false} onHide={() => setModalShow2({ open: false, id: 0, nama: "" })} />
           <TableCell style={{ minWidth: 50, width: 50 }}>
             <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
               {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -124,11 +178,11 @@ export default function Table2({ data, modalDelete }) {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box margin={1}>
-                <Typography variant="body1" gutterBottom component="div" className="text-black font-bold">
+                <label variant="body1" gutterBottom component="div" className="text-black text-sm">
                   Daftar Penerimaan Pembayaran
-                </Typography>
+                </label>
                 <Table size="small" aria-label="purchases">
-                  <TableHead className="bg-blue-300">
+                  <TableHead className="bg-blue-200">
                     <TableRow>
                       <TableCell>Invoice</TableCell>
                       <TableCell>Tanggal</TableCell>
@@ -141,19 +195,30 @@ export default function Table2({ data, modalDelete }) {
                   <TableBody>
                     {data.PenerimaanPembayaran.map((i, index) => (
                       <TableRow>
-                        <TableCell>Invoice #{(index += 1)}</TableCell>
-                        <TableCell>{i.tgl_pembayaran}</TableCell>
+                        <TableCell style={{ minWidth: 150, width: 150 }}>Invoice #{(index += 1)}</TableCell>
+                        <TableCell style={{ minWidth: 150, width: 150 }}>{i.tgl_pembayaran}</TableCell>
                         <TableCell>{i.presentase_penagihan}%</TableCell>
-                        {data.tipe_perusahaan == "false" ? (
-                          <TableCell>Rp. {i.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                        ) : (
-                          <TableCell>Rp. {i.tagihan_setelah_pajak.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                        )}
-                        <TableCell>{i.status}</TableCell>
-                        <TableCell align="right">
-                          <Button variant="success" size="sm" className="mr-2">
-                            <Done className="text-white" fontSize="small" />
-                          </Button>
+
+                        <TableCell style={{ minWidth: 200, width: 200 }}>
+                          {data.tipe_perusahaan == "false"
+                            ? "Rp. " + i.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })
+                            : "Rp. " + i.tagihan_setelah_pajak.toLocaleString({ minimumFractionDigits: 0 })}
+                        </TableCell>
+
+                        <TableCell style={{ minWidth: 150, width: 150 }}>
+                          {i.status == "Process" ? (
+                            <span class="bg-red-200 text-red-600 py-1 px-3 rounded text-xs">{i.status}</span>
+                          ) : (
+                            <span class="bg-green-200 text-green-600 py-1 px-3 rounded text-xs">{i.status}</span>
+                          )}
+                        </TableCell>
+
+                        <TableCell align="right" style={{ minWidth: 250, width: 250 }}>
+                          {i.status == "Process" ? (
+                            <Button variant="success" size="sm" className="mr-2" onClick={() => setModalShow2({ open: true, id: i.id, nama: "Complete " })}>
+                              <AssignmentTurnedIn className="text-white" fontSize="small" />
+                            </Button>
+                          ) : null}
 
                           <Link href={`../jual/pembayaran/view/${i.id}`}>
                             <a>
@@ -162,13 +227,16 @@ export default function Table2({ data, modalDelete }) {
                               </Button>
                             </a>
                           </Link>
-                          <Link href={`../jual/pembayaran/edit/${i.id}`}>
-                            <a>
-                              <Button variant="warning" size="sm" className="mr-2">
-                                <Edit className="text-white" fontSize="small" />
-                              </Button>
-                            </a>
-                          </Link>
+
+                          {i.status == "Process" ? (
+                            <Link href={`../jual/pembayaran/edit/${i.id}`}>
+                              <a>
+                                <Button variant="warning" size="sm" className="mr-2">
+                                  <Edit className="text-white" fontSize="small" />
+                                </Button>
+                              </a>
+                            </Link>
+                          ) : null}
 
                           <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.id, nama: "Invoice from " + data.nama_perusahaan })}>
                             <Delete className="text-white" fontSize="small" />

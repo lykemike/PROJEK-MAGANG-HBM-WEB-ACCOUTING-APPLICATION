@@ -3,26 +3,15 @@ import Head from "next/head";
 import Layout from "../../../../components/Layout";
 import { Row, Col, Form, Table, Button } from "react-bootstrap";
 import Link from "next/Link";
-import {
-  Breadcrumbs,
-  Table as Tables,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-  TableFooter,
-} from "@material-ui/core/";
+import { Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, TableFooter } from "@material-ui/core/";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function View({ data }) {
-  console.log(data);
-
   let date_invoice = new Date(data[0].tgl_pembayaran).toDateString();
   let date_contract = new Date(data[0].header_penjualan.tgl_kontrak_expired).toDateString();
+
+  let increment = 1;
   return (
     <>
       <Head>
@@ -31,12 +20,15 @@ export default function View({ data }) {
       <div className="container">
         <div className="px-2 py-2 mt-2 border border-gray-200">
           <Row>
-            <Col sm="4">
+            <Col sm="6">
               <label className="font-medium mr-2">PT. Hexaon Business Mitrasindo</label>
               <label>Soho Podomoro City Lantai 16 Unit 1628 & 1629</label>
               <label>Jalan Letjen S. Parman Kav. 28 Grogol</label>
               <label>Jakarta Barat 11470, Indonesia</label>
               <label>Telp: +62 21 2789 3347 | Fax +62 21 2789 3348</label>
+            </Col>
+            <Col sm="6">
+              <label className="text-8xl">INVOICE</label>
             </Col>
           </Row>
         </div>
@@ -107,36 +99,34 @@ export default function View({ data }) {
           </thead>
           <tbody className="border border-gray-200 text-center">
             <tr style={{ minHeight: 200, height: 200 }}>
-              <td className="text-center">{data[0].header_penjualan.id}</td>
+              <td className="text-center">{increment++}</td>
               <td className="text-left">{data[0].header_penjualan.DetailPenjualan[0].produk_name}</td>
               <td className="text-right">{data[0].header_penjualan.total.toLocaleString({ minimumFractionDigits: 0 })}</td>
               <td className="text-center">{data[0].presentase_penagihan}%</td>
-              <td className="text-right">{data[0].tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</td>
+              <td className="text-right">Rp. {data[0].tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</td>
             </tr>
           </tbody>
 
           <tr className="border border-gray-200 text-center">
             <td className="text-left text-sm" />
-            <td className="text-left text-sm">Jumlah Tagihan Sebelum PPN</td>
+            <td className="text-left text-sm">Jumlah Tagihan Sebelum {data[0].header_penjualan.pajak_nama}</td>
             <td className="text-right text-sm" />
             <td className="text-center text-sm" />
-            <td className="text-right text-sm">{data[0].tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</td>
+            <td className="text-right text-sm">Rp. {data[0].tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</td>
           </tr>
           <tr className="border border-gray-200 text-center">
             <td className="text-left text-sm" />
-            <td className="text-left text-sm">Pajak Pertambahan Nilai</td>
+            <td className="text-left text-sm">{data[0].header_penjualan.pajak_nama}</td>
             <td className="text-right text-sm" />
             <td className="text-center text-sm">{data[0].header_penjualan.pajak_persen}%</td>
-            <td className="text-right text-sm">{data[0].pajak_total.toLocaleString({ minimumFractionDigits: 0 })}</td>
+            <td className="text-right text-sm">Rp. {data[0].pajak_total.toLocaleString({ minimumFractionDigits: 0 })}</td>
           </tr>
           <tr className="border border-gray-200 text-center">
             <td className="text-left text-sm" />
-            <td className="text-left text-sm">Jumlah Setelah PPN</td>
+            <td className="text-left text-sm">Jumlah Setelah {data[0].header_penjualan.pajak_nama}</td>
             <td className="text-right text-sm" />
             <td className="text-center text-sm" />
-            <td className="text-right text-sm font-medium">
-              {data[0].tagihan_setelah_pajak.toLocaleString({ minimumFractionDigits: 0 })}
-            </td>
+            <td className="text-right text-sm font-medium">Rp. {data[0].tagihan_setelah_pajak.toLocaleString({ minimumFractionDigits: 0 })}</td>
           </tr>
           <tr className="border border-gray-200 text-center">
             <td className="text-left font-medium text-sm">Say: </td>

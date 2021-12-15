@@ -15,13 +15,7 @@ export default function TableDetailRow({ data, index }) {
         </td>
       </tr>
       <tr>
-        <td
-          class={`py-2 text-sm text-gray-500 text-uppercase font-bold ${
-            open ? "block" : "hidden"
-          }`}
-        >
-          Detail #{index + 1}
-        </td>
+        <td class={`py-2 text-sm text-gray-500 text-uppercase font-bold ${open ? "block" : "hidden"}`}>Detail #{index + 1}</td>
       </tr>
       <tr class="ml-4">
         <td colSpan="3" class={open ? "block" : "hidden"}>
@@ -45,12 +39,8 @@ export default function TableDetailRow({ data, index }) {
                   <td class="px-2 py-2">
                     {i.akun.kode_akun} - {i.akun.nama_akun}
                   </td>
-                  <td class="px-2 py-2">
-                    Rp. {i.debit.toLocaleString({ minimumFractionDigits: 0 })}
-                  </td>
-                  <td class="px-2 py-2">
-                    Rp. {i.kredit.toLocaleString({ minimumFractionDigits: 0 })}
-                  </td>
+                  <td class="px-2 py-2">Rp. {i.debit.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                  <td class="px-2 py-2">Rp. {i.kredit.toLocaleString({ minimumFractionDigits: 0 })}</td>
                 </tr>
               ))}
             </tbody>
@@ -59,20 +49,8 @@ export default function TableDetailRow({ data, index }) {
                 <td class="px-2 py-1" align="right">
                   Total
                 </td>
-                <td class="px-2 py-1">
-                  Rp.{" "}
-                  {data.DetailJurnal.reduce(
-                    (a, b) => (a = a + b.debit),
-                    0
-                  ).toLocaleString({ minimumFractionDigits: 0 })}
-                </td>
-                <td class="px-2 py-1">
-                  Rp.{" "}
-                  {data.DetailJurnal.reduce(
-                    (a, b) => (a = a + b.kredit),
-                    0
-                  ).toLocaleString({ minimumFractionDigits: 0 })}
-                </td>
+                <td class="px-2 py-1">Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
+                <td class="px-2 py-1">Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
               </tr>
             </tfoot>
           </table>

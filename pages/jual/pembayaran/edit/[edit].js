@@ -45,7 +45,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
           nama_akun_setor: current.akun.kode_akun + " - " + current.akun.nama_akun,
           tgl_pembayaran: current.tgl_pembayaran,
           pajak_keluaran: data.pajak_persen,
-
+          deskripsi: current.deskripsi,
           pajak_id: current.pajak_id,
           pajak_nama: current.pajak.nama + " - " + current.pajak_persen + "%",
           pajak_persen: current.pajak_persen,
@@ -63,13 +63,17 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
           bank_name: current.bank.nama_bank + " (" + current.bank.nomor_rekening + ")",
           tipe_perusahaan: data.tipe_perusahaan,
           status: current.status,
+
+          pajak_keluaran_nama: data.pajak.nama,
+          pajak_keluaran_presentase_aktif: data.pajak.presentase_aktif,
+          pajak_keluaran_total: current.pajak_keluaran_total,
         }}
         validationSchema={ValidationSchema}
         onSubmit={async (values) => {
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-              // router.push(`../pembayaran/view/${response.data[0].id.id}`);
+              router.push(`../pembayaran/view/${response.data[0].id.id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -164,7 +168,19 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
               <tbody>
                 <tr>
                   <td style={{ minWidth: 250, width: 250 }}>Sales Invoice #{data.id}</td>
-                  <td style={{ minWidth: 250, width: 250 }}>{data.DetailPenjualan[0].produk_deskripsi}</td>
+                  <td style={{ minWidth: 250, width: 250 }}>
+                    <Form.Control
+                      as="textarea"
+                      style={{ height: "60px" }}
+                      size="sm"
+                      value={props.values.deskripsi}
+                      onChange={(e) => {
+                        let uppercase_word = e.target.value;
+
+                        props.setFieldValue("deskripsi", uppercase_word);
+                      }}
+                    />
+                  </td>
                   <td style={{ minWidth: 150, width: 150 }}>Rp. {data.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</td>
                   <td style={{ minWidth: 150, width: 150 }}>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</td>
                   <td style={{ minWidth: 150, width: 150 }}>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</td>
@@ -187,7 +203,11 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
                         props.setFieldValue(`pajak_total`, total_pajak);
                         props.setFieldValue((props.values.pajak_total = total_pajak));
 
-                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak;
+                        let total_pajak_keluaran = tagihan_sebelum_pajak * (props.values.pajak_keluaran_presentase_aktif / 100);
+                        props.setFieldValue(`pajak_keluaran_total`, total_pajak_keluaran);
+                        props.setFieldValue((props.values.pajak_keluaran_total = total_pajak_keluaran));
+
+                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak_keluaran;
                         props.setFieldValue(`tagihan_setelah_pajak`, tagihan_setelah_pajak);
                         props.setFieldValue((props.values.tagihan_setelah_pajak = tagihan_setelah_pajak));
                       }}
@@ -214,7 +234,11 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
                         props.setFieldValue(`pajak_total`, total_pajak);
                         props.setFieldValue((props.values.pajak_total = total_pajak));
 
-                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak;
+                        let total_pajak_keluaran = tagihan_sebelum_pajak * (props.values.pajak_keluaran_presentase_aktif / 100);
+                        props.setFieldValue(`pajak_keluaran_total`, total_pajak_keluaran);
+                        props.setFieldValue((props.values.pajak_keluaran_total = total_pajak_keluaran));
+
+                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak_keluaran;
                         props.setFieldValue(`tagihan_setelah_pajak`, tagihan_setelah_pajak);
                         props.setFieldValue((props.values.tagihan_setelah_pajak = tagihan_setelah_pajak));
                       }}
@@ -237,8 +261,8 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
                 </tr>
 
                 <tr>
-                  <td className="font-medium text-sm">{props.values.pajak_label}</td>
-                  <td className="text-sm">Rp. {props.values.pajak_total.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                  <td className="font-medium text-sm">{props.values.pajak_keluaran_nama + " - " + props.values.pajak_keluaran_presentase_aktif + "%"}</td>
+                  <td className="text-sm">Rp. {props.values.pajak_keluaran_total.toLocaleString({ minimumFractionDigits: 0 })}</td>
                 </tr>
 
                 <tr>
@@ -311,8 +335,8 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
                 <Link href="/jual/penjualan">
                   <Button variant="danger mr-2">Batal</Button>
                 </Link>
-                <Button variant="success" onClick={props.handleSubmit} disabled={props.values.validation_button}>
-                  Buat Pencetakan
+                <Button variant="success" onClick={props.handleSubmit}>
+                  Update Pencetakan
                 </Button>
               </Col>
             </Row>
@@ -342,6 +366,7 @@ export async function getServerSideProps(context) {
     include: {
       kontak: true,
       DetailPenjualan: true,
+      pajak: true,
     },
   });
 

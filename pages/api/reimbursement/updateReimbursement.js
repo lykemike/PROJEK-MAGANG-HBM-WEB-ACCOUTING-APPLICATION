@@ -8,10 +8,11 @@ export default async (req, res) => {
       yang_mengetahui: req.body.yang_mengetahui,
       yang_menyetujui: req.body.yang_menyetujui,
       periode: req.body.periode,
+      total: parseInt(req.body.total),
       status: "Process",
     };
 
-    const create_header_reimburse = await prisma.headerReimburse.update({
+    const update_header_reimburse = await prisma.headerReimburse.update({
       where: {
         id: parseInt(req.body.id),
       },

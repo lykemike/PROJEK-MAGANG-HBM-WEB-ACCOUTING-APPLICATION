@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import Layout from "../../components/Layout";
+import Layout from "../../../components/Layout";
 import { Row, Col, Form, Button, FormCheck, InputGroup, FormControl, Table } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
@@ -19,56 +19,30 @@ import * as Yup from "yup";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function BuatBiaya({ data, data2, data3, data4 }) {
+export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
   const router = useRouter();
-  const url = "http://localhost:3000/api/biaya/createBiaya";
-
-  const day = new Date();
-  const current = day.toISOString().slice(0, 10);
-
-  const ValidationSchema = Yup.object().shape({
-    akun_id: Yup.string().required("*required"),
-    cara_pembayaran_id: Yup.string().required("*required"),
-  });
+  const url = "http://localhost:3000/api/biaya/updateBiaya";
 
   return (
     <Layout>
       <Head>
-        <title>Buat Biaya</title>
+        <title>Update Biaya</title>
       </Head>
       <Formik
         initialValues={{
-          akun_id: "",
-          tgl_transaksi: current,
-          cara_pembayaran_id: "",
-          harga_termasuk_pajak: false,
-          detail_biaya: [
-            {
-              akun_id: "",
-              akun_nama: "",
-              deskripsi: "",
-              pajak_masukan_id: "",
-              pajak_masukan_nama: "",
-              pajak_masukan_persen: 0,
-              pajak_masukan_per_baris: 0,
-              pajak_keluaran_id: "",
-              pajak_keluaran_nama: "",
-              pajak_keluaran_persen: 0,
-              pajak_keluaran_per_baris: 0,
-              jumlah: 0,
-              termasuk_jumlah: 0,
-              termasuk_pajak_masukan: 0,
-              termasuk_pajak_keluaran: 0,
-            },
-          ],
-          pajak_masukan_total: 0,
-          pajak_keluaran_total: 0,
-          memo: "",
+          id: data5.id,
+          akun_id: data5.akun_id,
+          tgl_transaksi: data5.tgl_transaksi,
+          cara_pembayaran_id: data5.cara_pembayaran_id,
+          harga_termasuk_pajak: data5.harga_termasuk_pajak == "false" ? false : true,
+          detail_biaya: data6,
+          pajak_masukan_total: data5.pajak_masukan_total,
+          pajak_keluaran_total: data5.pajak_keluaran_total,
+          memo: data5.memo,
           file_attachment: "",
-          subtotal: 0,
-          total: 0,
+          subtotal: data5.subtotal,
+          total: data5.total,
         }}
-        // validationSchema={ValidationSchema}
         onSubmit={async (values) => {
           let formData = new FormData();
           for (var key in values) {
@@ -87,7 +61,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
           })
             .then(function (response) {
               console.log(response);
-              router.push(`view/${response.data[0].id.id}`);
+              router.push(`../view/${response.data[0].id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -99,7 +73,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
             <Breadcrumbs aria-label="breadcrumb">
               <Typography color="textPrimary">Biaya</Typography>
             </Breadcrumbs>
-            <h2 className="text-blue-600">Buat Biaya</h2>
+            <h2 className="text-blue-600">Update Biaya</h2>
             <div className="border-t border-gray-200">
               <Row className="mt-2 mb-2">
                 <Col sm="3">
@@ -110,6 +84,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                   <Select
                     options={data}
                     name="akun_id"
+                    defaultValue={{ label: data5.akun.kode_akun + " - " + data5.akun.nama_akun, value: props.values.akun_id }}
                     onChange={(e) => {
                       props.setFieldValue(`akun_id`, e.value);
                     }}
@@ -126,7 +101,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                 </Col>
                 <Col sm="3">
                   <label className="font-medium">Tanggal Transaksi</label>
-                  <FormControl type="date" name="tgl_transaksi" onChange={props.handleChange} />
+                  <FormControl type="date" name="tgl_transaksi" value={props.values.tgl_transaksi} onChange={props.handleChange} />
                 </Col>
                 <Col sm="3">
                   <label className="font-medium">
@@ -137,6 +112,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                   </label>
                   <Select
                     options={data4}
+                    defaultValue={{ label: data5.cara_pembayaran.nama, value: props.values.cara_pembayaran_id }}
                     onChange={(e) => {
                       props.setFieldValue(`cara_pembayaran_id`, e.value);
                     }}
@@ -149,6 +125,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
               <FormControlLabel
                 label={props.values.harga_termasuk_pajak == false ? "Harga Termasuk Pajak" : "Harga Termasuk Pajak"}
                 labelPlacement="end"
+                checked={props.values.harga_termasuk_pajak}
                 control={
                   <Switch
                     color="primary"
@@ -221,6 +198,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                           >
                             <Select
                               options={data2}
+                              defaultValue={{ label: props.values.detail_biaya[index].akun_nama, value: props.values.detail_biaya[index].akun_id }}
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.akun_id`, e.value);
                                 props.setFieldValue(`detail_biaya.${index}.akun_nama`, e.label);
@@ -234,7 +212,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                               width: 300,
                             }}
                           >
-                            <Form.Control type="text" onChange={(e) => props.setFieldValue(`detail_biaya.${index}.deskripsi`, e.target.value)} />
+                            <Form.Control type="text" value={props.values.detail_biaya[index].deskripsi} onChange={(e) => props.setFieldValue(`detail_biaya.${index}.deskripsi`, e.target.value)} />
                           </td>
 
                           <td
@@ -245,6 +223,13 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                           >
                             <Select
                               options={data3}
+                              defaultValue={{
+                                label:
+                                  props.values.detail_biaya[index].pajak_masukan_id == null
+                                    ? "-"
+                                    : props.values.detail_biaya[index].pajak_masukan_nama + " - " + props.values.detail_biaya[index].pajak_masukan_persen + "%",
+                                value: props.values.detail_biaya[index].pajak_masukan_id,
+                              }}
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.pajak_masukan_id`, e.value);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_masukan_nama`, e.label2);
@@ -328,6 +313,13 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                           >
                             <Select
                               options={data3}
+                              defaultValue={{
+                                label:
+                                  props.values.detail_biaya[index].pajak_keluaran_id == null
+                                    ? "-"
+                                    : props.values.detail_biaya[index].pajak_keluaran_nama + " - " + props.values.detail_biaya[index].pajak_keluaran_persen + "%",
+                                value: props.values.detail_biaya[index].pajak_keluaran_id,
+                              }}
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_id`, e.value);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_nama`, e.label2);
@@ -411,6 +403,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                             <Form.Control
                               type="number"
                               min="0"
+                              value={props.values.detail_biaya[index].jumlah}
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.jumlah`, parseInt(e.target.value));
                                 props.setFieldValue((props.values.detail_biaya[index].jumlah = parseInt(e.target.value)));
@@ -529,7 +522,16 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
               <Col sm="4">
                 <div className="mb-2">
                   <label className="font-medium">Memo</label>
-                  <FormControl style={{ width: 400, resize: "none" }} placeholder="-" as="textarea" rows="3" name="memo" class="px-2 py-2 border border-gray-800" onChange={props.handleChange} />
+                  <FormControl
+                    style={{ width: 400, resize: "none" }}
+                    value={props.values.memo}
+                    placeholder="-"
+                    as="textarea"
+                    rows="3"
+                    name="memo"
+                    class="px-2 py-2 border border-gray-800"
+                    onChange={props.handleChange}
+                  />
                 </div>
 
                 <div>
@@ -600,7 +602,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
               <Col className="d-flex justify-content-end mt-10">
                 <Button variant="danger mr-2">Batal</Button>
                 <Button variant="success" className="ml-2" onClick={props.handleSubmit}>
-                  Bayar
+                  Update Biaya
                 </Button>
               </Col>
             </Row>
@@ -611,7 +613,8 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { edit } = context.query;
   const get_akun_kas_bank = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
@@ -669,12 +672,52 @@ export async function getServerSideProps() {
     });
   });
 
+  const get_header_biaya = await prisma.headerBiaya.findFirst({
+    where: {
+      id: parseInt(edit),
+    },
+    include: {
+      DetailBiaya: {
+        include: {
+          akun: true,
+          pajak_keluaran: true,
+          pajak_masukan: true,
+        },
+      },
+      akun: true,
+      cara_pembayaran: true,
+    },
+  });
+
+  let detail_biaya = [];
+  get_header_biaya.DetailBiaya.map((i) => {
+    detail_biaya.push({
+      akun_id: i.akun_id,
+      akun_nama: i.akun_nama,
+      deskripsi: i.deskripsi,
+      pajak_masukan_id: i.pajak_masukan_id,
+      pajak_masukan_nama: i.pajak_masukan_nama,
+      pajak_masukan_persen: i.pajak_masukan_persen,
+      pajak_masukan_per_baris: i.pajak_masukan_per_baris,
+      pajak_keluaran_id: i.pajak_keluaran_id,
+      pajak_keluaran_nama: i.pajak_keluaran_nama,
+      pajak_keluaran_persen: i.pajak_keluaran_persen,
+      pajak_keluaran_per_baris: i.pajak_keluaran_per_baris,
+      jumlah: i.jumlah,
+      termasuk_jumlah: i.termasuk_jumlah,
+      termasuk_pajak_masukan: i.termasuk_pajak_masukan,
+      termasuk_pajak_keluaran: i.termasuk_pajak_keluaran,
+    });
+  });
+
   return {
     props: {
       data: akun_kas_bank,
       data2: akun_beban,
       data3: pajak,
       data4: cara_pembayaran,
+      data5: get_header_biaya,
+      data6: detail_biaya,
     },
   };
 }

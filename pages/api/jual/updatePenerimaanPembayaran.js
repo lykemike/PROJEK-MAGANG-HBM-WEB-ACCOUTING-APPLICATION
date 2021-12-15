@@ -7,12 +7,14 @@ export default async (req, res) => {
       header_penjualan_id: parseInt(req.body.header_penjualan_id),
       akun_id: parseInt(req.body.setor_ke),
       tgl_pembayaran: req.body.tgl_pembayaran,
+      deskripsi: req.body.deskripsi,
       pajak_id: parseInt(req.body.pajak_id),
       pajak_nama: req.body.pajak_nama,
       pajak_persen: parseInt(req.body.pajak_persen),
       presentase_penagihan: parseInt(req.body.presentase_penagihan),
       tagihan_sebelum_pajak: parseInt(req.body.tagihan_sebelum_pajak),
       pajak_total: parseInt(req.body.pajak_total),
+      pajak_keluaran_total: parseInt(req.body.pajak_keluaran_total),
       tagihan_setelah_pajak: parseInt(req.body.tagihan_setelah_pajak),
       say: req.body.say,
       bank_id: parseInt(req.body.bank_id),
@@ -124,8 +126,8 @@ export default async (req, res) => {
       let akun_pendapatan_bersih = get_header_penjualan.DetailPenjualan[0].produk.akun_id;
 
       // Nominal akun
-      let nominal_piutang = parseInt(req.body.tagihan_sebelum_pajak) - parseInt(req.body.pajak_total);
-      let nominal_pajak_masukan = parseInt(req.body.pajak_total);
+      let nominal_piutang = parseInt(req.body.tagihan_sebelum_pajak) - parseInt(req.body.pajak_keluaran_total);
+      let nominal_pajak_masukan = parseInt(req.body.pajak_keluaran_total);
       let nominal_pendapatan_bersih = parseInt(req.body.tagihan_sebelum_pajak);
 
       const create_new_jurnal = await prisma.jurnalPenerimaanPembayaran.createMany({
@@ -133,6 +135,7 @@ export default async (req, res) => {
           {
             header_penjualan_id: get_header_penjualan.id,
             penerimaan_pembayaran_id: get_penerimaan_pembayaran.id,
+            tanggal: req.body.tgl_pembayaran,
             akun_id: parseInt(akun_piutang),
             nominal: parseInt(nominal_piutang),
             tipe_saldo: "Debit",
@@ -140,6 +143,7 @@ export default async (req, res) => {
           {
             header_penjualan_id: get_header_penjualan.id,
             penerimaan_pembayaran_id: get_penerimaan_pembayaran.id,
+            tanggal: req.body.tgl_pembayaran,
             akun_id: parseInt(akun_pajak_masukan),
             nominal: parseInt(nominal_pajak_masukan),
             tipe_saldo: "Debit",
@@ -147,6 +151,7 @@ export default async (req, res) => {
           {
             header_penjualan_id: get_header_penjualan.id,
             penerimaan_pembayaran_id: get_penerimaan_pembayaran.id,
+            tanggal: req.body.tgl_pembayaran,
             akun_id: parseInt(akun_pendapatan_bersih),
             nominal: parseInt(nominal_pendapatan_bersih),
             tipe_saldo: "Kredit",
@@ -225,6 +230,7 @@ export default async (req, res) => {
           {
             header_penjualan_id: get_header_penjualan.id,
             penerimaan_pembayaran_id: get_penerimaan_pembayaran.id,
+            tanggal: req.body.tgl_pembayaran,
             akun_id: parseInt(akun_piutang),
             nominal: parseInt(nominal_piutang),
             tipe_saldo: "Debit",
@@ -232,6 +238,7 @@ export default async (req, res) => {
           {
             header_penjualan_id: get_header_penjualan.id,
             penerimaan_pembayaran_id: get_penerimaan_pembayaran.id,
+            tanggal: req.body.tgl_pembayaran,
             akun_id: parseInt(akun_pajak_masukan),
             nominal: parseInt(nominal_pajak_masukan),
             tipe_saldo: "Debit",
@@ -239,6 +246,7 @@ export default async (req, res) => {
           {
             header_penjualan_id: get_header_penjualan.id,
             penerimaan_pembayaran_id: get_penerimaan_pembayaran.id,
+            tanggal: req.body.tgl_pembayaran,
             akun_id: parseInt(akun_pajak_keluaran),
             nominal: parseInt(nominal_pajak_keluaran),
             tipe_saldo: "Kredit",
@@ -246,6 +254,7 @@ export default async (req, res) => {
           {
             header_penjualan_id: get_header_penjualan.id,
             penerimaan_pembayaran_id: get_penerimaan_pembayaran.id,
+            tanggal: req.body.tgl_pembayaran,
             akun_id: parseInt(akun_pendapatan_bersih),
             nominal: parseInt(nominal_pendapatan_bersih),
             tipe_saldo: "Kredit",
