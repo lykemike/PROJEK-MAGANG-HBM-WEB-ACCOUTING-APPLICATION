@@ -7,7 +7,8 @@ export default async (req, res) => {
       nama_pegawai: req.body.nama_pegawai,
       yang_mengetahui: req.body.yang_mengetahui,
       yang_menyetujui: req.body.yang_menyetujui,
-      periode: req.body.periode,
+      periode_id: parseInt(req.body.periode_id),
+      total: parseInt(req.body.total),
       status: "Process",
     };
 

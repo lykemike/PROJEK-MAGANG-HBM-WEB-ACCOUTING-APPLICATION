@@ -29,13 +29,7 @@ export default function create_jurnal({ data, data2 }) {
   const current = day.toISOString().slice(0, 10);
 
   function SelectField(FieldProps) {
-    return (
-      <Select
-        options={data}
-        isClearable={false}
-        onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)}
-      />
-    );
+    return <Select options={data} isClearable={false} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
   }
   return (
     <Layout>
@@ -118,11 +112,7 @@ export default function create_jurnal({ data, data2 }) {
 
               <Col sm="6">
                 <div className="flex justify-end items-center">
-                  {props.values.balance == "Balance" ? (
-                    <h1 className="text-green-500">Balance</h1>
-                  ) : (
-                    <h2 className="text-red-500">{props.values.balance}</h2>
-                  )}
+                  {props.values.balance == "Balance" ? <h1 className="text-green-500">Balance</h1> : <h2 className="text-red-500">{props.values.balance}</h2>}
                 </div>
               </Col>
             </Row>
@@ -133,15 +123,7 @@ export default function create_jurnal({ data, data2 }) {
               </Col>
               <Col sm="1" />
               <Col sm="2">
-                <FormControl
-                  placeholder="Pick date"
-                  type="date"
-                  aria-label="date"
-                  onChange={props.handleChange}
-                  name="tgl_transaksi"
-                  value={current}
-                  disabled
-                />
+                <FormControl placeholder="Pick date" type="date" aria-label="date" onChange={props.handleChange} name="tgl_transaksi" value={current} disabled />
                 {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
               </Col>
             </Row>
@@ -394,11 +376,7 @@ export default function create_jurnal({ data, data2 }) {
                   <Form.Group as={Row} controlId="formPlaintext">
                     <Col sm="3">
                       File Attachment <br />
-                      <Form.File
-                        type="file"
-                        name="fileattachment"
-                        onChange={(e) => props.setFieldValue("fileattachment", e.target.files)}
-                      />
+                      <Form.File type="file" name="fileattachment" onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                     </Col>
                   </Form.Group>
                 </Form>

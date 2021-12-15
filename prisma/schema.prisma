@@ -83,13 +83,14 @@ model Akun {
 
   Produk  Produk[]
 
-  HeaderBiaya1    HeaderBiaya[]     @relation("akun_kas_bank")
-  HeaderBiaya2    HeaderBiaya[]     @relation("akun_pendapatan")
-  DetailBiaya1     DetailBiaya[]    @relation("Akun_Biaya")
-  DetailBiaya2     DetailBiaya[]    @relation("pajak_akun_beli")
-  PengirimanBiaya PengirimanBiaya[]
+  HeaderBiaya      HeaderBiaya[]  
+  DetailBiaya      DetailBiaya[]
 
-  PenerimaanPembayaran PenerimaanPembayaran[]
+  // Penjualan
+  PenerimaanPembayaran        PenerimaanPembayaran[]
+  JurnalPenerimaanPembayaran  JurnalPenerimaanPembayaran[]
+  DetailBank                  DetailBank[]
+
 
   HeaderPembelian1  HeaderPembelian[]   @relation("akunPemotonganPembelian")
   HeaderPembelian2  HeaderPembelian[]   @relation("akunUangMukaPembelian")
@@ -120,7 +121,7 @@ model Akun {
 
   // Jurnal
   // JurnalPenjualan             JurnalPenjualan[]
-  JurnalPenerimaanPembayaran  JurnalPenerimaanPembayaran[]
+  
   JurnalTransferUang          JurnalTransferUang[]
   JurnalTerimaUang            JurnalTerimaUang[]
   JurnalKirimUang             JurnalKirimUang[]
@@ -130,13 +131,10 @@ model Akun {
   JurnalPembelian             JurnalPembelian[]
   JurnalPengirimanBayaran     JurnalPengirimanBayaran[]
   JurnalBiaya                 JurnalBiaya[]
-  JurnalPengirimanBiaya       JurnalPengirimanBiaya[]
 
   DetailSaldoAwal DetailSaldoAwal[]
   DetailBankStatement DetailBankStatement[]
   JurnalBankStatement JurnalBankStatement[]
-
-  DetailBank  DetailBank[]
 }
 
 model HeaderSaldoAwal {
@@ -214,7 +212,6 @@ model Kontak {
   HeaderPembelian HeaderPembelian[]
 
   KontakDetail KontakDetail[]
-  HeaderBiaya  HeaderBiaya[]
 
   HeaderTerimaUang  HeaderTerimaUang[]
   HeaderKirimUang   HeaderKirimUang[]
@@ -277,16 +274,16 @@ model Pajak {
   kategori2       Akun   @relation("akunPembeli", fields: [akun_beli], references: [id])
   akun_beli       Int
 
-  HeaderPenjualan HeaderPenjualan[]
+  HeaderPenjualan       HeaderPenjualan[]
   PenerimaanPembayaran  PenerimaanPembayaran[]
 
-  DetailPembelian DetailPembelian[]
+  DetailPembelian       DetailPembelian[]
+ 
+  DetailBiaya1          DetailBiaya[] @relation("pajak_masukan")
+  DetailBiaya2          DetailBiaya[] @relation("pajak_keluaran")
 
-  DetailBiaya DetailBiaya[]
-
-  DetailTerimaUang DetailTerimaUang[]
-
-  DetailKirimUang DetailKirimUang[]
+  DetailTerimaUang      DetailTerimaUang[]
+  DetailKirimUang       DetailKirimUang[]
 }
 
 model SyaratPembayaran {
@@ -371,6 +368,8 @@ model PenerimaanPembayaran {
   presentase_penagihan  Int
   tagihan_sebelum_pajak Int
   pajak_total           Int
+  pajak_keluaran_total  Int
+  deskripsi             String
   tagihan_setelah_pajak Int
   say                   String
   bank                  DetailBank  @relation(fields: [bank_id], references: [id])
@@ -385,7 +384,7 @@ model JurnalPenerimaanPembayaran {
   id                   Int             @id @default(autoincrement())
   header_penjualan     HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
   header_penjualan_id  Int
-
+  tanggal              String
   penerimaan_pembayaran PenerimaanPembayaran @relation(fields: [penerimaan_pembayaran_id], references: [id])
   penerimaan_pembayaran_id Int
   akun                 Akun @relation(fields: [akun_id], references: [id])
@@ -500,90 +499,91 @@ model JurnalPengirimanBayaran {
 
 // Header Biaya Table
 model HeaderBiaya {
-  id               Int    @id @default(autoincrement())
-  akun1            Akun   @relation("akun_kas_bank", fields: [akun_kas_bank], references: [id])
-  akun_kas_bank    Int
-  kontak           Kontak @relation(fields: [nama_penerima], references: [id])
-  nama_penerima    Int
-  tgl_transaksi    String
-  cara_pembayaran  String
-  no_transaksi     Int    @unique
-  alamat_penagihan String
-  tag              String
+  id                    Int     @id @default(autoincrement())
+  
+  akun                  Akun    @relation(fields: [akun_id], references: [id])
+  akun_id               Int
 
-  memo           String
-  fileattachment String
-
-  subtotal         Int
-  akun2            Akun @relation("akun_pendapatan", fields: [akun_pemotongan], references: [id])
-  akun_pemotongan  Int
-  total            Int
-  pemotongan       Int
-  sisa_tagihan      Int
-  change_view       Boolean
-  total_pajak_per_baris   Int
-  status            String
-
-  detail_biaya          DetailBiaya[]
-  jurnal_biaya          JurnalBiaya[]
-  pengirimanbiaya       PengirimanBiaya[]
-  jurnalpengirimanbiaya JurnalPengirimanBiaya[]
-}
-
-model JurnalBiaya {
-  id              Int         @id @default(autoincrement())
-  headerbiaya     HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
-  header_biaya_id Int
-  akun_biaya      Akun @relation(fields: [akun_biaya_id], references:[id])
-  akun_biaya_id   Int
-  nominal         Int
-  tipe_saldo      String
+  tgl_transaksi         String
+  harga_termasuk_pajak  String
+  pajak_masukan_total    Int
+  pajak_keluaran_total    Int
+  memo                  String
+  file_attachment       String
+  subtotal              Int
+  total                 Int
+  cara_pembayaran  CaraPembayaran @relation(fields: [cara_pembayaran_id], references: [id])
+  cara_pembayaran_id  Int
+  DetailBiaya         DetailBiaya[]
+  JurnalBiaya         JurnalBiaya[]
+  // pengirimanbiaya       PengirimanBiaya[]
+  // jurnalpengirimanbiaya JurnalPengirimanBiaya[]
 }
 
 // Detail Biaya Table
 model DetailBiaya {
-  id              Int         @id @default(autoincrement())
-  header_biaya    HeaderBiaya @relation(fields: [header_biaya_id], references: [no_transaksi])
-  header_biaya_id Int
+  id                Int           @id @default(autoincrement())
+  header_biaya      HeaderBiaya   @relation(fields: [header_biaya_id], references: [id])
+  header_biaya_id   Int
 
-  akun_biaya           Akun   @relation("Akun_Biaya",fields: [akun_biaya_id], references: [id])
-  akun_biaya_id        Int
-  nama_akun            String
-  deskripsi            String
-  pajak                Pajak  @relation(fields: [pajak_id], references: [id])
-  pajak_id             Int
-  pajak_nama           String
-  pajak_akun_beli      Akun   @relation("pajak_akun_beli",fields: [pajak_akun_beli_id], references: [id])
-  pajak_akun_beli_id   Int
-  pajak_persen         Int
-  hasil_pajak          Int
-  jumlah               Int
-  jumlah2              Int
+  akun              Akun          @relation(fields: [akun_id], references: [id])
+  akun_id           Int
+  akun_nama         String
+  deskripsi         String
+
+  pajak_masukan            Pajak?         @relation("pajak_masukan", fields: [pajak_masukan_id], references: [id])
+  pajak_masukan_id         Int?
+  pajak_masukan_nama       String?
+  pajak_masukan_persen     Int?
+  pajak_masukan_per_baris  Int?
+  
+
+  pajak_keluaran            Pajak?         @relation("pajak_keluaran", fields: [pajak_keluaran_id], references: [id])
+  pajak_keluaran_id         Int?
+  pajak_keluaran_nama       String?
+  pajak_keluaran_persen     Int?
+  pajak_keluaran_per_baris  Int?
+  
+  jumlah            Int
+  termasuk_jumlah   Int
+  termasuk_pajak_masukan     Int
+  termasuk_pajak_keluaran     Int
 }
 
-model PengirimanBiaya {
-  id              Int         @id @default(autoincrement())
-  header_biaya    HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
-  header_biaya_id Int
-
-  akun            Akun   @relation(fields: [akun_id], references: [id])
-  akun_id         Int
-  cara_pembayaran String
-  tgl_pembayaran  String
-  tgl_jauth_tempo String
-
-  jumlah Int
+model JurnalBiaya {
+  id                Int         @id @default(autoincrement())
+  header_biaya      HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
+  header_biaya_id   Int
+  akun              Akun?        @relation(fields: [akun_id], references:[id])
+  akun_id           Int?
+  nominal           Int?
+  tipe_saldo        String
 }
 
-model JurnalPengirimanBiaya {
-  id                   Int         @id @default(autoincrement())
-  header_biaya         HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
-  header_biaya_id      Int
-  akun                 Akun   @relation(fields: [akun_id], references: [id])
-  akun_id              Int
-  nominal              Int
-  tipe_saldo           String
-}
+
+// model PengirimanBiaya {
+//   id              Int         @id @default(autoincrement())
+//   header_biaya    HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
+//   header_biaya_id Int
+
+//   akun            Akun   @relation(fields: [akun_id], references: [id])
+//   akun_id         Int
+//   cara_pembayaran String
+//   tgl_pembayaran  String
+//   tgl_jauth_tempo String
+
+//   jumlah Int
+// }
+
+// model JurnalPengirimanBiaya {
+//   id                   Int         @id @default(autoincrement())
+//   header_biaya         HeaderBiaya @relation(fields: [header_biaya_id], references: [id])
+//   header_biaya_id      Int
+//   akun                 Akun   @relation(fields: [akun_id], references: [id])
+//   akun_id              Int
+//   nominal              Int
+//   tipe_saldo           String
+// }
 
 // Setting Penjualan, Pembelian, dan Biaya
 
@@ -634,7 +634,7 @@ model HeaderTerimaUang {
   tgl_transaksi   String
   tag             String
   memo            String
-  file_attachment String
+  file_attachment String?
   subtotal        Int
   pajak           Int
   total           Int
@@ -865,7 +865,9 @@ model HeaderReimburse {
   nama_pegawai      String
   yang_mengetahui   String
   yang_menyetujui   String  
-  periode           String
+  periode           Periode @relation(fields: [periode_id], references: [id])
+  periode_id        Int
+  total             Int
   status            String  
 
   DetailReimburse   DetailReimburse[]
@@ -921,4 +923,18 @@ model DetailBank {
     atas_nama       String
 
     PenerimaanPembayaran  PenerimaanPembayaran[]
+}
+
+model CaraPembayaran {
+  id            Int     @id @default(autoincrement())
+  nama          String
+
+  HeaderBiaya   HeaderBiaya[]
+}
+
+model Periode {
+  id                Int                 @id @default(autoincrement())
+  nama              String
+  HeaderReimburse   HeaderReimburse[]
+   
 }

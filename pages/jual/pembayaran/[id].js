@@ -5,17 +5,7 @@ import { Row, Col, Form, Button, FormCheck, Table, InputGroup, FormControl } fro
 import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
 
-import {
-  Breadcrumbs,
-  Table as Tables,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-} from "@material-ui/core/";
+import { Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import Select from "react-select";
@@ -30,7 +20,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
   const router = useRouter();
   const { id } = router.query;
 
-  const url = "http://localhost:3000/api/jual/penerimaanPembayaran";
+  const url = "http://localhost:3000/api/jual/createPenerimaanPembayaran";
 
   function pembayaran() {
     router.push(`../pembayaran/view/${id}`);
@@ -63,7 +53,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
           pajak_persen: 0,
 
           presentase_penagihan: 0,
-
+          deskripsi: "-",
           subtotal: data[0].subtotal,
           tagihan_sebelum_pajak: 0,
           pajak_label: "Pajak",
@@ -73,6 +63,10 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
 
           bank_id: "",
           tipe_perusahaan: data[0].tipe_perusahaan,
+
+          pajak_keluaran_nama: data[0].pajak.nama,
+          pajak_keluaran_presentase_aktif: data[0].pajak.presentase_aktif,
+          pajak_keluaran_total: 0,
         }}
         validationSchema={ValidationSchema}
         onSubmit={async (values) => {
@@ -104,9 +98,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
                 <Col sm="3">
                   <label className="font-medium">
                     Setor Ke
-                    {props.errors.setor_ke && props.touched.setor_ke ? (
-                      <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.setor_ke}</span>
-                    ) : null}
+                    {props.errors.setor_ke && props.touched.setor_ke ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.setor_ke}</span> : null}
                   </label>
                   <Select
                     options={data2}
@@ -135,13 +127,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
 
                 <Col sm="3">
                   <label className="font-medium">Tanggal Pembayaran</label>
-                  <Form.Control
-                    placeholder=""
-                    type="date"
-                    name="tgl_pembayaran"
-                    value={props.values.tgl_pembayaran}
-                    onChange={props.handleChange}
-                  />
+                  <Form.Control placeholder="" type="date" name="tgl_pembayaran" value={props.values.tgl_pembayaran} onChange={props.handleChange} />
                 </Col>
 
                 <Col sm="3">
@@ -183,14 +169,21 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
               <tbody>
                 <tr>
                   <td style={{ minWidth: 250, width: 250 }}>Sales Invoice #{data[0].id}</td>
-                  <td style={{ minWidth: 250, width: 250 }}>{data[0].DetailPenjualan[0].produk_deskripsi}</td>
-                  <td style={{ minWidth: 150, width: 150 }}>
-                    Rp. {data[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}
+                  <td style={{ minWidth: 250, width: 250 }}>
+                    <Form.Control
+                      as="textarea"
+                      style={{ height: "60px" }}
+                      size="sm"
+                      onChange={(e) => {
+                        let uppercase_word = e.target.value;
+
+                        props.setFieldValue("deskripsi", uppercase_word);
+                      }}
+                    />
                   </td>
+                  <td style={{ minWidth: 150, width: 150 }}>Rp. {data[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</td>
                   <td style={{ minWidth: 150, width: 150 }}>Rp. {data[0].total.toLocaleString({ minimumFractionDigits: 0 })}</td>
-                  <td style={{ minWidth: 150, width: 150 }}>
-                    Rp. {data[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
-                  </td>
+                  <td style={{ minWidth: 150, width: 150 }}>Rp. {data[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</td>
                   <td style={{ minWidth: 300, width: 300 }}>
                     <Select
                       options={data3}
@@ -209,14 +202,16 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
                         props.setFieldValue(`pajak_total`, total_pajak);
                         props.setFieldValue((props.values.pajak_total = total_pajak));
 
-                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak;
+                        let total_pajak_keluaran = tagihan_sebelum_pajak * (props.values.pajak_keluaran_presentase_aktif / 100);
+                        props.setFieldValue(`pajak_keluaran_total`, total_pajak_keluaran);
+                        props.setFieldValue((props.values.pajak_keluaran_total = total_pajak_keluaran));
+
+                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak_keluaran;
                         props.setFieldValue(`tagihan_setelah_pajak`, tagihan_setelah_pajak);
                         props.setFieldValue((props.values.tagihan_setelah_pajak = tagihan_setelah_pajak));
                       }}
                     />
-                    {props.errors.pajak_id && props.touched.pajak_id ? (
-                      <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.pajak_id}</span>
-                    ) : null}
+                    {props.errors.pajak_id && props.touched.pajak_id ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.pajak_id}</span> : null}
                   </td>
                   <td style={{ minWidth: 100, width: 100 }}>
                     <FormControl
@@ -237,7 +232,11 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
                         props.setFieldValue(`pajak_total`, total_pajak);
                         props.setFieldValue((props.values.pajak_total = total_pajak));
 
-                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak;
+                        let total_pajak_keluaran = tagihan_sebelum_pajak * (props.values.pajak_keluaran_presentase_aktif / 100);
+                        props.setFieldValue(`pajak_keluaran_total`, total_pajak_keluaran);
+                        props.setFieldValue((props.values.pajak_keluaran_total = total_pajak_keluaran));
+
+                        let tagihan_setelah_pajak = tagihan_sebelum_pajak + total_pajak_keluaran;
                         props.setFieldValue(`tagihan_setelah_pajak`, tagihan_setelah_pajak);
                         props.setFieldValue((props.values.tagihan_setelah_pajak = tagihan_setelah_pajak));
                       }}
@@ -248,13 +247,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
                       <InputGroup.Append>
                         <InputGroup.Text>Rp. </InputGroup.Text>
                       </InputGroup.Append>
-                      <Form.Control
-                        disabled
-                        type="number"
-                        name="tagihan_sebelum_pajak"
-                        min="0"
-                        placeholder={props.values.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}
-                      />
+                      <Form.Control disabled type="number" name="tagihan_sebelum_pajak" min="0" placeholder={props.values.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })} />
                     </InputGroup>
                   </td>
                 </tr>
@@ -262,30 +255,22 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
               <tfoot>
                 <tr>
                   <td className="font-medium text-sm">Jumlah Tagihan Sebelum Pajak</td>
-                  <td className="text-sm">
-                    Rp. {props.values.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}
-                  </td>
+                  <td className="text-sm">Rp. {props.values.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</td>
                 </tr>
 
                 <tr>
-                  <td className="font-medium text-sm">
-                    {props.values.pajak_label == "Pajak" ? "Pajak" : props.values.pajak_label}
-                  </td>
-                  <td className="text-sm">Rp. {props.values.pajak_total.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                  <td className="font-medium text-sm">{props.values.pajak_keluaran_nama + " - " + props.values.pajak_keluaran_presentase_aktif + "%"}</td>
+                  <td className="text-sm">Rp. {props.values.pajak_keluaran_total.toLocaleString({ minimumFractionDigits: 0 })}</td>
                 </tr>
 
                 <tr>
                   <td className="font-medium text-sm">Jumlah Tagihan Setelah Pajak</td>
-                  <td className="text-sm">
-                    Rp. {props.values.tagihan_setelah_pajak.toLocaleString({ minimumFractionDigits: 0 })}
-                  </td>
+                  <td className="text-sm">Rp. {props.values.tagihan_setelah_pajak.toLocaleString({ minimumFractionDigits: 0 })}</td>
                 </tr>
                 <tr>
                   <td className="font-medium text-sm">
                     Terbilang
-                    {props.errors.say && props.touched.say ? (
-                      <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.say}</span>
-                    ) : null}
+                    {props.errors.say && props.touched.say ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.say}</span> : null}
                   </td>
                   <td>
                     <Form.Control
@@ -310,9 +295,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
               <Col sm="3">
                 <label className="font-medium text-sm">
                   Bank
-                  {props.errors.bank_id && props.touched.bank_id ? (
-                    <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.bank_id}</span>
-                  ) : null}
+                  {props.errors.bank_id && props.touched.bank_id ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.bank_id}</span> : null}
                 </label>
                 <Select
                   options={data4}
@@ -370,6 +353,7 @@ export async function getServerSideProps(context) {
     include: {
       kontak: true,
       DetailPenjualan: true,
+      pajak: true,
     },
   });
 

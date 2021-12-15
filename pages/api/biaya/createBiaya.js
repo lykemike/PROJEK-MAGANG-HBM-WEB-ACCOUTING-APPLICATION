@@ -50,37 +50,33 @@ export default async (req, res) => {
       total: parseInt(req.body.total),
     };
 
-    const header_biaya_id = parseInt(req.body.id);
+    const create_header_biaya = await prisma.headerBiaya.createMany({
+      data: [frontend_data],
+      skipDuplicates: true,
+    });
 
-    const update_header_biaya = await prisma.headerBiaya.updateMany({
-      where: {
-        id: header_biaya_id,
+    const find_latest = await prisma.headerBiaya.findFirst({
+      orderBy: {
+        id: "desc",
       },
-      data: frontend_data,
     });
 
     let termasuk_pajak = req.body.harga_termasuk_pajak;
 
-    const delete_detail_biaya = await prisma.detailBiaya.deleteMany({
-      where: {
-        header_biaya_id: header_biaya_id,
-      },
-    });
-
     let detail = [];
     JSON.parse(req.body.detail_biaya).map((i) => {
       detail.push({
-        header_biaya_id: header_biaya_id,
+        header_biaya_id: find_latest.id,
         akun_id: parseInt(i.akun_id),
         akun_nama: i.akun_nama,
         deskripsi: i.deskripsi,
 
-        pajak_masukan_id: i.pajak_masukan_id == null || i.pajak_masukan_id == "" ? null : parseInt(i.pajak_masukan_id),
+        pajak_masukan_id: i.pajak_masukan_id == "" ? null : parseInt(i.pajak_masukan_id),
         pajak_masukan_nama: i.pajak_masukan_nama == "" ? "-" : i.pajak_masukan_nama,
         pajak_masukan_persen: i.pajak_masukan_persen == "" || i.pajak_masukan_persen == 0 ? 0 : parseInt(i.pajak_masukan_persen),
         pajak_masukan_per_baris: i.pajak_masukan_per_baris == "" || i.pajak_masukan_per_baris == 0 ? 0 : parseInt(i.pajak_masukan_per_baris),
 
-        pajak_keluaran_id: i.pajak_keluaran_id == null || i.pajak_keluaran_id == "" ? null : parseInt(i.pajak_keluaran_id),
+        pajak_keluaran_id: i.pajak_keluaran_id == "" ? null : parseInt(i.pajak_keluaran_id),
         pajak_keluaran_nama: i.pajak_keluaran_nama == "" ? "-" : i.pajak_keluaran_nama,
         pajak_keluaran_persen: i.pajak_keluaran_persen == "" || i.pajak_keluaran_persen == 0 ? 0 : parseInt(i.pajak_keluaran_persen),
         pajak_keluaran_per_baris: i.pajak_keluaran_per_baris == "" || i.pajak_keluaran_per_baris == 0 ? 0 : parseInt(i.pajak_keluaran_per_baris),
@@ -96,17 +92,11 @@ export default async (req, res) => {
       data: detail,
     });
 
-    const delete_jurnal_biaya = await prisma.jurnalBiaya.deleteMany({
-      where: {
-        header_biaya_id: header_biaya_id,
-      },
-    });
-
     if (termasuk_pajak == "false") {
       let jurnal_akun_debit = [];
       detail.map((i) => {
         jurnal_akun_debit.push({
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: parseInt(i.akun_id),
           nominal: parseInt(i.jumlah),
           tipe_saldo: "Debit",
@@ -116,7 +106,7 @@ export default async (req, res) => {
       let jurnal_pajak_masukan = [];
       detail.map((i) => {
         jurnal_pajak_masukan.push({
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: i.pajak_masukan_id == null ? null : parseInt(i.pajak_masukan_id),
           nominal: i.pajak_masukan_per_baris == 0 ? 0 : parseInt(i.pajak_masukan_per_baris),
           tipe_saldo: "Debit",
@@ -126,7 +116,7 @@ export default async (req, res) => {
       let jurnal_pajak_keluaran = [];
       detail.map((i) => {
         jurnal_pajak_keluaran.push({
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: i.pajak_keluaran_id == null ? null : parseInt(i.pajak_keluaran_id),
           nominal: i.pajak_keluaran_per_baris == 0 ? 0 : parseInt(i.pajak_keluaran_per_baris),
           tipe_saldo: "Kredit",
@@ -144,7 +134,7 @@ export default async (req, res) => {
       });
       const create_jurnal_4 = await prisma.jurnalBiaya.createMany({
         data: {
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: parseInt(req.body.akun_id),
           nominal: parseInt(req.body.total),
           tipe_saldo: "Kredit",
@@ -154,7 +144,7 @@ export default async (req, res) => {
       let jurnal_akun_debit = [];
       detail.map((i) => {
         jurnal_akun_debit.push({
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: parseInt(i.akun_id),
           nominal: parseInt(i.termasuk_jumlah),
           tipe_saldo: "Debit",
@@ -164,7 +154,7 @@ export default async (req, res) => {
       let jurnal_pajak_masukan = [];
       detail.map((i) => {
         jurnal_pajak_masukan.push({
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: i.pajak_masukan_id == null ? null : parseInt(i.pajak_masukan_id),
           nominal: i.termasuk_pajak_masukan == 0 ? 0 : parseInt(i.termasuk_pajak_masukan),
           tipe_saldo: "Debit",
@@ -174,7 +164,7 @@ export default async (req, res) => {
       let jurnal_pajak_keluaran = [];
       detail.map((i) => {
         jurnal_pajak_keluaran.push({
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: i.pajak_keluaran_id == null ? null : parseInt(i.pajak_keluaran_id),
           nominal: i.termasuk_pajak_keluaran == 0 ? 0 : parseInt(i.termasuk_pajak_keluaran),
           tipe_saldo: "Kredit",
@@ -192,7 +182,7 @@ export default async (req, res) => {
       });
       const create_jurnal_4 = await prisma.jurnalBiaya.createMany({
         data: {
-          header_biaya_id: header_biaya_id,
+          header_biaya_id: find_latest.id,
           akun_id: parseInt(req.body.akun_id),
           nominal: parseInt(req.body.total),
           tipe_saldo: "Kredit",
@@ -200,11 +190,11 @@ export default async (req, res) => {
       });
     }
 
-    const mess = "Update biaya success";
+    const mess = "Create biaya success";
 
-    res.status(201).json([{ message: "Update biaya success!", data: mess, id: header_biaya_id }]);
+    res.status(201).json([{ message: "Create biaya success!", data: frontend_data, id: find_latest }]);
   } catch (error) {
-    res.status(400).json([{ data: "Update detail biaya failed!", error }]);
+    res.status(400).json([{ data: "Failed to create detail biaya!", error }]);
     console.log(error);
   }
 };

@@ -4,18 +4,7 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import { Row, Col, Button, DropdownButton, Dropdown, FormControl } from "react-bootstrap";
 
-import {
-  Breadcrumbs,
-  Typography,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-  TableFooter,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, TableFooter } from "@material-ui/core";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -40,10 +29,7 @@ export default function salesInvoice({ data, header }) {
     router.push(`../proforma-invoice/${id}`);
   }
 
-  const jurnal_penerimaan_pembayaran = header[0].JurnalPenerimaanPembayaran.filter((i) => i.tipe_saldo === "Debit").reduce(
-    (a, b) => (a = a + b.nominal),
-    0
-  );
+  const jurnal_penerimaan_pembayaran = header[0].JurnalPenerimaanPembayaran.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
     <Layout>
@@ -61,9 +47,7 @@ export default function salesInvoice({ data, header }) {
             <h2 className="text-blue-600">Sales Invoice #{id}</h2>
           </Col>
           <Col sm="4">
-            <div className="d-flex justify-content-end">
-              {header[0].sisa_tagihan > 0 ? <h3>Terbayar Sebagian</h3> : <h3 className="text-green-500">Lunas</h3>}
-            </div>
+            <div className="d-flex justify-content-end">{header[0].sisa_tagihan > 0 ? <h3>Terbayar Sebagian</h3> : <h3 className="text-green-500">Lunas</h3>}</div>
           </Col>
         </Row>
       </div>
@@ -158,6 +142,12 @@ export default function salesInvoice({ data, header }) {
             <TableCell />
             <TableCell align="right">SubTotal</TableCell>
             <TableCell>Rp. {header[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell />
+            <TableCell align="right">{header[0].pajak_nama + " - " + header[0].pajak_persen + "%"}</TableCell>
+            <TableCell>Rp. {header[0].pajak_hasil.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell />

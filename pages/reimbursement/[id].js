@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "../../components/layout";
 import Link from "next/link";
-import { Button, Row, Col, Form } from "react-bootstrap";
+import { Button, Row, Col, Form, Table } from "react-bootstrap";
 import { Formik, Form as Forms, FieldArray } from "formik";
 import * as Yup from "yup";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -10,12 +10,14 @@ import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Axios from "axios";
+import { Add, Backspace } from "@material-ui/icons/";
+import Select from "react-select";
 import { useRouter } from "next/router";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function updateReimbursement({ header, detail }) {
+export default function updateReimbursement({ data, header, detail }) {
   const router = useRouter();
   const { id } = router.query;
 
@@ -23,21 +25,23 @@ export default function updateReimbursement({ header, detail }) {
     router.push("../reimbursement/tabel-reimbursement");
   }
 
-  const api_update_reimbursement = "http://localhost:3000/api/reimbursement/updateReimbursement";
+  const api_update = "http://localhost:3000/api/reimbursement/updateReimbursement";
 
   return (
     <Formik
       initialValues={{
+        id: id,
         nama_pegawai: header.nama_pegawai,
         yang_mengetahui: header.yang_mengetahui,
         yang_menyetujui: header.yang_menyetujui,
-        periode: header.periode,
+        periode_id: header.periode_id,
+        periode_nama: header.periode.nama,
         status: header.status,
+        total: header.total,
         detail_reimburse: detail,
       }}
       onSubmit={(values) => {
-        let data = { ...values, id };
-        Axios.put(api_update_reimbursement, data)
+        Axios.put(api_update, values)
           .then(function (response) {
             console.log(response);
             router.push(`view/${response.data.id}`);
@@ -52,9 +56,6 @@ export default function updateReimbursement({ header, detail }) {
           <Layout>
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="../reimbursement/tabel-reimbursement">
-                  Tabel Reimbursement
-                </Link>
                 <Typography color="textPrimary">Update Reimbursement</Typography>
               </Breadcrumbs>
               <Row>
@@ -68,185 +69,221 @@ export default function updateReimbursement({ header, detail }) {
             <div class="mb-10 mt-2">
               <Row>
                 <Col sm="3">
-                  <Form.Label>Nama Pegawai</Form.Label>
+                  <label className="font-medium">Nama Pegawai</label>
                   <Form.Control
-                    placeholder={props.values.nama_pegawai}
+                    value={props.values.nama_pegawai}
                     type="text"
                     name="nama_pegawai"
                     onChange={(e) => {
-                      let name = e.target.value;
-                      let name2 = name.charAt(0).toUpperCase() + name.slice(1);
-                      props.setFieldValue((props.values.nama_pegawai = name2));
+                      let uppercase_word = e.target.value
+                        .split(/ /g)
+                        .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+                        .join(" ");
+
+                      props.setFieldValue((props.values.nama_pegawai = uppercase_word));
                     }}
                   />
                 </Col>
                 <Col sm="3">
-                  <Form.Label>Periode Reimbursement</Form.Label>
-                  <Form.Control value={props.values.periode} as="select" name="periode" onChange={props.handleChange}>
-                    <option value="kosong">Pilih Periode Bulan</option>
-                    <option value="Januari">Januari</option>
-                    <option value="Februari">Februari</option>
-                    <option value="Maret">Maret</option>
-                    <option value="April">April</option>
-                    <option value="Mei">Mei</option>
-                    <option value="Juni">Juni</option>
-                    <option value="Juli">Juli</option>
-                    <option value="Agustus">Agustus</option>
-                    <option value="September">September</option>
-                    <option value="Oktober">Oktober</option>
-                    <option value="November">November</option>
-                    <option value="Desember">Desember</option>
-                  </Form.Control>
+                  <label className="font-medium">Periode Reimbursement</label>
+                  <Select
+                    options={data}
+                    name="periode_id"
+                    onBlur={props.handleBlur}
+                    defaultValue={{ value: props.values.periode_id, label: props.values.periode_nama }}
+                    onChange={(e) => {
+                      props.setFieldValue(`periode_id`, e.value);
+                    }}
+                  />
                 </Col>
               </Row>
             </div>
 
-            <div className="card">
-              <div className="card-body">
-                <Row>
-                  <Col sm="2">
-                    <p className="font-semibold">Tanggal</p>
-                  </Col>
-                  <Col sm="3">
-                    <p className="font-semibold">Deskripsi</p>
-                  </Col>
-                  <Col sm="2">
-                    <p className="font-semibold">Biaya</p>
-                  </Col>
-                  <Col sm="3">
-                    <p className="font-semibold">Keterangan</p>
-                  </Col>
-                  <Col m="2">
-                    <p className="font-semibold">Jumlah</p>
-                  </Col>
-                </Row>
-                <FieldArray name="detail_reimburse">
-                  {({ insert, remove, push }) => (
-                    <div>
-                      {props.values.detail_reimburse.length > 0 &&
-                        props.values.detail_reimburse.map((i, index) => (
-                          <div key={index} name="detail_reimburse">
-                            <Row className="mt-2" key={index}>
-                              <Col sm="2">
-                                <Form.Control
-                                  type="date"
-                                  name="tanggal"
-                                  aria-label="date"
-                                  value={props.values.detail_reimburse[index].tanggal}
-                                  onChange={(e) => {
-                                    props.setFieldValue(`detail_reimburse.${index}.tanggal`, e.target.value);
-                                  }}
-                                />
-                              </Col>
-                              <Col sm="3">
-                                <Form.Control
-                                  name="tempat"
-                                  placeholder="-"
-                                  value={props.values.detail_reimburse[index].tempat}
-                                  onChange={(e) => {
-                                    props.setFieldValue(`detail_reimburse.${index}.tempat`, e.target.value);
-                                  }}
-                                />
-                              </Col>
-                              <Col sm="2">
-                                <Form.Control
-                                  type="text"
-                                  placeholder="-"
-                                  value={props.values.detail_reimburse[index].biaya}
-                                  name="biaya"
-                                  onChange={(e) => {
-                                    props.setFieldValue(`detail_reimburse.${index}.biaya`, e.target.value);
-                                  }}
-                                />
-                              </Col>
-                              <Col sm="3">
-                                <Form.Control
-                                  type="text"
-                                  placeholder="-"
-                                  value={props.values.detail_reimburse[index].keterangan}
-                                  name="keterangan"
-                                  onChange={(e) => {
-                                    props.setFieldValue(`detail_reimburse.${index}.keterangan`, e.target.value);
-                                  }}
-                                />
-                              </Col>
-                              <Col sm="2">
-                                <Form.Control
-                                  type="number"
-                                  placeholder="Rp. 0, 00"
-                                  min="0"
-                                  value={props.values.detail_reimburse[index].jumlah}
-                                  name="jumlah"
-                                  onChange={(e) => {
-                                    props.setFieldValue(`detail_reimburse.${index}.jumlah`, parseInt(e.target.value));
-                                  }}
-                                />
-                              </Col>
-                            </Row>
-                          </div>
-                        ))}
+            <Table responsive>
+              <thead className="bg-blue-500 text-white">
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Tempat</th>
+                  <th>Biaya</th>
+                  <th>Keterangan</th>
+                  <th>Jumlah</th>
+                  <th />
+                </tr>
+              </thead>
+              <FieldArray name="detail_reimburse">
+                {({ insert, remove, push }) => (
+                  <tbody>
+                    {props.values.detail_reimburse.length > 0 &&
+                      props.values.detail_reimburse.map((i, index) => (
+                        <tr key={index}>
+                          <td style={{ minWidth: 250, width: 250 }}>
+                            <Form.Control
+                              type="date"
+                              name={`detail_reimburse.${index}.tanggal`}
+                              value={props.values.detail_reimburse[index].tanggal}
+                              onBlur={props.handleBlur}
+                              onChange={props.handleChange}
+                            />
+                          </td>
+                          <td style={{ minWidth: 350, width: 350 }}>
+                            <Form.Control
+                              type="text"
+                              name={`detail_reimburse.${index}.tempat`}
+                              value={props.values.detail_reimburse[index].tempat}
+                              onBlur={props.handleBlur}
+                              onChange={(e) => {
+                                let uppercase_word = e.target.value
+                                  .split(/ /g)
+                                  .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+                                  .join(" ");
 
-                      <Button
-                        variant="primary mt-4"
-                        onClick={() =>
-                          push({
-                            tanggal: "",
-                            tempat: "-",
-                            biaya: "-",
-                            keterangan: "-",
-                            jumlah: 0,
-                          })
-                        }
-                      >
-                        <PlaylistAddIcon fontSize="medium" /> Tambah Data
-                      </Button>
-                    </div>
-                  )}
-                </FieldArray>
-              </div>
-            </div>
+                                props.setFieldValue((props.values.detail_reimburse[index].tempat = uppercase_word));
+                              }}
+                            />
+                          </td>
+                          <td style={{ minWidth: 350, width: 350 }}>
+                            <Form.Control
+                              type="text"
+                              name={`detail_reimburse.${index}.biaya`}
+                              value={props.values.detail_reimburse[index].biaya}
+                              onBlur={props.handleBlur}
+                              onChange={(e) => {
+                                let uppercase_word = e.target.value
+                                  .split(/ /g)
+                                  .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+                                  .join(" ");
 
-            <hr />
-            <div>
-              <Row>
+                                props.setFieldValue((props.values.detail_reimburse[index].biaya = uppercase_word));
+                              }}
+                            />
+                          </td>
+                          <td style={{ minWidth: 350, width: 350 }}>
+                            <Form.Control
+                              type="text"
+                              name={`detail_reimburse.${index}.keterangan`}
+                              value={props.values.detail_reimburse[index].keterangan}
+                              onBlur={props.handleBlur}
+                              onChange={(e) => {
+                                let uppercase_word = e.target.value
+                                  .split(/ /g)
+                                  .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+                                  .join(" ");
+
+                                props.setFieldValue((props.values.detail_reimburse[index].keterangan = uppercase_word));
+                              }}
+                            />
+                          </td>
+                          <td style={{ minWidth: 200, width: 200 }}>
+                            <Form.Control
+                              min="0"
+                              type="number"
+                              name={`detail_reimburse.${index}.jumlah`}
+                              value={props.values.detail_reimburse[index].jumlah}
+                              onBlur={props.handleBlur}
+                              onChange={(e) => {
+                                props.setFieldValue(`detail_reimburse.${index}.jumlah`, parseInt(e.target.value));
+                                props.setFieldValue((props.values.detail_reimburse[index].jumlah = parseInt(e.target.value)));
+
+                                const total = props.values.detail_reimburse.reduce((a, b) => (a = a + b.jumlah), 0);
+                                props.setFieldValue(`total`, total);
+                                props.setFieldValue((props.values.total = total));
+                              }}
+                            />
+                          </td>
+                          <td style={{ minWidth: 50, width: 50 }}>
+                            <Button variant="danger" onClick={() => remove(index)}>
+                              <Backspace fontSize="small" />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+
+                    <Button
+                      className="ml-2 mt-4 py-2"
+                      variant="primary"
+                      onClick={() =>
+                        push({
+                          tanggal: "",
+                          tempat: "",
+                          biaya: "",
+                          keterangan: "",
+                          jumlah: 0,
+                        })
+                      }
+                    >
+                      <Add fontSize="small" /> Tambah data
+                    </Button>
+                  </tbody>
+                )}
+              </FieldArray>
+              <tfoot>
+                <tr>
+                  <td />
+                  <td />
+                  <td />
+                  <td className="d-flex justify-content-end">
+                    <label className="font-medium">Total</label>
+                  </td>
+                  <td>Rp. {props.values.total.toLocaleString({ minimumFractionDigits: 0 })}</td>
+                  <td />
+                </tr>
+              </tfoot>
+            </Table>
+
+            <div className="border-t border-gray-200">
+              <Row className="py-2">
                 <Col sm="3">
-                  <Form.Label>Yang Mengetahui</Form.Label>
+                  <label className="font-medium">
+                    Yang Mengetahui
+                    {props.errors.yang_mengetahui && props.touched.yang_mengetahui ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.yang_mengetahui}</span> : null}
+                  </label>
                   <Form.Control
                     placeholder="-"
                     name="yang_mengetahui"
-                    value={props.values.yang_mengetahui}
                     type="text"
+                    value={props.values.yang_mengetahui}
+                    onBlur={props.handleBlur}
                     onChange={(e) => {
-                      let name = e.target.value;
-                      let name2 = name.charAt(0).toUpperCase() + name.slice(1);
-                      props.setFieldValue((props.values.yang_mengetahui = name2));
+                      let uppercase_word = e.target.value
+                        .split(/ /g)
+                        .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+                        .join(" ");
+
+                      props.setFieldValue((props.values.yang_mengetahui = uppercase_word));
                     }}
                   />
                 </Col>
                 <Col sm="3">
-                  <Form.Label>Yang Menyetujui</Form.Label>
+                  <label className="font-medium">
+                    Yang Menyetujui
+                    {props.errors.yang_menyetujui && props.touched.yang_menyetujui ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.yang_menyetujui}</span> : null}
+                  </label>
                   <Form.Control
                     placeholder="-"
                     name="yang_menyetujui"
-                    value={props.values.yang_menyetujui}
                     type="text"
+                    value={props.values.yang_menyetujui}
+                    onBlur={props.handleBlur}
                     onChange={(e) => {
-                      let name = e.target.value;
-                      let name2 = name.charAt(0).toUpperCase() + name.slice(1);
-                      props.setFieldValue((props.values.yang_menyetujui = name2));
+                      let uppercase_word = e.target.value
+                        .split(/ /g)
+                        .map((word) => `${word.substring(0, 1).toUpperCase()}${word.substring(1)}`)
+                        .join(" ");
+
+                      props.setFieldValue((props.values.yang_menyetujui = uppercase_word));
                     }}
                   />
                 </Col>
-                <Col></Col>
+                <Col />
               </Row>
             </div>
 
             <div className="float-right mb-10">
               <Button variant="danger mr-2" onClick={cancelButton}>
-                <HighlightOffIcon fontSize="medium" /> Batal
+                Batal
               </Button>
               <Button variant="success" type="submit" onClick={props.handleSubmit}>
-                <CheckCircleIcon fontSize="medium" /> Update Reimbursement
+                Update
               </Button>
             </div>
           </Layout>
@@ -265,6 +302,7 @@ export async function getServerSideProps(context) {
     },
     include: {
       DetailReimburse: true,
+      periode: true,
     },
   });
 
@@ -280,8 +318,18 @@ export async function getServerSideProps(context) {
     });
   });
 
+  const get_periode = await prisma.periode.findMany({});
+  let periode = [];
+  get_periode.map((i) => {
+    periode.push({
+      value: i.id,
+      label: i.nama,
+    });
+  });
+
   return {
     props: {
+      data: periode,
       header: get_reimbursement,
       detail: detail,
     },

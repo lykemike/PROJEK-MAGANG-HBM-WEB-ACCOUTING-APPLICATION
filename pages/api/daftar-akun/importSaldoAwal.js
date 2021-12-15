@@ -18,24 +18,14 @@ export default async (req, res) => {
     });
 
     let detail = [];
-    req.body.saldo_awal.map((i) => {
-      if (i.kredit === 0) {
-        detail.push({
-          header_saldo_awal_id: find_latest.id,
-          akun_id: parseInt(i.id),
-          debit: parseInt(i.debit),
-          kredit: parseInt(i.kredit),
-          sisa_saldo: parseInt(i.debit),
-        });
-      } else {
-        detail.push({
-          header_saldo_awal_id: find_latest.id,
-          akun_id: parseInt(i.id),
-          debit: parseInt(i.debit),
-          kredit: parseInt(i.kredit),
-          sisa_saldo: parseInt(i.kredit),
-        });
-      }
+    req.body.data_import.map((i) => {
+      detail.push({
+        header_saldo_awal_id: find_latest.id,
+        akun_id: parseInt(i.id),
+        debit: parseInt(i.debit_nominal),
+        kredit: parseInt(i.kredit_nominal),
+        sisa_saldo: i.debit_nominal > 0 ? parseInt(i.sisa_saldo_debit) : parseInt(i.sisa_saldo_kredit),
+      });
     });
 
     const create_detail_saldo = await prisma.detailSaldoAwal.createMany({

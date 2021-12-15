@@ -128,7 +128,13 @@ export default function DaftarAkun({ data }) {
                   <Typography className="text-white font-bold">Kategori Akun</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography className="text-white font-bold">Saldo</Typography>
+                  <Typography className="text-white font-bold">Saldo Awal Debit</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Saldo Awal Kredit</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography className="text-white font-bold">Saldo Saat Ini</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography className="text-white font-bold" align="right">
@@ -146,13 +152,16 @@ export default function DaftarAkun({ data }) {
                   <TableCell>{i.nama_akun}</TableCell>
                   <TableCell>{i.kategori_akun.name}</TableCell>
                   <TableCell>
-                    Rp. 0, 00
-                    {/* {
-                      (i.DetailSaldoAwal.length == 0
-                        ? " 0, 00"
-                        : i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 }),
-                      i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 }))
-                    } */}
+                    Rp.
+                    {i.DetailSaldoAwal.length == 0 ? " 0, 00" : i.DetailSaldoAwal[0].debit.toLocaleString({ minimumFractionDigits: 0 })}
+                  </TableCell>
+                  <TableCell>
+                    Rp.
+                    {i.DetailSaldoAwal.length == 0 ? " 0, 00" : i.DetailSaldoAwal[0].kredit.toLocaleString({ minimumFractionDigits: 0 })}
+                  </TableCell>
+                  <TableCell>
+                    Rp.
+                    {i.DetailSaldoAwal[0].sisa_saldo.toLocaleString({ minimumFractionDigits: 0 })}
                   </TableCell>
                   <TableCell align="right">
                     <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />

@@ -3,17 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 
-import {
-  Breadcrumbs,
-  Table as Tables,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-} from "@material-ui/core/";
+import { Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
 import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import Switch from "@material-ui/core/Switch";
@@ -67,7 +57,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
           tgl_kontrak_mulai: header_penjualan[0].tgl_kontrak_mulai,
           tgl_kontrak_expired: header_penjualan[0].tgl_kontrak_expired,
           custom_invoice: header_penjualan[0].custom_invoice,
-          tipe_perusahaan: header_penjualan[0].tipe_perusahaan,
+          tipe_perusahaan: header_penjualan[0].tipe_perusahaan == "false" ? false : true,
           pesan: header_penjualan[0].pesan,
           file_attachment: "",
           subtotal: header_penjualan[0].subtotal,
@@ -153,14 +143,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                 <Col sm="3">
                   <div className="mb-2">
                     <label className="font-medium">Alamat Penagihan</label>
-                    <FormControl
-                      style={{ height: 115, resize: "none" }}
-                      disabled
-                      placeholder={props.values.alamat_penagihan}
-                      as="textarea"
-                      className="italic"
-                      name="alamat_penagihan"
-                    />
+                    <FormControl style={{ height: 115, resize: "none" }} disabled placeholder={props.values.alamat_penagihan} as="textarea" className="italic" name="alamat_penagihan" />
                   </div>
                 </Col>
 
@@ -168,17 +151,9 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                   <div className="mb-2">
                     <label className="font-medium">
                       Nomor Kontrak
-                      {props.errors.nomor_kontrak && props.touched.nomor_kontrak ? (
-                        <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.nomor_kontrak}</span>
-                      ) : null}
+                      {props.errors.nomor_kontrak && props.touched.nomor_kontrak ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.nomor_kontrak}</span> : null}
                     </label>
-                    <Form.Control
-                      type="text"
-                      placeholder="-"
-                      name="nomor_kontrak"
-                      value={props.values.nomor_kontrak}
-                      onChange={props.handleChange}
-                    />
+                    <Form.Control type="text" placeholder="-" name="nomor_kontrak" value={props.values.nomor_kontrak} onChange={props.handleChange} />
                   </div>
 
                   <div className="mb-2">
@@ -190,12 +165,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                 <Col sm="3">
                   <div className="mb-2">
                     <label className="font-medium">Tanggal Kontrak</label>
-                    <Form.Control
-                      type="date"
-                      name="tgl_kontrak_mulai"
-                      value={props.values.tgl_kontrak_mulai}
-                      onChange={props.handleChange}
-                    />
+                    <Form.Control type="date" name="tgl_kontrak_mulai" value={props.values.tgl_kontrak_mulai} onChange={props.handleChange} />
                   </div>
 
                   <div className="mb-2">
@@ -219,12 +189,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                         <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.tgl_kontrak_expired}</span>
                       ) : null}
                     </label>
-                    <Form.Control
-                      type="date"
-                      name="tgl_kontrak_expired"
-                      value={props.values.tgl_kontrak_expired}
-                      onChange={props.handleChange}
-                    />
+                    <Form.Control type="date" name="tgl_kontrak_expired" value={props.values.tgl_kontrak_expired} onChange={props.handleChange} />
                   </div>
 
                   <div className="mb-2">
@@ -239,8 +204,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
               <FormControlLabel
                 label={props.values.tipe_perusahaan == false ? "Negara" : "Swasta"}
                 labelPlacement="end"
-                disabled
-                checked={Boolean(header_penjualan[0].tipe_perusahaan)}
+                checked={props.values.tipe_perusahaan}
                 control={
                   <Switch
                     color="primary"
@@ -372,12 +336,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                               width: 300,
                             }}
                           >
-                            <Form.Control
-                              disabled
-                              type="text"
-                              name={`produks.${index}.produk_deskripsi`}
-                              value={props.values.produks[index].produk_deskripsi}
-                            />
+                            <Form.Control disabled type="text" name={`produks.${index}.produk_deskripsi`} value={props.values.produks[index].produk_deskripsi} />
                           </td>
 
                           <td
@@ -386,12 +345,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                               width: 200,
                             }}
                           >
-                            <Form.Control
-                              disabled
-                              type="number"
-                              name={`produks.${index}.produk_harga`}
-                              value={props.values.produks[index].produk_harga}
-                            />
+                            <Form.Control disabled type="number" name={`produks.${index}.produk_harga`} value={props.values.produks[index].produk_harga} />
                           </td>
                           <td
                             style={{
@@ -441,18 +395,9 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
 
                 <div>
                   <label className="font-medium">File Attachment</label>
-                  <div
-                    style={{ width: 400 }}
-                    class="mt-1 flex justify-center px-6 pt-4 pb-6 border-2 border-gray-300 border-dashed rounded-md"
-                  >
+                  <div style={{ width: 400 }} class="mt-1 flex justify-center px-6 pt-4 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                     <div class="space-y-1 text-center">
-                      <svg
-                        class="mx-auto h-12 w-12 text-gray-400"
-                        stroke="currentColor"
-                        fill="none"
-                        viewBox="0 0 48 48"
-                        aria-hidden="true"
-                      >
+                      <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                         <path
                           d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
                           stroke-width="2"
@@ -462,15 +407,8 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                       </svg>
 
                       <div class="flex text-sm text-gray-600">
-                        <label
-                          for="file-upload"
-                          class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                          <Form.File
-                            type="file"
-                            name="file_attachment"
-                            onChange={(e) => props.setFieldValue("file_attachment", e.target.files)}
-                          />
+                        <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">
+                          <Form.File type="file" name="file_attachment" onChange={(e) => props.setFieldValue("file_attachment", e.target.files)} />
                         </label>
                       </div>
                       <p class="text-xs text-gray-500">Tarik file ke sini atau pilih file </p>
@@ -499,9 +437,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                   <Col sm="6">
                     <label className="font-medium">
                       Pajak Keluaran
-                      {props.errors.pajak_id && props.touched.pajak_id ? (
-                        <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.pajak_id}</span>
-                      ) : null}
+                      {props.errors.pajak_id && props.touched.pajak_id ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.pajak_id}</span> : null}
                     </label>
                   </Col>
                   <Col sm="6"></Col>
@@ -595,7 +531,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                 </Link>
                 <Link href="/jual/penjualan">
                   <Button variant="success" onClick={props.handleSubmit}>
-                    Buat Penjualan
+                    Update Penjualan
                   </Button>
                 </Link>
               </div>

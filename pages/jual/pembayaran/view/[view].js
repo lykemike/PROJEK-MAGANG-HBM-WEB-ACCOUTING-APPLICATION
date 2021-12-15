@@ -3,18 +3,7 @@ import Head from "next/head";
 import Layout from "../../../../components/Layout";
 import { Row, Col, Form, Table, Button } from "react-bootstrap";
 import Link from "next/Link";
-import {
-  Breadcrumbs,
-  Table as Tables,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-  TableFooter,
-} from "@material-ui/core/";
+import { Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, TableFooter } from "@material-ui/core/";
 
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -118,34 +107,26 @@ export default function View({ data }) {
           <TableBody>
             {data.map((i, index) => (
               <TableRow>
-                <TableCell style={{ minWidth: 250, width: 250 }}>Sales Invoice #{i.id}</TableCell>
-                <TableCell style={{ minWidth: 300, width: 300 }}>
-                  {i.header_penjualan.DetailPenjualan[0].produk_deskripsi}
-                </TableCell>
-                <TableCell style={{ minWidth: 250, width: 250 }}>
-                  Rp. {i.header_penjualan.total.toLocaleString({ minimumFractionDigits: 0 })}
-                </TableCell>
-                <TableCell style={{ minWidth: 250, width: 250 }}>
-                  Rp. {i.header_penjualan.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}
-                </TableCell>
-                <TableCell style={{ minWidth: 250, width: 250 }}>{i.presentase_penagihan}%</TableCell>
-                <TableCell style={{ minWidth: 250, width: 250 }}>
-                  Rp. {i.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}
-                </TableCell>
+                <TableCell style={{ minWidth: 400, width: 400 }}>Sales Invoice #{i.id}</TableCell>
+                <TableCell style={{ minWidth: 300, width: 300 }}>{i.deskripsi}</TableCell>
+                <TableCell style={{ minWidth: 250, width: 250 }}>Rp. {i.header_penjualan.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                <TableCell style={{ minWidth: 250, width: 250 }}>Rp. {i.header_penjualan.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                <TableCell style={{ minWidth: 100, width: 100 }}>{i.presentase_penagihan}%</TableCell>
+                <TableCell style={{ minWidth: 200, width: 200 }}>Rp. {i.tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableBody>
             <TableRow>
-              <TableCell>Jumlah Tagihan Sebelum Pajak</TableCell>
+              <TableCell>Jumlah Tagihan Sebelum {data[0].pajak.nama + " - " + data[0].pajak.presentase_aktif + "%"}</TableCell>
               <TableCell>Rp. {data[0].tagihan_sebelum_pajak.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Pajak</TableCell>
-              <TableCell>Rp. {data[0].pajak_total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+              <TableCell>{data[0].header_penjualan.pajak.nama + " - " + data[0].header_penjualan.pajak.presentase_aktif + "%"}</TableCell>
+              <TableCell>Rp. {data[0].pajak_keluaran_total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Jumlah Tagihan Setelah Pajak</TableCell>
+              <TableCell>Jumlah Tagihan Setelah {data[0].header_penjualan.pajak.nama + " - " + data[0].header_penjualan.pajak.presentase_aktif + "%"}</TableCell>
               <TableCell>Rp. {data[0].tagihan_setelah_pajak.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
             </TableRow>
             <TableRow>
@@ -167,7 +148,7 @@ export default function View({ data }) {
         <Col sm="5">
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-              <Typography className="">Lihat Jurnal</Typography>
+              <Typography>Lihat Jurnal</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <TableContainer component={Paper}>
@@ -180,18 +161,43 @@ export default function View({ data }) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data[0].JurnalPenerimaanPembayaran.map((i, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{i.akun.kode_akun + " - " + i.akun.nama_akun}</TableCell>
-                        <TableCell>
-                          {i.tipe_saldo == "Debit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}
-                        </TableCell>
-                        <TableCell>
-                          {i.tipe_saldo == "Kredit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {data[0].header_penjualan.tipe_perusahaan == "false"
+                      ? data[0].JurnalPenerimaanPembayaran.slice(0, 3).map((i, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{i.akun.kode_akun + " - " + i.akun.nama_akun}</TableCell>
+                            <TableCell>{i.tipe_saldo == "Debit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                            <TableCell>{i.tipe_saldo == "Kredit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                          </TableRow>
+                        ))
+                      : data[0].JurnalPenerimaanPembayaran.slice(0, 4).map((i, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{i.akun.kode_akun + " - " + i.akun.nama_akun}</TableCell>
+                            <TableCell>{i.tipe_saldo == "Debit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                            <TableCell>{i.tipe_saldo == "Kredit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                          </TableRow>
+                        ))}
                   </TableBody>
+                  <TableBody>
+                    <TableCell className="font-medium">Jurnal Done</TableCell>
+                    <TableCell />
+                    <TableCell />
+                  </TableBody>
+
+                  {data[0].header_penjualan.tipe_perusahaan == "false"
+                    ? data[0].JurnalPenerimaanPembayaran.slice(3, 5).map((i, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{i.akun.kode_akun + " - " + i.akun.nama_akun}</TableCell>
+                          <TableCell>{i.tipe_saldo == "Debit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                          <TableCell>{i.tipe_saldo == "Kredit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                        </TableRow>
+                      ))
+                    : data[0].JurnalPenerimaanPembayaran.slice(4, 6).map((i, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{i.akun.kode_akun + " - " + i.akun.nama_akun}</TableCell>
+                          <TableCell>{i.tipe_saldo == "Debit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                          <TableCell>{i.tipe_saldo == "Kredit" ? "Rp. " + i.nominal.toLocaleString({ minimumFractionDigits: 0 }) : null}</TableCell>
+                        </TableRow>
+                      ))}
                 </Table>
               </TableContainer>
             </AccordionDetails>
@@ -219,6 +225,7 @@ export async function getServerSideProps(context) {
       id: parseInt(view),
     },
     include: {
+      pajak: true,
       akun: true,
       JurnalPenerimaanPembayaran: {
         include: {
@@ -229,6 +236,7 @@ export async function getServerSideProps(context) {
         include: {
           kontak: true,
           DetailPenjualan: true,
+          pajak: true,
         },
       },
       bank: {
