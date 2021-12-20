@@ -38,56 +38,81 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      akun_bayar_id: parseInt(req.body.akun_setor),
-      akun_penerima_id: parseInt(req.body.akun_membayar),
-      no_transaksi: parseInt(req.body.no_transaksi),
+      akun_bayar_id: parseInt(req.body.akun_bayar_id),
+      kontak_id: parseInt(req.body.kontak_id),
       tgl_transaksi: req.body.tgl_transaksi,
-      tag: req.body.tag,
       memo: req.body.memo,
-      file_attachment: req.body.filename,
-      subtotal: parseInt(req.body.subtotal),
-      pajak: parseInt(req.body.pajak),
+      file_attachment: "req.file.filename",
       total: parseInt(req.body.total),
+      status: "Belum terekonsiliasi",
     };
 
-    const update_kirim_uang = await prisma.headerKirimUang.updateMany({
-      data: [frontend_data],
-      skipDuplicates: true,
-    });
+    const find_latest = req.body.id;
 
-    const find_header_kirim_uang = await prisma.headerKirimUang.findUnique({
+    const update_kirim_uang = await prisma.headerKirimUang.update({
       where: {
         id: parseInt(req.body.id),
+      },
+      data: frontend_data,
+    });
+
+    const delete_detail = await prisma.detailKirimUang.deleteMany({
+      where: {
+        header_kirim_uang_id: parseInt(req.body.id),
       },
     });
 
     let detail = [];
-    req.body.akuns &&
-      JSON.parse(req.body.akuns).map((i) => {
+    req.body.detail_kirim_uang &&
+      JSON.parse(req.body.detail_kirim_uang).map((i) => {
         detail.push({
-          header_kirim_uang_id: find_header_kirim_uang.id,
+          header_kirim_uang_id: parseInt(req.body.id),
           akun_id: parseInt(i.akun_id),
           nama_akun: i.nama_akun,
           deskripsi: i.deskripsi,
-          pajak_id: parseInt(i.pajak_id),
-          pajak_nama: i.pajak_nama,
-          pajak_persen: i.pajak_persen,
-          hasil_pajak: parseInt(i.hasil_pajak),
           jumlah: parseInt(i.jumlah),
         });
       });
 
-    const update_detail_kirim_uang = await prisma.detailKirimUang.update({
+    const create_detail_kirim_uang = await prisma.detailKirimUang.createMany({
+      data: detail,
+    });
+
+    const delete_jurnal = await prisma.jurnalKirimUang.deleteMany({
       where: {
         header_kirim_uang_id: parseInt(req.body.id),
       },
-      data: detail,
-      skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Update Kirim Uang Success!", data: update_detail_kirim_uang });
+    let jurnal_debit = [];
+    detail.map((i) => {
+      jurnal_debit.push({
+        header_kirim_uang_id: parseInt(req.body.id),
+        akun_id: parseInt(i.akun_id),
+        nominal: parseInt(i.jumlah),
+        tipe_saldo: "Debit",
+      });
+    });
+
+    const create_jurnal_debit = await prisma.jurnalKirimUang.createMany({
+      data: jurnal_debit,
+    });
+
+    const create_jurnal_kredit = await prisma.jurnalKirimUang.create({
+      data: {
+        header_kirim_uang_id: parseInt(req.body.id),
+        akun_id: parseInt(req.body.akun_bayar_id),
+        nominal: parseInt(req.body.total),
+        tipe_saldo: "Kredit",
+      },
+    });
+
+    res.status(201).json({
+      message: "Update Kirim Uang Success!",
+      id: find_latest,
+    });
   } catch (error) {
-    res.status(400).json({ data: "Failed to Update Kirim Uang!", error });
+    res.status(400).json({ data: "Update kirim uang failed!", error });
     console.log(error);
   }
 };

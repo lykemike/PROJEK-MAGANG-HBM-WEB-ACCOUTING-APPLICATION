@@ -7,39 +7,14 @@ import PemetaanKas from "../../components/KasBank/PemetaanKas";
 
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
-import {
-  Tabs,
-  Tab,
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  Row,
-  Col,
-  FormControl,
-  Modal,
-  Form,
-  Alert,
-  Toast,
-} from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableSortLabel,
-} from "@material-ui/core";
+import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl, Modal, Form, Alert, Toast } from "react-bootstrap";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableSortLabel } from "@material-ui/core";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import CachedIcon from "@material-ui/icons/Cached";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import NoteIcon from "@material-ui/icons/Note";
-
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 import * as XLSX from "xlsx";
@@ -201,10 +176,7 @@ export default function akundetail({ data, bank }) {
     } else if (selectedIndex === selectedTransactions.length - 1) {
       newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newselectedTransactions = newselectedTransactions.concat(
-        selectedTransactions.slice(0, selectedIndex),
-        selectedTransactions.slice(selectedIndex + 1)
-      );
+      newselectedTransactions = newselectedTransactions.concat(selectedTransactions.slice(0, selectedIndex), selectedTransactions.slice(selectedIndex + 1));
     }
     setselectedTransactions(newselectedTransactions);
   };
@@ -225,10 +197,7 @@ export default function akundetail({ data, bank }) {
     } else if (selectedIndex === selectedBankStatement.length - 1) {
       newselectedBankStatement = newselectedBankStatement.concat(selectedBankStatement.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newselectedBankStatement = newselectedBankStatement.concat(
-        selectedBankStatement.slice(0, selectedIndex),
-        selectedBankStatement.slice(selectedIndex + 1)
-      );
+      newselectedBankStatement = newselectedBankStatement.concat(selectedBankStatement.slice(0, selectedIndex), selectedBankStatement.slice(selectedIndex + 1));
     }
     setselectedBankStatement(newselectedBankStatement);
   };
@@ -288,23 +257,22 @@ export default function akundetail({ data, bank }) {
 
   return (
     <Layout>
+      <Head>
+        <title>
+          ({data[0].kode_akun}) - {data[0].nama_akun}
+        </title>
+      </Head>
       <MyVerticallyCenteredModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
       {/* <AlertDismissibleExample /> */}
-
       <Breadcrumbs aria-label="breadcrumb">
-        <Link color="inherit" href="../jual/penjualan">
-          Kas & Bank
-        </Link>
-        <Typography color="textPrimary">Akun - Cash & Bank</Typography>
+        <Typography color="textPrimary">Kas & Bank</Typography>
       </Breadcrumbs>
       <div className="border-b border-gray-200">
         <Row>
           <Col sm="8">
-            {data.map((i) => (
-              <h2>
-                ({i.kode_akun}) - {i.nama_akun}
-              </h2>
-            ))}
+            <h2>
+              ({data[0].kode_akun}) - {data[0].nama_akun}
+            </h2>
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
@@ -364,21 +332,13 @@ export default function akundetail({ data, bank }) {
                   <TableHead className="bg-dark">
                     <TableRow>
                       <TableCell>
-                        <Checkbox
-                          checked={isChecked}
-                          color="primary"
-                          indeterminate={isIndeterminate}
-                          onChange={handleSelectAll}
-                        />
+                        <Checkbox checked={isChecked} color="primary" indeterminate={isIndeterminate} onChange={handleSelectAll} />
                       </TableCell>
                       <TableCell>
                         <Typography className="text-white font-bold">Tanggal</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography className="text-white font-bold">Kontak</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography className="text-white font-bold">Tag</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography className="text-white font-bold">Terima (dalam IDR)</Typography>
@@ -392,11 +352,7 @@ export default function akundetail({ data, bank }) {
                       <TableCell>
                         <Typography className="text-white font-bold">Status</Typography>
                       </TableCell>
-                      <TableCell>
-                        <Typography className="text-white font-bold" align="center">
-                          Actions
-                        </Typography>
-                      </TableCell>
+                      <TableCell />
                     </TableRow>
                   </TableHead>
                   {data.map((data, index) => (
@@ -474,19 +430,13 @@ export default function akundetail({ data, bank }) {
                           <p className="font-medium">Langkah 1. Download file template rekening koran kami</p>
                           <hr />
                           <p>
-                            Mulai dengan men-download template file XLSX (Excel Microsoft Office Open XML Format Spreadsheet file)
-                            rekening koran kami. File ini memiliki kolom heading sesuai yang perlu untuk meng-import data rekening
-                            koran Anda.
+                            Mulai dengan men-download template file XLSX (Excel Microsoft Office Open XML Format Spreadsheet file) rekening koran kami. File ini memiliki kolom heading sesuai yang
+                            perlu untuk meng-import data rekening koran Anda.
                           </p>
                           <button
                             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
                             onClick={() => {
-                              const header_excel = [
-                                { TransactionDateBank: "" },
-                                { Received: "" },
-                                { Spent: "" },
-                                { Description: "" },
-                              ];
+                              const header_excel = [{ TransactionDateBank: "" }, { Received: "" }, { Spent: "" }, { Description: "" }];
                               var ws = XLSX.utils.json_to_sheet(header_excel);
                               var wb = XLSX.utils.book_new();
                               XLSX.utils.book_append_sheet(wb, ws, "Bank Statement");
@@ -505,13 +455,12 @@ export default function akundetail({ data, bank }) {
                           <p className="font-medium">Langkah 2. Copy data rekening koran Anda ke dalam template</p>
                           <hr />
                           <p>
-                            Copy dan paste data rekening koran Anda dari file yg di ekspor ke dalam template. Pastikan bahwa data
-                            rekening Anda sesuai dengan heading kolom yang di sediakan dalam template.
+                            Copy dan paste data rekening koran Anda dari file yg di ekspor ke dalam template. Pastikan bahwa data rekening Anda sesuai dengan heading kolom yang di sediakan dalam
+                            template.
                           </p>
                           <p className="text-red-500">
-                            Penting: Jangan rubah heading kolom yang di sediakan dalam template. Ini harus tetap sama supaya
-                            import bisa jalan pada langkah selanjutnya. Kami mengasumsi bahwa tanggal ada dalam format YYYY-MM-DD.
-                            Contoh: 2021-09-30
+                            Penting: Jangan rubah heading kolom yang di sediakan dalam template. Ini harus tetap sama supaya import bisa jalan pada langkah selanjutnya. Kami mengasumsi bahwa tanggal
+                            ada dalam format YYYY-MM-DD. Contoh: 2021-09-30
                           </p>
                         </div>
 
@@ -528,10 +477,7 @@ export default function akundetail({ data, bank }) {
                               }}
                             />
                           </Form.Group>
-                          <p>
-                            File yang Anda impor harus dalam bentuk XLSX (Excel Microsoft Office Open XML Format Spreadsheet
-                            file). Nama file Anda harus di akhiri dengan .xlsx
-                          </p>
+                          <p>File yang Anda impor harus dalam bentuk XLSX (Excel Microsoft Office Open XML Format Spreadsheet file). Nama file Anda harus di akhiri dengan .xlsx</p>
                         </div>
                       </Modal.Body>
 
@@ -588,12 +534,7 @@ export default function akundetail({ data, bank }) {
                     </TableRow>
                   </TableHead>
                   {bank.map((data, index) => (
-                    <BankStatement
-                      data={data}
-                      index={index}
-                      selectedBankStatement={selectedBankStatement}
-                      handleSelectOneBankStatement={handleSelectOneBankStatement}
-                    />
+                    <BankStatement data={data} index={index} selectedBankStatement={selectedBankStatement} handleSelectOneBankStatement={handleSelectOneBankStatement} />
                   ))}
                 </Table>
               </TableContainer>

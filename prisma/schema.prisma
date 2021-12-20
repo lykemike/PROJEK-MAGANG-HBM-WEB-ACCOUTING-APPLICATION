@@ -103,12 +103,10 @@ model Akun {
   TransferUang2 TransferUang[] @relation("akunSetorTransfer")
 
   HeaderTerimaUang HeaderTerimaUang[]
-  DetailTerimaUang1 DetailTerimaUang[] @relation("TerimaUangAkun")
-  DetailTerimaUang2 DetailTerimaUang[] @relation("TerimaUangPajakJual")
+  DetailTerimaUang DetailTerimaUang[] 
 
   HeaderKirimUang HeaderKirimUang[] 
-  DetailKirimUang1 DetailKirimUang[] @relation("KirimUangAkun")
-  DetailKirimUang2 DetailKirimUang[] @relation("KirimUangPajakBeli")
+  DetailKirimUang DetailKirimUang[] 
 
   DetailJurnal DetailJurnal[]
 
@@ -282,8 +280,6 @@ model Pajak {
   DetailBiaya1          DetailBiaya[] @relation("pajak_masukan")
   DetailBiaya2          DetailBiaya[] @relation("pajak_keluaran")
 
-  DetailTerimaUang      DetailTerimaUang[]
-  DetailKirimUang       DetailKirimUang[]
 }
 
 model SyaratPembayaran {
@@ -607,8 +603,6 @@ model TransferUang {
   tgl_transaksi String
   tag           String
   status        String
-  sisa_saldo_akuntransfer Int
-  sisa_saldo_akunsetor   Int
 
   JurnalTransferUang JurnalTransferUang[]
 }
@@ -625,24 +619,22 @@ model JurnalTransferUang {
 
 model HeaderTerimaUang {
   id                Int  @id @default(autoincrement())
-  akun_setor        Akun @relation(fields: [akun_setor_id], references: [id])
-  akun_setor_id     Int
-
   kontak            Kontak @relation(fields: [kontak_id], references: [id])
   kontak_id         Int
 
-  tgl_transaksi   String
-  tag             String
-  memo            String
-  file_attachment String?
-  subtotal        Int
-  pajak           Int
-  total           Int
-  sisa_saldo_akunsetor  Int
-  status          String
+  akun_setor        Akun @relation(fields: [akun_setor_id], references: [id])
+  akun_setor_id     Int
 
-  DetailTerimaUang DetailTerimaUang[]
-  JurnalTerimaUang JurnalTerimaUang[]
+  tgl_transaksi     String
+  
+  memo              String
+  file_attachment   String?
+  total             Int
+
+  status            String
+
+  DetailTerimaUang  DetailTerimaUang[]
+  JurnalTerimaUang  JurnalTerimaUang[]
 }
 
 model DetailTerimaUang {
@@ -650,22 +642,11 @@ model DetailTerimaUang {
   header_terima_uang    HeaderTerimaUang @relation(fields: [header_terima_uang_id], references: [id])
   header_terima_uang_id Int
 
-  akun      Akun   @relation("TerimaUangAkun",fields: [akun_id], references: [id])
+  akun      Akun   @relation(fields: [akun_id], references: [id])
   akun_id   Int
   nama_akun String
   deskripsi String
-
-  pajak                Pajak  @relation(fields: [pajak_id], references: [id])
-  pajak_id             Int
-  pajak_nama           String
-  pajak_persen         Int
-  hasil_pajak          Int
-  
-  pajak_jual          Akun @relation("TerimaUangPajakJual", fields: [pajak_jual_id], references: [id])
-  pajak_jual_id        Int
-
   jumlah  Int
-  jumlah2 Int
 }
 
 model JurnalTerimaUang {
@@ -676,24 +657,19 @@ model JurnalTerimaUang {
   akun_id               Int
   nominal               Int
   tipe_saldo            String
+
 }
 
 model HeaderKirimUang {
   id            Int  @id @default(autoincrement())
   akun_bayar    Akun @relation(fields: [akun_bayar_id], references: [id])
   akun_bayar_id Int
-
   kontak            Kontak @relation(fields: [kontak_id], references: [id])
   kontak_id         Int
-
   tgl_transaksi   String
-  tag             String
   memo            String
   file_attachment String
-  subtotal        Int
-  pajak           Int
   total           Int
-  sisa_saldo_akuntransfer  Int
   status          String
 
   DetailKirimUang DetailKirimUang[]
@@ -704,23 +680,11 @@ model DetailKirimUang {
   id                   Int             @id @default(autoincrement())
   header_kirim_uang    HeaderKirimUang @relation(fields: [header_kirim_uang_id], references: [id])
   header_kirim_uang_id Int
-
-  akun      Akun   @relation("KirimUangAkun", fields: [akun_id], references: [id])
+  akun      Akun   @relation(fields: [akun_id], references: [id])
   akun_id   Int
   nama_akun String
   deskripsi String
-
-  pajak                Pajak @relation(fields: [pajak_id], references: [id])
-  pajak_id             Int
-  pajak_nama           String
-  pajak_persen         Int
-  hasil_pajak          Int
-
-  pajak_beli           Akun @relation("KirimUangPajakBeli", fields: [pajak_beli_id], references: [id])
-  pajak_beli_id        Int
-
   jumlah  Int
-  jumlah2 Int
 }
 
 model JurnalKirimUang {

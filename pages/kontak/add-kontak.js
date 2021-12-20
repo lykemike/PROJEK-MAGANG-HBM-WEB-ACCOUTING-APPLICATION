@@ -24,17 +24,12 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
 
   const KontakSchema = Yup.object().shape({
     email: Yup.string().email("* must be valid email").required("* required"),
-    nama_perusahaan: Yup.string()
-      .min(5, "* must be more than 4 characters")
-      .max(50, "* must be less than 50 characters")
-      .required("* required"),
+    nama_perusahaan: Yup.string().min(5, "* must be more than 4 characters").max(50, "* must be less than 50 characters").required("* required"),
     nomor_telepon: Yup.string().required("* required"),
     nomor_npwp: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
     alamat_perusahaan: Yup.string().min(10, "* must be more than 10 characters").required("* required"),
     nama_bank: Yup.string().min(3, "* must be more than 3 characters").required("* required"),
     kantor_cabang_bank: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
-    nomor_rekening: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
-    atas_nama: Yup.string().min(5, "* must be more than 5 characters").required("* required"),
     akun_piutang_name: Yup.string().required("* required"),
     akun_hutang_name: Yup.string().required("* required"),
     syarat_pembayaran_id: Yup.string().required("* required"),
@@ -66,8 +61,8 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
           alamat_perusahaan: "",
           nama_bank: "",
           kantor_cabang_bank: "",
-          nomor_rekening: "",
-          atas_nama: "",
+          nomor_rekening: "-",
+          atas_nama: "-",
           akun_piutang_id: "",
           akun_piutang_name: "",
           akun_hutang_id: "",
@@ -137,9 +132,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                               <Field type="checkbox" name="menu" value="5" /> Lainnya
                             </label>
                           </Row>
-                          {props.errors.menu && props.touched.menu ? (
-                            <span class="text-xs font-medium text-red-500 required-dot">{props.errors.menu}</span>
-                          ) : null}
+                          {props.errors.menu && props.touched.menu ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.menu}</span> : null}
                         </div>
                       </Col>
                     </Row>
@@ -191,13 +184,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                         <label>Handphone</label>
                       </Col>
                       <Col sm="10">
-                        <Form.Control
-                          placeholder="-"
-                          type="text"
-                          name="nomor_hp"
-                          onChange={props.handleChange}
-                          onBlur={props.handleBlur}
-                        />
+                        <Form.Control placeholder="-" type="text" name="nomor_hp" onChange={props.handleChange} onBlur={props.handleBlur} />
                       </Col>
                     </Row>
 
@@ -207,9 +194,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                       </Col>
                       <Col sm="10">
                         <Form.Control placeholder="-" name="email" onChange={props.handleChange} onBlur={props.handleBlur} />
-                        {props.errors.email && props.touched.email ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.email}</span>
-                        ) : null}
+                        {props.errors.email && props.touched.email ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.email}</span> : null}
                       </Col>
                     </Row>
 
@@ -248,9 +233,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                             props.setFieldValue((props.values.nama_perusahaan = input2));
                           }}
                         />
-                        {props.errors.nama_perusahaan && props.touched.nama_perusahaan ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama_perusahaan}</span>
-                        ) : null}
+                        {props.errors.nama_perusahaan && props.touched.nama_perusahaan ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama_perusahaan}</span> : null}
                       </Col>
                     </Row>
 
@@ -259,16 +242,8 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                         <label>Telepon</label>
                       </Col>
                       <Col sm="10">
-                        <Form.Control
-                          placeholder="-"
-                          type="text"
-                          name="nomor_telepon"
-                          onBlur={props.handleBlur}
-                          onChange={props.handleChange}
-                        />
-                        {props.errors.nomor_telepon && props.touched.nomor_telepon ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nomor_telepon}</span>
-                        ) : null}
+                        <Form.Control placeholder="-" type="text" name="nomor_telepon" onBlur={props.handleBlur} onChange={props.handleChange} />
+                        {props.errors.nomor_telepon && props.touched.nomor_telepon ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nomor_telepon}</span> : null}
                       </Col>
                     </Row>
 
@@ -277,13 +252,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                         <label>Fax</label>
                       </Col>
                       <Col sm="10">
-                        <Form.Control
-                          placeholder="-"
-                          type="text"
-                          name="nomor_fax"
-                          onBlur={props.handleBlur}
-                          onChange={props.handleChange}
-                        />
+                        <Form.Control placeholder="-" type="text" name="nomor_fax" onBlur={props.handleBlur} onChange={props.handleChange} />
                       </Col>
                     </Row>
 
@@ -292,16 +261,8 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                         <label>NPWP</label>
                       </Col>
                       <Col sm="10">
-                        <Form.Control
-                          placeholder="-"
-                          type="text"
-                          name="nomor_npwp"
-                          onBlur={props.handleBlur}
-                          onChange={props.handleChange}
-                        />
-                        {props.errors.nomor_npwp && props.touched.nomor_npwp ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nomor_npwp}</span>
-                        ) : null}
+                        <Form.Control placeholder="-" type="text" name="nomor_npwp" onBlur={props.handleBlur} onChange={props.handleChange} />
+                        {props.errors.nomor_npwp && props.touched.nomor_npwp ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nomor_npwp}</span> : null}
                       </Col>
                     </Row>
 
@@ -322,9 +283,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                             props.setFieldValue((props.values.alamat_perusahaan = input2));
                           }}
                         />
-                        {props.errors.alamat_perusahaan && props.touched.alamat_perusahaan ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.alamat_perusahaan}</span>
-                        ) : null}
+                        {props.errors.alamat_perusahaan && props.touched.alamat_perusahaan ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.alamat_perusahaan}</span> : null}
                       </Col>
                     </Row>
 
@@ -359,9 +318,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                             props.setFieldValue((props.values.nama_bank = input2));
                           }}
                         />
-                        {props.errors.nama_bank && props.touched.nama_bank ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama_bank}</span>
-                        ) : null}
+                        {props.errors.nama_bank && props.touched.nama_bank ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama_bank}</span> : null}
                       </Col>
                     </Row>
 
@@ -393,16 +350,8 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                         <label>Nomor Rekening</label>
                       </Col>
                       <Col sm="10">
-                        <Form.Control
-                          placeholder="-"
-                          type="text"
-                          name="nomor_rekening"
-                          onChange={props.handleChange}
-                          onBlur={props.handleBlur}
-                        />
-                        {props.errors.nomor_rekening && props.touched.nomor_rekening ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nomor_rekening}</span>
-                        ) : null}
+                        <Form.Control placeholder="-" type="text" name="nomor_rekening" onChange={props.handleChange} onBlur={props.handleBlur} />
+                        {props.errors.nomor_rekening && props.touched.nomor_rekening ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nomor_rekening}</span> : null}
                       </Col>
                     </Row>
 
@@ -422,9 +371,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                             props.setFieldValue((props.values.atas_nama = input2));
                           }}
                         />
-                        {props.errors.atas_nama && props.touched.atas_nama ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.atas_nama}</span>
-                        ) : null}
+                        {props.errors.atas_nama && props.touched.atas_nama ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.atas_nama}</span> : null}
                       </Col>
                     </Row>
 
@@ -449,9 +396,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                             props.setFieldValue(`akun_piutang_name`, e.label);
                           }}
                         />
-                        {props.errors.akun_piutang_name && props.touched.akun_piutang_name ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_piutang_name}</span>
-                        ) : null}
+                        {props.errors.akun_piutang_name && props.touched.akun_piutang_name ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_piutang_name}</span> : null}
                       </Col>
                     </Row>
 
@@ -467,9 +412,7 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
                             props.setFieldValue(`akun_hutang_name`, e.label);
                           }}
                         />
-                        {props.errors.akun_hutang_name && props.touched.akun_hutang_name ? (
-                          <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_hutang_name}</span>
-                        ) : null}
+                        {props.errors.akun_hutang_name && props.touched.akun_hutang_name ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_hutang_name}</span> : null}
                       </Col>
                     </Row>
 

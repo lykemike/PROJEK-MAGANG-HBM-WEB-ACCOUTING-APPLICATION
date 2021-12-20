@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Layout from "../../components/layout";
+import Layout from "../../../components/layout";
 import Link from "next/link";
 import Head from "next/head";
 import { Button, Table, DropdownButton, Dropdown, Row, Col, Form, Card, InputGroup, FormControl } from "react-bootstrap";
@@ -19,57 +19,40 @@ import { Formik, Form as Forms, FieldArray } from "formik";
 const prisma = new PrismaClient();
 import { PrismaClient } from "@prisma/client";
 
-export default function TerimaUang({ data, data2, data3 }) {
+export default function kirim_uang({ data, data2, data3, data4 }) {
   const router = useRouter();
-  const url = "http://localhost:3000/api/kasbank/createTerimaUang";
-
-  const day = new Date();
-  const current = day.toISOString().slice(0, 10);
-
-  const validation = Yup.object().shape({
-    akun_setor_id: Yup.string().required("*required"),
-    kontak_id: Yup.string().required("*required"),
-  });
+  const url = "http://localhost:3000/api/kasbank/updateKirimUang";
 
   return (
     <Layout>
       <Formik
         initialValues={{
-          akun_setor_id: "",
-          kontak_id: "",
-          tgl_transaksi: current,
-          memo: "",
-          total: 0,
+          id: data4.id,
+          akun_bayar_id: data4.akun_bayar_id,
+          kontak_id: data4.kontak_id,
+          tgl_transaksi: data4.tgl_transaksi,
+          memo: data4.memo,
+          total: data4.total,
           fileattachment: [],
-          detail_terima_uang: [
-            {
-              akun_id: "",
-              nama_akun: "",
-              deskripsi: "-",
-              jumlah: 0,
-            },
-          ],
+          detail_kirim_uang: data4.DetailKirimUang,
         }}
-        validationSchema={validation}
         onSubmit={async (values) => {
           let formData = new FormData();
           for (var key in values) {
-            if (key == "detail_terima_uang") {
+            if (key == "detail_kirim_uang") {
               formData.append(`${key}`, JSON.stringify(values[key]));
             } else {
               formData.append(`${key}`, `${values[key]}`);
             }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
-
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           })
             .then(function (response) {
-              console.log(response);
-              // router.push(`view-terima/${response.data.id.id}`);
+              router.push(`../view-kirim/${response.data.id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -79,27 +62,28 @@ export default function TerimaUang({ data, data2, data3 }) {
         {(props) => (
           <Forms noValidate>
             <Head>
-              <title>Buat Terima Uang</title>
+              <title>Edit Kirim Uang</title>
             </Head>
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Transaksi</Typography>
               </Breadcrumbs>
-              <h2 className="text-blue-600">Terima Uang</h2>
+              <h2 className="text-blue-600">Edit Kirim Uang</h2>
             </div>
 
             <div class="border-b border-gray-200">
               <Row className="py-2">
                 <Col sm="3">
                   <label className="font-medium">
-                    Setor Ke
-                    {props.errors.akun_setor_id && props.touched.akun_setor_id ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.akun_setor_id}</span> : null}
+                    Bayar dari
+                    {props.errors.akun_bayar_id && props.touched.akun_bayar_id ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.akun_bayar_id}</span> : null}
                   </label>
                   <Select
                     options={data}
-                    name="akun_setor_id"
+                    defaultValue={{ label: data4.akun_bayar.kode_akun + " - " + data4.akun_bayar.nama_akun, value: props.values.akun_bayar_id }}
+                    name="akun_bayar_id"
                     onChange={(e) => {
-                      props.setFieldValue("akun_setor_id", e.value);
+                      props.setFieldValue("akun_bayar_id", e.value);
                     }}
                   />
                 </Col>
@@ -122,17 +106,16 @@ export default function TerimaUang({ data, data2, data3 }) {
             <div class="border-b border-gray-200">
               <Row className="py-2">
                 <Col sm="3">
-                  <label className="font-medium">
-                    Yang Membayar
-                    {props.errors.kontak_id && props.touched.kontak_id ? <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.kontak_id}</span> : null}
-                  </label>
+                  <label className="font-medium">Penerima</label>
                   <Select
                     options={data2}
+                    defaultValue={{ label: data4.kontak.nama_perusahaan, value: props.values.kontak_id }}
                     name="kontak_id"
                     onChange={(e) => {
                       props.setFieldValue("kontak_id", e.value);
                     }}
                   />
+                  {props.errors.kontak_id && props.touched.kontak_id ? <div class="text-red-500 text-sm mt-2">{props.errors.kontak_id}</div> : null}
                 </Col>
 
                 <Col sm="3">
@@ -153,25 +136,26 @@ export default function TerimaUang({ data, data2, data3 }) {
             <Table responsive>
               <thead className="bg-blue-500 text-white">
                 <tr>
-                  <th>Terima Dari</th>
+                  <th>Pembayaran Untuk Akun</th>
                   <th>Deskripsi</th>
                   <th>Jumlah</th>
                   <th />
                 </tr>
               </thead>
-              <FieldArray name="detail_terima_uang">
+              <FieldArray name="detail_kirim_uang">
                 {({ insert, remove, push }) => (
                   <tbody style={{ height: "10rem" }}>
-                    {props.values.detail_terima_uang.length > 0 &&
-                      props.values.detail_terima_uang.map((i, index) => (
+                    {props.values.detail_kirim_uang.length > 0 &&
+                      props.values.detail_kirim_uang.map((i, index) => (
                         <tr key={index}>
                           <td>
                             <Select
                               options={data3}
-                              name={`detail_terima_uang.${index}.akun_id`}
+                              name={`detail_kirim_uang.${index}.akun_id`}
+                              defaultValue={{ label: props.values.detail_kirim_uang[index].nama_akun, values: props.values.detail_kirim_uang[index].akun_bayar_id }}
                               onChange={(e) => {
-                                props.setFieldValue(`detail_terima_uang.${index}.akun_id`, e.value);
-                                props.setFieldValue(`detail_terima_uang.${index}.nama_akun`, e.label);
+                                props.setFieldValue(`detail_kirim_uang.${index}.akun_id`, e.value);
+                                props.setFieldValue(`detail_kirim_uang.${index}.nama_akun`, e.label);
                               }}
                             />
                           </td>
@@ -179,9 +163,10 @@ export default function TerimaUang({ data, data2, data3 }) {
                           <td>
                             <Form.Control
                               placeholder="-"
-                              name={`detail_terima_uang.${index}.deskripsi`}
+                              name={`detail_kirim_uang.${index}.deskripsi`}
+                              value={props.values.detail_kirim_uang[index].deskripsi}
                               onChange={(e) => {
-                                props.setFieldValue(`detail_terima_uang.${index}.deskripsi`, e.target.value);
+                                props.setFieldValue(`detail_kirim_uang.${index}.deskripsi`, e.target.value);
                               }}
                             />
                           </td>
@@ -191,12 +176,13 @@ export default function TerimaUang({ data, data2, data3 }) {
                               placeholder="0"
                               type="number"
                               min="0"
-                              name={`detail_terima_uang.${index}.jumlah`}
+                              name={`detail_kirim_uang.${index}.jumlah`}
+                              value={props.values.detail_kirim_uang[index].jumlah}
                               onChange={(e) => {
-                                props.setFieldValue((props.values.detail_terima_uang[index].jumlah = parseInt(e.target.value)));
-                                props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value));
+                                props.setFieldValue((props.values.detail_kirim_uang[index].jumlah = parseInt(e.target.value)));
+                                props.setFieldValue(`detail_kirim_uang.${index}.jumlah`, parseInt(e.target.value));
 
-                                const total = props.values.detail_terima_uang.reduce((a, b) => (a = a + b.jumlah), 0);
+                                const total = props.values.detail_kirim_uang.reduce((a, b) => (a = a + b.jumlah), 0);
                                 props.setFieldValue((props.values.total = total));
                                 props.setFieldValue(`total`, total);
                               }}
@@ -211,17 +197,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                         </tr>
                       ))}
 
-                    <Button
-                      className="ml-2 mt-4"
-                      onClick={() =>
-                        push({
-                          akun_id: "",
-                          nama_akun: "",
-                          deskripsi: "-",
-                          jumlah: 0,
-                        })
-                      }
-                    >
+                    <Button className="ml-2 mt-4" variant="primary" onClick={() => push({ akun_id: "", nama_akun: "", deskripsi: "-", jumlah: 0 })}>
                       <AddIcon fontSize="small" /> Tambah data
                     </Button>
                   </tbody>
@@ -235,7 +211,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                   <Form.Group controlId="exampleForm.ControlTextarea1">
                     <label className="font-medium">Memo</label>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
-                      <Form.Control as="textarea" rows={3} name="memo" placeholder="-" onChange={props.handleChange} />
+                      <Form.Control as="textarea" rows={3} name="memo" value={props.values.memo} onChange={props.handleChange} />
                       {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
                     </Form.Group>
                   </Form.Group>
@@ -247,10 +223,12 @@ export default function TerimaUang({ data, data2, data3 }) {
                   <Row>
                     <Col sm="8">Total</Col>
                     <Col sm="4">
-                      Rp.{" "}
-                      {props.values.total.toLocaleString({
-                        minimumFractionDigits: 0,
-                      })}
+                      <label name="total">
+                        Rp.{" "}
+                        {props.values.total.toLocaleString({
+                          minimumFractionDigits: 0,
+                        })}
+                      </label>
                     </Col>
                   </Row>
                 </Col>
@@ -258,12 +236,10 @@ export default function TerimaUang({ data, data2, data3 }) {
             </div>
 
             <div className="flex justify-end mb-10">
-              <Button variant="danger mr-2">
-                <HighlightOffIcon fontSize="medium" /> Batal
-              </Button>
+              <Button variant="danger mr-2">Batal</Button>
 
               <Button variant="success" type="submit" onClick={props.handleSubmit}>
-                <CheckCircleIcon fontSize="medium" /> Buat Transferan
+                Update Kirim Uang
               </Button>
             </div>
           </Forms>
@@ -273,7 +249,8 @@ export default function TerimaUang({ data, data2, data3 }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { edit } = context.query;
   const get_akun_kas_bank = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
@@ -281,12 +258,12 @@ export async function getServerSideProps() {
   });
 
   let akun_kas_bank = [];
-  get_akun_kas_bank.map((i) => {
+  get_akun_kas_bank.map((i) =>
     akun_kas_bank.push({
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
-    });
-  });
+    })
+  );
 
   const get_kontaks = await prisma.kontak.findMany({
     orderBy: {
@@ -302,27 +279,43 @@ export async function getServerSideProps() {
     })
   );
 
-  const get_akun_awalan_piutang = await prisma.akun.findMany({
+  const get_akun_utang = await prisma.akun.findMany({
     where: {
-      nama_akun: {
-        startsWith: "piutang",
+      kategoriId: {
+        in: [8, 10, 11],
       },
     },
   });
 
-  const akun_awalan_piutang = [];
-  get_akun_awalan_piutang.map((i) => {
-    akun_awalan_piutang.push({
+  let akun_utang = [];
+  get_akun_utang.map((i) =>
+    akun_utang.push({
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
-    });
+    })
+  );
+
+  const get_kirim_uang = await prisma.headerKirimUang.findFirst({
+    where: {
+      id: parseInt(edit),
+    },
+    include: {
+      DetailKirimUang: {
+        include: {
+          akun: true,
+        },
+      },
+      akun_bayar: true,
+      kontak: true,
+    },
   });
 
   return {
     props: {
       data: akun_kas_bank,
       data2: kontaks,
-      data3: akun_awalan_piutang,
+      data3: akun_utang,
+      data4: get_kirim_uang,
     },
   };
 }

@@ -71,7 +71,7 @@ export default function Pengeluaran({ data }) {
   const handleChange = (e) => {
     e.preventDefault();
     if (e.target.value !== "") {
-      setSearch(product.filter((i) => i.kontak.nama.toLowerCase().includes(e.target.value.toLowerCase())));
+      setSearch(product.filter((i) => i.akun.nama_akun.toLowerCase().includes(e.target.value.toLowerCase())));
     } else {
       setSearch([]);
     }
