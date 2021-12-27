@@ -47,6 +47,7 @@ Penjualan
   * Ketika sudah mencet tombol DONE 
     - jurnal otomatis terbuat = 100%
     - maka penerimaan pembayaran tersebut sudah tidak bisa di UPDATE = 100%
+    - otomatis update ke saldo saat ini = 50%
 
 - Tabel Penjualan = 100%
   * View Penjualan = 100%
@@ -56,6 +57,8 @@ Penjualan
 Setting
 - Detail Bank UI = 100%
 - Create detail bank = 100%
+- Show Detail Bank = 100%
+- Edit, Delete Detail Bank = 50%
 
 Biaya
   * Perubahan UI create dan update sesuai requirements = 100%
@@ -68,6 +71,7 @@ Biaya
   * View invoice = 100%
   * Validasi frontend & backend = 100%
   * Cetak Biaya = 100%
+  * Mencoba create, update, delete  ke Sisa Saldo Kas Bank = 100%
 
 Reimbursement
   * Perbaikan UI = 100%
@@ -118,6 +122,13 @@ Kas Bank
   * Transfer Uang
     - Update, Delete = 100%
 
+Pembelian
+  * Perubahan UI create dan update sesuai requirements = 100%
+  * Perubahan database header & detail penjualan = 100%
+  * Create Penagihan Penjualan = 100%
+  * Update Penagihan Penjualan = 20%
+  * Delete Penagihan Penjualan = 20%
+  * Pengiriman Pembayaran = 40%
 
 NOTES
 =================================
@@ -141,3 +152,51 @@ TANYA
   - cara buat alert success, failed
   - merge data yang sama
   - show more than 2 items di invoice penerimaan pembayaran with one subtotal
+
+DATA YANG BERBEDA
+contoh: 
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 5000
+  },
+  {
+    akun_id: 2,
+    sisa_saldo: 5000
+  }
+]
+expected hasil: 
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 5000
+  },
+  {
+    akun_id: 2,
+    sisa_saldo: 5000
+  }
+]
+
+DATA YANG SAMA
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 5000
+  },
+  {
+    akun_id: 2,
+    sisa_saldo: 5000
+  }
+]
+
+expected hasil: 
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 10000
+  },
+]

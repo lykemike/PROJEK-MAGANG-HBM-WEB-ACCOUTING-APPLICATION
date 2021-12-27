@@ -21,10 +21,7 @@ export default function updateRole({ data }) {
   const formik = useRef(null);
 
   const RoleSchema = Yup.object().shape({
-    role_type: Yup.string()
-      .min(2, " characters must be more than 1")
-      .max(30, " characters must be less than 30")
-      .required(" required"),
+    role_type: Yup.string().min(2, " characters must be more than 1").max(30, " characters must be less than 30").required(" required"),
   });
 
   function cancelButton() {
@@ -42,7 +39,7 @@ export default function updateRole({ data }) {
         initialValues={{
           role_type: data.roleType,
           role_desc: data.roleDesc,
-          menu: [],
+          menu: data.RolePrivellege.map((i) => i.menu_id.toString()),
         }}
         validationSchema={RoleSchema}
         onSubmit={async (values) => {
@@ -74,85 +71,81 @@ export default function updateRole({ data }) {
                 <Form>
                   <Row className="mb-2">
                     <Col sm="2">
-                      <Form.Label>Role Name</Form.Label>
+                      <label className="font-medium">Role Name</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control
-                        placeholder={props.values.role_type}
-                        name="role_type"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
-                      {props.errors.role_type && props.touched.role_type ? (
-                        <div class="text-red-500 text-sm">*{props.errors.role_type}</div>
-                      ) : null}
+                      <Form.Control value={props.values.role_type} name="role_type" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      {props.errors.role_type && props.touched.role_type ? <div class="text-red-500 text-sm">*{props.errors.role_type}</div> : null}
                     </Col>
                   </Row>
 
                   <Row className="mb-2">
                     <Col sm="2">
-                      <Form.Label>Role Description</Form.Label>
+                      <label className="font-medium">Role Description</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control
-                        placeholder={props.values.role_desc}
-                        name="role_desc"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
+                      <Form.Control value={props.values.role_desc} name="role_desc" onChange={props.handleChange} onBlur={props.handleBlur} />
                     </Col>
                   </Row>
 
                   <Row>
                     <Col sm="2">
-                      <Form.Label>Access Menu</Form.Label>
+                      <label className="font-medium">Access Menu</label>
                     </Col>
 
                     <Col sm="2" className="ml-3">
                       <div role="group" aria-labelledby="checkbox-group">
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="1" /> Dashboard
+                            <Field type="checkbox" name="menu" value="1" className="mr-2" />
+                            Dashboard
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="2" /> Jurnal
+                            <Field type="checkbox" name="menu" value="2" className="mr-2" />
+                            Jurnal
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="3" /> User
+                            <Field type="checkbox" name="menu" value="3" className="mr-2" />
+                            User
                           </label>
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="4" /> Role
-                          </label>
-                        </Row>
-
-                        <Row>
-                          <label>
-                            <Field type="checkbox" name="menu" value="5" /> Daftar Akun
+                            <Field type="checkbox" name="menu" value="4" className="mr-2" />
+                            Role
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="6" /> Kontak
+                            <Field type="checkbox" name="menu" value="5" className="mr-2" />
+                            Daftar Akun
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="7" /> Laporan
+                            <Field type="checkbox" name="menu" value="6" className="mr-2" />
+                            Kontak
+                          </label>
+                        </Row>
+
+                        <Row>
+                          <label>
+                            <Field type="checkbox" name="menu" value="7" className="mr-2" />
+                            Laporan
                           </label>
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="15" /> Reimbursement
+                            <Field type="checkbox" name="menu" value="15" className="mr-2" />
+                            Reimbursement
                           </label>
                         </Row>
                       </div>
@@ -162,48 +155,55 @@ export default function updateRole({ data }) {
                       <div role="group" aria-labelledby="checkbox-group">
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="8" /> Pajak
+                            <Field type="checkbox" name="menu" value="8" className="mr-2" />
+                            Pajak
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="9" /> Produk
+                            <Field type="checkbox" name="menu" value="9" className="mr-2" />
+                            Produk
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="10" />
+                            <Field type="checkbox" name="menu" value="10" className="mr-2" />
                             Kas & Bank
                           </label>
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="11" /> Penjualan
+                            <Field type="checkbox" name="menu" value="11" className="mr-2" />
+                            Penjualan
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="12" /> Pembelian
+                            <Field type="checkbox" name="menu" value="12" className="mr-2" />
+                            Pembelian
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="13" /> Biaya
+                            <Field type="checkbox" name="menu" value="13" className="mr-2" />
+                            Biaya
                           </label>
                         </Row>
 
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="14" /> Pengaturan
+                            <Field type="checkbox" name="menu" value="14" className="mr-2" />
+                            Pengaturan
                           </label>
                         </Row>
                         <Row>
                           <label>
-                            <Field type="checkbox" name="menu" value="16" /> Aset
+                            <Field type="checkbox" name="menu" value="16" className="mr-2" />
+                            Aset
                           </label>
                         </Row>
                       </div>

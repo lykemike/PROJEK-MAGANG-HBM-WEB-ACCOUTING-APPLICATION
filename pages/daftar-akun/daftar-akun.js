@@ -161,7 +161,7 @@ export default function DaftarAkun({ data }) {
                   </TableCell>
                   <TableCell>
                     Rp.
-                    {i.DetailSaldoAwal[0].sisa_saldo.toLocaleString({ minimumFractionDigits: 0 })}
+                    {i.DetailSaldoAwal.length == 0 ? " 0, 00" : i.DetailSaldoAwal[0].sisa_saldo.toLocaleString({ minimumFractionDigits: 0 })}
                   </TableCell>
                   <TableCell align="right">
                     <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />

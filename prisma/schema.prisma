@@ -68,7 +68,7 @@ model TipeAkun {
 // Akun table
 model Akun {
   id            Int      @id @default(autoincrement())
-  kode_akun     String
+  kode_akun     String   @unique
   tipe_akun     TipeAkun @relation(fields: [tipeId], references: [id])
   tipeId        Int
   nama_akun     String

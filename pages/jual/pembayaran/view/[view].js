@@ -177,11 +177,14 @@ export default function View({ data }) {
                           </TableRow>
                         ))}
                   </TableBody>
-                  <TableBody>
-                    <TableCell className="font-medium">Jurnal Done</TableCell>
-                    <TableCell />
-                    <TableCell />
-                  </TableBody>
+
+                  {data[0].status == "Process" ? null : (
+                    <TableBody>
+                      <TableCell className="font-medium">Jurnal Done</TableCell>
+                      <TableCell />
+                      <TableCell />
+                    </TableBody>
+                  )}
 
                   {data[0].header_penjualan.tipe_perusahaan == "false"
                     ? data[0].JurnalPenerimaanPembayaran.slice(3, 5).map((i, index) => (

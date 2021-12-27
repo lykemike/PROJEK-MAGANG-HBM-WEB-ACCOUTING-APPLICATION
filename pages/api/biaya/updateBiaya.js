@@ -37,6 +37,27 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
+    const find_header_biaya = await prisma.headerBiaya.findFirst({
+      where: {
+        id: parseInt(req.body.id),
+      },
+    });
+
+    const find_old_akun = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: find_header_biaya.akun_id,
+      },
+    });
+
+    const revert_saldo_skrg = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: find_header_biaya.akun_id,
+      },
+      data: {
+        sisa_saldo: find_old_akun.sisa_saldo + parseInt(req.body.total),
+      },
+    });
+
     const frontend_data = {
       akun_id: parseInt(req.body.akun_id),
       tgl_transaksi: req.body.tgl_transaksi,
@@ -49,6 +70,21 @@ export default async (req, res) => {
       subtotal: parseInt(req.body.subtotal),
       total: parseInt(req.body.total),
     };
+
+    const find_saldo_skrg = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: frontend_data.akun_id,
+      },
+    });
+
+    const update_kas = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: frontend_data.akun_id,
+      },
+      data: {
+        sisa_saldo: find_saldo_skrg.sisa_saldo - parseInt(req.body.total),
+      },
+    });
 
     const header_biaya_id = parseInt(req.body.id);
 

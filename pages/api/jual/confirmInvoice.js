@@ -18,8 +18,48 @@ export default async (req, res) => {
           },
         },
         akun: true,
+        JurnalPenerimaanPembayaran: {
+          include: {
+            akun: true,
+          },
+        },
       },
     });
+
+    const get_saldo_skrg = await prisma.detailSaldoAwal.findMany({
+      where: {
+        akun_id: {
+          in: get_penerimaan_pembayaran.JurnalPenerimaanPembayaran.map((i) => i.akun_id),
+        },
+      },
+    });
+
+    let sisa_saldo_skrg = [];
+    get_penerimaan_pembayaran.JurnalPenerimaanPembayaran.map((i) => {
+      sisa_saldo_skrg.push({
+        akun_id: i.akun_id,
+        nominal: i.nominal,
+      });
+    });
+
+    let new_sisa_saldo_skrg = [];
+    sisa_saldo_skrg.map((i, index) => {
+      new_sisa_saldo_skrg.push({
+        akun_id: i.akun_id,
+        nominal: get_saldo_skrg[index].sisa_saldo + i.nominal,
+      });
+    });
+
+    for (var k = 0; k < get_saldo_skrg.length; k++) {
+      const update_saldo_skrg = await prisma.detailSaldoAwal.updateMany({
+        where: {
+          akun_id: new_sisa_saldo_skrg[k].akun_id,
+        },
+        data: {
+          sisa_saldo: new_sisa_saldo_skrg[k].nominal,
+        },
+      });
+    }
 
     const tipe_perusahaan = get_penerimaan_pembayaran.header_penjualan.tipe_perusahaan;
     const akun_kas_kecil = get_penerimaan_pembayaran.akun_id;
@@ -91,7 +131,7 @@ export default async (req, res) => {
 
     const message = "All data successfully DONE";
 
-    res.status(201).json({ message: "Complete invoice penerimaan pembayaran success!", data: message });
+    res.status(201).json({ message: "Complete invoice penerimaan pembayaran success!", get_penerimaan_pembayaran, get_saldo_skrg, sisa_saldo_skrg, new_sisa_saldo_skrg });
   } catch (error) {
     res.status(400).json({ data: "Comeplete invoice penerimaan pembayaran failed!", error });
     console.log(error);

@@ -3,6 +3,27 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
+    const find_header_biaya_total = await prisma.headerBiaya.findFirst({
+      where: {
+        id: parseInt(req.body.header_biaya_id),
+      },
+    });
+
+    const find_saldo_skrg = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: find_header_biaya_total.akun_id,
+      },
+    });
+
+    const revert_saldo = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: find_header_biaya_total.akun_id,
+      },
+      data: {
+        sisa_saldo: find_saldo_skrg.sisa_saldo + find_header_biaya_total.total,
+      },
+    });
+
     const delete_jurnal_biaya = prisma.jurnalBiaya.deleteMany({
       where: {
         header_biaya_id: parseInt(req.body.header_biaya_id),

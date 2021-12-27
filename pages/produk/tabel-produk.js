@@ -203,9 +203,6 @@ export default function tabelProduk({ data }) {
               <TableHead className="bg-dark">
                 <TableRow>
                   <TableCell>
-                    <FormCheck />
-                  </TableCell>
-                  <TableCell>
                     <Typography className="text-white font-bold">Nama Produk</Typography>
                   </TableCell>
                   <TableCell>
@@ -228,9 +225,6 @@ export default function tabelProduk({ data }) {
                   .slice(firstIndex, lastIndex)
                   .map((i, index) => (
                     <TableRow key={index}>
-                      <TableCell style={{ minWidth: 50, width: 50 }}>
-                        <FormCheck />
-                      </TableCell>
                       <TableCell style={{ minWidth: 350, width: 350 }}>{i.nama.length > 40 ? i.nama.slice(0, 40) + "..." : i.nama}</TableCell>
                       <TableCell style={{ minWidth: 250, width: 250 }}>{i.kategori.nama}</TableCell>
                       <TableCell style={{ minWidth: 250, width: 250 }}>{i.deskripsi.length > 40 ? i.deskripsi.slice(0, 40) + "..." : i.deskripsi}</TableCell>
