@@ -38,183 +38,108 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      kontak_id: parseInt(req.body.nama_supplier),
+      kontak_id: parseInt(req.body.kontak_id),
       nama_supplier: req.body.nama_supplier,
       email: req.body.email,
-      alamat_supplier: req.body.alamat_supplier,
+      alamat_perusahaan: req.body.alamat_perusahaan,
+      akun_hutang_supplier_id: parseInt(req.body.akun_hutang_supp),
       tgl_transaksi: req.body.tgl_transaksi,
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
-      syarat_pembayaran: String(req.body.syarat_pembayaran),
+      syarat_pembayaran_id: parseInt(req.body.syarat_pembayaran_id),
+      syarat_pembayaran_nama: req.body.syarat_pembayaran_nama,
       no_ref_penagihan: req.body.no_ref_penagihan,
       no_transaksi: parseInt(req.body.no_transaksi),
-      tag: req.body.tag,
-      pesan: req.body.pesan,
       memo: req.body.memo,
+
       file_attachment: req.file.filename,
       subtotal: parseInt(req.body.subtotal),
-      total_diskon_per_baris: parseInt(req.body.total_diskon_per_baris),
-      diskon: parseInt(req.body.diskon),
       total_diskon: parseInt(req.body.total_diskon),
-      total_pajak_per_baris: parseInt(req.body.total_pajak_per_baris),
-      total: parseInt(req.body.total),
-      pemotongan: parseInt(req.body.pemotongan),
-      pemotongan_total: parseInt(req.body.pemotongan_total),
-      akun_pemotongan: parseInt(req.body.akun_pemotongan),
-      uang_muka: parseInt(req.body.uang_muka),
-      akun_uang_muka: parseInt(req.body.akun_uang_muka),
+      pajak_id: parseInt(req.body.pajak_id),
+      pajak_nama: req.body.pajak_nama,
+      pajak_persen: parseInt(req.body.pajak_persen),
+      total_pajak: parseInt(req.body.total_pajak),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
+      total: parseInt(req.body.sisa_tagihan),
       status: "Active",
+      akun_diskon_pembelian_id: parseInt(req.body.akun_diskon_pembelian_id),
+      akun_diskon_pembelian_nama: req.body.akun_diskon_pembelian_nama,
     };
 
     const update_header = await prisma.headerPembelian.update({
       where: {
-        id: parseInt(req.body.no_transaksi)
+        id: parseInt(req.body.no_transaksi),
       },
-      data: frontend_data
-    })
+      data: frontend_data,
+    });
 
     const delete_old_detail = await prisma.detailPembelian.deleteMany({
       where: {
-        header_pembelian_id: parseInt(req.body.no_transaksi)
-      }
-    })
+        header_pembelian_id: parseInt(req.body.no_transaksi),
+      },
+    });
 
     const delete_old_jurnal = await prisma.jurnalPembelian.deleteMany({
       where: {
-        header_pembelian_id: parseInt(req.body.no_transaksi)
-      }
-    })
-
-    const get_setting_pembelian = await prisma.settingDefault.findMany({
-      where: {
-        tipe: "pembelian",
-      },
-      include: {
-        akun: true,
+        header_pembelian_id: parseInt(req.body.no_transaksi),
       },
     });
 
-    const setting_pembelian_cogs = get_setting_pembelian.filter((i) => i.nama_setting === "pembelian_cogs");
-    const setting_pemotongan = get_setting_pembelian.filter((i) => i.nama_setting === "pemotongan");
-    const setting_uang_muka_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "uang_muka_pembelian");
-    const setting_hutang_blm_ditagih = get_setting_pembelian.filter((i) => i.nama_setting === "hutang_blm_ditagih");
-    const setting_pajak_pembelian = get_setting_pembelian.filter((i) => i.nama_setting === "pajak_pembelian");
-    const diskon_penjualan = get_setting_pembelian.filter((i) => i.nama_setting === "diskon_penjualan");
-    const total_diskon = parseInt(req.body.total_diskon_per_baris) + parseInt(req.body.total_diskon);
-    
     let detail = [];
-    req.body.produks &&
-      JSON.parse(req.body.produks).map((i) => {
-        if (parseInt(i.hasil_pajak) == 0) {
-          detail.push({
-            header_pembelian_id: parseInt(req.body.no_transaksi),
-            produk_id: parseInt(i.produk_id),
-            nama_produk: i.nama_produk,
-            desk_produk: i.deskripsi_produk,
-            kuantitas: parseInt(i.kuantitas),
-            satuan: i.satuan,
-            harga_satuan: parseInt(i.harga_satuan),
-            diskon: parseInt(i.diskon),
-            hasil_diskon: parseInt(i.hasil_diskon),
-            pajak_id: 1,
-            pajak_nama: "KOSONG",
-            pajak_persen: 0,
-            hasil_pajak: 0,
-            jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_beli: setting_pajak_pembelian[0].akun.nama_akun,
-          });
-        } else {
-          detail.push({
-            header_pembelian_id: parseInt(req.body.no_transaksi),
-            produk_id: parseInt(i.produk_id),
-            nama_produk: i.nama_produk,
-            desk_produk: i.deskripsi_produk,
-            kuantitas: parseInt(i.kuantitas),
-            satuan: i.satuan,
-            harga_satuan: parseInt(i.harga_satuan),
-            diskon: parseInt(i.diskon),
-            hasil_diskon: parseInt(i.hasil_diskon),
-            pajak_id: parseInt(i.pajak_id),
-            pajak_nama: i.pajak_nama,
-            pajak_persen: parseInt(i.pajak_persen),
-            hasil_pajak: parseInt(i.hasil_pajak),
-            jumlah: parseInt(i.jumlah),
-            pajak_nama_akun_beli: i.pajak_nama_akun_beli,
-          });
-        }
+    req.body.akun_beli &&
+      JSON.parse(req.body.akun_beli).map((i) => {
+        detail.push({
+          header_pembelian_id: parseInt(req.body.no_transaksi),
+          akun_pembelian_id: parseInt(i.akun_pembelian_id),
+          nama_akun_pembelian: i.nama_akun_pembelian,
+          deskripsi: i.deskripsi,
+          kuantitas: parseInt(i.kuantitas),
+
+          harga_satuan: parseInt(i.harga_satuan),
+          diskon: parseInt(i.diskon),
+
+          total: parseInt(i.jumlah),
+          jumlah: parseInt(i.jumlah),
+        });
       });
 
-      const create_detail =  await prisma.detailPembelian.createMany({
-        data: detail,
+    const create_detail = await prisma.detailPembelian.createMany({
+      data: detail,
+    });
+
+    let list_akun = [];
+    detail.map((i) => {
+      list_akun.push({
+        header_pembelian_id: parseInt(req.body.no_transaksi),
+        akun_id: parseInt(i.akun_pembelian_id),
+        nominal: parseInt(i.jumlah),
+        tipe_saldo: "Debit",
       });
-
-      let list_pajak = [];
-      detail.map((i) => {
-      if (i.nama_pajak == "" || i.hasil_pajak == 0) {
-        list_pajak.push({
-          header_pembelian_id: parseInt(req.body.no_transaksi),
-          nama_akun: setting_pajak_pembelian[0].akun.nama_akun,
-          nominal: 0,
-          tipe_saldo: "Debit",
-        });
-      } else {
-        list_pajak.push({
-          header_pembelian_id: parseInt(req.body.no_transaksi),
-          nama_akun: i.pajak_nama_akun_beli,
-          nominal: parseInt(i.hasil_pajak),
-          tipe_saldo: "Debit",
-        });
-      }
-    });
-    
-    const akunUangMuka = await prisma.akun.findMany({
-      where: {
-        id: parseInt(req.body.akun_uang_muka),
-      },
-    });
-
-    const akunPemotongan = await prisma.akun.findMany({
-      where: {
-        id: parseInt(req.body.akun_pemotongan),
-      },
     });
 
     const add_jurnal_pembelian = await prisma.jurnalPembelian.createMany({
-     data: list_pajak,
-    })
+      data: list_akun,
+    });
 
     const create_kredit_jurnal = await prisma.jurnalPembelian.createMany({
       data: [
-      {
-        header_pembelian_id: parseInt(req.body.no_transaksi),
-        nama_akun: setting_pembelian_cogs[0].akun.nama_akun,
-        nominal: parseInt(req.body.subtotal),
-        tipe_saldo: "Debit",
-      },  
-      {
-        header_pembelian_id: parseInt(req.body.no_transaksi),
-        nama_akun: setting_pemotongan[0].akun.nama_akun,
-        nominal: parseInt(req.body.pemotongan),
-        tipe_saldo: "Kredit",
-      },
-      {
-        header_pembelian_id: parseInt(req.body.no_transaksi),
-        nama_akun: diskon_penjualan[0].akun.nama_akun,
-        nominal: parseInt(total_diskon),
-        tipe_saldo: "Kredit",
-      },
-      {
-        header_pembelian_id: parseInt(req.body.no_transaksi),
-        nama_akun: setting_uang_muka_pembelian[0].akun.nama_akun,
-        nominal: parseInt(req.body.uang_muka),
-        tipe_saldo: "Kredit",
-      },
-      {
-        header_pembelian_id: parseInt(req.body.no_transaksi),
-        nama_akun: setting_hutang_blm_ditagih[0].akun.nama_akun,
-        nominal: parseInt(req.body.sisa_tagihan),
-        tipe_saldo: "Kredit",
-      },
+        {
+          header_pembelian_id: parseInt(req.body.no_transaksi),
+          akun_id: parseInt(req.body.akun_diskon_pembelian_id),
+          nominal: parseInt(req.body.total_diskon),
+          tipe_saldo: "Kredit",
+        },
+        {
+          header_pembelian_id: parseInt(req.body.no_transaksi),
+          akun_id: parseInt(req.body.pajak_id),
+          nominal: parseInt(req.body.total_pajak),
+          tipe_saldo: "Debit",
+        },
+        {
+          header_pembelian_id: parseInt(req.body.no_transaksi),
+          akun_id: parseInt(req.body.akun_hutang_supp),
+          nominal: parseInt(req.body.sisa_tagihan),
+          tipe_saldo: "Kredit",
+        },
       ],
     });
 
@@ -230,4 +155,3 @@ export const config = {
     bodyParser: false,
   },
 };
-

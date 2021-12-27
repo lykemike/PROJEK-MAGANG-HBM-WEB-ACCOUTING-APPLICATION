@@ -9,6 +9,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import Link from "next/Link";
+import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
+import { KeyboardArrowDown, KeyboardArrowUp, Visibility, Edit, Delete, Icon, AssignmentTurnedIn } from "@material-ui/icons/";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
@@ -54,171 +56,92 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
   }
   return (
     <>
-      {view == "biaya" ? (
-        <TableBody>
-          <TableRow>
-            <TableCell>
-              <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
-            </TableCell>
-            <TableCell component="th" scope="row">
-              {data.tgl_transaksi}
-            </TableCell>
-            <TableCell>
-              {label} #{data.id}
-            </TableCell>
-            <TableCell>
-              {data.akun1.nama_akun.length > 28 ? data.akun1.nama_akun.slice(0, 28) + "..." : data.akun1.nama_akun}
-            </TableCell>
-            <TableCell>{data.kontak.nama}</TableCell>
-            <TableCell>{data.tag}</TableCell>
-            <TableCell>{status(data.tgl_jatuh_tempo, data.status)}</TableCell>
-            <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-            <TableCell>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-            <TableCell align="center">
-              <Link href={`../../${view}/view/${data.id}`}>
-                <a>
-                  <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
-                </a>
-              </Link>
-              <Link href={`../../${view}/${data.id}`}>
-                <a>
-                  <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
-                </a>
-              </Link>
-              <DeleteOutlineIcon color="secondary" fontSize="small" />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                <Box margin={1}>
-                  <Typography variant="body1" gutterBottom component="div" className="text-black font-bold">
-                    History {label2}
-                  </Typography>
-                  <Table size="small" aria-label="purchases">
-                    <TableHead className="bg-blue-300">
+      <TableBody>
+        <TableRow>
+          <TableCell>
+            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row">
+            {data.tgl_transaksi}
+          </TableCell>
+          <TableCell>
+            {label} #{data.id}
+          </TableCell>
+          <TableCell>{data.kontak.nama}</TableCell>
+          <TableCell>{data.tgl_jatuh_tempo}</TableCell>
+
+          <TableCell>{status(data.tgl_jatuh_tempo, data.status)}</TableCell>
+          <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          <TableCell align="center">
+            <Link href={`../../${view}/view/${data.id}`}>
+              <a>
+                <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
+              </a>
+            </Link>
+            <Link href={`../../${view}/${data.id}`}>
+              <a>
+                <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+              </a>
+            </Link>
+            <DeleteOutlineIcon className="cursor-pointer" color="secondary" fontSize="small" onClick={modalDelete} />
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box margin={1}>
+                <Typography variant="body1" gutterBottom component="div" className="text-black font-bold">
+                  History {label2}
+                </Typography>
+                <Table size="small" aria-label="purchases">
+                  <TableHead className="bg-blue-300">
+                    <TableRow>
+                      <TableCell>Jumlah Transaksi</TableCell>
+                      <TableCell>Cara Pembayaran</TableCell>
+                      <TableCell>Tanggal Pembayaran</TableCell>
+                      <TableCell>Total Pembayaran</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {detail.map((i) => (
                       <TableRow>
-                        <TableCell>Jumlah Transaksi</TableCell>
-                        <TableCell>Cara Pembayaran</TableCell>
-                        <TableCell>Tanggal Pembayaran</TableCell>
-                        <TableCell>Total Pembayaran</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {detail.map((i) => (
-                        <TableRow>
-                          <TableCell component="th" scope="row" align="center">
-                            {autoIncrement++}
-                          </TableCell>
-                          <Link href={`../../${view}/pembayaran/view/${data.id}`}>
+                        <TableCell component="th" scope="row" align="center">
+                          {autoIncrement++}
+                        </TableCell>
+                        <Link href={`../../${view}/pembayaran/view/${i.id}`}>
+                          <TableCell className="cursor-pointer hover:text-blue-600">{i.cara_pembayaran_nama}</TableCell>
+                        </Link>
+                        <TableCell>{i.tgl_pembayaran}</TableCell>
+                        <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                        <TableCell>
+                          <Link href={`../beli/pembayaran/view/${i.id}`}>
                             <a>
-                              <TableCell>{i.cara_pembayaran}</TableCell>
+                              <Button variant="info" size="sm" className="mr-2">
+                                <Visibility className="text-white" fontSize="small" />
+                              </Button>
                             </a>
                           </Link>
-                          <TableCell>{i.tgl_pembayaran}</TableCell>
-                          <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TableCell />
-                        <TableCell />
-                        <TableCell>Total Pembayaran</TableCell>
-                        <TableCell>
-                          Rp. {detail.reduce((a, b) => (a = a + b.jumlah), 0).toLocaleString({ minimumFractionDigits: 0 })}
                         </TableCell>
                       </TableRow>
-                    </TableFooter>
-                  </Table>
-                </Box>
-              </Collapse>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      ) : (
-        <TableBody>
-          <TableRow>
-            <TableCell>
-              <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
-            </TableCell>
-            <TableCell component="th" scope="row">
-              {data.tgl_transaksi}
-            </TableCell>
-            <TableCell>
-              {label} #{data.id}
-            </TableCell>
-            <TableCell>{data.kontak.nama}</TableCell>
-            <TableCell>{data.tgl_jatuh_tempo}</TableCell>
-            <TableCell>{data.tag}</TableCell>
-            <TableCell>{status(data.tgl_jatuh_tempo, data.status)}</TableCell>
-            <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-            <TableCell>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-            <TableCell align="center">
-              <Link href={`../../${view}/view/${data.id}`}>
-                <a>
-                  <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
-                </a>
-              </Link>
-              <Link href={`../../${view}/${data.id}`}>
-                <a>
-                  <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
-                </a>
-              </Link>
-              <DeleteOutlineIcon className="cursor-pointer" color="secondary" fontSize="small" onClick={modalDelete} />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                <Box margin={1}>
-                  <Typography variant="body1" gutterBottom component="div" className="text-black font-bold">
-                    History {label2}
-                  </Typography>
-                  <Table size="small" aria-label="purchases">
-                    <TableHead className="bg-blue-300">
-                      <TableRow>
-                        <TableCell>Jumlah Transaksi</TableCell>
-                        <TableCell>Cara Pembayaran</TableCell>
-                        <TableCell>Tanggal Pembayaran</TableCell>
-                        <TableCell>Total Pembayaran</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {detail.map((i) => (
-                        <TableRow>
-                          <TableCell component="th" scope="row" align="center">
-                            {autoIncrement++}
-                          </TableCell>
-                          <Link href={`../../${view}/pembayaran/view/${i.id}`}>
-                            <TableCell className="cursor-pointer hover:text-blue-600">{i.cara_pembayaran}</TableCell>
-                          </Link>
-                          <TableCell>{i.tgl_pembayaran}</TableCell>
-                          <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TableCell />
-                        <TableCell />
-                        <TableCell>Total Pembayaran</TableCell>
-                        <TableCell>
-                          Rp. {detail.reduce((a, b) => (a = a + b.jumlah), 0).toLocaleString({ minimumFractionDigits: 0 })}
-                        </TableCell>
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </Box>
-              </Collapse>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      )}
+                    ))}
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell />
+                      <TableCell>Total Pembayaran</TableCell>
+                      <TableCell>Rp. {detail.reduce((a, b) => (a = a + b.jumlah), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </TableBody>
     </>
   );
 }

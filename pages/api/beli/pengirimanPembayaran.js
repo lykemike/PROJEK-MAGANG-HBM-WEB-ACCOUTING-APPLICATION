@@ -5,10 +5,12 @@ export default async (req, res) => {
   try {
     const frontend_data = {
       header_pembelian_id: parseInt(req.body.id),
-      akun_id: parseInt(req.body.bayar_dari),
-      cara_pembayaran: req.body.carapembayaran,
+      akun_id: parseInt(req.body.akun_id),
+      nama_akun_bayar_dari: req.body.nama_akun_bayar_dari,
+      cara_pembayaran_id: parseInt(req.body.cara_pembayaran_id),
+      cara_pembayaran_nama: req.body.cara_pembayaran_nama,
       tgl_pembayaran: req.body.tgl_pembayaran,
-      tgl_jauth_tempo: req.body.tgl_jatuh_tempo,
+
       jumlah: parseInt(req.body.jumlah),
     };
 
@@ -28,14 +30,14 @@ export default async (req, res) => {
 
     const sisa = parseInt(find_header_pembelian.sisa_tagihan) - parseInt(req.body.jumlah);
 
-    if (sisa == 0){
+    if (sisa == 0) {
       const update_sisa_tagihan = await prisma.headerPembelian.update({
         where: {
           id: parseInt(req.body.id),
         },
         data: {
           sisa_tagihan: sisa,
-          status: "Complete"
+          status: "Complete",
         },
       });
     } else {
@@ -45,14 +47,14 @@ export default async (req, res) => {
         },
         data: {
           sisa_tagihan: sisa,
-          status: "Partial"
+          status: "Partial",
         },
       });
     }
 
     const find_akun_bayar = await prisma.akun.findFirst({
       where: {
-        id: parseInt(req.body.bayar_dari),
+        id: parseInt(req.body.akun_id),
       },
     });
 
@@ -82,9 +84,7 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json([
-      { message: "Pengerimaan Pembayaran Success!", data: create_penerimaan_pembayaran },
-    ]);
+    res.status(201).json([{ message: "Pengerimaan Pembayaran Success!", data: create_penerimaan_pembayaran }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

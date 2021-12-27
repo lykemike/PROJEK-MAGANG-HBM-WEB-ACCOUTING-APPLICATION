@@ -38,13 +38,15 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      kontak_id: parseInt(req.body.nama_supplier),
+      kontak_id: parseInt(req.body.kontak_id),
       nama_supplier: req.body.nama_supplier,
       email: req.body.email,
       alamat_perusahaan: req.body.alamat_perusahaan,
+      akun_hutang_supplier_id: parseInt(req.body.akun_hutang_supp),
       tgl_transaksi: req.body.tgl_transaksi,
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
-      syarat_pembayaran: String(req.body.syarat_pembayaran),
+      syarat_pembayaran_id: parseInt(req.body.syarat_pembayaran_id),
+      syarat_pembayaran_nama: req.body.syarat_pembayaran_nama,
       no_ref_penagihan: req.body.no_ref_penagihan,
       no_transaksi: parseInt(req.body.no_transaksi),
       memo: req.body.memo,
@@ -56,6 +58,7 @@ export default async (req, res) => {
       pajak_persen: parseInt(req.body.pajak_persen),
       total_pajak: parseInt(req.body.total_pajak),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
+      total: parseInt(req.body.sisa_tagihan),
       status: "Active",
       akun_diskon_pembelian_id: parseInt(req.body.akun_diskon_pembelian_id),
       akun_diskon_pembelian_nama: req.body.akun_diskon_pembelian_nama,
@@ -146,6 +149,7 @@ export default async (req, res) => {
     res.status(201).json([
       {
         message: "Create Detail Pembelian Success!",
+        id: find_latest,
       },
     ]);
   } catch (error) {

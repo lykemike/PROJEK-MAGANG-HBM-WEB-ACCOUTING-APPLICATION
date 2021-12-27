@@ -30,13 +30,15 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
     <Layout>
       <Formik
         initialValues={{
+          kontak_id: 0,
           nama_supplier: "",
           akun_hutang_supp: "",
           email: "",
           alamat_perusahaan: "",
           tgl_transaksi: current,
           tgl_jatuh_tempo: "",
-          syarat_pembayaran: "",
+          syarat_pembayaran_id: 0,
+          syarat_pembayaran_nama: "",
           no_ref_penagihan: "-",
           no_transaksi: 0,
 
@@ -120,7 +122,8 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                       options={kontak}
                       name="nama_supplier"
                       onChange={(e) => {
-                        props.setFieldValue(`nama_supplier`, e.value);
+                        props.setFieldValue(`kontak_id`, e.value);
+                        props.setFieldValue(`nama_supplier`, e.label);
                         props.setFieldValue(`email`, e.email);
                         props.setFieldValue(`alamat_perusahaan`, e.alamat_perusahaan);
                         props.setFieldValue(`akun_hutang_supp`, e.akun_hutang);
@@ -184,7 +187,8 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                       options={syarat_pembayaran}
                       name="syarat_pembayaran"
                       onChange={(e) => {
-                        props.setFieldValue(`syarat_pembayaran`, e.value);
+                        props.setFieldValue(`syarat_pembayaran_id`, e.value);
+                        props.setFieldValue(`syarat_pembayaran_nama`, e.label);
                       }}
                     />
                   </div>
@@ -426,7 +430,7 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                 <Col sm="4">
                   <label for="memo">Memo</label>
                   <br />
-                  <textarea rows="3" name="memo" class="px-16 py-2 border border-gray-800  "></textarea> <br />
+                  <textarea rows="3" name="memo" class="px-16 py-2 border border-gray-800  " onChange={props.handleChange}></textarea> <br />
                   File Attachment <br />
                   <Form.File type="file" name="fileattachment" onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
                 </Col>
