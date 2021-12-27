@@ -4,18 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { Button, Row, Col, Form } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-  TableFooter,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, TableFooter } from "@material-ui/core";
 import PrintIcon from "@material-ui/icons/Print";
 
 import { PrismaClient } from "@prisma/client";
@@ -23,14 +12,10 @@ const prisma = new PrismaClient();
 
 export default function InvoiceKirimuang({ data, data2 }) {
   const router = useRouter();
-  const { id } = router.query;
-
-  function cetak() {
-    router.push(`../cetak-kirim/${id}`);
-  }
+  const { cetak } = router.query;
 
   return (
-    <Layout>
+    <div className="container">
       <Head>
         <title>Invoice Kirim Uang</title>
       </Head>
@@ -41,7 +26,7 @@ export default function InvoiceKirimuang({ data, data2 }) {
 
         <Row>
           <Col sm="8">
-            <h2 className="text-blue-600">Bank Withdrawl #{id}</h2>
+            <h2 className="text-blue-600">Bank Withdrawl #{cetak}</h2>
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
@@ -71,7 +56,7 @@ export default function InvoiceKirimuang({ data, data2 }) {
         <Row>
           <Col sm="3">
             <label className="mr-2 font-medium py-2">Penerima:</label>
-            <label>{data[0].kontak.nama}</label>
+            <label>{data[0].kontak.nama_perusahaan}</label>
           </Col>
 
           <Col sm="3">
@@ -82,11 +67,6 @@ export default function InvoiceKirimuang({ data, data2 }) {
           <Col sm="3">
             <label className="mr-2 font-medium py-2">Nomor Transaksi:</label>
             <label>Bank Withdrawl #{data[0].id}</label>
-          </Col>
-
-          <Col sm="3">
-            <label className="mr-2 font-medium py-2">Tag:</label>
-            <label>{data[0].tag}</label>
           </Col>
         </Row>
       </div>
@@ -101,9 +81,7 @@ export default function InvoiceKirimuang({ data, data2 }) {
               <TableCell>
                 <Typography className="text-white font-bold">Deskripsi</Typography>
               </TableCell>
-              <TableCell>
-                <Typography className="text-white font-bold">Pajak</Typography>
-              </TableCell>
+
               <TableCell>
                 <Typography className="text-white font-bold">Jumlah (in IDR)</Typography>
               </TableCell>
@@ -116,59 +94,27 @@ export default function InvoiceKirimuang({ data, data2 }) {
                   {i.akun.kode_akun} - {i.akun.nama_akun}
                 </TableCell>
                 <TableCell>{i.deskripsi}</TableCell>
-                <TableCell>
-                  {i.pajak.nama} - {i.pajak.presentasaAktif}%
-                </TableCell>
                 <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableRow>
             <TableCell />
-            <TableCell />
-            <TableCell align="right">SubTotal</TableCell>
-            <TableCell>Rp. {data[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell align="right">Total Pajak</TableCell>
-            <TableCell>Rp. {data[0].pajak.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
-            <TableCell />
             <TableCell align="right">Total</TableCell>
             <TableCell>Rp. {data[0].total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
         </Table>
       </TableContainer>
-
-      <Row className="mt-12">
-        <Col sm="4">
-          <Button variant="danger">Hapus</Button>
-        </Col>
-        <Col sm="4">
-          <Button variant="primary" onClick={cetak}>
-            <PrintIcon fontSize="medium" /> Cetak
-          </Button>
-        </Col>
-        <Col sm="4">
-          <div className="d-flex justify-content-end">
-            <Button variant="secondary mr-2">Kembali</Button>
-          </div>
-        </Col>
-      </Row>
-    </Layout>
+    </div>
   );
 }
 
 export async function getServerSideProps(context) {
-  const { id } = context.query;
+  const { cetak } = context.query;
 
   const header = await prisma.headerKirimUang.findMany({
     where: {
-      id: parseInt(id),
+      id: parseInt(cetak),
     },
     include: {
       akun_bayar: true,
@@ -178,12 +124,11 @@ export async function getServerSideProps(context) {
 
   const detail = await prisma.detailKirimUang.findMany({
     where: {
-      header_kirim_uang_id: parseInt(id),
+      header_kirim_uang_id: parseInt(cetak),
     },
     include: {
       header_kirim_uang: true,
       akun: true,
-      pajak: true,
     },
   });
 

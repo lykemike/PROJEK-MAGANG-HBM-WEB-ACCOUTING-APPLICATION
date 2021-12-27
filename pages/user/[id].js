@@ -26,10 +26,7 @@ export default function update({ data, data2 }) {
   }
 
   const UserSchema = Yup.object().shape({
-    first_name: Yup.string()
-      .min(2, "* chracters must be more than 2")
-      .max(20, "* chracters must be less than 20")
-      .required("*required"),
+    first_name: Yup.string().min(2, "* chracters must be more than 2").max(20, "* chracters must be less than 20").required("*required"),
     email: Yup.string().email("* must be a valid email").required("* required"),
     password: Yup.string().min(6, "* password must be more than 6 characters").required("* required"),
     // role_id: Yup.object().shape({
@@ -90,15 +87,8 @@ export default function update({ data, data2 }) {
                       <Form.Label>First Name</Form.Label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control
-                        placeholder={props.values.first_name}
-                        name="first_name"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
-                      {props.errors.first_name && props.touched.first_name ? (
-                        <div className="text-red-500 text-sm">{props.errors.first_name}</div>
-                      ) : null}
+                      <Form.Control placeholder={props.values.first_name} name="first_name" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      {props.errors.first_name && props.touched.first_name ? <div className="text-red-500 text-sm">{props.errors.first_name}</div> : null}
                     </Col>
                   </Row>
 
@@ -107,15 +97,8 @@ export default function update({ data, data2 }) {
                       <Form.Label>Last Name</Form.Label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control
-                        placeholder={props.values.last_name}
-                        name="last_name"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
-                      {props.errors.last_name && props.touched.last_name ? (
-                        <div className="text-red-500 text-sm">{props.errors.last_name}</div>
-                      ) : null}
+                      <Form.Control placeholder={props.values.last_name} name="last_name" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      {props.errors.last_name && props.touched.last_name ? <div className="text-red-500 text-sm">{props.errors.last_name}</div> : null}
                     </Col>
                   </Row>
 
@@ -124,15 +107,8 @@ export default function update({ data, data2 }) {
                       <Form.Label>Email</Form.Label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control
-                        placeholder={props.values.email}
-                        name="email"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
-                      {props.errors.email && props.touched.email ? (
-                        <div className="text-red-500 text-sm">{props.errors.email}</div>
-                      ) : null}
+                      <Form.Control placeholder={props.values.email} name="email" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      {props.errors.email && props.touched.email ? <div className="text-red-500 text-sm">{props.errors.email}</div> : null}
                     </Col>
                   </Row>
 
@@ -141,15 +117,8 @@ export default function update({ data, data2 }) {
                       <Form.Label>Password</Form.Label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control
-                        placeholder="Password"
-                        name="password"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
-                      {props.errors.password && props.touched.password ? (
-                        <div className="text-red-500 text-sm">{props.errors.password}</div>
-                      ) : null}
+                      <Form.Control placeholder="Password" name="password" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      {props.errors.password && props.touched.password ? <div className="text-red-500 text-sm">{props.errors.password}</div> : null}
                     </Col>
                   </Row>
 

@@ -68,7 +68,7 @@ model TipeAkun {
 // Akun table
 model Akun {
   id            Int      @id @default(autoincrement())
-  kode_akun     String
+  kode_akun     String   @unique
   tipe_akun     TipeAkun @relation(fields: [tipeId], references: [id])
   tipeId        Int
   nama_akun     String
@@ -102,13 +102,11 @@ model Akun {
   TransferUang1 TransferUang[] @relation("akunTransfer")
   TransferUang2 TransferUang[] @relation("akunSetorTransfer")
 
-  HeaderTerimaUang  HeaderTerimaUang[]
-  DetailTerimaUang1 DetailTerimaUang[] @relation("TerimaUangAkun")
-  DetailTerimaUang2 DetailTerimaUang[] @relation("TerimaUangPajakJual")
+  HeaderTerimaUang HeaderTerimaUang[]
+  DetailTerimaUang DetailTerimaUang[] 
 
-  HeaderKirimUang  HeaderKirimUang[]
-  DetailKirimUang1 DetailKirimUang[] @relation("KirimUangAkun")
-  DetailKirimUang2 DetailKirimUang[] @relation("KirimUangPajakBeli")
+  HeaderKirimUang HeaderKirimUang[] 
+  DetailKirimUang DetailKirimUang[] 
 
   DetailJurnal DetailJurnal[]
 
@@ -283,8 +281,6 @@ model Pajak {
   DetailBiaya1 DetailBiaya[] @relation("pajak_masukan")
   DetailBiaya2 DetailBiaya[] @relation("pajak_keluaran")
 
-  DetailTerimaUang DetailTerimaUang[]
-  DetailKirimUang  DetailKirimUang[]
 }
 
 model SyaratPembayaran {
@@ -597,15 +593,13 @@ model TransferUang {
   akun_transfer    Akun @relation("akunTransfer", fields: [akun_transfer_id], references: [id])
   akun_transfer_id Int
 
-  akun_setor              Akun   @relation("akunSetorTransfer", fields: [akun_setor_id], references: [id])
-  akun_setor_id           Int
-  total                   Int
-  memo                    String
-  tgl_transaksi           String
-  tag                     String
-  status                  String
-  sisa_saldo_akuntransfer Int
-  sisa_saldo_akunsetor    Int
+  akun_setor    Akun   @relation("akunSetorTransfer", fields: [akun_setor_id], references: [id])
+  akun_setor_id Int
+  total         Int
+  memo          String
+  tgl_transaksi String
+  tag           String
+  status        String
 
   JurnalTransferUang JurnalTransferUang[]
 }
@@ -621,25 +615,23 @@ model JurnalTransferUang {
 }
 
 model HeaderTerimaUang {
-  id            Int  @id @default(autoincrement())
-  akun_setor    Akun @relation(fields: [akun_setor_id], references: [id])
-  akun_setor_id Int
+  id                Int  @id @default(autoincrement())
+  kontak            Kontak @relation(fields: [kontak_id], references: [id])
+  kontak_id         Int
 
-  kontak    Kontak @relation(fields: [kontak_id], references: [id])
-  kontak_id Int
+  akun_setor        Akun @relation(fields: [akun_setor_id], references: [id])
+  akun_setor_id     Int
 
-  tgl_transaksi        String
-  tag                  String
-  memo                 String
-  file_attachment      String?
-  subtotal             Int
-  pajak                Int
-  total                Int
-  sisa_saldo_akunsetor Int
-  status               String
+  tgl_transaksi     String
+  
+  memo              String
+  file_attachment   String?
+  total             Int
 
-  DetailTerimaUang DetailTerimaUang[]
-  JurnalTerimaUang JurnalTerimaUang[]
+  status            String
+
+  DetailTerimaUang  DetailTerimaUang[]
+  JurnalTerimaUang  JurnalTerimaUang[]
 }
 
 model DetailTerimaUang {
@@ -647,22 +639,11 @@ model DetailTerimaUang {
   header_terima_uang    HeaderTerimaUang @relation(fields: [header_terima_uang_id], references: [id])
   header_terima_uang_id Int
 
-  akun      Akun   @relation("TerimaUangAkun", fields: [akun_id], references: [id])
+  akun      Akun   @relation(fields: [akun_id], references: [id])
   akun_id   Int
   nama_akun String
   deskripsi String
-
-  pajak        Pajak  @relation(fields: [pajak_id], references: [id])
-  pajak_id     Int
-  pajak_nama   String
-  pajak_persen Int
-  hasil_pajak  Int
-
-  pajak_jual    Akun @relation("TerimaUangPajakJual", fields: [pajak_jual_id], references: [id])
-  pajak_jual_id Int
-
   jumlah  Int
-  jumlah2 Int
 }
 
 model JurnalTerimaUang {
@@ -673,25 +654,20 @@ model JurnalTerimaUang {
   akun_id               Int
   nominal               Int
   tipe_saldo            String
+
 }
 
 model HeaderKirimUang {
   id            Int  @id @default(autoincrement())
   akun_bayar    Akun @relation(fields: [akun_bayar_id], references: [id])
   akun_bayar_id Int
-
-  kontak    Kontak @relation(fields: [kontak_id], references: [id])
-  kontak_id Int
-
-  tgl_transaksi           String
-  tag                     String
-  memo                    String
-  file_attachment         String
-  subtotal                Int
-  pajak                   Int
-  total                   Int
-  sisa_saldo_akuntransfer Int
-  status                  String
+  kontak            Kontak @relation(fields: [kontak_id], references: [id])
+  kontak_id         Int
+  tgl_transaksi   String
+  memo            String
+  file_attachment String
+  total           Int
+  status          String
 
   DetailKirimUang DetailKirimUang[]
   JurnalKirimUang JurnalKirimUang[]
@@ -701,23 +677,11 @@ model DetailKirimUang {
   id                   Int             @id @default(autoincrement())
   header_kirim_uang    HeaderKirimUang @relation(fields: [header_kirim_uang_id], references: [id])
   header_kirim_uang_id Int
-
-  akun      Akun   @relation("KirimUangAkun", fields: [akun_id], references: [id])
+  akun      Akun   @relation(fields: [akun_id], references: [id])
   akun_id   Int
   nama_akun String
   deskripsi String
-
-  pajak        Pajak  @relation(fields: [pajak_id], references: [id])
-  pajak_id     Int
-  pajak_nama   String
-  pajak_persen Int
-  hasil_pajak  Int
-
-  pajak_beli    Akun @relation("KirimUangPajakBeli", fields: [pajak_beli_id], references: [id])
-  pajak_beli_id Int
-
   jumlah  Int
-  jumlah2 Int
 }
 
 model JurnalKirimUang {

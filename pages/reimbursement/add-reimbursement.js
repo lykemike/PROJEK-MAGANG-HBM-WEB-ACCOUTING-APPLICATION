@@ -31,7 +31,6 @@ export default function reimbursement({ data }) {
       })
     ),
   });
-
   return (
     <Layout>
       <Head>
@@ -43,6 +42,7 @@ export default function reimbursement({ data }) {
           yang_mengetahui: "",
           yang_menyetujui: "",
           periode_id: "",
+          current_periode: "",
           detail_reimburse: [
             {
               tanggal: "",
@@ -114,6 +114,15 @@ export default function reimbursement({ data }) {
                     onBlur={props.handleBlur}
                     onChange={(e) => {
                       props.setFieldValue(`periode_id`, e.value);
+
+                      let day = new Date();
+                      let current_year = day.getFullYear();
+                      let current_month = e.value;
+                      let new_month = "";
+                      current_month < 10 ? (new_month = "0" + current_month) : (new_month = current_month);
+                      let join_new_date = [current_year, new_month, "01"].join("-");
+                      props.setFieldValue(`current_periode`, join_new_date);
+                      props.setFieldValue((props.values.current_periode = join_new_date));
                     }}
                   />
                 </Col>
@@ -138,7 +147,27 @@ export default function reimbursement({ data }) {
                       props.values.detail_reimburse.map((i, index) => (
                         <tr key={index}>
                           <td style={{ minWidth: 250, width: 250 }}>
-                            <Form.Control type="date" name={`detail_reimburse.${index}.tanggal`} onBlur={props.handleBlur} onChange={props.handleChange} />
+                            <Form.Control
+                              type="date"
+                              name={`detail_reimburse.${index}.tanggal`}
+                              onBlur={props.handleBlur}
+                              value={props.values.current_periode}
+                              onChange={(e) => {
+                                let input = e.target.value;
+                                let split_input = input.split("-");
+                                let split_input_day = split_input[2];
+
+                                let split_periode = props.values.current_periode.split("-");
+                                let year = split_periode[0];
+                                let month = split_periode[1];
+                                let day = split_periode[2];
+
+                                let new_tanggal = [year, month, split_input_day].join("-");
+
+                                props.setFieldValue(`detail_reimburse.${index}.tanggal`, new_tanggal);
+                                props.setFieldValue((props.values.detail_reimburse[index].tanggal = new_tanggal));
+                              }}
+                            />
                             {getIn(props.errors, `detail_reimburse.${index}.tanggal`) && getIn(props.touched, `detail_reimburse.${index}.tanggal`) ? (
                               <span class="ml-1 text-xs font-medium text-red-500 required-dot">{getIn(props.errors, `detail_reimburse.${index}.tanggal`)}</span>
                             ) : null}

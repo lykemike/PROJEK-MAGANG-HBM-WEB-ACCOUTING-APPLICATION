@@ -2,7 +2,7 @@ import multer from "multer";
 import { extname } from "path";
 import { PrismaClient } from ".prisma/client";
 const prisma = new PrismaClient();
-
+import _ from "lodash";
 export const editFileName = (req, file, callback) => {
   const name = file.originalname.split(".")[0];
   const fileExtName = extname(file.originalname);
@@ -49,6 +49,21 @@ export default async (req, res) => {
       subtotal: parseInt(req.body.subtotal),
       total: parseInt(req.body.total),
     };
+
+    const find_saldo_skrg = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: frontend_data.akun_id,
+      },
+    });
+
+    const update_kas = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: frontend_data.akun_id,
+      },
+      data: {
+        sisa_saldo: find_saldo_skrg.sisa_saldo - parseInt(req.body.total),
+      },
+    });
 
     const create_header_biaya = await prisma.headerBiaya.createMany({
       data: [frontend_data],
@@ -192,7 +207,7 @@ export default async (req, res) => {
 
     const mess = "Create biaya success";
 
-    res.status(201).json([{ message: "Create biaya success!", data: frontend_data, id: find_latest }]);
+    res.status(201).json([{ message: "Create biaya success!", id: find_latest }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed to create detail biaya!", error }]);
     console.log(error);

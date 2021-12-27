@@ -1,34 +1,27 @@
 import React from "react";
-import Layout from "../../../components/layout";
+import Link from "next/link";
 import Head from "next/head";
-
+import Layout from "../../../components/layout";
+import { Button, Row, Col, Form } from "react-bootstrap";
+import PrintIcon from "@material-ui/icons/Print";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { useRouter } from "next/router";
 
-import { Button, Row, Col, Form } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-  TableFooter,
-} from "@material-ui/core";
-import PrintIcon from "@material-ui/icons/Print";
+import { Breadcrumbs, Typography, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, TableFooter } from "@material-ui/core";
 
-export default function CetakInvoiceKirimUang({ data, data2 }) {
+export default function InvoiceTerimaUang({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
+
+  function cetak() {
+    router.push(`../cetak-terima/${id}`);
+  }
 
   return (
     <div className="container">
       <Head>
-        <title>Invoice Kirim Uang</title>
+        <title>Invoice Terima Uang</title>
       </Head>
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
@@ -37,7 +30,7 @@ export default function CetakInvoiceKirimUang({ data, data2 }) {
 
         <Row>
           <Col sm="8">
-            <h2 className="text-blue-600">Bank Withdrawl #{id}</h2>
+            <h2 className="text-blue-600">Bank Deposit #{id}</h2>
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
@@ -49,12 +42,12 @@ export default function CetakInvoiceKirimUang({ data, data2 }) {
 
       <div className="border-b border-gray-200">
         <Row>
-          <Col sm="4">
+          <Col sm="6">
             <label className="mr-2 font-medium py-2">Bayar dari:</label>
-            <label>{data[0].akun_bayar.nama_akun}</label>
+            <label>{data[0].akun_setor.kode_akun + " - " + data[0].akun_setor.nama_akun}</label>
           </Col>
 
-          <Col sm="8">
+          <Col sm="6">
             <div className="d-flex justify-content-end">
               <h3 className="mr-2">Total Amount:</h3>
               <h3 className="text-blue-600">Rp. {data[0].total.toLocaleString({ minimumFractionDigits: 0 })}</h3>
@@ -66,8 +59,8 @@ export default function CetakInvoiceKirimUang({ data, data2 }) {
       <div className="border-b border-gray-200">
         <Row>
           <Col sm="3">
-            <label className="mr-2 font-medium py-2">Penerima:</label>
-            <label>{data[0].kontak.nama}</label>
+            <label className="mr-2 font-medium py-2">Pembayar:</label>
+            <label>{data[0].kontak.nama_perusahaan}</label>
           </Col>
 
           <Col sm="3">
@@ -77,12 +70,7 @@ export default function CetakInvoiceKirimUang({ data, data2 }) {
 
           <Col sm="3">
             <label className="mr-2 font-medium py-2">Nomor Transaksi:</label>
-            <label>Bank Withdrawl #{data[0].id}</label>
-          </Col>
-
-          <Col sm="3">
-            <label className="mr-2 font-medium py-2">Tag:</label>
-            <label>{data[0].tag}</label>
+            <label>Bank Deposit #{data[0].id}</label>
           </Col>
         </Row>
       </div>
@@ -98,9 +86,6 @@ export default function CetakInvoiceKirimUang({ data, data2 }) {
                 <Typography className="text-white font-bold">Deskripsi</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">Pajak</Typography>
-              </TableCell>
-              <TableCell>
                 <Typography className="text-white font-bold">Jumlah (in IDR)</Typography>
               </TableCell>
             </TableRow>
@@ -112,27 +97,11 @@ export default function CetakInvoiceKirimUang({ data, data2 }) {
                   {i.akun.kode_akun} - {i.akun.nama_akun}
                 </TableCell>
                 <TableCell>{i.deskripsi}</TableCell>
-                <TableCell>
-                  {i.pajak.nama} - {i.pajak.presentasaAktif}%
-                </TableCell>
                 <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell align="right">SubTotal</TableCell>
-            <TableCell>Rp. {data[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
-            <TableCell />
-            <TableCell align="right">Total Pajak</TableCell>
-            <TableCell>Rp. {data[0].pajak.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell />
             <TableCell />
             <TableCell align="right">Total</TableCell>
             <TableCell>Rp. {data[0].total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
@@ -146,24 +115,23 @@ export default function CetakInvoiceKirimUang({ data, data2 }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerKirimUang.findMany({
+  const header = await prisma.headerTerimaUang.findMany({
     where: {
       id: parseInt(id),
     },
     include: {
-      akun_bayar: true,
+      akun_setor: true,
       kontak: true,
     },
   });
 
-  const detail = await prisma.detailKirimUang.findMany({
+  const detail = await prisma.detailTerimaUang.findMany({
     where: {
-      header_kirim_uang_id: parseInt(id),
+      header_terima_uang_id: parseInt(id),
     },
     include: {
-      header_kirim_uang: true,
+      header_terima_uang: true,
       akun: true,
-      pajak: true,
     },
   });
 

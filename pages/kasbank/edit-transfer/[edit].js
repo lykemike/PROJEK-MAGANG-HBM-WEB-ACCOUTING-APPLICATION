@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import Layout from "../../components/layout";
-import Link from "next/link";
-import { Button, Table, DropdownButton, FormControl, InputGroup, Dropdown, Row, Col, Form, Card } from "react-bootstrap";
-import AttachmentIcon from "@material-ui/icons/Attachment";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import React from "react";
+import Layout from "../../../components/layout";
+import { Button, FormControl, InputGroup, Row, Col, Form } from "react-bootstrap";
 
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Tables, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
+import { Breadcrumbs, Typography } from "@material-ui/core";
 
 import Select from "react-select";
 
@@ -15,45 +11,29 @@ import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
-import { PeopleSharp } from "@material-ui/icons";
 const prisma = new PrismaClient();
 
-// const TransferUangSchema = Yup.object().shape({
-//   akun_transfer: Yup.string().required("Harus Pilih Akun"),
-//   akun_setor: Yup.string().required("Harus Pilih Akun"),
-//   total: Yup.string().required("Input total"),
-//   tgl_transaksi: Yup.string().required("Pilih tanggal"),
-//   // lastName: Yup.string()
-//   //   .min(2, 'Too Short!')
-//   //   .max(50, 'Too Long!')
-//   //   .required('Required'),
-//   // email: Yup.string().email('Invalid email').required('Required'),
-// });
-
-export default function tranfer_uang({ data, data2, data3 }) {
+export default function tranfer_uang({ data, data2 }) {
   const router = useRouter();
-  const url = "http://localhost:3000/api/kasbank/createTransferUang";
-
-  const day = new Date();
-  const current = day.toISOString().slice(0, 10);
+  const url = "http://localhost:3000/api/kasbank/updateTransferUang";
 
   return (
     <Layout>
       <Formik
         initialValues={{
-          akun_transfer: "",
-          akun_setor: "",
-          total: "",
-          memo: "-",
-          tgl_transaksi: current,
-          tag: "-",
+          id: data2.id,
+          akun_transfer: data2.akun_transfer_id,
+          akun_setor: data2.akun_setor_id,
+          total: data2.total,
+          memo: data2.memo,
+          tgl_transaksi: data2.tgl_transaksi,
+          tag: data2.tag,
         }}
-        // validationSchema={TransferUangSchema}
         onSubmit={async (values) => {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              // router.push(`view-transfer/${response.data.id.id}`);
+              router.push(`../view-transfer/${response.data.id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -76,6 +56,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
                   <Select
                     options={data}
                     name="akun_transfer"
+                    defaultValue={{ label: data2.akun_transfer.kode_akun + " - " + data2.akun_transfer.nama_akun, value: props.values.akun_transfer }}
                     onChange={(e) => {
                       props.setFieldValue("akun_transfer", e.value);
                     }}
@@ -88,6 +69,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
                   <Select
                     options={data}
                     name="akun_setor"
+                    defaultValue={{ label: data2.akun_setor.kode_akun + " - " + data2.akun_setor.nama_akun, value: props.values.akun_setor }}
                     onChange={(e) => {
                       props.setFieldValue("akun_setor", e.value);
                     }}
@@ -97,7 +79,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
                 <Col sm="3">
                   <label>Total</label>
-                  <Form.Control type="number" min="0" placeholder="Rp. 0, 00" name="total" onChange={props.handleChange} />
+                  <Form.Control type="number" min="0" value={props.values.total} name="total" onChange={props.handleChange} />
                 </Col>
               </Row>
             </div>
@@ -107,7 +89,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
                 <Col sm="3">
                   <Form.Group controlId="exampleForm.ControlTextarea1">
                     <label>Memo</label>
-                    <Form.Control as="textarea" rows={3} name="memo" placeholder="-" onChange={props.handleChange} />
+                    <Form.Control as="textarea" rows={3} name="memo" value={props.values.memo} onChange={props.handleChange} />
                     {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
                   </Form.Group>
                 </Col>
@@ -127,7 +109,7 @@ export default function tranfer_uang({ data, data2, data3 }) {
 
                 <Col sm="3">
                   <label>Tag</label>
-                  <Form.Control placeholder="-" name="tag" onChange={props.handleChange} />
+                  <Form.Control value={props.values.tag} name="tag" onChange={props.handleChange} />
                 </Col>
               </Row>
             </div>
@@ -170,7 +152,8 @@ export default function tranfer_uang({ data, data2, data3 }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { edit } = context.query;
   const get_akun_kas_bank = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
@@ -185,9 +168,20 @@ export async function getServerSideProps() {
     })
   );
 
+  const get_transfer_uang = await prisma.transferUang.findFirst({
+    where: {
+      id: parseInt(edit),
+    },
+    include: {
+      akun_transfer: true,
+      akun_setor: true,
+    },
+  });
+
   return {
     props: {
       data: akun_kas_bank,
+      data2: get_transfer_uang,
     },
   };
 }

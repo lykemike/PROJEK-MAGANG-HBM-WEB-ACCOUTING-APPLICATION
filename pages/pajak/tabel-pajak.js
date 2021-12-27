@@ -5,17 +5,8 @@ import Layout from "../../components/Layout";
 import TablePagination from "../../components/TablePagination";
 
 import { Button, Row, Col, Modal } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-} from "@material-ui/core/";
+import { Breadcrumbs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
+import { Visibility, Edit, Delete } from "@material-ui/icons/";
 import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
@@ -28,7 +19,7 @@ import Axios from "axios";
 function MyVerticallyCenteredModal(props) {
   const router = useRouter();
   const api_delete_pajak = "http://localhost:3000/api/pajak/deletepajak";
-
+  const alert = "";
   const handle_delete = async () => {
     Axios.delete(api_delete_pajak, {
       data: {
@@ -36,8 +27,8 @@ function MyVerticallyCenteredModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.push("tabel-pajak");
+        console.log(response.data.message);
+        router.reload(window.location.pathname);
       })
       .catch(function (error) {
         console.log(error);
@@ -45,19 +36,21 @@ function MyVerticallyCenteredModal(props) {
   };
 
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Delete Pajak Confirmation</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure you want to delete the current pajak?</p>
+        <p>
+          Are you sure you want to delete pajak <label className="font-medium">{props.nama}</label>?
+        </p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handle_delete}>
-          Confirm Delete
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
         </Button>
       </Modal.Footer>
     </Modal>
@@ -71,7 +64,7 @@ export default function list({ data }) {
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
-  const [modalShow, setModalShow] = useState({ open: false, id: 0 });
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
 
   const handlePrevChange = () => {
     if (page < 1) {
@@ -103,7 +96,7 @@ export default function list({ data }) {
 
   return (
     <Layout>
-      <MyVerticallyCenteredModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
+      <MyVerticallyCenteredModal nama={modalShow.nama} id={modalShow.id} show={modalShow.open} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
       <Head>
         <title>Tabel Pajak</title>
       </Head>
@@ -147,9 +140,7 @@ export default function list({ data }) {
                   <TableCell>
                     <Typography className="text-white font-bold">Akun Pajak Masukan</Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography className="text-white font-bold">Actions</Typography>
-                  </TableCell>
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -159,19 +150,19 @@ export default function list({ data }) {
                       {i.nama}
                     </TableCell>
                     <TableCell>{i.presentase_aktif} %</TableCell>
-                    <TableCell>{i.kategori1.nama_akun}</TableCell>
-                    <TableCell>{i.kategori2.nama_akun}</TableCell>
-                    <TableCell>
+                    <TableCell>{i.kategori1.kode_akun + " - " + i.kategori1.nama_akun}</TableCell>
+                    <TableCell>{i.kategori2.kode_akun + " - " + i.kategori2.nama_akun}</TableCell>
+                    <TableCell align="right">
                       <Link href={`${i.id}`}>
-                        <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
+                        <a>
+                          <Button variant="warning" size="sm" className="mr-2">
+                            <Edit className="text-white" fontSize="small" />
+                          </Button>
+                        </a>
                       </Link>
-
-                      <DeleteOutlineIcon
-                        onClick={() => setModalShow({ open: true, id: i.id })}
-                        color="secondary"
-                        fontSize="small"
-                        className="cursor-pointer"
-                      />
+                      <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.id, nama: i.nama })}>
+                        <Delete className="text-white" fontSize="small" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -1,56 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useRouter } from "next/router";
-import Layout from "../../components/layout";
-import Link from "next/link";
-import Head from "next/head";
-import { Button, Table, DropdownButton, Dropdown, Row, Col, Form, Card, InputGroup, FormControl } from "react-bootstrap";
+import Layout from "../../../components/layout";
 
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Tables, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
+import Head from "next/head";
+import { Button, Table, Row, Col, Form, InputGroup, FormControl } from "react-bootstrap";
+
+import { Breadcrumbs, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
-import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import BackspaceIcon from "@material-ui/icons/Backspace";
 import Axios from "axios";
-import * as Yup from "yup";
 import Select from "react-select";
 import { Formik, Form as Forms, FieldArray } from "formik";
 
 const prisma = new PrismaClient();
 import { PrismaClient } from "@prisma/client";
 
-export default function TerimaUang({ data, data2, data3 }) {
+export default function TerimaUang({ data, data2, data3, data4 }) {
   const router = useRouter();
-  const url = "http://localhost:3000/api/kasbank/createTerimaUang";
-
-  const day = new Date();
-  const current = day.toISOString().slice(0, 10);
-
-  const validation = Yup.object().shape({
-    akun_setor_id: Yup.string().required("*required"),
-    kontak_id: Yup.string().required("*required"),
-  });
+  const url = "http://localhost:3000/api/kasbank/updateTerimaUang";
 
   return (
     <Layout>
       <Formik
         initialValues={{
-          akun_setor_id: "",
-          kontak_id: "",
-          tgl_transaksi: current,
-          memo: "",
-          total: 0,
+          id: data4.id,
+          akun_setor_id: data4.akun_setor_id,
+          kontak_id: data4.kontak_id,
+          tgl_transaksi: data4.tgl_transaksi,
+          memo: data4.memo,
+          total: data4.total,
           fileattachment: [],
-          detail_terima_uang: [
-            {
-              akun_id: "",
-              nama_akun: "",
-              deskripsi: "-",
-              jumlah: 0,
-            },
-          ],
+          detail_terima_uang: data4.DetailTerimaUang,
         }}
-        validationSchema={validation}
         onSubmit={async (values) => {
           let formData = new FormData();
           for (var key in values) {
@@ -69,7 +50,7 @@ export default function TerimaUang({ data, data2, data3 }) {
           })
             .then(function (response) {
               console.log(response);
-              // router.push(`view-terima/${response.data.id.id}`);
+              router.push(`../view-terima/${response.data.id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -79,13 +60,13 @@ export default function TerimaUang({ data, data2, data3 }) {
         {(props) => (
           <Forms noValidate>
             <Head>
-              <title>Buat Terima Uang</title>
+              <title>Update Terima Uang</title>
             </Head>
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Transaksi</Typography>
               </Breadcrumbs>
-              <h2 className="text-blue-600">Terima Uang</h2>
+              <h2 className="text-blue-600">Update Terima Uang</h2>
             </div>
 
             <div class="border-b border-gray-200">
@@ -97,6 +78,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                   </label>
                   <Select
                     options={data}
+                    defaultValue={{ label: data4.akun_setor.kode_akun + " - " + data4.akun_setor.nama_akun, value: props.values.akun_setor_id }}
                     name="akun_setor_id"
                     onChange={(e) => {
                       props.setFieldValue("akun_setor_id", e.value);
@@ -129,6 +111,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                   <Select
                     options={data2}
                     name="kontak_id"
+                    defaultValue={{ label: data4.kontak.nama_perusahaan, value: props.values.kontak_id }}
                     onChange={(e) => {
                       props.setFieldValue("kontak_id", e.value);
                     }}
@@ -169,6 +152,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                             <Select
                               options={data3}
                               name={`detail_terima_uang.${index}.akun_id`}
+                              defaultValue={{ label: props.values.detail_terima_uang[index].nama_akun, value: props.values.detail_terima_uang[index].akun_id }}
                               onChange={(e) => {
                                 props.setFieldValue(`detail_terima_uang.${index}.akun_id`, e.value);
                                 props.setFieldValue(`detail_terima_uang.${index}.nama_akun`, e.label);
@@ -180,6 +164,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                             <Form.Control
                               placeholder="-"
                               name={`detail_terima_uang.${index}.deskripsi`}
+                              value={props.values.detail_terima_uang[index].deskripsi}
                               onChange={(e) => {
                                 props.setFieldValue(`detail_terima_uang.${index}.deskripsi`, e.target.value);
                               }}
@@ -192,6 +177,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                               type="number"
                               min="0"
                               name={`detail_terima_uang.${index}.jumlah`}
+                              value={props.values.detail_terima_uang[index].jumlah}
                               onChange={(e) => {
                                 props.setFieldValue((props.values.detail_terima_uang[index].jumlah = parseInt(e.target.value)));
                                 props.setFieldValue(`detail_terima_uang.${index}.jumlah`, parseInt(e.target.value));
@@ -235,7 +221,7 @@ export default function TerimaUang({ data, data2, data3 }) {
                   <Form.Group controlId="exampleForm.ControlTextarea1">
                     <label className="font-medium">Memo</label>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
-                      <Form.Control as="textarea" rows={3} name="memo" placeholder="-" onChange={props.handleChange} />
+                      <Form.Control as="textarea" rows={3} name="memo" value={props.values.memo} placeholder="-" onChange={props.handleChange} />
                       {props.errors.memo && props.touched.memo ? <div>{props.errors.memo}</div> : null}
                     </Form.Group>
                   </Form.Group>
@@ -258,12 +244,10 @@ export default function TerimaUang({ data, data2, data3 }) {
             </div>
 
             <div className="flex justify-end mb-10">
-              <Button variant="danger mr-2">
-                <HighlightOffIcon fontSize="medium" /> Batal
-              </Button>
+              <Button variant="danger mr-2">Batal</Button>
 
               <Button variant="success" type="submit" onClick={props.handleSubmit}>
-                <CheckCircleIcon fontSize="medium" /> Buat Transferan
+                Update Terima Uang
               </Button>
             </div>
           </Forms>
@@ -273,7 +257,8 @@ export default function TerimaUang({ data, data2, data3 }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { edit } = context.query;
   const get_akun_kas_bank = await prisma.akun.findMany({
     where: {
       kategoriId: 3,
@@ -310,7 +295,7 @@ export async function getServerSideProps() {
     },
   });
 
-  const akun_awalan_piutang = [];
+  let akun_awalan_piutang = [];
   get_akun_awalan_piutang.map((i) => {
     akun_awalan_piutang.push({
       value: i.id,
@@ -318,11 +303,26 @@ export async function getServerSideProps() {
     });
   });
 
+  const get_terima_uang = await prisma.headerTerimaUang.findFirst({
+    where: {
+      id: parseInt(edit),
+    },
+    include: {
+      DetailTerimaUang: {
+        include: {
+          akun: true,
+        },
+      },
+      akun_setor: true,
+      kontak: true,
+    },
+  });
   return {
     props: {
       data: akun_kas_bank,
       data2: kontaks,
       data3: akun_awalan_piutang,
+      data4: get_terima_uang,
     },
   };
 }

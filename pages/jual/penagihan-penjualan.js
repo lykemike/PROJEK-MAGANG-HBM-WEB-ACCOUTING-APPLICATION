@@ -117,7 +117,6 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
         }}
         validationSchema={ValidationSchema}
         onSubmit={async (values) => {
-          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "produks") {
@@ -127,7 +126,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
             }
           }
           Array.from(values.file_attachment).map((i) => formData.append("file", i));
-          console.log(values);
+
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",

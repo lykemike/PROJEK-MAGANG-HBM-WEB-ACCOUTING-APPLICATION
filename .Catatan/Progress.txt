@@ -1,23 +1,24 @@
 Produk & Jasa
-- Add produk/jasa perubahan UI sesuai requirements = 100%
-- Update produk/jasa perubahan UI sesuai requirements = 100%
-- Perubahan database produk/jasa & kategori = 100%
-- Validasi = 100%
-- Delete confirmation update UI = 100%
-- Api create, update, delete = 100%
-- View Detail Produk & Jasa = 100%
-- Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+ * Add produk/jasa perubahan UI sesuai requirements = 100%
+ * Update produk/jasa perubahan UI sesuai requirements = 100%
+ * Perubahan database produk/jasa & kategori = 100%
+ * Validasi = 100%
+ * Delete confirmation update UI = 100%
+ * Api create, update, delete = 100%
+ * View Detail Produk & Jasa = 100%
+ * Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
 
 Kontak
-- Add kontak perubahan UI sesuai requirements = 100%
-- Update kontak perubahan UI sesuai requirements = 100%
-- Perubahan database kontak & tipe kontak = 100%
-- Validasi = 100%
-- Delete confirmation update UI = 100%
-- Api create, update, delete = 100%
-- View Profil kontak = 100%
-- View Transaksi kontak = 100%
-- Tabel Kontak = 100%
+ * Add kontak perubahan UI sesuai requirements = 100%
+ * Update kontak perubahan UI sesuai requirements = 100%
+ * Perubahan database kontak & tipe kontak = 100%
+ * Validasi = 100%
+ * Delete confirmation update UI = 100%
+ * Api create, update, delete = 100%
+ * View Profil kontak = 100%
+ * View Transaksi kontak = 100%
+ * Tabel Kontak = 100%
+ * No rekening dan atas nama rekening dibuat opsional = 100%
 
 Penjualan
 - Penagihan Penjualan
@@ -46,7 +47,8 @@ Penjualan
   * Ketika sudah mencet tombol DONE 
     - jurnal otomatis terbuat = 100%
     - maka penerimaan pembayaran tersebut sudah tidak bisa di UPDATE = 100%
-  
+    - otomatis update ke saldo saat ini = 50%
+
 - Tabel Penjualan = 100%
   * View Penjualan = 100%
   * View Jumlah Transaksi per penjualan = 100%
@@ -55,8 +57,10 @@ Penjualan
 Setting
 - Detail Bank UI = 100%
 - Create detail bank = 100%
+- Show Detail Bank = 100%
+- Edit, Delete Detail Bank = 50%
 
-- Biaya
+Biaya
   * Perubahan UI create dan update sesuai requirements = 100%
   * Switch Button & Rumus hitungan harga tidak termasuk/termasuk pajak = 100%
   * Perubahan database header & detail biaya = 100%
@@ -67,8 +71,9 @@ Setting
   * View invoice = 100%
   * Validasi frontend & backend = 100%
   * Cetak Biaya = 100%
+  * Mencoba create, update, delete  ke Sisa Saldo Kas Bank = 100%
 
-- Reimbursement
+Reimbursement
   * Perbaikan UI = 100%
   * Create UI Reimbursement = 100%
   * Update UI Reimbursement = 100%
@@ -78,8 +83,9 @@ Setting
   * Confirm Status "Done" Reimbursement = 100%
   * Validation Frontend and backend = 100%
   * Cetak Update UI = 100%
+  * Pemilihan tanggal hanya boleh sesuai bulan periode reimbursement (Sesuai bulan udah bisa, tapi error ketika memilih tanggal lain)= 70%
 
-- Meeting 06/12/2021
+Meeting 06/12/2021
   * Invoice Penerimaan Pembayaran kolom no jadi 1,2,3 dst = 100%
   * Invoice Penerimaan Pembayaran harga pake Rp. = 100%
   * Invoice Penerimaan Pembayaran nama pajak di sesuaikan = 100%
@@ -89,16 +95,40 @@ Setting
   * Bug Penerimaan Pembayaran Status yang done dan process di negeri = 100%
   * Di penjualan jatuh tempo di hapus semua = 100%
 
-- Saldo awal
+Saldo awal
   * Saldo Awal bisa submit manual dan pakai excel (xlsx) = 100%
 
-- Biaya
+Biaya
   * Rumus PPN dan PPH, dan Harga tidak termasuk pajak (lagi revisi perhitungan)= 100%
   * Create UI Biaya = 100%
   * Update UI Biaya = 100%
-  * Delete UI Biaya = 60%
-  * Api create, update, delete = 66%
+  * Delete UI Biaya = 100%
+  * Api create, update, delete = 100%
 
+Bank Detail
+  * Import Data Bank Nama, No Rek, Cabang, dan Jenis = 100%
+
+Kas Bank
+  * Kas Bank
+    - Statistik untung/rugi dlm presentase dua decimal, dan icon = 100%
+  * Kirim Uang
+    - Hapus Termasuk Pajak, Pajak Kirim Uang= 100%
+    - Perbaikan Database Kirim Uang = 100%
+    - Create, Update, Delete API = 100%
+  * Terima Uang
+    - Hapus Termasuk Pajak, Pajak Terima Uang= 100%
+    - Perbaikan Database Terima Uang = 100%
+    - Create, Update, Delete API = 10%
+  * Transfer Uang
+    - Update, Delete = 100%
+
+Pembelian
+  * Perubahan UI create dan update sesuai requirements = 100%
+  * Perubahan database header & detail penjualan = 100%
+  * Create Penagihan Penjualan = 100%
+  * Update Penagihan Penjualan = 20%
+  * Delete Penagihan Penjualan = 20%
+  * Pengiriman Pembayaran = 40%
 
 NOTES
 =================================
@@ -119,6 +149,54 @@ TANYA
   - status bug, sisa tagihan 0 dan tanggal lewat jatuh tempo sehaursnya tetap complete
   - cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
   - menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan
-  - alert success, failed
+  - cara buat alert success, failed
   - merge data yang sama
   - show more than 2 items di invoice penerimaan pembayaran with one subtotal
+
+DATA YANG BERBEDA
+contoh: 
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 5000
+  },
+  {
+    akun_id: 2,
+    sisa_saldo: 5000
+  }
+]
+expected hasil: 
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 5000
+  },
+  {
+    akun_id: 2,
+    sisa_saldo: 5000
+  }
+]
+
+DATA YANG SAMA
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 5000
+  },
+  {
+    akun_id: 2,
+    sisa_saldo: 5000
+  }
+]
+
+expected hasil: 
+new_data: 
+[
+  {
+    akun_id: 1,
+    sisa_saldo: 10000
+  },
+]

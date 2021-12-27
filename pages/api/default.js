@@ -307,7 +307,7 @@ export default async (req, res) => {
         {
           kode_akun: "1-10014",
           tipeId: 2,
-          nama_akun: "Bank (Permata 702215889) GIRO IDR",
+          nama_akun: "Bank (Permata 0702215889) GIRO IDR",
           kategoriId: 3,
         },
         {
@@ -339,6 +339,12 @@ export default async (req, res) => {
           kode_akun: "1-10019",
           tipeId: 3,
           nama_akun: "Ayat Silang Bank/Bank",
+          kategoriId: 3,
+        },
+        {
+          kode_akun: "1-10020",
+          tipeId: 3,
+          nama_akun: "Bank (DKI 10108094963) GIRO IDR",
           kategoriId: 3,
         },
 
@@ -1868,9 +1874,29 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Create Default API Success!", data: create_gelar });
+    const bank_detail = await prisma.detailBank.createMany({
+      data: [
+        { akun_id: 4, nama_bank: "Bank Central Asia (BCA)", cabang_bank: "KCP Taman Palem Lestari", nomor_rekening: "7570325889 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 5, nama_bank: "Bank Central Asia (BCA)", cabang_bank: "KCP Taman Palem Lestari", nomor_rekening: "7570392225 (GIRO USD)", atas_nama: "-" },
+        { akun_id: 6, nama_bank: "Mandiri", cabang_bank: "KCP Taman Palem Lestari", nomor_rekening: "1180003922266 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 7, nama_bank: "Mandiri", cabang_bank: "KCP Taman Palem Lestari", nomor_rekening: "1180003922258 (GIRO USD)", atas_nama: "-" },
+        { akun_id: 8, nama_bank: "Mandiri", cabang_bank: "KCP Taman Palem Lestari", nomor_rekening: "1180003922282 (Tabungan IDR)", atas_nama: "-" },
+        { akun_id: 9, nama_bank: "Mandiri", cabang_bank: "KCP Taman Palem Lestari", nomor_rekening: "1180003922274 (Tabungan USD)", atas_nama: "-" },
+        { akun_id: 10, nama_bank: "Bank Negara Indonesa (BNI)", cabang_bank: "KC Daan Mogot", nomor_rekening: "0257569337 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 11, nama_bank: "Bank Tabungan Negara (BTN)", cabang_bank: "KC Jakarta Harmoni", nomor_rekening: "0001401300018261 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 12, nama_bank: "Bank Syariah Mandiri", cabang_bank: "KC Thamrin", nomor_rekening: "7101183868 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 13, nama_bank: "Bank BJB Syariah", cabang_bank: "KC Braga", nomor_rekening: "0080102004334 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 14, nama_bank: "Bank Permata", cabang_bank: "KC BNI 46", nomor_rekening: "0702215889 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 15, nama_bank: "Bank Mega", cabang_bank: "KC Tanjung Duren", nomor_rekening: "010300011001169 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 16, nama_bank: "Bank Rakyat Indonesia (BRI)", cabang_bank: "KC Daan Mogot", nomor_rekening: "037901000926300 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 17, nama_bank: "Bank Syariah Bukopin", cabang_bank: "KC Saelmba", nomor_rekening: "8802607106 (GIRO IDR)", atas_nama: "-" },
+        { akun_id: 20, nama_bank: "Bank DKI", cabang_bank: "KC Juanda", nomor_rekening: "10108094963 (GIRO IDR)", atas_nama: "-" },
+      ],
+    });
+
+    res.status(201).json({ message: "Create Default API Success!" });
   } catch (error) {
-    res.status(400).json({ roleType: "Create Admin Role Failed!", error });
+    res.status(400).json({ roleType: "Create Default Api Failed!", error });
     console.log(error);
   }
 };

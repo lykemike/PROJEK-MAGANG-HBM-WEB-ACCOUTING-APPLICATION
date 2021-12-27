@@ -30,7 +30,7 @@ function CompleteInvoice(props) {
           Axios.post(api_confirm, values)
             .then(function (response) {
               console.log(response);
-              router.reload(window.location.pathname);
+              // router.reload(window.location.pathname);
             })
             .catch(function (error) {
               console.log(error);
