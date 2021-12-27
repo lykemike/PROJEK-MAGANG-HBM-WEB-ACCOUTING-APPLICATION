@@ -12,6 +12,7 @@ import {
   InputGroup,
   Dropdown,
 } from "react-bootstrap";
+import { prisma } from ".prisma/client";
 
 const laporanjurnalpenutup = () => {
   return (
@@ -206,3 +207,41 @@ const laporanjurnalpenutup = () => {
 };
 
 export default laporanjurnalpenutup;
+
+export async function getServerSideProps() {
+  const test1 = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [13, 1],
+      },
+    },
+    include: {
+      DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
+    },
+  });
+
+  const test1 = await prisma.akun.findMany({
+    where: {
+      kategoriId: {
+        in: [13, 1],
+      },
+    },
+    include: {
+      DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
+    },
+  });
+}

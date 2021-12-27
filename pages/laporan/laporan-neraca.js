@@ -36,6 +36,8 @@ export default function laporan_neraca({
     // Axios.get()
   };
 
+  console.log(header);
+
   return (
     <Layout>
       <div variant="container">
@@ -124,7 +126,7 @@ export default function laporan_neraca({
                 data={header4}
               />
               <tr>
-                <td>Total Liabilitas Jangka Panjang</td>
+                <td>Total Liabilitas Jangka Pendek</td>
                 <td class="pl-5">XXX</td>
               </tr>
 
@@ -133,7 +135,7 @@ export default function laporan_neraca({
                 data={header5}
               />
               <tr>
-                <td>Total Liabilitas Jangka Pendek</td>
+                <td>Total Liabilitas Jangka Panjang</td>
                 <td class="pl-5">XXX</td>
               </tr>
 
@@ -168,6 +170,13 @@ export async function getServerSideProps() {
     },
     include: {
       DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
 
@@ -179,6 +188,13 @@ export async function getServerSideProps() {
     },
     include: {
       DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
 
@@ -190,6 +206,13 @@ export async function getServerSideProps() {
     },
     include: {
       DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
 
@@ -201,6 +224,13 @@ export async function getServerSideProps() {
     },
     include: {
       DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
 
@@ -212,6 +242,13 @@ export async function getServerSideProps() {
     },
     include: {
       DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
 
@@ -223,8 +260,145 @@ export async function getServerSideProps() {
     },
     include: {
       DetailSaldoAwal: true,
+      DetailJurnal: true,
+      JurnalPembelian: true,
+      JurnalPenjualan: true,
+      JurnalBiaya: true,
+      JurnalTransferUang: true,
+      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
+
+  // const penyesuaian = (
+  //   tipeSaldo,
+  //   detailjurnal,
+  //   jurnalpembelian,
+  //   jurnalpenjualan,
+  //   jurnalbiaya,
+  //   jurnalkirimuang,
+  //   jurnaltransferuang,
+  //   jurnalterimauang
+  // ) => {
+  //   let detailJurnal =
+  //     detailjurnal?.length > 0
+  //       ? detailjurnal
+  //           ?.filter((i) => i.tipe_saldo === tipeSaldo)
+  //           .reduce((a, b) => (a = a + b.nominal), 0)
+  //       : 0;
+
+  //   let jurnalPembelian =
+  //     jurnalpembelian?.length > 0
+  //       ? jurnalpembelian
+  //           ?.filter((i) => i.tipe_saldo === tipeSaldo)
+  //           .reduce((a, b) => (a = a + b.nominal), 0)
+  //       : 0;
+
+  //   let jurnalPenjualan =
+  //     jurnalpenjualan?.length > 0
+  //       ? jurnalpenjualan
+  //           ?.filter((i) => i.tipe_saldo === tipeSaldo)
+  //           .reduce((a, b) => (a = a + b.nominal), 0)
+  //       : 0;
+
+  //   let jurnalBiaya =
+  //     jurnalbiaya?.length > 0
+  //       ? jurnalbiaya
+  //           ?.filter((i) => i.tipe_saldo === tipeSaldo)
+  //           .reduce((a, b) => (a = a + b.nominal), 0)
+  //       : 0;
+
+  //   let jurnalKirimuang =
+  //     jurnalkirimuang?.length > 0
+  //       ? jurnalkirimuang
+  //           ?.filter((i) => i.tipe_saldo === tipeSaldo)
+  //           .reduce((a, b) => (a = a + b.nominal), 0)
+  //       : 0;
+
+  //   let jurnalTransferuang =
+  //     jurnaltransferuang?.length > 0
+  //       ? jurnaltransferuang
+  //           ?.filter((i) => i.tipe_saldo === tipeSaldo)
+  //           .reduce((a, b) => (a = a + b.nominal), 0)
+  //       : 0;
+
+  //   let jurnalTerimauang =
+  //     jurnalterimauang?.length > 0
+  //       ? jurnalterimauang
+  //           ?.filter((i) => i.tipe_saldo === tipeSaldo)
+  //           .reduce((a, b) => (a = a + b.nominal), 0)
+  //       : 0;
+
+  //   return (
+  //     detailJurnal +
+  //     jurnalPembelian +
+  //     jurnalPenjualan +
+  //     jurnalBiaya +
+  //     jurnalKirimuang +
+  //     jurnalTransferuang +
+  //     jurnalTerimauang
+  //   );
+  // };
+
+  // const saldoakhir = (saldoawaldebit, saldoawalkredit, debit, kredit, tipe) => {
+  //   if (saldoawaldebit < 1) {
+  //     let hitung_kredit = saldoawalkredit + kredit;
+  //     if (hitung_kredit > debit) {
+  //       // masuk ke kredit
+  //       if (tipe === "Kredit") {
+  //         return hitung_kredit - debit;
+  //       } else {
+  //         return 0;
+  //       }
+  //     } else {
+  //       if (tipe === "Kredit") {
+  //         return 0;
+  //       } else {
+  //         return debit - hitung_kredit;
+  //       }
+  //     }
+  //   } else {
+  //     let hitung_debit = saldoawaldebit + debit;
+  //     if (hitung_debit > kredit) {
+  //       // masuk ke debit
+  //       if (tipe === "Debit") {
+  //         return hitung_debit - kredit;
+  //       } else {
+  //         return 0;
+  //       }
+  //     } else {
+  //       if (tipe === "Debit") {
+  //         // masuk ke kredit
+  //         return 0;
+  //       } else {
+  //         return kredit - hitung_debit;
+  //       }
+  //     }
+  //   }
+  // };
+
+  // const totalsaldo =
+  // {penyesuaian(
+  //   "Debit",
+  //   aset.DetailJurnal,
+  //   aset.JurnalBiaya,
+  //   aset.JurnalKirimUang,
+  //   aset.JurnalTerimaUang,
+  //   aset.JurnalPenjualan,
+  //   aset.JurnalPembelian,
+  //   aset.JurnalTransferUang
+  // ).toLocaleString({ minimumFractionDigits: 0 })} +
+
+  // {penyesuaian(
+  //   "Kredit",
+  //   aset.DetailJurnal,
+  //   aset.JurnalBiaya,
+  //   aset.JurnalKirimUang,
+  //   aset.JurnalTerimaUang,
+  //   aset.JurnalPenjualan,
+  //   aset.JurnalPembelian,
+  //   aset.JurnalTransferUang
+  // ).toLocaleString({ minimumFractionDigits: 0 })}
 
   return {
     props: {

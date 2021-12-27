@@ -115,13 +115,15 @@ export async function getServerSideProps() {
       },
     },
     include: {
-      JurnalPembelian: true,
       DetailSaldoAwal: true,
+
+      DetailJurnal: true,
+      JurnalPembelian: true,
       JurnalPenjualan: true,
       JurnalBiaya: true,
       JurnalTransferUang: true,
       JurnalKirimUang: true,
-      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
 
@@ -132,13 +134,15 @@ export async function getServerSideProps() {
       },
     },
     include: {
-      JurnalPembelian: true,
       DetailSaldoAwal: true,
+
+      DetailJurnal: true,
+      JurnalPembelian: true,
       JurnalPenjualan: true,
       JurnalBiaya: true,
       JurnalTransferUang: true,
       JurnalKirimUang: true,
-      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
 
@@ -149,15 +153,111 @@ export async function getServerSideProps() {
       },
     },
     include: {
-      JurnalPembelian: true,
       DetailSaldoAwal: true,
+
+      DetailJurnal: true,
+      JurnalPembelian: true,
       JurnalPenjualan: true,
       JurnalBiaya: true,
       JurnalTransferUang: true,
       JurnalKirimUang: true,
-      JurnalKirimUang: true,
+      JurnalTerimaUang: true,
     },
   });
+
+  // //Journal Entry
+  // const journal_debit = flatten(
+  //   getJurnal.map((i) => {
+  //     return i.DetailJurnal.filter((j) => j.tipe_saldo === "Debit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // const journal_kredit = flatten(
+  //   getJurnal.map((i) => {
+  //     return i.DetailJurnal.filter((j) => j.tipe_saldo === "Kredit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // //Sales Invoice
+  // const penjualan_debit = flatten(
+  //   getPenjualan.map((i) => {
+  //     return i.JurnalPenjualan.filter((j) => j.tipe_saldo === "Debit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // const penjualan_kredit = flatten(
+  //   getPenjualan.map((i) => {
+  //     return i.JurnalPenjualan.filter((j) => j.tipe_saldo === "Kredit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // //Purchase Invoice
+  // const pembelian_debit = flatten(
+  //   getPembelian.map((i) => {
+  //     return i.JurnalPembelian.filter((j) => j.tipe_saldo === "Debit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // const pembelian_kredit = flatten(
+  //   getPembelian.map((i) => {
+  //     return i.JurnalPembelian.filter((j) => j.tipe_saldo === "Kredit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // //Kirim Uang Invoice
+  // const kirimuang_debit = flatten(
+  //   getKirimUang.map((i) => {
+  //     return i.JurnalKirimUang.filter((j) => j.tipe_saldo === "Debit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // const kirimuang_kredit = flatten(
+  //   getKirimUang.map((i) => {
+  //     return i.JurnalKirimUang.filter((j) => j.tipe_saldo === "Kredit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // //Terima Uang Invoice
+  // const terimauang_debit = flatten(
+  //   getTerimaUang.map((i) => {
+  //     return i.JurnalTerimaUang.filter((j) => j.tipe_saldo === "Debit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // const terimauang_kredit = flatten(
+  //   getTerimaUang.map((i) => {
+  //     return i.JurnalTerimaUang.filter((j) => j.tipe_saldo === "Kredit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // //Transfer Uang Invoice
+  // const transferuang_debit = flatten(
+  //   getTransferUang.map((i) => {
+  //     return i.JurnalTransferUang.filter((j) => j.tipe_saldo === "Debit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // const transferuang_kredit = flatten(
+  //   getTransferUang.map((i) => {
+  //     return i.JurnalTransferUang.filter((j) => j.tipe_saldo === "Kredit");
+  //   })
+  // ).reduce((a, b) => a + b.nominal, 0);
+
+  // const totaldebit =
+  //   kirimuang_debit +
+  //   pembelian_debit +
+  //   penjualan_debit +
+  //   terimauang_debit +
+  //   transferuang_debit +
+  //   journal_debit;
+
+  // const totalkredit =
+  //   kirimuang_kredit +
+  //   pembelian_kredit +
+  //   penjualan_kredit +
+  //   terimauang_kredit +
+  //   transferuang_kredit +
+  //   journal_kredit;
 
   // const getPembelian = await prisma.headerPembelian.findMany({
   //   orderBy: {
@@ -173,6 +273,8 @@ export async function getServerSideProps() {
       header: aset,
       header2: kewajiban,
       header3: ekuitas,
+      // debit: grandtotaldebit,
+      // kredit: grandtotalkredit,
     },
   };
 }
