@@ -36,9 +36,6 @@ export default function addpajak({ data, data2 }) {
 
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" href="../pajak/tabel-pajak">
-            Pajak List
-          </Link>
           <Typography color="textPrimary">Buat Pajak Baru</Typography>
         </Breadcrumbs>
 
@@ -68,8 +65,8 @@ export default function addpajak({ data, data2 }) {
             <div className="mt-12 container">
               <Form>
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Nama</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Nama</label>
                   </Col>
                   <Col sm="4">
                     <Form.Control
@@ -84,38 +81,27 @@ export default function addpajak({ data, data2 }) {
                       }}
                     />
                   </Col>
-                  {props.errors.nama && props.touched.nama ? (
-                    <p className="text-red-500 text-sm italic mt-2">{props.errors.nama}</p>
-                  ) : null}
+                  {props.errors.nama && props.touched.nama ? <p className="text-red-500 text-sm italic mt-2">{props.errors.nama}</p> : null}
                 </Row>
 
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Presentase Aktif</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Presentase Aktif</label>
                   </Col>
                   <Col sm="4">
                     <InputGroup>
-                      <Form.Control
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        name="persen"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
+                      <Form.Control type="number" min="0" placeholder="0" name="persen" onChange={props.handleChange} onBlur={props.handleBlur} />
                       <InputGroup.Append>
                         <InputGroup.Text>%</InputGroup.Text>
                       </InputGroup.Append>
                     </InputGroup>
                   </Col>
-                  {props.errors.persen && props.touched.persen ? (
-                    <p className="text-red-500 text-sm italic mt-2">{props.errors.persen}</p>
-                  ) : null}
+                  {props.errors.persen && props.touched.persen ? <p className="text-red-500 text-sm italic mt-2">{props.errors.persen}</p> : null}
                 </Row>
 
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Akun Pajak Penjualan</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Akun Pajak Penjualan</label>
                   </Col>
                   <Col sm="4">
                     <Row>
@@ -133,8 +119,8 @@ export default function addpajak({ data, data2 }) {
                 </Row>
 
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Akun Pajak Pembelian</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Akun Pajak Pembelian</label>
                   </Col>
                   <Col sm="4">
                     <Row>

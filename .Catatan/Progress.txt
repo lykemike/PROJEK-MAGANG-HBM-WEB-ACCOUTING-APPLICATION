@@ -1,3 +1,4 @@
+Web Akuntansi Up Ke Server HBM buat testing
 Produk & Jasa
  * Add produk/jasa perubahan UI sesuai requirements = 100%
  * Update produk/jasa perubahan UI sesuai requirements = 100%
@@ -47,7 +48,7 @@ Penjualan
   * Ketika sudah mencet tombol DONE 
     - jurnal otomatis terbuat = 100%
     - maka penerimaan pembayaran tersebut sudah tidak bisa di UPDATE = 100%
-    - otomatis update ke saldo saat ini = 50%
+    - akun setor ke otomatis update ke saldo saat ini = 100%
 
 - Tabel Penjualan = 100%
   * View Penjualan = 100%
@@ -126,9 +127,14 @@ Pembelian
   * Perubahan UI create dan update sesuai requirements = 100%
   * Perubahan database header & detail penjualan = 100%
   * Create Penagihan Penjualan = 100%
-  * Update Penagihan Penjualan = 20%
-  * Delete Penagihan Penjualan = 20%
-  * Pengiriman Pembayaran = 40%
+  * Update Penagihan Penjualan = 40%
+  * Delete Penagihan Penjualan = 40%
+  * Pengiriman Pembayaran = 100%
+
+Pajak 
+  * Perbaikan Update = 100%
+
+SIT 7 Bug Done
 
 NOTES
 =================================

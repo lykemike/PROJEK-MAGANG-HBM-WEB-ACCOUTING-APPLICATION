@@ -22,7 +22,7 @@ export default function update({ data, data2, data3 }) {
 
   const PajakScehma = Yup.object().shape({
     nama: Yup.string().min(5, "* must be atleast 5 characters long").required("* required"),
-    presentaseAktif: Yup.number().required("* required").positive("* presentase aktif must be a positive").integer(),
+    presentase_aktif: Yup.number().required("* required").positive("* presentase aktif must be a positive").integer(),
   });
 
   const updatePajak = "http://localhost:3000/api/pajak/updatePajak";
@@ -30,16 +30,6 @@ export default function update({ data, data2, data3 }) {
   function cancelButton() {
     router.push("../pajak/tabel-pajak");
   }
-
-  function SelectField(FieldProps) {
-    return <Select options={data} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
-  }
-
-  function SelectField2(FieldProps) {
-    return <Select options={data2} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
-  }
-
-  console.log(data3);
 
   return (
     <Layout>
@@ -49,9 +39,6 @@ export default function update({ data, data2, data3 }) {
 
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" href="../pajak/tabel-pajak">
-            Pajak List
-          </Link>
           <Typography color="textPrimary">Update Pajak</Typography>
         </Breadcrumbs>
 
@@ -62,9 +49,11 @@ export default function update({ data, data2, data3 }) {
         innerRef={formik}
         initialValues={{
           nama: data3.nama,
-          presentaseAktif: data3.presentasaAktif,
-          akunPajakPenjualan: data3.akunPenjual,
-          akunPajakPembelian: data3.akunPembeli,
+          presentase_aktif: data3.presentase_aktif,
+          akun_pajak_penjualan_id: data3.akun_jual,
+          akun_pajak_penjualan_name: data3.kategori1.kode_akun + " - " + data3.kategori1.nama_akun,
+          akun_pajak_penjualan_id: data3.akun_beli,
+          akun_pajak_pembelian_name: data3.kategori2.kode_akun + " - " + data3.kategori2.nama_akun,
         }}
         validationSchema={PajakScehma}
         onSubmit={async (values) => {
@@ -85,65 +74,65 @@ export default function update({ data, data2, data3 }) {
             <div className="mt-12 container">
               <Form>
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Nama</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Nama</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      placeholder={props.values.nama}
-                      name="nama"
-                      onChange={props.handleChange}
-                      onBLur={props.handleBlur}
-                    />
+                    <Form.Control value={props.values.nama} name="nama" onChange={props.handleChange} onBLur={props.handleBlur} />
                   </Col>
-                  {props.errors.nama && props.touched.nama ? (
-                    <p className="text-red-500 text-sm italic mt-2">{props.errors.nama}</p>
-                  ) : null}
+                  {props.errors.nama && props.touched.nama ? <p className="text-red-500 text-sm italic mt-2">{props.errors.nama}</p> : null}
                 </Row>
 
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Presentase Aktif</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Presentase Aktif</label>
                   </Col>
                   <Col sm="4">
                     <InputGroup>
-                      <Form.Control
-                        placeholder={props.values.presentaseAktif}
-                        name="presentaseAktif"
-                        onChange={props.handleChange}
-                        onBLur={props.handleBlur}
-                      />
+                      <Form.Control value={props.values.presentase_aktif} type="number" name="presentase_aktif" onChange={props.handleChange} onBLur={props.handleBlur} />
                       <InputGroup.Append>
                         <InputGroup.Text>%</InputGroup.Text>
                       </InputGroup.Append>
                     </InputGroup>
                   </Col>
-                  {props.errors.presentaseAktif && props.touched.presentaseAktif ? (
-                    <p className="text-red-500 text-sm italic mt-2">{props.errors.presentaseAktif}</p>
-                  ) : null}
+                  {props.errors.presentase_aktif && props.touched.presentase_aktif ? <p className="text-red-500 text-sm italic mt-2">{props.errors.presentase_aktif}</p> : null}
                 </Row>
 
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Akun Pajak Penjualan</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Akun Pajak Penjualan</label>
                   </Col>
                   <Col sm="4">
                     <Row>
                       <Col>
-                        <Field options={data} name="akunPajakPenjualan" component={SelectField} />
+                        <Select
+                          options={data}
+                          name="akun_pajak_penjualan_id"
+                          defaultValue={{ label: props.values.akun_pajak_penjualan_name, value: props.values.akun_pajak_penjualan_id }}
+                          onChange={(e) => {
+                            props.setFieldValue(`akun_pajak_penjualan_id`, e.value);
+                          }}
+                        />
                       </Col>
                     </Row>
                   </Col>
                 </Row>
 
                 <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Akun Pajak Pembelian</Form.Label>
+                  <Col sm="3">
+                    <label className="font-medium">Akun Pajak Pembelian</label>
                   </Col>
                   <Col sm="4">
                     <Row>
                       <Col>
-                        <Field options={data2} name="akunPajakPembelian" component={SelectField2} />
+                        <Select
+                          options={data2}
+                          name="akun_pajak_pembelian_id"
+                          defaultValue={{ label: props.values.akun_pajak_pembelian_name, value: props.values.akun_pajak_pembelian_id }}
+                          onChange={(e) => {
+                            props.setFieldValue(`akun_pajak_pembelian_id`, e.value);
+                          }}
+                        />
                       </Col>
                     </Row>
                   </Col>
@@ -184,7 +173,7 @@ export async function getServerSideProps(context) {
   get_pajak_penjualan.map((i) => {
     pajak_penjualan.push({
       value: i.id,
-      label: i.nama_akun,
+      label: i.kode_akun + " - " + i.nama_akun,
     });
   });
 
@@ -200,13 +189,17 @@ export async function getServerSideProps(context) {
   get_pajak_pembelian.map((i) => {
     pajak_pembelian.push({
       value: i.id,
-      label: i.nama_akun,
+      label: i.kode_akun + " - " + i.nama_akun,
     });
   });
 
   const get_pajak = await prisma.pajak.findFirst({
     where: {
       id: parseInt(id),
+    },
+    include: {
+      kategori1: true,
+      kategori2: true,
     },
   });
 

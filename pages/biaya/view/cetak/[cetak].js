@@ -74,7 +74,10 @@ export default function Expense({ data }) {
                 <Typography className="text-white font-bold">Deskripsi</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-white font-bold">Pajak</Typography>
+                <Typography className="text-white font-bold">Pajak Masukan</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Pajak Keluaran</Typography>
               </TableCell>
               <TableCell>
                 <Typography className="text-white font-bold">Jumlah (dalam IDR)</Typography>
@@ -86,25 +89,48 @@ export default function Expense({ data }) {
               <TableRow key={index}>
                 <TableCell>{i.akun.kode_akun + " - " + i.akun.nama_akun}</TableCell>
                 <TableCell>{i.deskripsi}</TableCell>
-                <TableCell>{i.pajak.nama + " - " + i.pajak.presentase_aktif + "%"}</TableCell>
-                <TableCell>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                <TableCell>
+                  Rp.{" "}
+                  {data[0].harga_termasuk_pajak == "false"
+                    ? i.pajak_masukan_per_baris.toLocaleString({ minimumFractionDigits: 0 })
+                    : i.termasuk_pajak_masukan.toLocaleString({ minimumFractionDigits: 0 })}
+                </TableCell>
+                <TableCell>
+                  Rp.{" "}
+                  {data[0].harga_termasuk_pajak == "false"
+                    ? i.pajak_keluaran_per_baris.toLocaleString({ minimumFractionDigits: 0 })
+                    : i.termasuk_pajak_keluaran.toLocaleString({ minimumFractionDigits: 0 })}
+                </TableCell>
+                {/* <TableCell style={{ minWidth: 300, width: 300 }}>{i.pajak_nama == "-" ? "-" : i.pajak.nama + " - " + i.pajak.presentase_aktif + "%"}</TableCell> */}
+                <TableCell style={{ minWidth: 300, width: 300 }}>Rp. {i.jumlah.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           <TableRow>
             <TableCell />
             <TableCell />
+            <TableCell />
             <TableCell align="right">Subtotal</TableCell>
             <TableCell>Rp. {data[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell />
             <TableCell />
-            <TableCell align="right">Pajak Total</TableCell>
-            <TableCell>Rp. {data[0].pajak_hasil.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+            <TableCell />
+            <TableCell align="right">Pajak Masukan Total</TableCell>
+            <TableCell>Rp. {data[0].pajak_masukan_total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell />
+            <TableCell />
+            <TableCell />
+            <TableCell align="right">Pajak Keluaran Total</TableCell>
+            <TableCell>Rp. {data[0].pajak_keluaran_total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
 
           <TableRow>
+            <TableCell />
             <TableCell />
             <TableCell />
             <TableCell align="right">Total</TableCell>
@@ -127,7 +153,8 @@ export async function getServerSideProps(context) {
       DetailBiaya: {
         include: {
           akun: true,
-          pajak: true,
+          pajak_keluaran: true,
+          pajak_masukan: true,
         },
       },
       JurnalBiaya: true,

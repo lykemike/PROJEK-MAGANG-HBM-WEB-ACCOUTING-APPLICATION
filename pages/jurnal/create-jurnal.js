@@ -123,7 +123,7 @@ export default function create_jurnal({ data, data2 }) {
               </Col>
               <Col sm="1" />
               <Col sm="2">
-                <FormControl placeholder="Pick date" type="date" aria-label="date" onChange={props.handleChange} name="tgl_transaksi" value={current} disabled />
+                <FormControl placeholder="Pick date" type="date" aria-label="date" onChange={props.handleChange} name="tgl_transaksi" value={current} />
                 {props.errors.tgl_transaksi && props.touched.tgl_transaksi ? <div>{props.errors.tgl_transaksi}</div> : null}
               </Col>
             </Row>

@@ -9,15 +9,15 @@ export default async (req, res) => {
       },
       data: {
         nama: req.body.nama,
-        presentasaAktif: parseInt(req.body.presentaseAktif),
-        akunPenjual: parseInt(req.body.akunPajakPenjualan),
-        akunPembeli: parseInt(req.body.akunPajakPembelian),
+        presentase_aktif: parseInt(req.body.presentase_aktif),
+        akun_jual: parseInt(req.body.akun_pajak_penjualan_id),
+        akun_beli: parseInt(req.body.akun_pajak_penjualan_id),
       },
     });
 
-    res.status(200).json({ message: "UPDATE AKUN PAJAK SUCCESS!", data: updatePajak });
+    res.status(200).json({ message: "Update Pajak Success!" });
   } catch (error) {
-    res.status(400).json({ data: "UPDATE AKUN PAJAK FAILED!", error });
+    res.status(400).json({ data: "Update Pajak Failed!", error });
     console.log(error);
   }
 };
