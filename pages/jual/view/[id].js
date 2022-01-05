@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/Link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
@@ -179,9 +180,14 @@ export default function salesInvoice({ data, header }) {
         </Col>
         <Col sm="4">
           <Row className="float-right row no-gutters">
-            <Button variant="danger" className="mr-2">
-              Kembali
-            </Button>
+            <Link href="../penjualan">
+              <a>
+                <Button variant="danger" className="mr-2">
+                  Kembali
+                </Button>
+              </a>
+            </Link>
+
             {header[0].PenerimaanPembayaran.length > 0 ? null : (
               <Button variant="success" onClick={edit}>
                 Ubah

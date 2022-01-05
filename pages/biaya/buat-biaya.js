@@ -598,7 +598,12 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
 
             <Row>
               <Col className="d-flex justify-content-end mt-10">
-                <Button variant="danger mr-2">Batal</Button>
+                <Link href="pengeluaran">
+                  <a>
+                    <Button variant="danger mr-2">Batal</Button>
+                  </a>
+                </Link>
+
                 <Button variant="success" className="ml-2" onClick={props.handleSubmit}>
                   Bayar
                 </Button>

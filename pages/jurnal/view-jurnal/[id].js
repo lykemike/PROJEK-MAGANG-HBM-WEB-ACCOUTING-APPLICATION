@@ -2,18 +2,7 @@ import React from "react";
 import Head from "next/head";
 import Layout from "../../../components/Layout";
 import { Form, Row, Col, Button } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-  TableFooter,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, TableFooter } from "@material-ui/core";
 
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
@@ -53,7 +42,7 @@ export default function jurnalentry({ data, data2 }) {
 
       <div className="mt-4 mb-4">
         <Row>
-          <Col sm="3">Tanggal Transaksi: {data[0].tgl_transaksi}</Col>
+          <Col sm="3">Tanggal Transaksi: {data[0].id}</Col>
           <Col sm="3">No. Transaksi: Journal Entry #{data[0].no_transaksi}</Col>
         </Row>
       </div>
@@ -96,14 +85,10 @@ export default function jurnalentry({ data, data2 }) {
               <TableCell />
               <TableCell />
               <TableCell>
-                <Typography className="text-gray-500">
-                  Rp. {data[0].total_debit.toLocaleString({ minimumFractionDigits: 0 })}
-                </Typography>
+                <Typography className="text-gray-500">Rp. {data[0].total_debit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-gray-500">
-                  Rp. {data[0].total_kredit.toLocaleString({ minimumFractionDigits: 0 })}
-                </Typography>
+                <Typography className="text-gray-500">Rp. {data[0].total_kredit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
               </TableCell>
             </TableRow>
           </TableFooter>

@@ -109,6 +109,9 @@ Biaya
 Bank Detail
   * Import Data Bank Nama, No Rek, Cabang, dan Jenis = 100%
 
+Pajak 
+  * Perbaikan Update = 100%
+
 Kas Bank
   * Kas Bank
     - Statistik untung/rugi dlm presentase dua decimal, dan icon = 100%
@@ -131,10 +134,11 @@ Pembelian
   * Delete Penagihan Penjualan = 40%
   * Pengiriman Pembayaran = 100%
 
-Pajak 
-  * Perbaikan Update = 100%
+Jurnal
+ * Perbaikan UI = 100%
+ * Perbaikan Create, Update, Delete = 100%
 
-SIT 7 Bug Done
+SIT 16 Bug Done
 
 NOTES
 =================================

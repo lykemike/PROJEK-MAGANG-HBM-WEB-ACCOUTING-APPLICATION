@@ -696,7 +696,6 @@ model JurnalKirimUang {
 
 model HeaderJurnal {
   id            Int    @id @default(autoincrement())
-  no_transaksi  Int
   tgl_transaksi String
   total_debit   Int
   total_kredit  Int
@@ -711,13 +710,12 @@ model DetailJurnal {
   header_jurnal_id Int
   akun             Akun         @relation(fields: [akun_id], references: [id])
   akun_id          Int
-
+  akun_nama        String
   nominal    Int
   tipe_saldo String
   debit      Int
   kredit     Int
   deskripsi  String
-  tag        String
 }
 
 model Aset {

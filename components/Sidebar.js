@@ -133,12 +133,12 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div>
+    <div className="">
       <div className="fixed flex flex-col top-0 left-0 w-64 bg-dark h-full ">
         <div className="flex items-center justify-center h-14">
           <div />
         </div>
-        <div className="overflow-y-auto overflow-x-hidden flex-grow">
+        <div className="overflow-y-auto overflow-x-hidden flex-grow scrollbar-hide">
           <ul className="flex flex-col py-2 space-y-1">
             <li className="px-7">
               <div className="flex flex-row items-center h-8">
