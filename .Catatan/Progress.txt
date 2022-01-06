@@ -130,13 +130,16 @@ Pembelian
   * Perubahan UI create dan update sesuai requirements = 100%
   * Perubahan database header & detail penjualan = 100%
   * Create Penagihan Penjualan = 100%
-  * Update Penagihan Penjualan = 40%
-  * Delete Penagihan Penjualan = 40%
+  * Update Penagihan Penjualan = 50%
+  * Delete Penagihan Penjualan = 50%
   * Pengiriman Pembayaran = 100%
 
 Jurnal
  * Perbaikan UI = 100%
  * Perbaikan Create, Update, Delete = 100%
+
+User & Role
+ * Perbaikan UI, Validation, Modal = 100%
 
 SIT 16 Bug Done
 
@@ -153,15 +156,16 @@ NOTES
 
 TANYA
   - optional upload file
-  - delete confirmation setelah success tidak resfresh/redirect
+  DONE delete confirmation setelah success tidak resfresh/redirect
   DONE bug ui select2 ketika update, tampilannya ga berubah
   - show current file
   - status bug, sisa tagihan 0 dan tanggal lewat jatuh tempo sehaursnya tetap complete
-  - cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
+  DONE cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
   - menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan
   - cara buat alert success, failed
   - merge data yang sama
   - show more than 2 items di invoice penerimaan pembayaran with one subtotal
+  - ketika buat akun baru, kode akun tersebut akan otomatis tergantung kategori yg di pilih
 
 DATA YANG BERBEDA
 contoh: 

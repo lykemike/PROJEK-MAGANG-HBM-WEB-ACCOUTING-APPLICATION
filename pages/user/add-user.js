@@ -24,15 +24,10 @@ export default function User({ data }) {
   }
 
   const UserSchema = Yup.object().shape({
-    first_name: Yup.string()
-      .min(2, "* chracters must be more than 2")
-      .max(20, "* chracters must be less than 20")
-      .required("*required"),
+    first_name: Yup.string().min(2, "* chracters must be more than 2").max(20, "* chracters must be less than 20").required("* required"),
     email: Yup.string().email("* must be a valid email").required("* required"),
     password: Yup.string().min(6, "* password must be more than 6 characters").required("* required"),
-    // role_id: Yup.object().shape({
-    //   value: Yup.number().required("* required"),
-    // }),
+    role_id: Yup.string().required("* required"),
   });
 
   function cancelButton() {
@@ -68,9 +63,6 @@ export default function User({ data }) {
           <Forms noValidate>
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="../user/tabel-user">
-                  User list
-                </Link>
                 <Typography color="textPrimary">Buat User Baru</Typography>
               </Breadcrumbs>
 
@@ -81,82 +73,59 @@ export default function User({ data }) {
               <Form>
                 <Row className="mb-2">
                   <Col sm="2">
-                    <Form.Label>First Name</Form.Label>
+                    <label className="font-medium">First Name</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      placeholder="First Name"
-                      name="first_name"
-                      onChange={props.handleChange}
-                      onBLur={props.handleBlur}
-                    />
-                    {props.errors.first_name && props.touched.first_name ? (
-                      <div class="text-red-500 text-sm">{props.errors.first_name}</div>
-                    ) : null}
+                    <Form.Control placeholder="First Name" name="first_name" onChange={props.handleChange} onBLur={props.handleBlur} />
                   </Col>
+                  <Col>{props.errors.first_name && props.touched.first_name ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.first_name}</span> : null}</Col>
                 </Row>
 
                 <Row className="mb-2">
                   <Col sm="2">
-                    <Form.Label>Last Name</Form.Label>
+                    <label className="font-medium">Last Name</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      placeholder="Last Name"
-                      name="last_name"
-                      onChange={props.handleChange}
-                      onBLur={props.handleBlur}
-                    />
-                    {props.errors.last_name && props.touched.last_name ? (
-                      <div class="text-red-500 text-sm">{props.errors.last_name}</div>
-                    ) : null}
+                    <Form.Control placeholder="Last Name" name="last_name" onChange={props.handleChange} onBLur={props.handleBlur} />
                   </Col>
+                  <Col>{props.errors.last_name && props.touched.last_name ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.last_name}</span> : null}</Col>
                 </Row>
 
                 <Row className="mb-2">
                   <Col sm="2">
-                    <Form.Label>Email</Form.Label>
+                    <label className="font-medium">Email</label>
                   </Col>
                   <Col sm="4">
                     <Form.Control placeholder="Email" name="email" onChange={props.handleChange} onBLur={props.handleBlur} />
-                    {props.errors.email && props.touched.email ? (
-                      <div class="text-red-500 text-sm">{props.errors.email}</div>
-                    ) : null}
                   </Col>
+                  <Col>{props.errors.email && props.touched.email ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.email}</span> : null}</Col>
                 </Row>
 
                 <Row className="mb-2">
                   <Col sm="2">
-                    <Form.Label>Password</Form.Label>
+                    <label className="font-medium">Password</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      name="password"
-                      onChange={props.handleChange}
-                      onBLur={props.handleBlur}
+                    <Form.Control type="password" placeholder="Password" name="password" onChange={props.handleChange} onBLur={props.handleBlur} />
+                  </Col>
+                  <Col>{props.errors.password && props.touched.password ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.password}</span> : null}</Col>
+                </Row>
+
+                <Row className="mb-2">
+                  <Col sm="2">
+                    <label className="font-medium">Roles</label>
+                  </Col>
+                  <Col sm="4">
+                    <Select
+                      options={data}
+                      name="role_id"
+                      onChange={(e) => {
+                        props.setFieldValue(`role_id`, e.value);
+                        props.setFieldValue((props.values.role_id = e.value));
+                      }}
                     />
-                    {props.errors.password && props.touched.password ? (
-                      <div class="text-red-500 text-sm">{props.errors.password}</div>
-                    ) : null}
                   </Col>
-                </Row>
-
-                <Row className="mb-2">
-                  <Col sm="2">
-                    <Form.Label>Roles</Form.Label>
-                  </Col>
-                  <Col sm="4">
-                    <Row>
-                      <Col>
-                        <Field options={data} name="role_id" component={SelectField} />
-                        {/* {props.errors.role_id && props.touched.role_id ? (
-                            <div class="text-red-500 text-sm">{props.errors.role_id}</div>
-                          ) : null} */}
-                      </Col>
-                    </Row>
-                  </Col>
+                  <Col>{props.errors.role_id && props.touched.role_id ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.role_id}</span> : null}</Col>
                 </Row>
 
                 <Row>

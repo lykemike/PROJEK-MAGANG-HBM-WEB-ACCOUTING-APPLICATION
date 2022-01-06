@@ -37,7 +37,7 @@ export default function update({ data, data2 }) {
   function cancelButton() {
     router.push("../user/tabel-user");
   }
-
+  console.log(data2);
   return (
     <Layout>
       <Head>
@@ -51,7 +51,8 @@ export default function update({ data, data2 }) {
           last_name: data2.lastName,
           email: data2.email,
           password: data2.password,
-          role_id: "",
+          role_id: data2.roleId,
+          role_name: data2.role.roleType,
         }}
         validationSchema={UserSchema}
         onSubmit={async (values) => {
@@ -70,9 +71,6 @@ export default function update({ data, data2 }) {
           <Forms noValidate>
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" href="../user/tabel-user">
-                  User List
-                </Link>
                 <Typography color="textPrimary">Update User</Typography>
               </Breadcrumbs>
 
@@ -84,54 +82,58 @@ export default function update({ data, data2 }) {
                 <Form>
                   <Row className="mb-2">
                     <Col sm="2">
-                      <Form.Label>First Name</Form.Label>
+                      <label className="font-medium">First Name</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder={props.values.first_name} name="first_name" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control placeholder={props.values.first_name} value={props.values.first_name} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.first_name && props.touched.first_name ? <div className="text-red-500 text-sm">{props.errors.first_name}</div> : null}
                     </Col>
                   </Row>
 
                   <Row className="mb-2">
                     <Col sm="2">
-                      <Form.Label>Last Name</Form.Label>
+                      <label className="font-medium">Last Name</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder={props.values.last_name} name="last_name" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control placeholder={props.values.last_name} value={props.values.last_name} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.last_name && props.touched.last_name ? <div className="text-red-500 text-sm">{props.errors.last_name}</div> : null}
                     </Col>
                   </Row>
 
                   <Row className="mb-2">
                     <Col sm="2">
-                      <Form.Label>Email</Form.Label>
+                      <label className="font-medium">Email</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder={props.values.email} name="email" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control placeholder={props.values.email} value={props.values.email} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.email && props.touched.email ? <div className="text-red-500 text-sm">{props.errors.email}</div> : null}
                     </Col>
                   </Row>
 
                   <Row className="mb-2">
                     <Col sm="2">
-                      <Form.Label>Password</Form.Label>
+                      <label className="font-medium">Password</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder="Password" name="password" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control placeholder="********" onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.password && props.touched.password ? <div className="text-red-500 text-sm">{props.errors.password}</div> : null}
                     </Col>
                   </Row>
 
                   <Row className="mb-2">
                     <Col sm="2">
-                      <Form.Label>Roles</Form.Label>
+                      <label className="font-medium">Roles</label>
                     </Col>
                     <Col sm="4">
-                      <Row>
-                        <Col>
-                          <Field options={data} name="role_id" component={SelectField} />
-                        </Col>
-                      </Row>
+                      <Select
+                        options={data}
+                        name="role_id"
+                        defaultValue={{ label: props.values.role_name, value: props.values.role_id }}
+                        onChange={(e) => {
+                          props.setFieldValue(`role_id`, e.value);
+                          props.setFieldValue((props.values.role_id = e.value));
+                        }}
+                      />
                     </Col>
                   </Row>
 
@@ -162,6 +164,9 @@ export async function getServerSideProps(context) {
   const get_user = await prisma.user.findFirst({
     where: {
       id: parseInt(id),
+    },
+    include: {
+      role: true,
     },
   });
 

@@ -5,27 +5,15 @@ import Layout from "../../components/Layout";
 import TablePagination from "../../components/TablePagination";
 
 import { Button, Row, Col, Modal } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-} from "@material-ui/core/";
-import AddIcon from "@material-ui/icons/Add";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import { Breadcrumbs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
+import { Add, SearchOutlined, ErrorOutline, Visibility, Edit, Delete } from "@material-ui/icons/";
 
 import Axios from "axios";
 import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-function MyVerticallyCenteredModal(props) {
+function DeleteModal(props) {
   const router = useRouter();
   const api_delete_user = "http://localhost:3000/api/role/deleterole";
 
@@ -37,7 +25,7 @@ function MyVerticallyCenteredModal(props) {
     })
       .then(function (response) {
         console.log(response);
-        router.push("tabel-role");
+        router.reload(window.location.pathname);
       })
       .catch(function (error) {
         console.log(error);
@@ -45,19 +33,19 @@ function MyVerticallyCenteredModal(props) {
   };
 
   return (
-    <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Role Confirmation</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure you want to delete the current role?</p>
+        <p>Are you sure you want to delete {props.nama}?</p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handle_delete}>
-          Confirm Delete
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
         </Button>
       </Modal.Footer>
     </Modal>
@@ -71,7 +59,7 @@ export default function roleList({ data }) {
   const firstIndex = page * rowsPerPage;
   const lastIndex = page * rowsPerPage + rowsPerPage;
 
-  const [modalShow, setModalShow] = useState({ open: false, id: 0 });
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
 
   const handlePrevChange = () => {
     if (page < 1) {
@@ -106,7 +94,7 @@ export default function roleList({ data }) {
       <Head>
         <title>Tabel Role</title>
       </Head>
-      <MyVerticallyCenteredModal id={modalShow.id} show={modalShow.open} onHide={() => setModalShow({ open: false, id: 0 })} />
+      <DeleteModal id={modalShow.id} show={modalShow.open} nama={modalShow.nama} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, nama: "" })} />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Role</Typography>
@@ -120,7 +108,7 @@ export default function roleList({ data }) {
             <div className="d-flex justify-content-end">
               <Link href="add-role">
                 <Button variant="primary mr-2">
-                  <AddIcon fontSize="small" /> Buat role baru
+                  <Add fontSize="small" /> Buat role baru
                 </Button>
               </Link>
             </div>
@@ -139,9 +127,7 @@ export default function roleList({ data }) {
                 <TableCell>
                   <Typography className="text-white font-bold">Role Description</Typography>
                 </TableCell>
-                <TableCell>
-                  <Typography className="text-white font-bold">Actions</Typography>
-                </TableCell>
+                <TableCell align="right" />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -151,17 +137,16 @@ export default function roleList({ data }) {
                     {i.roleType}
                   </TableCell>
                   <TableCell>{i.roleDesc}</TableCell>
-                  <TableCell>
+                  <TableCell align="right">
                     <Link href={`${i.id}`}>
-                      <EditOutlinedIcon color="action" fontSize="small" className="mr-2 cursor-pointer" />
+                      <Button variant="warning" size="sm" className="mr-2">
+                        <Edit className="text-white" fontSize="small" />
+                      </Button>
                     </Link>
 
-                    <DeleteOutlineIcon
-                      onClick={() => setModalShow({ open: true, id: i.id })}
-                      color="secondary"
-                      fontSize="small"
-                      className="cursor-pointer"
-                    />
+                    <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.id, nama: i.roleType })}>
+                      <Delete className="text-white" fontSize="small" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
