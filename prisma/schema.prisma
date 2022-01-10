@@ -103,10 +103,10 @@ model Akun {
   TransferUang2 TransferUang[] @relation("akunSetorTransfer")
 
   HeaderTerimaUang HeaderTerimaUang[]
-  DetailTerimaUang DetailTerimaUang[] 
+  DetailTerimaUang DetailTerimaUang[]
 
-  HeaderKirimUang HeaderKirimUang[] 
-  DetailKirimUang DetailKirimUang[] 
+  HeaderKirimUang HeaderKirimUang[]
+  DetailKirimUang DetailKirimUang[]
 
   DetailJurnal DetailJurnal[]
 
@@ -477,18 +477,21 @@ model PengirimanBayaran {
   tgl_pembayaran       String
 
 
-  jumlah Int
+  jumlah                  Int
+  JurnalPengirimanBayaran JurnalPengirimanBayaran[]
 }
 
 // Jurnal Pengiriman Bayaran Table
 model JurnalPengirimanBayaran {
-  id                  Int             @id @default(autoincrement())
-  header_pembelian    HeaderPembelian @relation(fields: [header_pembelian_id], references: [id])
-  header_pembelian_id Int
-  akun                Akun            @relation(fields: [akun_id], references: [id])
-  akun_id             Int
-  nominal             Int
-  tipe_saldo          String
+  id                   Int               @id @default(autoincrement())
+  header_pembelian     HeaderPembelian   @relation(fields: [header_pembelian_id], references: [id])
+  header_pembelian_id  Int
+  PengirimanBayaran    PengirimanBayaran @relation(fields: [PengirimanBayaran_id], references: [id])
+  PengirimanBayaran_id Int
+  akun                 Akun              @relation(fields: [akun_id], references: [id])
+  akun_id              Int
+  nominal              Int
+  tipe_saldo           String
 }
 
 // Header Biaya Table
@@ -615,23 +618,23 @@ model JurnalTransferUang {
 }
 
 model HeaderTerimaUang {
-  id                Int  @id @default(autoincrement())
-  kontak            Kontak @relation(fields: [kontak_id], references: [id])
-  kontak_id         Int
+  id        Int    @id @default(autoincrement())
+  kontak    Kontak @relation(fields: [kontak_id], references: [id])
+  kontak_id Int
 
-  akun_setor        Akun @relation(fields: [akun_setor_id], references: [id])
-  akun_setor_id     Int
+  akun_setor    Akun @relation(fields: [akun_setor_id], references: [id])
+  akun_setor_id Int
 
-  tgl_transaksi     String
-  
-  memo              String
-  file_attachment   String?
-  total             Int
+  tgl_transaksi String
 
-  status            String
+  memo            String
+  file_attachment String?
+  total           Int
 
-  DetailTerimaUang  DetailTerimaUang[]
-  JurnalTerimaUang  JurnalTerimaUang[]
+  status String
+
+  DetailTerimaUang DetailTerimaUang[]
+  JurnalTerimaUang JurnalTerimaUang[]
 }
 
 model DetailTerimaUang {
@@ -643,7 +646,7 @@ model DetailTerimaUang {
   akun_id   Int
   nama_akun String
   deskripsi String
-  jumlah  Int
+  jumlah    Int
 }
 
 model JurnalTerimaUang {
@@ -658,11 +661,11 @@ model JurnalTerimaUang {
 }
 
 model HeaderKirimUang {
-  id            Int  @id @default(autoincrement())
-  akun_bayar    Akun @relation(fields: [akun_bayar_id], references: [id])
-  akun_bayar_id Int
-  kontak            Kontak @relation(fields: [kontak_id], references: [id])
-  kontak_id         Int
+  id              Int    @id @default(autoincrement())
+  akun_bayar      Akun   @relation(fields: [akun_bayar_id], references: [id])
+  akun_bayar_id   Int
+  kontak          Kontak @relation(fields: [kontak_id], references: [id])
+  kontak_id       Int
   tgl_transaksi   String
   memo            String
   file_attachment String
@@ -677,11 +680,11 @@ model DetailKirimUang {
   id                   Int             @id @default(autoincrement())
   header_kirim_uang    HeaderKirimUang @relation(fields: [header_kirim_uang_id], references: [id])
   header_kirim_uang_id Int
-  akun      Akun   @relation(fields: [akun_id], references: [id])
-  akun_id   Int
-  nama_akun String
-  deskripsi String
-  jumlah  Int
+  akun                 Akun            @relation(fields: [akun_id], references: [id])
+  akun_id              Int
+  nama_akun            String
+  deskripsi            String
+  jumlah               Int
 }
 
 model JurnalKirimUang {

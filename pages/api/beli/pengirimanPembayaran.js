@@ -52,18 +52,9 @@ export default async (req, res) => {
       });
     }
 
-    const find_akun_bayar = await prisma.akun.findFirst({
+    const find_akun_bayar = await prisma.kontak.findFirst({
       where: {
-        id: parseInt(req.body.akun_id),
-      },
-    });
-
-    const find_default_hutang_blm_ditagih = await prisma.settingDefault.findFirst({
-      where: {
-        id: 10,
-      },
-      include: {
-        akun: true,
+        kontak_id: parseInt(req.body.kontak_id),
       },
     });
 
@@ -71,13 +62,13 @@ export default async (req, res) => {
       data: [
         {
           header_pembelian_id: parseInt(req.body.id),
-          akun_id: find_default_hutang_blm_ditagih.akun.id,
+          akun_id: find_akun_bayar.akun_hutang_id,
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Debit",
         },
         {
           header_pembelian_id: parseInt(req.body.id),
-          akun_id: find_akun_bayar.id,
+          akun_id: req.body.akun.id,
           nominal: parseInt(req.body.jumlah),
           tipe_saldo: "Kredit",
         },

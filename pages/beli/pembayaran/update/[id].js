@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../../../components/Layout";
+import Layout from "../../../../components/Layout";
 import { Row, Col, Form, Button, FormCheck } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
@@ -14,26 +14,30 @@ const prisma = new PrismaClient();
 export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
   const router = useRouter();
   const { id } = router.query;
-
-  const url = "http://localhost:3000/api/beli/pengirimanPembayaran";
+  console.log(data);
+  const url = "http://localhost:3000/api/beli/updatePembayaran";
 
   function pembayaran() {
     router.push(`../pembayaran/view/${id}`);
   }
+
+  const sisatagihanlama = data[0].header_pembelian.sisa_tagihan + data[0].jumlah;
 
   return (
     <Layout>
       <Formik
         initialValues={{
           id: id,
-          kontak_id: data.kontak.id,
-          akun_id: "",
-          nama_akun_bayar_dari: "",
-          cara_pembayaran_id: "",
-          cara_pembayaran_nama: "",
-          tgl_pembayaran: "",
+          kontak_id: data[0].header_pembelian.kontak.id,
+          akun_id: data[0].akun_id,
+          header_pembelian_id: data[0].header_pembelian.id,
+          nama_akun_bayar_dari: data[0].nama_akun_bayar_dari,
+          cara_pembayaran_id: data[0].cara_pembayaran_id,
+          cara_pembayaran_nama: data[0].cara_pembayaran_nama,
+          tgl_pembayaran: data[0].tgl_pembayaran,
 
-          jumlah: 0,
+          jumlah: data[0].jumlah,
+          jumlah_baru: data[0].jumlah,
         }}
         // validationSchema={UserSchema}
         onSubmit={async (values) => {
@@ -41,7 +45,7 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-              router.push(`../../beli/view/${id}`);
+              // router.push(`../../beli/view/${id}`);
             })
             .catch(function (error) {
               console.log(error);
@@ -59,16 +63,18 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
             <hr />
             <Form>
               <Row sm="12">
-                {data.map((i) => (
-                  <Col sm="3">
-                    <Form.Label className="font-medium">Supplier</Form.Label>
-                    <Form.Control placeholder={i.kontak.nama} disabled />
-                  </Col>
-                ))}
+                <Col sm="3">
+                  <Form.Label className="font-medium">Supplier</Form.Label>
+                  <Form.Control placeholder={data[0].header_pembelian.nama_supplier} disabled />
+                </Col>
 
                 <Col sm="3">
                   <Form.Label className="font-medium">Bayar Dari</Form.Label>
                   <Select
+                    defaultValue={{
+                      value: props.values.akun_id,
+                      label: props.values.nama_akun_bayar_dari,
+                    }}
                     options={data2}
                     name="akunkasbank"
                     onChange={(e) => {
@@ -91,6 +97,10 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
                 <Col sm="4">
                   <Form.Label className="font-medium">Cara Pembayaran</Form.Label>
                   <Select
+                    defaultValue={{
+                      value: props.values.cara_pembayaran_id,
+                      label: props.values.cara_pembayaran_nama,
+                    }}
                     options={cara_pembayaran}
                     name="akunkasbank"
                     onChange={(e) => {
@@ -102,13 +112,19 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
 
                 <Col sm="4">
                   <Form.Label className="font-medium">Tanggal Pembayaran</Form.Label>
-                  <Form.Control placeholder="" type="date" name="tgl_pembayaran" onChange={props.handleChange} />
+                  <Form.Control
+                    placeholder=""
+                    type="date"
+                    name="tgl_pembayaran"
+                    onChange={props.handleChange}
+                    defaultValue={props.values.tgl_pembayaran}
+                  />
                 </Col>
 
                 {data.map((i) => (
                   <Col sm="4">
                     <Form.Label className="font-medium">No. Transaksi</Form.Label>
-                    <Form.Control placeholder={i.no_transaksi} disabled />
+                    <Form.Control placeholder="Auto" disabled />
                   </Col>
                 ))}
               </Row>
@@ -133,7 +149,7 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
                 </Col>
 
                 <Col sm="2">
-                  <Form.Label className="font-medium">Sisa Tagihan</Form.Label>
+                  <Form.Label className="font-medium">Sisa Tagihan sebelum pembayaran</Form.Label>
                 </Col>
 
                 <Col sm="2">
@@ -145,34 +161,31 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
               {data.map((i) => (
                 <Row className="mb-12">
                   <Col sm="2">
-                    <p>Purchase Invoice #{i.id}</p>
+                    <p>Purchase Invoice #{i.header_pembelian.no_transaksi}</p>
                   </Col>
 
                   <Col sm="2">
-                    <p>{i.memo}</p>
+                    <p>{i.header_pembelian.memo}</p>
                   </Col>
 
                   <Col sm="2">
-                    <p>{i.tgl_jatuh_tempo}</p>
+                    <p>{i.header_pembelian.tgl_jatuh_tempo}</p>
                   </Col>
 
                   <Col sm="2">
-                    <p>Rp. {i.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                    <p>Rp. {i.header_pembelian.total.toLocaleString({ minimumFractionDigits: 0 })}</p>
                   </Col>
 
                   <Col sm="2">
-                    <p>Rp. {i.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                    <p>Rp. {sisatagihanlama.toLocaleString({ minimumFractionDigits: 0 })}</p>
                   </Col>
 
                   <Col sm="2">
                     <Form.Control
-                      placeholder=""
+                      defaultValue={props.values.jumlah}
                       name="jumlah"
                       onChange={(e) => {
-                        props.setFieldValue("jumlah", parseInt(e.target.value));
-                        const total = i.sisa_tagihan - e.target.value;
-
-                        props.setFieldValue("total", parseInt(total));
+                        props.setFieldValue("jumlah_baru", e.target.value);
                       }}
                     />
                   </Col>
@@ -208,20 +221,17 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
                 </Col>
 
                 <Col sm="3">
-                  <h5 name="total">Rp. {parseInt(props.values.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h5>
+                  <h5 name="total">Rp. {props.values.jumlah_baru.toLocaleString({ minimumFractionDigits: 0 })}</h5>
                 </Col>
               </Row>
 
               <Row>
                 <Col className="d-flex justify-content-end mt-10">
-                  <Button variant="primary mr-2" onClick={pembayaran}>
-                    Invoice
-                  </Button>
                   <Link href="/beli/pembelian">
                     <Button variant="danger mr-2">Batal</Button>
                   </Link>
                   <Button variant="success" onClick={props.handleSubmit}>
-                    Bayar
+                    Update
                   </Button>
                 </Col>
               </Row>
@@ -236,13 +246,17 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerPembelian.findMany({
+  const header = await prisma.pengirimanBayaran.findMany({
     where: {
       id: parseInt(id),
     },
     include: {
-      kontak: true,
-      DetailPembelian: true,
+      header_pembelian: {
+        include: {
+          kontak: true,
+        },
+      },
+      akun: true,
     },
   });
 
