@@ -1,90 +1,166 @@
 import React from "react";
-import Layout from "../../../components/Layout";
-
-import { Row, Col, Button, FormControl } from "react-bootstrap";
-import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import Layout from "../../../components/Layout";
+import { Row, Col, Button, DropdownButton, Dropdown, FormControl } from "react-bootstrap";
+
+import { Breadcrumbs, Typography, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, TableFooter } from "@material-ui/core";
+
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export default function salesInvoice({ header, detail, jurnal }) {
+export default function salesInvoice({ data, header }) {
   const router = useRouter();
   const { id } = router.query;
 
-  let min = "0";
-  let max = "100";
+  function pembayaran() {
+    router.push(`../pembayaran/${id}`);
+  }
+
+  function edit() {
+    router.push(`../${id}`);
+  }
+
+  function cetak() {
+    router.push(`../cetak/${id}`);
+  }
+
+  function cetak2() {
+    router.push(`../proforma-invoice/${id}`);
+  }
+
+  const jurnal_penerimaan_pembayaran = header[0].JurnalPenerimaanPembayaran.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
-    <div className="container">
-      <Row>
-        <Col>
-          <label>Jakarta Barat 11470</label>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <label>INDONESIA</label>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <label>Telp: +62 21 2789 3347</label>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <label>Fax : +62 21 2789 3348</label>
-        </Col>
-      </Row>
+    <div class="container">
+      <Head>
+        <title>Proforma Sales Invoice</title>
+      </Head>
 
-      <div className="border border-black">
-        <div className="px-2 py-2">
-          <Row>
-            <Col sm="6">
-              <label style={{ width: 60 }} className="font-medium mr-2">
-                To:
-              </label>
-              <label>{header[0].nama_perusahaan}</label>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col sm="6">
-              <label style={{ width: 60 }} className="font-medium mr-2">
-                Address:
-              </label>
-              <label>{header[0].alamat_penagihan}</label>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col sm="6">
-              <label style={{ width: 60 }} className="font-medium mr-2">
-                Telepon:
-              </label>
-              <label className="mr-12">{header[0].kontak.nomor_telepon}</label>
-
-              <label className="font-medium mr-2">Fax:</label>
-              <label>{header[0].kontak.nomor_fax}</label>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col sm="6">
-              <label className="font-medium mr-2">Say:</label>
-              <FormControl type="text" class="border-radius: 0" />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col sm="6">
-              <label className="font-medium mr-2">Presentase Penagihan: </label>
-              <FormControl type="number" min={min} max={max} class="border-radius: 0" />
-            </Col>
-          </Row>
-        </div>
+      <div className="border-b border-gray-200">
+        <Row>
+          <Col sm="8">
+            <h2 className="text-blue-600">Sales Invoice #{id}</h2>
+          </Col>
+          <Col sm="4">
+            <div className="d-flex justify-content-end">
+              <h3 className="text-blue-600">Proforma Invoice</h3>
+            </div>
+          </Col>
+        </Row>
       </div>
+
+      <div className="py-2 border-b border-gray-200">
+        <Row>
+          <Col sm="4">
+            <label className="font-medium mr-2">Pelanggan:</label>
+            <label>{header[0].nama_perusahaan}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Email:</label>
+            <label>{header[0].email}</label>
+          </Col>
+
+          <Col>
+            <div className="d-flex justify-content-end">
+              <h3>Total Amount</h3>
+              <h3 className=" text-blue-600 ml-2">Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+            </div>
+          </Col>
+        </Row>
+      </div>
+
+      <div className="py-2 border-b border-gray-200">
+        <Row>
+          <Col sm="4">
+            <label className="font-medium mr-2">Alamat Penagihan:</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Tanggal Mulai Kontrak:</label>
+            <label>{header[0].tgl_kontrak_mulai}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Nomor Kontrak:</label>
+            <label>{header[0].nomor_kontrak}</label>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col sm="4">
+            <label>{header[0].alamat_penagihan}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Tanggal Habis Kontrak:</label>
+            <label>{header[0].tgl_kontrak_expired}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">Syarat Pembayaran:</label>
+            <label>{header[0].syarat_pembayaran.nama}</label>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col sm="4">
+            <label className="font-medium mr-2">NPWP:</label>
+            <label>{header[0].nomor_npwp}</label>
+          </Col>
+          <Col sm="4">
+            <label className="font-medium mr-2">No. Transaksi:</label>
+            <label>Sales Invoice #{header[0].id}</label>
+          </Col>
+          <Col sm="4" />
+        </Row>
+      </div>
+
+      <TableContainer className="mt-4" component={Paper}>
+        <Table size="small" aria-label="a dense table">
+          <TableHead className="bg-dark">
+            <TableRow>
+              <TableCell>
+                <Typography className="text-white font-bold">Produk</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Deskripsi</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography className="text-white font-bold">Harga</Typography>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {header[0].DetailPenjualan.map((i, index) => (
+              <TableRow key={index}>
+                <TableCell>{i.produk_name}</TableCell>
+                <TableCell>{i.produk_deskripsi}</TableCell>
+                <TableCell>Rp. {i.produk_harga.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableRow>
+            <TableCell />
+            <TableCell align="right">SubTotal</TableCell>
+            <TableCell>Rp. {header[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell />
+            <TableCell align="right">{header[0].pajak_nama + " - " + header[0].pajak_persen + "%"}</TableCell>
+            <TableCell>Rp. {header[0].pajak_hasil.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell />
+            <TableCell align="right">Total</TableCell>
+            <TableCell>Rp. {header[0].total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell />
+            <TableCell align="right">Sisa Tagihan</TableCell>
+            <TableCell>Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          </TableRow>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
@@ -98,23 +174,20 @@ export async function getServerSideProps(context) {
     },
     include: {
       kontak: true,
-    },
-  });
-
-  const detail = await prisma.detailPenjualan.findMany({
-    where: {
-      header_penjualan_id: parseInt(id),
-    },
-    include: {
-      header_penjualan: true,
-      produk: true,
+      DetailPenjualan: {
+        include: {
+          produk: true,
+        },
+      },
+      PenerimaanPembayaran: true,
+      JurnalPenerimaanPembayaran: true,
+      syarat_pembayaran: true,
     },
   });
 
   return {
     props: {
       header: header,
-      detail: detail,
     },
   };
 }

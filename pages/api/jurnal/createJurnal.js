@@ -38,7 +38,6 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       total_debit: parseInt(req.body.total_debit),
       total_kredit: parseInt(req.body.total_kredit),
@@ -62,8 +61,8 @@ export default async (req, res) => {
         detail.push({
           header_jurnal_id: find_latest.id,
           akun_id: parseInt(i.akun_id),
+          akun_nama: i.akun_nama,
           deskripsi: i.deskripsi,
-          tag: i.tag,
           debit: parseInt(i.debit),
           kredit: parseInt(i.kredit),
           nominal: parseInt(i.nominal),

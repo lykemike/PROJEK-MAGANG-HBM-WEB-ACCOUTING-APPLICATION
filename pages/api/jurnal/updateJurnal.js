@@ -38,7 +38,6 @@ export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
     const frontend_data = {
-      no_transaksi: parseInt(req.body.no_transaksi),
       tgl_transaksi: req.body.tgl_transaksi,
       total_debit: parseInt(req.body.total_debit),
       total_kredit: parseInt(req.body.total_kredit),
@@ -49,7 +48,7 @@ export default async (req, res) => {
       where: {
         id: parseInt(req.body.id),
       },
-      data: [frontend_data],
+      data: frontend_data,
     });
 
     const delete_old_jurnal = await prisma.detailJurnal.deleteMany({
@@ -59,13 +58,13 @@ export default async (req, res) => {
     });
 
     let detail = [];
-    req.body.akuns &&
-      JSON.parse(req.body.akuns).map((i) => {
+    req.body.detail_jurnal &&
+      JSON.parse(req.body.detail_jurnal).map((i) => {
         detail.push({
-          header_jurnal_id: find_header_jurnal.id,
+          header_jurnal_id: parseInt(req.body.id),
           akun_id: parseInt(i.akun_id),
+          akun_nama: i.akun_nama,
           deskripsi: i.deskripsi,
-          tag: i.tag,
           debit: parseInt(i.debit),
           kredit: parseInt(i.kredit),
           nominal: parseInt(i.nominal),
@@ -78,9 +77,21 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json([{ message: "Update Jurnal success!", data: update_detail_jurnal }]);
+    const find_latest = await prisma.headerJurnal.findFirst({
+      where: {
+        id: parseInt(req.body.id),
+      },
+    });
+
+    res.status(201).json([{ message: "Update Jurnal success!", id: find_latest }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed to update jurnal!", error }]);
     console.log(error);
   }
+};
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
 };

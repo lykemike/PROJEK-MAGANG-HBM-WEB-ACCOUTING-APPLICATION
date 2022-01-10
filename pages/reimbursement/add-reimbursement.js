@@ -123,6 +123,11 @@ export default function reimbursement({ data }) {
                       let join_new_date = [current_year, new_month, "01"].join("-");
                       props.setFieldValue(`current_periode`, join_new_date);
                       props.setFieldValue((props.values.current_periode = join_new_date));
+
+                      // for (var index = 1; index < props.values.detail_reimburse.length; index++) {
+                      //   props.setFieldValue(`detail_reimburse.${index}.tanggal`, join_new_date);
+                      //   props.setFieldValue((props.values.detail_reimburse[index].tanggal = join_new_date));
+                      // }
                     }}
                   />
                 </Col>
@@ -150,8 +155,8 @@ export default function reimbursement({ data }) {
                             <Form.Control
                               type="date"
                               name={`detail_reimburse.${index}.tanggal`}
-                              onBlur={props.handleBlur}
-                              value={props.values.current_periode}
+                              // onBlur={props.handleBlur}
+                              defaultValue={props.values.current_periode}
                               onChange={(e) => {
                                 let input = e.target.value;
                                 let split_input = input.split("-");
