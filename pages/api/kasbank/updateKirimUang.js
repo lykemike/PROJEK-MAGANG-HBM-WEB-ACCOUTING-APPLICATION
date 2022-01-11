@@ -49,6 +49,42 @@ export default async (req, res) => {
 
     const find_latest = req.body.id;
 
+    const find_old_saldo = await prisma.headerKirimUang.findFirst({
+      where: {
+        id: parseInt(req.body.id),
+      },
+    });
+
+    const find_old_detail_saldo = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: parseInt(req.body.akun_bayar_id),
+      },
+    });
+
+    const revert_saldo_saat_ini = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: parseInt(req.body.akun_bayar_id),
+      },
+      data: {
+        sisa_saldo: find_old_detail_saldo.sisa_saldo + find_old_saldo.total,
+      },
+    });
+
+    const find_new_detail_saldo = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: parseInt(req.body.akun_bayar_id),
+      },
+    });
+
+    const update_saldo_saat_ini = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: parseInt(req.body.akun_bayar_id),
+      },
+      data: {
+        sisa_saldo: find_new_detail_saldo.sisa_saldo - parseInt(req.body.total),
+      },
+    });
+
     const update_kirim_uang = await prisma.headerKirimUang.update({
       where: {
         id: parseInt(req.body.id),

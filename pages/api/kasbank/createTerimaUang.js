@@ -52,6 +52,21 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
+    const find_detail_saldo = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: parseInt(req.body.akun_setor_id),
+      },
+    });
+
+    const update_saldo_saat_ini = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: parseInt(req.body.akun_setor_id),
+      },
+      data: {
+        sisa_saldo: find_detail_saldo.sisa_saldo + parseInt(req.body.total),
+      },
+    });
+
     const find_latest = await prisma.headerTerimaUang.findFirst({
       orderBy: {
         id: "desc",

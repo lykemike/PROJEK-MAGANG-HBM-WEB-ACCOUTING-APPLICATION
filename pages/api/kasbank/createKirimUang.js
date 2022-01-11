@@ -52,6 +52,21 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
+    const find_detail_saldo = await prisma.detailSaldoAwal.findFirst({
+      where: {
+        akun_id: parseInt(req.body.akun_bayar_id),
+      },
+    });
+
+    const update_saldo_saat_ini = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: parseInt(req.body.akun_bayar_id),
+      },
+      data: {
+        sisa_saldo: find_detail_saldo.sisa_saldo - parseInt(req.body.total),
+      },
+    });
+
     const find_latest = await prisma.headerKirimUang.findFirst({
       orderBy: {
         id: "desc",
@@ -100,7 +115,7 @@ export default async (req, res) => {
 
     res.status(201).json({
       message: "Create Kirim Uang Success!",
-      id: find_latest,
+      id: find_latest.id,
     });
   } catch (error) {
     res.status(400).json({ data: "Failed to create kirim uang!", error });

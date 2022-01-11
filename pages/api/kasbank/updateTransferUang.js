@@ -30,7 +30,7 @@ export default async (req, res) => {
       },
     });
 
-    const revert_saldo_akun_transfer = await prisma.detailSaldoAwal.update({
+    const revert_saldo_akun_setor = await prisma.detailSaldoAwal.update({
       where: {
         akun_id: header_transfer_uang.akun_setor_id,
       },

@@ -8,25 +8,14 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { useRouter } from "next/router";
 
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Tables,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Tables, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
 
 export default function bank_transfer({ data }) {
   const router = useRouter();
-  const { id } = router.query;
+  const { view } = router.query;
 
   function cetak() {
-    router.push(`../cetak-transfer/${id}`);
+    router.push(`../cetak-transfer/${view}`);
   }
 
   return (
@@ -41,7 +30,7 @@ export default function bank_transfer({ data }) {
 
         <Row>
           <Col sm="8">
-            <h2 className="text-blue-600">Bank Transfer #{id}</h2>
+            <h2 className="text-blue-600">Bank Transfer #{view}</h2>
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
@@ -100,11 +89,11 @@ export default function bank_transfer({ data }) {
 }
 
 export async function getServerSideProps(context) {
-  const { id } = context.query;
+  const { view } = context.query;
 
   const transfer = await prisma.transferUang.findMany({
     where: {
-      id: parseInt(id),
+      id: parseInt(view),
     },
     include: {
       akun_setor: true,

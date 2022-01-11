@@ -8,6 +8,7 @@ Produk & Jasa
  * Api create, update, delete = 100%
  * View Detail Produk & Jasa = 100%
  * Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+ * View transaksi barang = 100%
 
 Kontak
  * Add kontak perubahan UI sesuai requirements = 100%
@@ -122,16 +123,17 @@ Kas Bank
   * Terima Uang
     - Hapus Termasuk Pajak, Pajak Terima Uang= 100%
     - Perbaikan Database Terima Uang = 100%
-    - Create, Update, Delete API = 10%
+    - Create, Update, Delete API = 100%
   * Transfer Uang
     - Update, Delete = 100%
+  * Update Saldo Awal Kas Bank ketika ada transaksi transfer, terima, dan kirim  = 100%
 
 Pembelian
   * Perubahan UI create dan update sesuai requirements = 100%
-  * Perubahan database header & detail penjualan = 100%
-  * Create Penagihan Penjualan = 100%
-  * Update Penagihan Penjualan = 50%
-  * Delete Penagihan Penjualan = 50%
+  * Perubahan database header & detail pembelian = 100%
+  * Create Penagihan pembelian = 100%
+  * Update Penagihan pembelian = 100%
+  * Delete Penagihan pembelian = 80%
   * Pengiriman Pembayaran = 100%
 
 Jurnal
@@ -141,7 +143,10 @@ Jurnal
 User & Role
  * Perbaikan UI, Validation, Modal = 100%
 
-SIT 16 Bug Done
+Daftar Akun
+  * Kode Akun Otomatis sesuai kategori yang di pilih = 30%
+  
+SIT 17 Bug Done
 
 NOTES
 =================================

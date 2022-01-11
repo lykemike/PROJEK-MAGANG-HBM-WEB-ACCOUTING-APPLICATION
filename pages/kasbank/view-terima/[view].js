@@ -12,10 +12,10 @@ import { Breadcrumbs, Typography, Paper, TableContainer, Table, TableRow, TableC
 
 export default function InvoiceTerimaUang({ data, data2 }) {
   const router = useRouter();
-  const { id } = router.query;
+  const { view } = router.query;
 
-  function cetak() {
-    router.push(`../cetak-terima/${id}`);
+  function print() {
+    window.open(`../cetak-terima/${view}`);
   }
 
   return (
@@ -30,7 +30,7 @@ export default function InvoiceTerimaUang({ data, data2 }) {
 
         <Row>
           <Col sm="8">
-            <h2 className="text-blue-600">Bank Deposit #{id}</h2>
+            <h2 className="text-blue-600">Bank Deposit #{view}</h2>
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
@@ -114,7 +114,7 @@ export default function InvoiceTerimaUang({ data, data2 }) {
           <Button variant="danger">Hapus</Button>
         </Col>
         <Col sm="4">
-          <Button variant="primary" onClick={cetak}>
+          <Button variant="primary" onClick={print}>
             <PrintIcon fontSize="medium" /> Cetak
           </Button>
         </Col>
@@ -129,11 +129,11 @@ export default function InvoiceTerimaUang({ data, data2 }) {
 }
 
 export async function getServerSideProps(context) {
-  const { id } = context.query;
+  const { view } = context.query;
 
   const header = await prisma.headerTerimaUang.findMany({
     where: {
-      id: parseInt(id),
+      id: parseInt(view),
     },
     include: {
       akun_setor: true,
@@ -143,7 +143,7 @@ export async function getServerSideProps(context) {
 
   const detail = await prisma.detailTerimaUang.findMany({
     where: {
-      header_terima_uang_id: parseInt(id),
+      header_terima_uang_id: parseInt(view),
     },
     include: {
       header_terima_uang: true,

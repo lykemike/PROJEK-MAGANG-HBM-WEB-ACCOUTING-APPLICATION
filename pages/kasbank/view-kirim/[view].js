@@ -14,8 +14,8 @@ export default function InvoiceKirimuang({ data, data2 }) {
   const router = useRouter();
   const { view } = router.query;
 
-  function cetak() {
-    router.push(`../cetak-kirim/${view}`);
+  function print() {
+    window.open(`../cetak-kirim/${view}`);
   }
 
   return (
@@ -115,7 +115,7 @@ export default function InvoiceKirimuang({ data, data2 }) {
           <Button variant="danger">Hapus</Button>
         </Col>
         <Col sm="4">
-          <Button variant="primary" onClick={cetak}>
+          <Button variant="primary" onClick={print}>
             <PrintIcon fontSize="medium" /> Cetak
           </Button>
         </Col>
