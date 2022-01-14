@@ -8,10 +8,11 @@ import Axios from "axios";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+import Select from "react-select";
 
 const BuatAkunBaruSchema = Yup.object().shape({
-  nama_akun: Yup.string().required("*Required"),
-  kode_akun: Yup.string().required("*Required"),
+  nama_akun: Yup.string().required("* required"),
+  // kode_akun: Yup.string().required("*Required"),
   // kategori_akun: Yup.string().required('kategori_akun harus dipilih'),
   // detail: Yup.string().required('detail harus dipilih'),
   // deskripsi: Yup.string().required('*deskripsi tidak boleh kosong'),
@@ -24,10 +25,7 @@ export default function BuatAkunBaru({ data, data2 }) {
       <Formik
         initialValues={{
           nama_akun: "",
-          kode_akun: "",
-          sub_akun: "",
-          header_akun: "",
-          // deskripsi: '',
+          kategori_id: "",
         }}
         validationSchema={BuatAkunBaruSchema}
         onSubmit={async (values) => {
@@ -49,7 +47,17 @@ export default function BuatAkunBaru({ data, data2 }) {
                 <Row className="mb-3">
                   <Col sm="2">Nama Akun</Col>
                   <Col sm="6">
-                    <Form.Control type="text" placeholder="Nama" name="nama_akun" onChange={props.handleChange} onBLur={props.handleBlur} />
+                    <Form.Control
+                      type="text"
+                      placeholder="Nama"
+                      name="nama_akun"
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        let input2 = input.charAt(0).toUpperCase() + input.slice(1);
+                        props.setFieldValue((props.values.nama_akun = input2));
+                      }}
+                      onBLur={props.handleBlur}
+                    />
                     {props.errors.nama_akun && props.touched.nama_akun ? <div class="text-red-500 text-sm">{props.errors.nama_akun}</div> : null}
                   </Col>
                 </Row>
@@ -57,7 +65,7 @@ export default function BuatAkunBaru({ data, data2 }) {
                 <Row className="mb-3">
                   <Col sm="2">Kode Akun</Col>
                   <Col sm="6">
-                    <Form.Control type="text" placeholder="Auto" name="kode_akun" onChange={props.handleChange} onBLur={props.handleBlur} />
+                    <Form.Control type="text" placeholder="Auto" name="kode_akun" disabled onBLur={props.handleBlur} />
                     {props.errors.kode_akun && props.touched.kode_akun ? <div class="text-red-500 text-sm">{props.errors.kode_akun}</div> : null}
                   </Col>
                 </Row>
@@ -65,77 +73,17 @@ export default function BuatAkunBaru({ data, data2 }) {
                 <Row className="mb-3">
                   <Col sm="2">Kategori</Col>
                   <Col sm="6">
-                    <Form.Control
-                      as="select"
-                      name="header_akun"
+                    <Select
+                      options={data}
+                      name="kategori_id"
                       onChange={(e) => {
-                        props.setFieldValue(`header_akun`, e.target.value);
+                        props.setFieldValue(`kategori_id`, e.value);
+                        props.setFieldValue(`kategori_name`, e.label);
                       }}
-                      onBLur={props.handleBlur}
-                    >
-                      {/* loop over tipe akun and show them */}
-                      {data.map((tipeAkun, index) => (
-                        <option key={tipeAkun.id} value={tipeAkun.id}>
-                          {tipeAkun.name}
-                        </option>
-                      ))}
-                    </Form.Control>
-                    {props.errors.header_akun && props.touched.header_akun ? <div class="text-red-500 text-sm">{props.errors.header_akun}</div> : null}
+                    />
+                    {props.errors.kategori_id && props.touched.kategori_id ? <div class="text-red-500 text-sm">{props.errors.kategori_id}</div> : null}
                   </Col>
                 </Row>
-
-                {/* <Row className="mb-3">
-									<Col sm="2">Detail</Col>
-									<Col sm="6">
-										<Form.Control as="select" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
-										
-											{data2.map((kategori) => (
-												<option key={kategori.id} value={kategori.id}>{kategori.name}</option>
-											))}
-										</Form.Control>
-										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
-									</Col>
-								</Row> */}
-
-                <Row className="mb-3">
-                  <Col sm="2">Detail</Col>
-                  <Col sm="6">
-                    <Form.Control as="select" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
-                      <option>None</option>
-                      <option>Sub Akun dari: </option>
-                      <option>Akun Header dari: </option>
-                    </Form.Control>
-                    {props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
-                  </Col>
-                </Row>
-
-                <Row className="mb-3">
-                  <Col sm="2"></Col>
-                  <Col sm="6">
-                    <Form.Control type="text" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}></Form.Control>
-                    {props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
-                  </Col>
-                </Row>
-
-                {/* <Row className="mb-3">
-									<Col sm="2">Detail</Col>
-									<Col sm="6">
-										<Form.Control as="select" nama_akun="detail" onChange={props.handleChange} onBLur={props.handleBlur}>
-											<option value='' disabled>None</option>
-											<option value="sub1">Sub - Akun Dari:</option>
-											<option value="sub2">Akun Header Dari:</option>
-										</Form.Control>
-										{props.errors.detail && props.touched.detail ? <div class="text-red-500 text-sm">{props.errors.detail}</div> : null}
-									</Col>
-								</Row> */}
-
-                {/* <Row className="mb-3">
-									<Col sm="2">Deskripsi</Col>
-									<Col sm="6">
-										<Form.Control as="textarea" rows={3} name="deskripsi" onChange={props.handleChange} onBLur={props.handleBlur} />
-										{props.errors.deskripsi && props.touched.deskripsi ? <div class="text-red-500 text-sm">{props.errors.deskripsi}</div> : null}
-									</Col>
-								</Row> */}
 
                 <Row className="mb-3">
                   <Form.Label column sm="2" />
@@ -158,8 +106,14 @@ export default function BuatAkunBaru({ data, data2 }) {
 }
 
 export async function getServerSideProps() {
-  // get kategoris from our api
-  const kategories = await prisma.kategori.findMany({
+  const get_kategories = await prisma.kategori.findMany({
+    where: {
+      NOT: {
+        name: {
+          equals: "Kartu Kredit",
+        },
+      },
+    },
     orderBy: [
       {
         id: "asc",
@@ -167,7 +121,14 @@ export async function getServerSideProps() {
     ],
   });
 
-  // get tipeAkun from our api
+  const destructure = [];
+  get_kategories.map((i) => {
+    destructure.push({
+      value: i.id,
+      label: i.name,
+    });
+  });
+
   const tipeAkuns = await prisma.tipeAkun.findMany({
     orderBy: [
       {
@@ -178,7 +139,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      data: kategories,
+      data: destructure,
       data2: tipeAkuns,
     },
   };
