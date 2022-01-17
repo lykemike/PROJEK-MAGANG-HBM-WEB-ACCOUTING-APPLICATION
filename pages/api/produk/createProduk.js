@@ -64,7 +64,7 @@ export default async (req, res) => {
 
     res.status(201).json({ message: "Create produk produk success!", data: create_produk });
   } catch (error) {
-    res.status(400).json({ data: "error", error });
+    res.status(400).json({ data: "Failed to create produk", error });
     console.log(error);
   }
 };

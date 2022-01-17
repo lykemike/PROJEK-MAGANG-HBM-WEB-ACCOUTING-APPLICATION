@@ -1,7 +1,8 @@
-import React from "react";
+import { React, useState } from "react";
 import Layout from "../../components/Layout";
-import { Form, Row, Col, Button } from "react-bootstrap";
-
+import { Form, Row, Col } from "react-bootstrap";
+import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
 import { Formik, Form as Forms } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
@@ -20,6 +21,28 @@ const BuatAkunBaruSchema = Yup.object().shape({
 
 export default function BuatAkunBaru({ data, data2 }) {
   const url = "http://localhost:3000/api/daftar-akun/createAkun";
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
+  // const buttons = (
+  //   <>
+  //     <Button onClick={handleClick({ vertical: "bottom", horizontal: "right" })}>Bottom-Right</Button>
+  //   </>
+  // );
   return (
     <Layout>
       <Formik
@@ -32,10 +55,12 @@ export default function BuatAkunBaru({ data, data2 }) {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              console.log(response);
+              console.log(response.data.message);
+              setState({ open: true, toast_message: response.data.message });
             })
             .catch(function (error) {
-              console.log(error);
+              // console.log(error.response);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
@@ -44,6 +69,9 @@ export default function BuatAkunBaru({ data, data2 }) {
             <h1>Buat Akun Baru</h1>
             <div class="mt-12 container">
               <Form>
+                <div>
+                  <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
+                </div>
                 <Row className="mb-3">
                   <Col sm="2">Nama Akun</Col>
                   <Col sm="6">

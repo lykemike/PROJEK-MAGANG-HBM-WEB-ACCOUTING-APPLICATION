@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 
 import { Form, Button, Row, Col, InputGroup } from "react-bootstrap";
-import { Breadcrumbs, Typography } from "@material-ui/core/";
+import { Breadcrumbs, Typography, Snackbar } from "@material-ui/core/";
 
 import Select from "react-select";
 import * as Yup from "yup";
@@ -31,8 +31,26 @@ export default function update({ data, data2, data3 }) {
     router.push("../pajak/tabel-pajak");
   }
 
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   return (
     <Layout>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Head>
         <title>Update Pajak</title>
       </Head>
@@ -61,11 +79,11 @@ export default function update({ data, data2, data3 }) {
 
           Axios.put(updatePajak, data)
             .then(function (response) {
-              console.log(response);
+              setState({ open: true, toast_message: response.data.message });
               router.push("../pajak/tabel-pajak");
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >

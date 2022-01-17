@@ -266,7 +266,7 @@ export default async (req, res) => {
     res.status(201).json([
       {
         message: "Update Penerimaan Pembayaran Penjualan Success!",
-        data: frontend_data,
+        id: get_penerimaan_pembayaran.id,
       },
     ]);
   } catch (error) {

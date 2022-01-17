@@ -3,9 +3,8 @@ import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import TablePagination from "../../components/TablePagination";
-
 import { Button, Row, Col, Modal } from "react-bootstrap";
-import { Breadcrumbs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
+import { Breadcrumbs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Snackbar } from "@material-ui/core/";
 import { Visibility, Edit, Delete } from "@material-ui/icons/";
 import AddIcon from "@material-ui/icons/Add";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -17,9 +16,25 @@ const prisma = new PrismaClient();
 import Axios from "axios";
 
 function MyVerticallyCenteredModal(props) {
-  const router = useRouter();
   const api_delete_pajak = "http://localhost:3000/api/pajak/deletepajak";
-  const alert = "";
+  const router = useRouter();
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const handle_delete = async () => {
     Axios.delete(api_delete_pajak, {
       data: {
@@ -27,16 +42,17 @@ function MyVerticallyCenteredModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response.data.message);
+        setState({ open: true, toast_message: response.data.message });
         router.reload(window.location.pathname);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>

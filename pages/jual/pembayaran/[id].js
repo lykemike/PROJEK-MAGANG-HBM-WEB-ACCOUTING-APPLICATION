@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Layout from "../../../components/Layout";
 import { Row, Col, Form, Button, FormCheck, Table, InputGroup, FormControl } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
 
-import { Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
+import { Snackbar, Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import Select from "react-select";
@@ -19,6 +19,22 @@ const prisma = new PrismaClient();
 export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
   const router = useRouter();
   const { id } = router.query;
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   const url = "http://localhost:3000/api/jual/createPenerimaanPembayaran";
 
@@ -38,6 +54,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
 
   return (
     <Layout>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Head>
         <title>Penerimaan Pembayaran</title>
       </Head>
@@ -73,11 +90,11 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              console.log(response);
+              setState({ open: true, toast_message: response.data[0].message });
               router.push(`../pembayaran/view/${response.data[0].id.id}`);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data[0].message });
             });
         }}
       >

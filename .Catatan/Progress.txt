@@ -174,7 +174,7 @@ TANYA
   - show current file
   DONE cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
   - menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan, dan error lainnya
-  - cara buat alert success, failed
+  3/4 cara buat alert success, failed
   - merge data yang sama
   - show more than 2 items di invoice penerimaan pembayaran with one subtotal
   3/4 DONE?? ketika buat akun baru, kode akun tersebut akan terbuat otomatis tergantung kategori yg di pilih

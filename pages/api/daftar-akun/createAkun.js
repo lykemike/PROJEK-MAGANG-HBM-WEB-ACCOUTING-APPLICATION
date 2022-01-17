@@ -59,9 +59,10 @@ export default async (req, res) => {
             kategoriId: 1,
           },
         });
-        console.log("Success");
+
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 2) {
       // Aktiva lancar lainnya 1-10301 - 1-10199
@@ -80,9 +81,9 @@ export default async (req, res) => {
             kategoriId: 2,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 3) {
       // Kas & bank 1-10001 = 1-10099
@@ -101,9 +102,9 @@ export default async (req, res) => {
             kategoriId: 3,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 4) {
       // Persediaan 1-10201 - 1-10299
@@ -122,9 +123,9 @@ export default async (req, res) => {
             kategoriId: 4,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 5) {
       // Aktiva tetap 1-10601 - 1-10699
@@ -143,9 +144,9 @@ export default async (req, res) => {
             kategoriId: 5,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 6) {
       // Aktiva lainnya 1-10701 - 1-10749
@@ -164,9 +165,9 @@ export default async (req, res) => {
             kategoriId: 6,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 7) {
       // Depresiasi & amortasi 1-10750 - 1-10759
@@ -185,9 +186,9 @@ export default async (req, res) => {
             kategoriId: 7,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 8) {
       // Akun hutang 2-20101 - 2-20299
@@ -206,9 +207,9 @@ export default async (req, res) => {
             kategoriId: 8,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 10) {
       // Kewajiban lancar lainnya 2-20301 - 2-20699
@@ -227,9 +228,9 @@ export default async (req, res) => {
             kategoriId: 10,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 11) {
       // Kewajiban jangka panjang 2-20701 - 2-20799
@@ -248,9 +249,9 @@ export default async (req, res) => {
             kategoriId: 11,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 12) {
       // Ekuitas 3-30001 - 3-30999
@@ -269,9 +270,9 @@ export default async (req, res) => {
             kategoriId: 12,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 13) {
       // Pendapatan 4-40001 - 4-40999
@@ -290,9 +291,9 @@ export default async (req, res) => {
             kategoriId: 13,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 14) {
       // Pendapatan lainnya 7-70001 - 7-70999
@@ -311,9 +312,9 @@ export default async (req, res) => {
             kategoriId: 14,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 15) {
       // Harga pokok penjualan 5-50001 - 50999
@@ -332,9 +333,9 @@ export default async (req, res) => {
             kategoriId: 15,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 16) {
       // Beban 6-60001 - 6-60999
@@ -353,9 +354,9 @@ export default async (req, res) => {
             kategoriId: 16,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     } else if (req.body.kategori_id == 17) {
       // Beban lainnya 8-80001 - 80999
@@ -374,15 +375,15 @@ export default async (req, res) => {
             kategoriId: 17,
           },
         });
-        console.log("Success");
+        return res.status(200).json({ message: "Create Success!" });
       } else {
-        console.log("Failed");
+        return res.status(400).json({ message: "Failed to create!" });
       }
     }
 
-    res.status(200).json({ message: "CREATE AKUN BARU SUCCESS!", find_akun });
+    res.status(200).json({ message: "Create akun success!" });
   } catch (error) {
-    res.status(400).json({ kode_akun: "CREATE AKUN BARU FAILED!", error });
+    res.status(400).json({ message: "Create akun failed!", error });
     console.log(error);
   }
 };
