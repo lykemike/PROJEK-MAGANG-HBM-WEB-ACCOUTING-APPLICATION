@@ -80,7 +80,9 @@ export default function update({ data, data2, data3 }) {
           Axios.put(updatePajak, data)
             .then(function (response) {
               setState({ open: true, toast_message: response.data.message });
-              router.push("../pajak/tabel-pajak");
+              setTimeout(() => {
+                router.push("../pajak/tabel-pajak");
+              }, 2000);
             })
             .catch(function (error) {
               setState({ open: true, toast_message: error.response.data.message });

@@ -263,12 +263,10 @@ export default async (req, res) => {
       });
     }
 
-    res.status(201).json([
-      {
-        message: "Update Penerimaan Pembayaran Penjualan Success!",
-        id: get_penerimaan_pembayaran.id,
-      },
-    ]);
+    res.status(201).json({
+      message: "Update Penerimaan Pembayaran Penjualan Success!",
+      id: get_penerimaan_pembayaran.id,
+    });
   } catch (error) {
     res.status(400).json([{ data: "Update Penerimaan Pembayaran Penjualan Failed!", error }]);
     console.log(error);

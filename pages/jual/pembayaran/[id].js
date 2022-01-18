@@ -90,11 +90,13 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              setState({ open: true, toast_message: response.data[0].message });
-              router.push(`../pembayaran/view/${response.data[0].id.id}`);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`../pembayaran/view/${response.data.id.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              setState({ open: true, toast_message: error.response.data[0].message });
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >

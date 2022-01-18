@@ -47,7 +47,9 @@ function CompleteInvoice(props) {
           Axios.post(api_confirm, values)
             .then(function (response) {
               setState({ open: true, toast_message: response.data.message });
-              router.reload(window.location.pathname);
+              setTimeout(() => {
+                router.reload(window.location.pathname);
+              }, 2000);
             })
             .catch(function (error) {
               setState({ open: true, toast_message: error.response.data.message });
@@ -108,7 +110,9 @@ function DeleteInvoice(props) {
     })
       .then(function (response) {
         setState({ open: true, toast_message: response.data.message });
-        router.reload(window.location.pathname);
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
         setState({ open: true, toast_message: error.response.data.message });

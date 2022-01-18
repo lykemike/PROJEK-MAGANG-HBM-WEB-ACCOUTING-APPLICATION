@@ -53,7 +53,9 @@ export default function updateKategoriProduk({ data }) {
           Axios.post(updateKategori, data)
             .then(function (response) {
               setState({ open: true, toast_message: response.data.message });
-              router.push("../kategori/tabel-kategori");
+              setTimeout(() => {
+                router.push("../kategori/tabel-kategori");
+              }, 2000);
             })
             .catch(function (error) {
               setState({ open: true, toast_message: error.response.data.message });

@@ -81,7 +81,9 @@ export default function addProduk({ data, data2, data3 }) {
           })
             .then(function (response) {
               setState({ open: true, toast_message: response.data.message });
-              router.push("../produk/tabel-produk");
+              setTimeout(() => {
+                router.push("../produk/tabel-produk");
+              }, 2000);
             })
             .catch(function (error) {
               setState({ open: true, toast_message: error.response.data.message });

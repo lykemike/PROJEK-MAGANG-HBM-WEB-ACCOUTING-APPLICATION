@@ -105,11 +105,13 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
             },
           })
             .then(function (response) {
-              setState({ open: true, toast_message: response.data[0].message });
-              router.push(`view/${response.data[0].id}`);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`view/${response.data.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              setState({ open: true, toast_message: error.response.data[0].message });
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >

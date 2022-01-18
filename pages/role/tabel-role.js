@@ -47,7 +47,7 @@ function DeleteModal(props) {
         }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 

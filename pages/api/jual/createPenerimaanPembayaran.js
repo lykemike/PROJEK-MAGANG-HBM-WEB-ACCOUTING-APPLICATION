@@ -199,13 +199,11 @@ export default async (req, res) => {
       });
     }
 
-    res.status(201).json([
-      {
-        message: "Create Penerimaan Pembayaran Penjualan Success!",
-        data: frontend_data,
-        id: find_latest,
-      },
-    ]);
+    res.status(201).json({
+      message: "Create Penerimaan Pembayaran Penjualan Success!",
+      data: frontend_data,
+      id: find_latest,
+    });
   } catch (error) {
     res.status(400).json([{ data: "Create Penerimaan Pembayaran Penjualan Failed!", error }]);
     console.log(error);

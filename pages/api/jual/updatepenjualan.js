@@ -90,7 +90,7 @@ export default async (req, res) => {
       data: detail,
     });
 
-    res.status(201).json([{ message: "Update Invoice Penjualan Success!", id: current_id }]);
+    res.status(201).json({ message: "Update Invoice Penjualan Success!", id: current_id });
   } catch (error) {
     res.status(400).json([{ data: "Failed to Update Invoice Penjualan!", error }]);
     console.log(error);

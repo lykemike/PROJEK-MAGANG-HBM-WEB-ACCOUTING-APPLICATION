@@ -151,11 +151,13 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
             },
           })
             .then(function (response) {
-              setState({ open: true, toast_message: response.data[0].message });
-              router.push(`view/${response.data[0].id.id}`);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`view/${response.data.id.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              setState({ open: true, toast_message: error.response.data[0].message });
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >

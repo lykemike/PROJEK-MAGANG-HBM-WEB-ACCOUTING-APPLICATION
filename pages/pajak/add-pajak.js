@@ -71,7 +71,9 @@ export default function addpajak({ data, data2 }) {
           Axios.post(api_create, values)
             .then(function (response) {
               setState({ open: true, toast_message: response.data.message });
-              router.push("tabel-pajak");
+              setTimeout(() => {
+                router.push("tabel-pajak");
+              }, 2000);
             })
             .catch(function (error) {
               setState({ open: true, toast_message: error.response.data.message });
