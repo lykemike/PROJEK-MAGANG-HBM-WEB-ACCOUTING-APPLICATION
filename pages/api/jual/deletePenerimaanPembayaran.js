@@ -3,28 +3,28 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
-    const get_penerimaan_pembayaran = await prisma.penerimaanPembayaran.findFirst({
+    const get_pengiriman_pembayaran = await prisma.pengirimanPembayaran.findFirst({
       where: {
         id: parseInt(req.body.id),
       },
       include: {
-        header_penjualan: true,
+        header_pembelian: true,
       },
     });
 
-    const penerimaan_pembayaran_id = get_penerimaan_pembayaran.id;
-    const header_penjualan_id = get_penerimaan_pembayaran.header_penjualan.id;
-    const tipe_perusahaan = get_penerimaan_pembayaran.header_penjualan.tipe_perusahaan;
-    const tagihan_sebelum_pajak = get_penerimaan_pembayaran.tagihan_sebelum_pajak;
-    const tagihan_setelah_pajak = get_penerimaan_pembayaran.tagihan_setelah_pajak;
-    const sisa_tagihan = get_penerimaan_pembayaran.header_penjualan.sisa_tagihan;
+    const pengiriman_pembayaran_id = get_pengiriman_pembayaran.id;
+    const header_pembelian_id = get_pengiriman_pembayaran.header_pembelian.id;
+    const tipe_perusahaan = get_pengiriman_pembayaran.header_pembelian.tipe_perusahaan;
+    const tagihan_sebelum_pajak = get_pengiriman_pembayaran.tagihan_sebelum_pajak;
+    const tagihan_setelah_pajak = get_pengiriman_pembayaran.tagihan_setelah_pajak;
+    const sisa_tagihan = get_pengiriman_pembayaran.header_pembelian.sisa_tagihan;
 
     if (tipe_perusahaan == "false") {
       const revert_sisa_tagihan = tagihan_sebelum_pajak + sisa_tagihan;
 
-      const update_sisa_tagihan = await prisma.headerPenjualan.update({
+      const update_sisa_tagihan = await prisma.headerpembelian.update({
         where: {
-          id: header_penjualan_id,
+          id: header_pembelian_id,
         },
         data: {
           sisa_tagihan: revert_sisa_tagihan,
@@ -33,9 +33,9 @@ export default async (req, res) => {
     } else {
       const revert_sisa_tagihan = tagihan_setelah_pajak + sisa_tagihan;
 
-      const update_sisa_tagihan = await prisma.headerPenjualan.update({
+      const update_sisa_tagihan = await prisma.headerPembelian.update({
         where: {
-          id: header_penjualan_id,
+          id: header_pembelian_id,
         },
         data: {
           sisa_tagihan: revert_sisa_tagihan,

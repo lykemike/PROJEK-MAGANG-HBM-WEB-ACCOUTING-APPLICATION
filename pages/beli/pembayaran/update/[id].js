@@ -45,7 +45,7 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
           Axios.post(url, values)
             .then(function (response) {
               console.log(response);
-              // router.push(`../../beli/view/${id}`);
+              router.push(`../view/${response.data[0].id}`);
             })
             .catch(function (error) {
               console.log(error);

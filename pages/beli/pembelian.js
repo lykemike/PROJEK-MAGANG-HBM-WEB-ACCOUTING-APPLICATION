@@ -22,7 +22,7 @@ const prisma = new PrismaClient();
 function MyVerticallyCenteredModal(props) {
   const router = useRouter();
   const api_delete = "http://localhost:3000/api/beli/deletebeli";
-
+  console.log(props.id);
   const handle_delete = async () => {
     Axios.delete(api_delete, {
       data: {
@@ -31,8 +31,8 @@ function MyVerticallyCenteredModal(props) {
     })
       .then(function (response) {
         console.log(response);
-        props.onHide;
-        router.push(`../beli/pembelian`);
+
+        // router.reload(window.location.pathname);
       })
       .catch(function (error) {
         console.log(error);
@@ -63,7 +63,7 @@ export default function pembelian({ data }) {
   const [modalShow, setModalShow] = useState({
     open: false,
     id: 0,
-    kontak: " ",
+    nama: " ",
   });
   const [search, setSearch] = useState([]);
   const [pembelian, setPembelian] = useState(data);
@@ -187,15 +187,8 @@ export default function pembelian({ data }) {
               </TableCell>
             </TableRow>
           </TableHead>
-          {handleList().map((data, index) => (
-            <TableReusable
-              data={data}
-              index={index}
-              label="Purchase Invoice"
-              label2="Pengiriman Bayaran"
-              view="beli"
-              modalDelete={() => setModalShow({ open: true, id: data.id })}
-            />
+          {handleList().map((data) => (
+            <TableReusable data={data} modalDelete={() => setModalShow({ open: true, id: data.id, nama: data.nama_supplier })} />
           ))}
         </Table>
       </TableContainer>

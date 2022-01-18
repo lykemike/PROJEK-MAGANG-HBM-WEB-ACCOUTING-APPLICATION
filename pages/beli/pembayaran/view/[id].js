@@ -3,12 +3,20 @@ import Layout from "../../../../components/Layout";
 import { Row, Col, Form, Button, FormCheck } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
-
+import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function BayarNanti({ data2 }) {
   console.log(data2);
+  const router = useRouter();
+  const { id } = router.query;
+  function edit() {
+    router.push(`../update/${id}`);
+  }
+  function done() {
+    router.push(`../../pembelian`);
+  }
   return (
     <Layout>
       <div>
@@ -82,7 +90,7 @@ export default function BayarNanti({ data2 }) {
         <div className="py-2 border-b border-gray-200">
           <Row>
             <Col sm="2">
-              <label>Purchase Invoice #{data2.header_pembelian.no_transaksi}</label>
+              <label>Purchase Invoice #{data2.header_pembelian.id}</label>
             </Col>
             <Col sm="2">
               <label>{data2.header_pembelian.memo}</label>
@@ -125,6 +133,19 @@ export default function BayarNanti({ data2 }) {
           <Col sm="3">
             <h5 name="total">Total: Rp. {parseInt(data2.jumlah).toLocaleString({ minimumFractionDigits: 0 })}</h5>
           </Col>
+        </Row>
+
+        <Row sm="12" className="mt-3">
+          <Col sm="4" />
+          <Col sm="4">
+            <Button variant="primary" onClick={edit}>
+              Ubah
+            </Button>
+            <Button variant="success" onClick={done}>
+              Done
+            </Button>
+          </Col>
+          <Col sm="4" />
         </Row>
       </div>
     </Layout>

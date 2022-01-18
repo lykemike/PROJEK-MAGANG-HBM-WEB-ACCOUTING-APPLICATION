@@ -17,8 +17,54 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { TableFooter } from "@material-ui/core";
+import { useRouter } from "next/router";
+import Axios from "axios";
+
+function DeleteInvoice(props) {
+  const api_delete = "http://localhost:3000/api/beli/deletePengirimanPembayaran";
+  const router = useRouter();
+
+  const handle_delete = async () => {
+    Axios.delete(api_delete, {
+      data: {
+        id: props.id,
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        router.reload(window.location.pathname);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p className="text-sm">
+          Are you sure you want to delete <label className="font-medium">{props.nama_supplier}</label>? These will revert "jumlah" from the current
+          invoice to sisa tagihan.
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="danger" onClick={handle_delete}>
+          Confirm, Delete!
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+
 export default function Table2({ data, index, label, label2, view, modalDelete }) {
   const [open, setOpen] = useState(false);
+  const [modalShow, setModalShow] = useState({ open: false, id: 0, nama: "" });
   const onClick = () => {
     setOpen(!open);
   };
@@ -27,14 +73,8 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
   const current = day.toISOString().slice(0, 10);
 
   const detail = useMemo(() => {
-    if (view == "jual") {
-      return data.PenerimaanPembayaran;
-    } else if (view == "beli") {
-      return data.PengirimanBayaran;
-    } else {
-      return data.pengirimanbiaya;
-    }
-  }, [view]);
+    return data.PengirimanBayaran;
+  }, []);
 
   const status = useCallback((tgl_jatuh_tempo, status) => {
     if (tgl_jatuh_tempo < current) {
@@ -51,13 +91,19 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
   }, []);
 
   let autoIncrement = 1;
-  {
-    console.log(detail);
-  }
+  console.log(data);
   return (
     <>
       <TableBody>
         <TableRow>
+          <DeleteInvoice
+            id={modalShow.id}
+            show={modalShow.open}
+            nama={modalShow.nama}
+            backdrop="static"
+            keyboard={false}
+            onHide={() => setModalShow({ open: false, id: 0, nama: "" })}
+          />
           <TableCell>
             <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -74,9 +120,9 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
 
           <TableCell>{status(data.tgl_jatuh_tempo, data.status)}</TableCell>
           <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-          <TableCell>Rp. {data.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+          <TableCell>Rp. {data.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           <TableCell align="center">
-            <Link href={`../../${view}/view/${data.id}`}>
+            <Link href={`view/${data.id}`}>
               <a>
                 <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
               </a>
@@ -103,13 +149,14 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
                       <TableCell>Cara Pembayaran</TableCell>
                       <TableCell>Tanggal Pembayaran</TableCell>
                       <TableCell>Total Pembayaran</TableCell>
+                      <TableCell></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {detail.map((i) => (
+                    {data.PengirimanBayaran.map((i, index) => (
                       <TableRow>
                         <TableCell component="th" scope="row" align="center">
-                          {autoIncrement++}
+                          {(index += 1)}
                         </TableCell>
                         <Link href={`../../${view}/pembayaran/view/${i.id}`}>
                           <TableCell className="cursor-pointer hover:text-blue-600">{i.cara_pembayaran_nama}</TableCell>
@@ -124,6 +171,20 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
                               </Button>
                             </a>
                           </Link>
+                          <Link href={`../beli/pembayaran/update/${i.id}`}>
+                            <a>
+                              <Button variant="warning" size="sm" className="mr-2">
+                                <Edit className="text-white" fontSize="small" />
+                              </Button>
+                            </a>
+                          </Link>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => setModalShow({ open: true, id: i.id, nama: "Invoice from " + data.nama_supplier })}
+                          >
+                            <Delete className="text-white" fontSize="small" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}

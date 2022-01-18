@@ -14,14 +14,34 @@ export default async (req, res) => {
       jumlah: parseInt(req.body.jumlah),
     };
 
-    const create_penerimaan_pembayaran = await prisma.pengirimanBayaran.createMany({
-      data: [frontend_data],
-      skipDuplicates: true,
+    const create_penerimaan_pembayaran = await prisma.pengirimanBayaran.create({
+      data: frontend_data,
     });
 
-    const find_header_pembelian = await prisma.headerPembelian.findUnique({
+    const find_pengiriman_bayaran = await prisma.pengirimanBayaran.findFirst({
+      orderBy: {
+        id: "desc",
+      },
+    });
+
+    const find_akun_detail_saldoawal = await prisma.detailSaldoAwal.findMany({
       where: {
-        id: frontend_data.header_pembelian_id,
+        akun_id: parseInt(req.body.akun_id),
+      },
+    });
+
+    const update_saldo_skrg_bayar_dari = await prisma.detailSaldoAwal.update({
+      where: {
+        akun_id: parseInt(req.body.akun_id),
+      },
+      data: {
+        sisa_saldo: find_akun_detail_saldoawal[0].sisa_saldo - parseInt(req.body.jumlah),
+      },
+    });
+
+    const find_header_pembelian = await prisma.headerPembelian.findFirst({
+      where: {
+        id: parseInt(req.body.id),
       },
       select: {
         sisa_tagihan: true,
@@ -52,9 +72,9 @@ export default async (req, res) => {
       });
     }
 
-    const find_akun_bayar = await prisma.kontak.findFirst({
+    const find_akun_bayar = await prisma.kontak.findMany({
       where: {
-        kontak_id: parseInt(req.body.kontak_id),
+        id: parseInt(req.body.kontak_id),
       },
     });
 
@@ -62,20 +82,22 @@ export default async (req, res) => {
       data: [
         {
           header_pembelian_id: parseInt(req.body.id),
-          akun_id: find_akun_bayar.akun_hutang_id,
+          akun_id: find_akun_bayar[0].akun_hutang_id,
           nominal: parseInt(req.body.jumlah),
+          PengirimanBayaran_id: find_pengiriman_bayaran.id,
           tipe_saldo: "Debit",
         },
         {
           header_pembelian_id: parseInt(req.body.id),
-          akun_id: req.body.akun.id,
+          akun_id: req.body.akun_id,
           nominal: parseInt(req.body.jumlah),
+          PengirimanBayaran_id: find_pengiriman_bayaran.id,
           tipe_saldo: "Kredit",
         },
       ],
     });
 
-    res.status(201).json([{ message: "Pengerimaan Pembayaran Success!", data: create_penerimaan_pembayaran }]);
+    res.status(201).json([{ message: "Pengerimaan Pembayaran Success!", id: find_pengiriman_bayaran.id }]);
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

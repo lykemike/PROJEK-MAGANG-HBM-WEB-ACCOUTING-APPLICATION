@@ -714,11 +714,11 @@ model DetailJurnal {
   akun             Akun         @relation(fields: [akun_id], references: [id])
   akun_id          Int
   akun_nama        String
-  nominal    Int
-  tipe_saldo String
-  debit      Int
-  kredit     Int
-  deskripsi  String
+  nominal          Int
+  tipe_saldo       String
+  debit            Int
+  kredit           Int
+  deskripsi        String
 }
 
 model Aset {
