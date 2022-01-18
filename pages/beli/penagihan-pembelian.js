@@ -1,8 +1,8 @@
-import { React } from "react";
+import { React, useState } from "react";
 import Link from "next/Link";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
-
+import { Snackbar } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import Switch from "@material-ui/core/Switch";
 import Select from "react-select";
@@ -25,6 +25,23 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
 
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   return (
     <Layout>
@@ -88,15 +105,26 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
             },
           })
             .then(function (response) {
-              router.push(`view/${response.data[0].id.id}`);
+              setState({ open: true, toast_message: response.data[0].message });
+              setTimeout(() => {
+                router.push(`view/${response.data[0].id.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={6000}
+              open={open}
+              onClose={handleClose}
+              message={toast_message}
+              key={vertical + horizontal}
+            />
             <Breadcrumbs aria-label="breadcrumb">
               <Link color="inherit" href="../beli/pembelian">
                 Transaksi
@@ -122,11 +150,14 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                       options={kontak}
                       name="nama_supplier"
                       onChange={(e) => {
+                        console.log(kontak);
                         props.setFieldValue(`kontak_id`, e.value);
                         props.setFieldValue(`nama_supplier`, e.label);
                         props.setFieldValue(`email`, e.email);
                         props.setFieldValue(`alamat_perusahaan`, e.alamat_perusahaan);
                         props.setFieldValue(`akun_hutang_supp`, e.akun_hutang);
+                        props.setFieldValue(`syarat_pembayaran_id`, e.syarat_pembayaran_id);
+                        props.setFieldValue(`syarat_pembayaran_nama`, e.syarat_pembayaran_nama);
                       }}
                     />
                   </Col>
@@ -184,6 +215,11 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                   <div className="mb-2">
                     <label>Syarat Pembayaran</label>
                     <Select
+                      // defaultValue={{
+                      //   value: props.values.syarat_pembayaran_id,
+                      //   label: props.values.syarat_pembayaran_nama,
+                      // }}
+                      placeholder={props.values.syarat_pembayaran_nama}
                       options={syarat_pembayaran}
                       name="syarat_pembayaran"
                       onChange={(e) => {
@@ -202,7 +238,13 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                         <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.tgl_transaksi}</span>
                       ) : null}
                     </label>
-                    <Form.Control type="date" placeholder="Auto" name="tgl_transaksi" onChange={props.handleChange} />
+                    <Form.Control
+                      type="date"
+                      placeholder="Auto"
+                      defaultValue={props.values.tgl_transaksi}
+                      name="tgl_transaksi"
+                      onChange={props.handleChange}
+                    />
                   </div>
                   <div className="mb-2">
                     <label>Tanggal Jatuh Tempo</label>
@@ -529,16 +571,15 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
               </Form.Group>
             </Form>
             <div class="left-0 px-4 py-3 border-t border-gray-200 w-full flex justify-end items-center gap-3">
-              <Link href="/jual/penjualan">
+              <Link href="/beli/pembelian">
                 <button onclick="openModal(false)" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white focus:outline-none">
                   Batal
                 </button>
               </Link>
-              <Link href="/beli/pembelian">
-                <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
-                  Buat Pembelian
-                </button>
-              </Link>
+
+              <button class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white focus:outline-none" onClick={props.handleSubmit}>
+                Buat Pembelian
+              </button>
             </div>
           </Forms>
         )}
@@ -562,7 +603,7 @@ export async function getServerSideProps() {
   get_kontaks.map((i) => {
     kontaks.push({
       value: i.id,
-      label: i.nama,
+      label: i.nama_perusahaan,
       email: i.email,
       alamat_perusahaan: i.alamat_perusahaan,
       syarat_pembayaran_id: i.syarat_pembayaran_id,

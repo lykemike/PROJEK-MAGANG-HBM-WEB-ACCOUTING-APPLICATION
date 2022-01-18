@@ -124,15 +124,21 @@ export default function Table2({ data, index, label, label2, view, modalDelete }
           <TableCell align="center">
             <Link href={`view/${data.id}`}>
               <a>
-                <VisibilityOutlinedIcon color="primary" fontSize="small" className="mr-2" />
+                <Button variant="info" size="sm" className="mr-2">
+                  <Visibility className="text-white" fontSize="small" />
+                </Button>
               </a>
             </Link>
-            <Link href={`../../${view}/${data.id}`}>
+            <Link href={`../beli/${data.id}`}>
               <a>
-                <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                <Button variant="warning" size="sm" className="mr-2">
+                  <Edit className="text-white" fontSize="small" />
+                </Button>
               </a>
             </Link>
-            <DeleteOutlineIcon className="cursor-pointer" color="secondary" fontSize="small" onClick={modalDelete} />
+            <Button variant="danger" size="sm" onClick={modalDelete}>
+              <Delete className="text-white" fontSize="small" />
+            </Button>
           </TableCell>
         </TableRow>
         <TableRow>

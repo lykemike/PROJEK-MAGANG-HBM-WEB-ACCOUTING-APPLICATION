@@ -17,10 +17,6 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
 
   const url = "http://localhost:3000/api/beli/pengirimanPembayaran";
 
-  function pembayaran() {
-    router.push(`../pembayaran/view/${id}`);
-  }
-
   return (
     <Layout>
       <Formik
@@ -214,9 +210,6 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
 
               <Row>
                 <Col className="d-flex justify-content-end mt-10">
-                  <Button variant="primary mr-2" onClick={pembayaran}>
-                    Invoice
-                  </Button>
                   <Link href="/beli/pembelian">
                     <Button variant="danger mr-2">Batal</Button>
                   </Link>

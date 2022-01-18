@@ -148,7 +148,7 @@ export default async (req, res) => {
 
     res.status(201).json([
       {
-        message: "Create Detail Pembelian Success!",
+        message: "Create Pembelian Success!",
         id: find_latest,
       },
     ]);
