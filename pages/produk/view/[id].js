@@ -2,30 +2,17 @@ import React from "react";
 import Head from "next/head";
 import Layout from "../../../components/Layout";
 import { Row, Col, FormControl, Button, Card } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableSortLabel,
-  TableBody,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableSortLabel, TableBody } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import Link from "next/Link";
 import { useRouter } from "next/router";
-
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 export default function detailProduk({ data }) {
   const router = useRouter();
   const { id } = router.query;
-
+  console.log(data);
   return (
     <Layout>
       <Head>
@@ -64,23 +51,23 @@ export default function detailProduk({ data }) {
           <Col>
             <div>
               <label className="font-medium mr-2">Nama Produk:</label>
-              <label>{data[0].nama}</label>
+              <label>{data.nama}</label>
             </div>
             <div>
               <label className="font-medium mr-2">Kategori:</label>
-              <label>{data[0].kategori.nama}</label>
+              <label>{data.kategori.nama}</label>
             </div>
             <div>
               <label className="font-medium mr-2">Deskrpsi:</label>
-              <label>{data[0].deskripsi}</label>
+              <label>{data.deskripsi}</label>
             </div>
             <div>
               <label className="font-medium mr-2">Harga:</label>
-              <label>Rp. {data[0].harga.toLocaleString({ minimumFractionDigits: 0 })}</label>
+              <label>Rp. {data.harga.toLocaleString({ minimumFractionDigits: 0 })}</label>
             </div>
             <div>
               <label className="font-medium mr-2">Akun Penjualan:</label>
-              <label>{data[0].akun.nama_akun}</label>
+              <label>{data.akun.nama_akun}</label>
             </div>
           </Col>
         </Row>
@@ -101,14 +88,27 @@ export default function detailProduk({ data }) {
                     <TableCell>
                       <Typography className="text-white font-bold">Jumlah</Typography>
                     </TableCell>
+                    <TableCell align="right" />
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
+                  {data.DetailPenjualan.map((i, index) => (
+                    <TableRow key={index}>
+                      <TableCell style={{ minWidth: 200, width: 200 }}>{i.header_penjualan.tgl_kontrak_mulai}</TableCell>
+
+                      <TableCell style={{ minWidth: 200, width: 200 }}>{i.header_penjualan.tipe_perusahaan == "false" ? "Negeri" : "Swasta"}</TableCell>
+                      <TableCell style={{ minWidth: 200, width: 200 }}>Rp. {i.header_penjualan.sisa_tagihan.toLocaleString()}</TableCell>
+                      <TableCell align="right" style={{ minWidth: 50, width: 50 }}>
+                        <Link href={`../../jual/view/${i.header_penjualan.id}`}>
+                          <a>
+                            <Button variant="secondary" size="sm" className="mr-2">
+                              <OpenInNewIcon className="text-white" fontSize="small" />
+                            </Button>
+                          </a>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -122,13 +122,18 @@ export default function detailProduk({ data }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const products = await prisma.produk.findMany({
+  const products = await prisma.produk.findFirst({
     where: {
       id: parseInt(id),
     },
     include: {
       akun: true,
       kategori: true,
+      DetailPenjualan: {
+        include: {
+          header_penjualan: true,
+        },
+      },
     },
   });
 

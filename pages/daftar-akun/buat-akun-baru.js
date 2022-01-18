@@ -1,172 +1,174 @@
-import React from 'react';
-import Layout from '../../components/Layout';
-import { Form, Row, Col, Button } from 'react-bootstrap';
+import { React, useState } from "react";
+import Layout from "../../components/Layout";
+import { Form, Row, Col } from "react-bootstrap";
+import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
+import { Formik, Form as Forms } from "formik";
+import * as Yup from "yup";
+import Axios from "axios";
 
-import { Formik, Form as Forms } from 'formik';
-import * as Yup from 'yup';
-import Axios from 'axios'
-
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+import Select from "react-select";
 
 const BuatAkunBaruSchema = Yup.object().shape({
-	nama_akun: Yup.string().required('*Required'),
-	kode_akun: Yup.string().required('*Required'),
-	// kategori_akun: Yup.string().required('kategori_akun harus dipilih'),
-	// detail: Yup.string().required('detail harus dipilih'),
-	// deskripsi: Yup.string().required('*deskripsi tidak boleh kosong'),
+  nama_akun: Yup.string().required("* required"),
+  // kode_akun: Yup.string().required("*Required"),
+  // kategori_akun: Yup.string().required('kategori_akun harus dipilih'),
+  // detail: Yup.string().required('detail harus dipilih'),
+  // deskripsi: Yup.string().required('*deskripsi tidak boleh kosong'),
 });
 
 export default function BuatAkunBaru({ data, data2 }) {
-	const url = 'http://localhost:3000/api/daftar-akun/akun-baru';
-	return (
-		<Layout>
-			<Formik
-				initialValues={{
-					nama_akun: '',
-					kode_akun: '',
-					sub_akun: '',
-					header_akun: '',
-					// deskripsi: '',
-				}}
-				validationSchema={BuatAkunBaruSchema}
-				onSubmit={async (values) => {
-					console.log(values)
-					Axios.post(url, values).
-						then(function (response) { console.log(response) }).
-						catch(function (error) { console.log(error) })
-				}}
-			>
-				{(props) => (
-					<Forms noValidate>
-						<h1>Buat Akun Baru</h1>
-						<div class="mt-12 container">
-							<Form>
-								<Row className="mb-3">
-									<Col sm="2">Nama Akun</Col>
-									<Col sm="6">
-										<Form.Control type="text" placeholder="Nama" name="nama_akun" onChange={props.handleChange} onBLur={props.handleBlur} />
-										{props.errors.nama_akun && props.touched.nama_akun ? <div class="text-red-500 text-sm">{props.errors.nama_akun}</div> : null}
-									</Col>
-								</Row>
+  const url = "http://localhost:3000/api/daftar-akun/createAkun";
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
 
-								<Row className="mb-3">
-									<Col sm="2">Kode Akun</Col>
-									<Col sm="6">
-										<Form.Control type="text" placeholder="Auto" name="kode_akun" onChange={props.handleChange} onBLur={props.handleBlur} />
-										{props.errors.kode_akun && props.touched.kode_akun ? <div class="text-red-500 text-sm">{props.errors.kode_akun}</div> : null}
-									</Col>
-								</Row>
+  const { vertical, horizontal, open, toast_message } = state;
 
-								<Row className="mb-3">
-									<Col sm="2">Kategori</Col>
-									<Col sm="6">
-										<Form.Control as="select" name="header_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
-											{/* loop over tipe akun and show them */}
-											{data.map((tipeAkun, index) => (
-												<option key={tipeAkun.id} value={tipeAkun.id}>{tipeAkun.name}</option>
-											))}
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
 
-										</Form.Control>
-										{props.errors.header_akun && props.touched.header_akun ? <div class="text-red-500 text-sm">{props.errors.header_akun}</div> : null}
-									</Col>
-								</Row>
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
-								{/* <Row className="mb-3">
-									<Col sm="2">Detail</Col>
-									<Col sm="6">
-										<Form.Control as="select" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
-										
-											{data2.map((kategori) => (
-												<option key={kategori.id} value={kategori.id}>{kategori.name}</option>
-											))}
-										</Form.Control>
-										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
-									</Col>
-								</Row> */}
+  // const buttons = (
+  //   <>
+  //     <Button onClick={handleClick({ vertical: "bottom", horizontal: "right" })}>Bottom-Right</Button>
+  //   </>
+  // );
+  return (
+    <Layout>
+      <Formik
+        initialValues={{
+          nama_akun: "",
+          kategori_id: "",
+        }}
+        validationSchema={BuatAkunBaruSchema}
+        onSubmit={async (values) => {
+          console.log(values);
+          Axios.post(url, values)
+            .then(function (response) {
+              console.log(response.data.message);
+              setState({ open: true, toast_message: response.data.message });
+            })
+            .catch(function (error) {
+              // console.log(error.response);
+              setState({ open: true, toast_message: error.response.data.message });
+            });
+        }}
+      >
+        {(props) => (
+          <Forms noValidate>
+            <h1>Buat Akun Baru</h1>
+            <div class="mt-12 container">
+              <Form>
+                <div>
+                  <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
+                </div>
+                <Row className="mb-3">
+                  <Col sm="2">Nama Akun</Col>
+                  <Col sm="6">
+                    <Form.Control
+                      type="text"
+                      placeholder="Nama"
+                      name="nama_akun"
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        let input2 = input.charAt(0).toUpperCase() + input.slice(1);
+                        props.setFieldValue((props.values.nama_akun = input2));
+                      }}
+                      onBLur={props.handleBlur}
+                    />
+                    {props.errors.nama_akun && props.touched.nama_akun ? <div class="text-red-500 text-sm">{props.errors.nama_akun}</div> : null}
+                  </Col>
+                </Row>
 
-								<Row className="mb-3">
-									<Col sm="2">Detail</Col>
-									<Col sm="6">
-										<Form.Control as="select" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
-													<option>None</option>
-													<option>Sub Akun dari: </option>
-													<option>Akun Header dari: </option>
-										</Form.Control>
-										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
-									</Col>
-								</Row>
+                <Row className="mb-3">
+                  <Col sm="2">Kode Akun</Col>
+                  <Col sm="6">
+                    <Form.Control type="text" placeholder="Auto" name="kode_akun" disabled onBLur={props.handleBlur} />
+                    {props.errors.kode_akun && props.touched.kode_akun ? <div class="text-red-500 text-sm">{props.errors.kode_akun}</div> : null}
+                  </Col>
+                </Row>
 
-								<Row className="mb-3">
-									<Col sm="2"></Col>
-									<Col sm="6">
-										<Form.Control type="text" name="sub_akun" onChange={props.handleChange} onBLur={props.handleBlur}>
-													
-										</Form.Control>
-										{props.errors.sub_akun && props.touched.sub_akun ? <div class="text-red-500 text-sm">{props.errors.sub_akun}</div> : null}
-									</Col>
-								</Row>
+                <Row className="mb-3">
+                  <Col sm="2">Kategori</Col>
+                  <Col sm="6">
+                    <Select
+                      options={data}
+                      name="kategori_id"
+                      onChange={(e) => {
+                        props.setFieldValue(`kategori_id`, e.value);
+                        props.setFieldValue(`kategori_name`, e.label);
+                      }}
+                    />
+                    {props.errors.kategori_id && props.touched.kategori_id ? <div class="text-red-500 text-sm">{props.errors.kategori_id}</div> : null}
+                  </Col>
+                </Row>
 
-								{/* <Row className="mb-3">
-									<Col sm="2">Detail</Col>
-									<Col sm="6">
-										<Form.Control as="select" nama_akun="detail" onChange={props.handleChange} onBLur={props.handleBlur}>
-											<option value='' disabled>None</option>
-											<option value="sub1">Sub - Akun Dari:</option>
-											<option value="sub2">Akun Header Dari:</option>
-										</Form.Control>
-										{props.errors.detail && props.touched.detail ? <div class="text-red-500 text-sm">{props.errors.detail}</div> : null}
-									</Col>
-								</Row> */}
-
-								{/* <Row className="mb-3">
-									<Col sm="2">Deskripsi</Col>
-									<Col sm="6">
-										<Form.Control as="textarea" rows={3} name="deskripsi" onChange={props.handleChange} onBLur={props.handleBlur} />
-										{props.errors.deskripsi && props.touched.deskripsi ? <div class="text-red-500 text-sm">{props.errors.deskripsi}</div> : null}
-									</Col>
-								</Row> */}
-
-								<Row className="mb-3">
-									<Form.Label column sm="2" />
-									<Col sm="6">
-										<Button variant="danger mr-4" onClick={props.handleReset}>Batal</Button>
-										<Button variant="success" type="submit" onClick={props.handleSubmit}>Buat</Button>
-									</Col>
-								</Row>
-							</Form>
-						</div>
-					</Forms>
-				)}
-			</Formik>
-		</Layout >
-	);
+                <Row className="mb-3">
+                  <Form.Label column sm="2" />
+                  <Col sm="6">
+                    <Button variant="danger mr-4" onClick={props.handleReset}>
+                      Batal
+                    </Button>
+                    <Button variant="success" type="submit" onClick={props.handleSubmit}>
+                      Buat
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </div>
+          </Forms>
+        )}
+      </Formik>
+    </Layout>
+  );
 }
 
 export async function getServerSideProps() {
-	// get kategoris from our api
-	const kategories = await prisma.kategori.findMany({
-		orderBy: [
-			{
-				id: 'asc'
-			}
-		]
-	});
+  const get_kategories = await prisma.kategori.findMany({
+    where: {
+      NOT: {
+        name: {
+          equals: "Kartu Kredit",
+        },
+      },
+    },
+    orderBy: [
+      {
+        id: "asc",
+      },
+    ],
+  });
 
-	// get tipeAkun from our api
-	const tipeAkuns = await prisma.tipeAkun.findMany({
-		orderBy: [
-			{
-				id: 'asc'
-			}
-		]
-	});
+  const destructure = [];
+  get_kategories.map((i) => {
+    destructure.push({
+      value: i.id,
+      label: i.name,
+    });
+  });
 
-	return {
-		props: {
-			data: kategories,
-			data2: tipeAkuns,
-		}
+  const tipeAkuns = await prisma.tipeAkun.findMany({
+    orderBy: [
+      {
+        id: "asc",
+      },
+    ],
+  });
 
-	}
+  return {
+    props: {
+      data: destructure,
+      data2: tipeAkuns,
+    },
+  };
 }

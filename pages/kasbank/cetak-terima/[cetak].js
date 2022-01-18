@@ -12,11 +12,7 @@ import { Breadcrumbs, Typography, Paper, TableContainer, Table, TableRow, TableC
 
 export default function InvoiceTerimaUang({ data, data2 }) {
   const router = useRouter();
-  const { id } = router.query;
-
-  function cetak() {
-    router.push(`../cetak-terima/${id}`);
-  }
+  const { cetak } = router.query;
 
   return (
     <div className="container">
@@ -30,7 +26,7 @@ export default function InvoiceTerimaUang({ data, data2 }) {
 
         <Row>
           <Col sm="8">
-            <h2 className="text-blue-600">Bank Deposit #{id}</h2>
+            <h2 className="text-blue-600">Bank Deposit #{cetak}</h2>
           </Col>
           <Col sm="4">
             <div className="d-flex justify-content-end">
@@ -113,11 +109,11 @@ export default function InvoiceTerimaUang({ data, data2 }) {
 }
 
 export async function getServerSideProps(context) {
-  const { id } = context.query;
+  const { cetak } = context.query;
 
   const header = await prisma.headerTerimaUang.findMany({
     where: {
-      id: parseInt(id),
+      id: parseInt(cetak),
     },
     include: {
       akun_setor: true,
@@ -127,7 +123,7 @@ export async function getServerSideProps(context) {
 
   const detail = await prisma.detailTerimaUang.findMany({
     where: {
-      header_terima_uang_id: parseInt(id),
+      header_terima_uang_id: parseInt(cetak),
     },
     include: {
       header_terima_uang: true,

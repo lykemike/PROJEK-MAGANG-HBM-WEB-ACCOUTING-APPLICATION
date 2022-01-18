@@ -7,18 +7,7 @@ import TablePagination from "../../../components/TablePagination";
 import { Formik, Form as Forms } from "formik";
 import { Card, Button, InputGroup, FormControl, Col, Row, Modal, Form } from "react-bootstrap";
 
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Snackbar, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
 import { Add, Search, Delete } from "@material-ui/icons/";
 
 import * as Yup from "yup";
@@ -28,11 +17,25 @@ const prisma = new PrismaClient();
 
 function CreateModal(props) {
   const KategoriSchema = Yup.object().shape({
-    nama: Yup.string()
-      .min(1, "* must be atleast 1 characters")
-      .max(15, "* must be less than 15 characters")
-      .required("* required"),
+    nama: Yup.string().min(1, "* must be atleast 1 characters").max(15, "* must be less than 15 characters").required("* required"),
   });
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   const api_create_kategori = "http://localhost:3000/api/produk/createKategori";
   return (
@@ -45,16 +48,18 @@ function CreateModal(props) {
       onSubmit={async (values) => {
         Axios.post(api_create_kategori, values)
           .then(function (response) {
-            console.log(response);
-            router.push("../satuan/tabel-satuan");
+            setState({ open: true, toast_message: response.data.message });
+            router.reload(window.location.pathname);
           })
           .catch(function (error) {
             console.log(error);
+            // setState({ open: true, toast_message: error.response.data.message });
           });
       }}
     >
       {(formikProps) => (
         <Forms noValidate>
+          <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
           <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">Tambah Kategori</Modal.Title>
@@ -65,16 +70,9 @@ function CreateModal(props) {
                   <label className="font-medium">Kategori</label>
                 </Col>
                 <Col xs={8}>
-                  <Form.Control
-                    placeholder="Nama kategori"
-                    name="nama"
-                    onChange={formikProps.handleChange}
-                    onBlur={formikProps.handleBlur}
-                  />
+                  <Form.Control placeholder="Nama kategori" name="nama" onChange={formikProps.handleChange} onBlur={formikProps.handleBlur} />
                 </Col>
-                {formikProps.errors.nama && formikProps.touched.nama ? (
-                  <div class="text-red-500 text-sm mt-2">{formikProps.errors.nama}</div>
-                ) : null}
+                {formikProps.errors.nama && formikProps.touched.nama ? <div class="text-red-500 text-sm mt-2">{formikProps.errors.nama}</div> : null}
               </Row>
 
               <Row className="mb-2">
@@ -104,7 +102,22 @@ function CreateModal(props) {
 function DeleteModal(props) {
   const router = useRouter();
   const api_delete_kategori = "http://localhost:3000/api/produk/deleteKategori";
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
 
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const handle_delete = async () => {
     Axios.delete(api_delete_kategori, {
       data: {
@@ -112,15 +125,17 @@ function DeleteModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.push("../kategori/tabel-kategori");
+        setState({ open: true, toast_message: response.data.message });
+        router.reload(window.location.pathname);
       })
       .catch(function (error) {
         console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
@@ -196,14 +211,7 @@ export default function tabelKategori({ data }) {
   return (
     <Layout>
       <CreateModal backdrop="static" keyboard={false} show={modalCreate} onHide={() => setModalCreate(false)} />
-      <DeleteModal
-        id={modalDelete.id}
-        show={modalDelete.open}
-        nama={modalDelete.nama}
-        backdrop="static"
-        keyboard={false}
-        onHide={() => setModalDelete({ open: false, id: 0, nama: "" })}
-      />
+      <DeleteModal id={modalDelete.id} show={modalDelete.open} nama={modalDelete.nama} backdrop="static" keyboard={false} onHide={() => setModalDelete({ open: false, id: 0, nama: "" })} />
       <Head>
         <title>Kategori Produk</title>
       </Head>

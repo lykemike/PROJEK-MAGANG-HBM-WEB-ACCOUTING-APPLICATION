@@ -67,7 +67,8 @@ export default function kirim_uang({ data, data2, data3 }) {
             },
           })
             .then(function (response) {
-              router.push(`view-kirim/${response.data.id.id}`);
+              console.log(response);
+              router.push(`view-kirim/${response.data.id}`);
             })
             .catch(function (error) {
               console.log(error);

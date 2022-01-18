@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TablePenjualan from "../../components/PenjualanPembelianBiaya/TabelPenjualan";
 import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableHead, TableFooter, TableBody, TableRow, TableCell, Collapse, IconButton, Box } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableHead, TableFooter, TableBody, TableRow, TableCell, Collapse, IconButton, Box } from "@material-ui/core";
 
 import { Add, SearchOutlined, ErrorOutline, Visibility, Edit, Delete, Icon, KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons/";
 
@@ -16,7 +16,22 @@ const prisma = new PrismaClient();
 function DeleteModal(props) {
   const router = useRouter();
   const api_delete = "http://localhost:3000/api/jual/deletePenjualan";
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
 
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const handle_delete = async () => {
     Axios.delete(api_delete, {
       data: {
@@ -24,16 +39,17 @@ function DeleteModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
+        setState({ open: true, toast_message: response.data.message });
         router.reload(window.location.pathname);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>

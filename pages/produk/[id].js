@@ -1,22 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 
 import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
-import {
-  Breadcrumbs,
-  Typography,
-  Checkbox,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
-  TableBody,
-} from "@material-ui/core";
+import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Snackbar } from "@material-ui/core";
 
 import * as Yup from "yup";
 import { Formik, Form as Forms, Field } from "formik";
@@ -27,10 +16,7 @@ const prisma = new PrismaClient();
 
 export default function addProduk({ data, data2, data3 }) {
   const ProdukSchema = Yup.object().shape({
-    nama: Yup.string()
-      .min(2, "* must be more than 5 characters")
-      .max(50, "* must be less than 50 characters")
-      .required("* required"),
+    nama: Yup.string().min(2, "* must be more than 5 characters").max(50, "* must be less than 50 characters").required("* required"),
     kategori_id: Yup.string().required("* required"),
     harga: Yup.number().required("* required"),
     akun_penjualan_id: Yup.string().required("* required"),
@@ -46,6 +32,23 @@ export default function addProduk({ data, data2, data3 }) {
   function cancelButton() {
     router.push("../produk/tabel-produk");
   }
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   return (
     <Layout>
@@ -77,11 +80,11 @@ export default function addProduk({ data, data2, data3 }) {
             },
           })
             .then(function (response) {
-              console.log(response);
+              setState({ open: true, toast_message: response.data.message });
               router.push("../produk/tabel-produk");
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
@@ -90,7 +93,7 @@ export default function addProduk({ data, data2, data3 }) {
             <Head>
               <title>Update Produk / Jasa</title>
             </Head>
-
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Update Produk & Jasa</Typography>
@@ -110,12 +113,7 @@ export default function addProduk({ data, data2, data3 }) {
                     <label>Gambar</label>
                   </Col>
                   <Col sm="4">
-                    <Form.File
-                      type="file"
-                      name="file_attachment"
-                      accept="image/*"
-                      onChange={(e) => props.setFieldValue(`file_attachment`, e.target.files)}
-                    />
+                    <Form.File type="file" name="file_attachment" accept="image/*" onChange={(e) => props.setFieldValue(`file_attachment`, e.target.files)} />
                   </Col>
                 </Row>
 
@@ -136,9 +134,7 @@ export default function addProduk({ data, data2, data3 }) {
                       }}
                     />
                   </Col>
-                  {props.errors.nama && props.touched.nama ? (
-                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama}</span>
-                  ) : null}
+                  {props.errors.nama && props.touched.nama ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.nama}</span> : null}
                 </Row>
 
                 <Row className="mb-2">
@@ -156,9 +152,7 @@ export default function addProduk({ data, data2, data3 }) {
                       }}
                     />
                   </Col>
-                  {props.errors.kategori_id && props.touched.kategori_id ? (
-                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.kategori_id}</span>
-                  ) : null}
+                  {props.errors.kategori_id && props.touched.kategori_id ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.kategori_id}</span> : null}
                 </Row>
 
                 <Row className="mb-2">
@@ -185,18 +179,9 @@ export default function addProduk({ data, data2, data3 }) {
                     <label>Harga</label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      className="mb-2"
-                      type="number"
-                      min="0"
-                      name="harga"
-                      value={props.values.harga}
-                      onChange={props.handleChange}
-                    />
+                    <Form.Control className="mb-2" type="number" min="0" name="harga" value={props.values.harga} onChange={props.handleChange} />
                   </Col>
-                  {props.errors.harga && props.touched.harga ? (
-                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.harga}</span>
-                  ) : null}
+                  {props.errors.harga && props.touched.harga ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.harga}</span> : null}
                 </Row>
 
                 <Row className="mb-2">
@@ -214,9 +199,7 @@ export default function addProduk({ data, data2, data3 }) {
                       }}
                     />
                   </Col>
-                  {props.errors.akun_penjualan_id && props.touched.akun_penjualan_id ? (
-                    <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_penjualan_id}</span>
-                  ) : null}
+                  {props.errors.akun_penjualan_id && props.touched.akun_penjualan_id ? <span class="text-xs font-medium text-red-500 required-dot">{props.errors.akun_penjualan_id}</span> : null}
                 </Row>
               </Card.Body>
             </Card>

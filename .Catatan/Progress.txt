@@ -1,3 +1,9 @@
+Laporan 📄 Mike
+• ⏱️ Waktu 
+In : 09.00
+Out : 17.30
+Lokasi :  wfo
+🗓️ Tanggal 12 Januari 2022, Rabu
 Web Akuntansi Up Ke Server HBM buat testing
 Produk & Jasa
  * Add produk/jasa perubahan UI sesuai requirements = 100%
@@ -8,6 +14,7 @@ Produk & Jasa
  * Api create, update, delete = 100%
  * View Detail Produk & Jasa = 100%
  * Kategori produk & jasa delete confirmation update UI sesuai requirements = 100%
+ * View transaksi barang = 100%
 
 Kontak
  * Add kontak perubahan UI sesuai requirements = 100%
@@ -122,16 +129,17 @@ Kas Bank
   * Terima Uang
     - Hapus Termasuk Pajak, Pajak Terima Uang= 100%
     - Perbaikan Database Terima Uang = 100%
-    - Create, Update, Delete API = 10%
+    - Create, Update, Delete API = 100%
   * Transfer Uang
     - Update, Delete = 100%
+  * Update Saldo Awal Kas Bank ketika ada transaksi transfer, terima, dan kirim  = 100%
 
 Pembelian
   * Perubahan UI create dan update sesuai requirements = 100%
-  * Perubahan database header & detail penjualan = 100%
-  * Create Penagihan Penjualan = 100%
-  * Update Penagihan Penjualan = 50%
-  * Delete Penagihan Penjualan = 50%
+  * Perubahan database header & detail pembelian = 100%
+  * Create Penagihan pembelian = 100%
+  * Update Penagihan pembelian = 100%
+  * Delete Penagihan pembelian = 90%
   * Pengiriman Pembayaran = 100%
 
 Jurnal
@@ -141,7 +149,12 @@ Jurnal
 User & Role
  * Perbaikan UI, Validation, Modal = 100%
 
-SIT 16 Bug Done
+Daftar Akun
+  * Kode Akun Otomatis sesuai kategori yang di pilih = 90%
+  * Perbaikan UI = 90%
+
+  
+SIT 17 Bug Done
 
 NOTES
 =================================
@@ -159,13 +172,14 @@ TANYA
   DONE delete confirmation setelah success tidak resfresh/redirect
   DONE bug ui select2 ketika update, tampilannya ga berubah
   - show current file
-  - status bug, sisa tagihan 0 dan tanggal lewat jatuh tempo sehaursnya tetap complete
   DONE cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
-  - menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan
-  - cara buat alert success, failed
+  - menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan, dan error lainnya
+  3/4 cara buat alert success, failed
   - merge data yang sama
   - show more than 2 items di invoice penerimaan pembayaran with one subtotal
-  - ketika buat akun baru, kode akun tersebut akan otomatis tergantung kategori yg di pilih
+  3/4 DONE?? ketika buat akun baru, kode akun tersebut akan terbuat otomatis tergantung kategori yg di pilih
+  - autheticaion page agar user lain tidak bisa akses dengan cara mengetik url (middleware)
+  - filter data
 
 DATA YANG BERBEDA
 contoh: 

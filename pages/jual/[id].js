@@ -1,9 +1,9 @@
-import { React } from "react";
+import { React, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 
-import { Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
+import { Breadcrumbs, Table as Tables, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Snackbar } from "@material-ui/core/";
 import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import Switch from "@material-ui/core/Switch";
@@ -33,12 +33,29 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
     //   .min(1)
     //   .max(3),
   });
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   const url = "http://localhost:3000/api/jual/updatepenjualan";
   const router = useRouter();
 
   return (
     <Layout>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Head>
         <title>Update Penagihan Penjualan</title>
       </Head>
@@ -88,11 +105,11 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
             },
           })
             .then(function (response) {
-              console.log(response);
+              setState({ open: true, toast_message: response.data[0].message });
               router.push(`view/${response.data[0].id}`);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data[0].message });
             });
         }}
       >

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Layout from "../../../components/Layout";
 import { Button, Form, Col, Row } from "react-bootstrap";
 
@@ -8,7 +8,7 @@ import Axios from "axios";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
+import { Snackbar } from "@material-ui/core";
 export default function updateKategoriProduk({ data }) {
   const router = useRouter();
   const { id } = router.query;
@@ -22,9 +22,27 @@ export default function updateKategoriProduk({ data }) {
   function cancelButton() {
     router.push("../kategori/tabel-kategori");
   }
-  console.log(data);
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   return (
     <Layout>
+      {" "}
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Formik
         initialValues={{
           nama: data.nama,
@@ -34,11 +52,11 @@ export default function updateKategoriProduk({ data }) {
           let data = { ...values, id };
           Axios.post(updateKategori, data)
             .then(function (response) {
-              console.log(response);
+              setState({ open: true, toast_message: response.data.message });
               router.push("../kategori/tabel-kategori");
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
@@ -55,12 +73,7 @@ export default function updateKategoriProduk({ data }) {
                     <Form.Label>Nama</Form.Label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      placeholder={props.values.nama}
-                      name="nama"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                    />
+                    <Form.Control placeholder={props.values.nama} name="nama" onChange={props.handleChange} onBlur={props.handleBlur} />
                   </Col>
                 </Row>
 
@@ -69,13 +82,7 @@ export default function updateKategoriProduk({ data }) {
                     <Form.Label>Jumlah</Form.Label>
                   </Col>
                   <Col sm="4">
-                    <Form.Control
-                      disabled
-                      placeholder={props.values.jumlah}
-                      name="jumlah"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                    />
+                    <Form.Control disabled placeholder={props.values.jumlah} name="jumlah" onChange={props.handleChange} onBlur={props.handleBlur} />
                   </Col>
                 </Row>
 

@@ -106,9 +106,9 @@ export default async (req, res) => {
       data: detail,
     });
 
-    res.status(201).json([{ message: "Create Invoice Penjualan Success!", data: frontend_data, id: find_latest }]);
+    res.status(201).json([{ message: "Create Invoice Penjualan Success!", id: find_latest }]);
   } catch (error) {
-    res.status(400).json([{ data: "Create Invoice Penjualan Failed!", error }]);
+    res.status(400).json([{ data: "Failed to Create Invoice Penjualan!", error }]);
     console.log(error);
   }
 };

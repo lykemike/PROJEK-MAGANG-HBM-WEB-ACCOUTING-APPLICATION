@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 
 import { Button, Form, Col, Row, FormCheck, Card } from "react-bootstrap";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
+import { Breadcrumbs, Typography, Snackbar, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
 
 import * as Yup from "yup";
 import { Formik, Form as Forms, Field } from "formik";
@@ -32,6 +32,23 @@ export default function addProduk({ data, data2 }) {
   function cancelButton() {
     router.push("../produk/tabel-produk");
   }
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   return (
     <Layout>
@@ -62,11 +79,11 @@ export default function addProduk({ data, data2 }) {
             },
           })
             .then(function (response) {
-              console.log(response);
+              setState({ open: true, toast_message: response.data.message });
               router.push("../produk/tabel-produk");
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
@@ -75,6 +92,7 @@ export default function addProduk({ data, data2 }) {
             <Head>
               <title>Add Produk / Jasa</title>
             </Head>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
 
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">

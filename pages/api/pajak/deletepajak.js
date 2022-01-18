@@ -23,6 +23,7 @@ export default async (req, res) => {
       find_current_transactions.PenerimaanPembayaran.length > 0
     ) {
       message = "Pajak cannot be deleted because there is still an ongoing transaction!";
+      return res.status(400).json({ message: message });
     } else {
       const delete_pajak = await prisma.pajak.delete({
         where: {
@@ -30,9 +31,8 @@ export default async (req, res) => {
         },
       });
       message = "Delete Pajak Success!";
+      return res.status(201).json({ message: message });
     }
-
-    res.status(201).json({ message: "Delete pajak success!", message });
   } catch (error) {
     res.status(400).json({ data: "Delete pajak failed!", error });
     console.log(error);

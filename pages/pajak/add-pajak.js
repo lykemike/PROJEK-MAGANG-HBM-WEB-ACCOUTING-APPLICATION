@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import { Form, Button, Row, Col, InputGroup } from "react-bootstrap";
-import { Breadcrumbs, Typography } from "@material-ui/core/";
+import { Breadcrumbs, Typography, Snackbar } from "@material-ui/core/";
 
 import Select from "react-select";
 import * as Yup from "yup";
@@ -28,12 +28,29 @@ export default function addpajak({ data, data2 }) {
     router.push("../pajak/tabel-pajak");
   }
 
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   return (
     <Layout>
       <Head>
         <title>Buat Pajak Baru</title>
       </Head>
-
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Buat Pajak Baru</Typography>
@@ -53,10 +70,11 @@ export default function addpajak({ data, data2 }) {
         onSubmit={async (values) => {
           Axios.post(api_create, values)
             .then(function (response) {
+              setState({ open: true, toast_message: response.data.message });
               router.push("tabel-pajak");
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
