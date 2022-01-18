@@ -1,11 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { Formik, Form as Forms, Field } from "formik";
-import { Breadcrumbs, Typography } from "@material-ui/core/";
+import { Breadcrumbs, Typography, Snackbar } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import Axios from "axios";
@@ -19,11 +19,6 @@ export default function update({ data, data2 }) {
   const router = useRouter();
   const { id } = router.query;
   const updateUser = "http://localhost:3000/api/user/updateUser";
-  const formik = useRef(null);
-
-  function SelectField(FieldProps) {
-    return <Select options={data} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
-  }
 
   const UserSchema = Yup.object().shape({
     first_name: Yup.string().min(2, "* chracters must be more than 2").max(20, "* chracters must be less than 20").required("*required"),
@@ -37,15 +32,30 @@ export default function update({ data, data2 }) {
   function cancelButton() {
     router.push("../user/tabel-user");
   }
-  console.log(data2);
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   return (
     <Layout>
       <Head>
         <title>Update User</title>
       </Head>
       <Formik
-        enableReinitialize={true}
-        innerRef={formik}
         initialValues={{
           first_name: data2.firstName,
           last_name: data2.lastName,
@@ -59,16 +69,19 @@ export default function update({ data, data2 }) {
           let data = { ...values, id };
           Axios.put(updateUser, data)
             .then(function (response) {
-              console.log(response);
-              router.push("../user/tabel-user");
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push("../user/tabel-user");
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Update User</Typography>
@@ -85,7 +98,7 @@ export default function update({ data, data2 }) {
                       <label className="font-medium">First Name</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder={props.values.first_name} value={props.values.first_name} onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control value={props.values.first_name} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.first_name && props.touched.first_name ? <div className="text-red-500 text-sm">{props.errors.first_name}</div> : null}
                     </Col>
                   </Row>
@@ -95,7 +108,7 @@ export default function update({ data, data2 }) {
                       <label className="font-medium">Last Name</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder={props.values.last_name} value={props.values.last_name} onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control value={props.values.last_name} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.last_name && props.touched.last_name ? <div className="text-red-500 text-sm">{props.errors.last_name}</div> : null}
                     </Col>
                   </Row>
@@ -105,7 +118,7 @@ export default function update({ data, data2 }) {
                       <label className="font-medium">Email</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder={props.values.email} value={props.values.email} onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control value={props.values.email} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.email && props.touched.email ? <div className="text-red-500 text-sm">{props.errors.email}</div> : null}
                     </Col>
                   </Row>

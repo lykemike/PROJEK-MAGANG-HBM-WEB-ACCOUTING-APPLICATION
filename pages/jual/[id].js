@@ -19,6 +19,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pembayaran, header_penjualan, detail_penjualan }) {
+  const url = "http://localhost:3000/api/jual/updatepenjualan";
+  const router = useRouter();
+
   const ValidationSchema = Yup.object().shape({
     nomor_kontrak: Yup.string().required("*required"),
     tgl_kontrak_mulai: Yup.string().required("*required"),
@@ -50,16 +53,13 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
     setState({ ...state, open: false, toast_message: "" });
   };
 
-  const url = "http://localhost:3000/api/jual/updatepenjualan";
-  const router = useRouter();
-
   return (
     <Layout>
       <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Head>
         <title>Update Penagihan Penjualan</title>
       </Head>
-      {console.log(header_penjualan[0])}
+
       <Formik
         initialValues={{
           id: header_penjualan[0].id,
@@ -76,7 +76,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
           custom_invoice: header_penjualan[0].custom_invoice,
           tipe_perusahaan: header_penjualan[0].tipe_perusahaan == "false" ? false : true,
           pesan: header_penjualan[0].pesan,
-          file_attachment: "",
+          file_attachment: header_penjualan[0].file_attachment,
           subtotal: header_penjualan[0].subtotal,
           pajak_id: header_penjualan[0].pajak_id,
           pajak_nama: header_penjualan[0].pajak_nama,

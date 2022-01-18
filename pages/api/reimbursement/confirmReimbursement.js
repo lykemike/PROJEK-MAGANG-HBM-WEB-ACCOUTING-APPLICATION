@@ -13,10 +13,10 @@ export default async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Update Reimbursement Status Successful!",
+      message: "Confirm reimbursement success!",
     });
   } catch (error) {
-    res.status(400).json({ data: "Update Status Failed!", error });
+    res.status(400).json({ data: "Confirm reimbursement failed!", error });
     console.log(error);
   }
 };

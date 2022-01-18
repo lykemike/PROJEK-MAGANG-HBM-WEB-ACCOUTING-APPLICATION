@@ -33,21 +33,9 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res
-      .status(201)
-      .json(
-        { message: "Create role success!", data: create_role },
-        { message: "Find role id success!", data: find_role },
-        { message: "Create role privellege success!", data: create_role_privellege }
-      );
+    res.status(201).json({ message: "Create role success!" });
   } catch (error) {
-    res
-      .status(400)
-      .json(
-        { data: "Failed to create role!", error },
-        { data: "Failed to find role id!", error },
-        { data: "Failed to create role privellege!", error }
-      );
+    res.status(400).json({ data: "Failed to create role!", error });
     console.log(error);
   }
 };

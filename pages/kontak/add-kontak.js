@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import Layout from "../../components/Layout";
 import { Form, Row, Col, Button, Card } from "react-bootstrap";
-import { Breadcrumbs, Typography } from "@material-ui/core/";
+import { Breadcrumbs, Typography, Snackbar } from "@material-ui/core/";
 import BusinessCenterOutlinedIcon from "@material-ui/icons/BusinessCenterOutlined";
 import AccountBalanceOutlinedIcon from "@material-ui/icons/AccountBalanceOutlined";
 import InsertDriveFileOutlinedIcon from "@material-ui/icons/InsertDriveFileOutlined";
@@ -20,6 +20,23 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function BuatKontakBaru({ data, data2, data3, data4 }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const router = useRouter();
 
   const KontakSchema = Yup.object().shape({
@@ -75,16 +92,19 @@ export default function BuatKontakBaru({ data, data2, data3, data4 }) {
           console.log(values);
           Axios.post(api_create_kontak, values)
             .then(function (response) {
-              console.log(response);
-              router.push("../kontak/tabel-kontak");
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push("../kontak/tabel-kontak");
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Kontak Baru</Typography>

@@ -5,8 +5,8 @@ import Layout from "../../components/Layout";
 import TablePagination from "../../components/TablePagination";
 
 import { Button, Row, Col, Modal } from "react-bootstrap";
-import { Breadcrumbs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
-import { Add, SearchOutlined, ErrorOutline, Visibility, Edit, Delete } from "@material-ui/icons/";
+import { Snackbar, Breadcrumbs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
+import { Add, Edit, Delete } from "@material-ui/icons/";
 
 import Axios from "axios";
 import { useRouter } from "next/router";
@@ -14,6 +14,23 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 function DeleteModal(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const router = useRouter();
   const api_delete_user = "http://localhost:3000/api/role/deleterole";
 
@@ -24,8 +41,10 @@ function DeleteModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
         console.log(error);
@@ -34,6 +53,7 @@ function DeleteModal(props) {
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Role Confirmation</Modal.Title>
       </Modal.Header>

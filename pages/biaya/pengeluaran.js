@@ -6,7 +6,7 @@ import TableBiaya from "../../components/PenjualanPembelianBiaya/TabelBiaya";
 import Link from "next/link";
 
 import { Row, Col, Button, InputGroup, FormControl, FormCheck, Modal } from "react-bootstrap";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableHead, TableFooter, TableBody, TableRow, TableCell, Collapse, IconButton, Box } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableHead, TableFooter, TableBody, TableRow, TableCell, Collapse, IconButton, Box } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
 import { useRouter } from "next/router";
@@ -15,6 +15,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 function DeleteModal(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
   const api_delete = "http://localhost:3000/api/biaya/deleteBiaya";
 
@@ -25,16 +41,19 @@ function DeleteModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>

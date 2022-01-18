@@ -40,7 +40,7 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Update role success!", data: update_role });
+    res.status(201).json({ message: "Update role success!" });
   } catch (error) {
     res.status(400).json({ data: "Update role failed!", error });
     console.log(error);

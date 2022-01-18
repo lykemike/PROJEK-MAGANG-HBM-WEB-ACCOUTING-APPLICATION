@@ -238,9 +238,9 @@ export default async (req, res) => {
 
     const mess = "Update biaya success";
 
-    res.status(201).json([{ message: "Update biaya success!", data: mess, id: header_biaya_id }]);
+    res.status(201).json({ message: "Update biaya success!", id: header_biaya_id });
   } catch (error) {
-    res.status(400).json([{ data: "Update detail biaya failed!", error }]);
+    res.status(400).json({ data: "Update detail biaya failed!", error });
     console.log(error);
   }
 };

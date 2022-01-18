@@ -4,33 +4,9 @@ import Link from "next/link";
 import Layout from "../../components/Layout";
 import TablePagination from "../../components/TablePagination";
 
-import {
-  Tabs,
-  Tab,
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  InputGroup,
-  FormControl,
-  Form,
-  Col,
-  Row,
-  FormCheck,
-  Modal,
-} from "react-bootstrap";
+import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, InputGroup, FormControl, Form, Col, Row, FormCheck, Modal } from "react-bootstrap";
 
-import {
-  Breadcrumbs,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-} from "@material-ui/core/";
+import { Snackbar, Breadcrumbs, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@material-ui/core/";
 
 import * as XLSX from "xlsx";
 import { Add, SearchOutlined, Visibility, Edit, Delete } from "@material-ui/icons/";
@@ -42,6 +18,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 function DeleteModal(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
   const api_delete = "http://localhost:3000/api/kontak/deletekontak";
 
@@ -52,16 +44,19 @@ function DeleteModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.push(`../kontak/tabel-kontak`);
+        setState({ open: true, toast_message: response.data.message });
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
@@ -144,14 +139,7 @@ export default function Kontak({ data, data2 }) {
       <Head>
         <title>Tabel Kontak</title>
       </Head>
-      <DeleteModal
-        id={modalShow.id}
-        show={modalShow.open}
-        kontak={modalShow.kontak}
-        backdrop="static"
-        keyboard={false}
-        onHide={() => setModalShow({ open: false, id: 0, kontak: "" })}
-      />
+      <DeleteModal id={modalShow.id} show={modalShow.open} kontak={modalShow.kontak} backdrop="static" keyboard={false} onHide={() => setModalShow({ open: false, id: 0, kontak: "" })} />
       <div className="border-b border-gray-200">
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="textPrimary">Kontak</Typography>
@@ -260,9 +248,7 @@ export default function Kontak({ data, data2 }) {
                           <TableRow key={index}>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
                             <TableCell style={{ minWidth: 600, width: 600 }}>
-                              {i.kontak.alamat_perusahaan.length > 80
-                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
-                                : i.kontak.alamat_perusahaan}
+                              {i.kontak.alamat_perusahaan.length > 80 ? i.kontak.alamat_perusahaan.slice(0, 80) + "..." : i.kontak.alamat_perusahaan}
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
@@ -281,11 +267,7 @@ export default function Kontak({ data, data2 }) {
                                   </Button>
                                 </a>
                               </Link>
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
-                              >
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}>
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -383,9 +365,7 @@ export default function Kontak({ data, data2 }) {
                           <TableRow key={index}>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
                             <TableCell style={{ minWidth: 600, width: 600 }}>
-                              {i.kontak.alamat_perusahaan.length > 80
-                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
-                                : i.kontak.alamat_perusahaan}
+                              {i.kontak.alamat_perusahaan.length > 80 ? i.kontak.alamat_perusahaan.slice(0, 80) + "..." : i.kontak.alamat_perusahaan}
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
@@ -406,11 +386,7 @@ export default function Kontak({ data, data2 }) {
                                 </a>
                               </Link>
 
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
-                              >
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}>
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -508,9 +484,7 @@ export default function Kontak({ data, data2 }) {
                           <TableRow key={index}>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
                             <TableCell style={{ minWidth: 600, width: 600 }}>
-                              {i.kontak.alamat_perusahaan.length > 80
-                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
-                                : i.kontak.alamat_perusahaan}
+                              {i.kontak.alamat_perusahaan.length > 80 ? i.kontak.alamat_perusahaan.slice(0, 80) + "..." : i.kontak.alamat_perusahaan}
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
@@ -531,11 +505,7 @@ export default function Kontak({ data, data2 }) {
                                 </a>
                               </Link>
 
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
-                              >
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}>
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -633,9 +603,7 @@ export default function Kontak({ data, data2 }) {
                           <TableRow key={index}>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
                             <TableCell style={{ minWidth: 600, width: 600 }}>
-                              {i.kontak.alamat_perusahaan.length > 80
-                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
-                                : i.kontak.alamat_perusahaan}
+                              {i.kontak.alamat_perusahaan.length > 80 ? i.kontak.alamat_perusahaan.slice(0, 80) + "..." : i.kontak.alamat_perusahaan}
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
@@ -656,11 +624,7 @@ export default function Kontak({ data, data2 }) {
                                 </a>
                               </Link>
 
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
-                              >
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}>
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>
@@ -758,9 +722,7 @@ export default function Kontak({ data, data2 }) {
                           <TableRow key={index}>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nama_perusahaan}</TableCell>
                             <TableCell style={{ minWidth: 600, width: 600 }}>
-                              {i.kontak.alamat_perusahaan.length > 80
-                                ? i.kontak.alamat_perusahaan.slice(0, 80) + "..."
-                                : i.kontak.alamat_perusahaan}
+                              {i.kontak.alamat_perusahaan.length > 80 ? i.kontak.alamat_perusahaan.slice(0, 80) + "..." : i.kontak.alamat_perusahaan}
                             </TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.email}</TableCell>
                             <TableCell style={{ minWidth: 250, width: 250 }}>{i.kontak.nomor_npwp}</TableCell>
@@ -781,11 +743,7 @@ export default function Kontak({ data, data2 }) {
                                 </a>
                               </Link>
 
-                              <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}
-                              >
+                              <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.kontak.id, kontak: i.kontak.nama_perusahaan })}>
                                 <Delete className="text-white" fontSize="small" />
                               </Button>
                             </TableCell>

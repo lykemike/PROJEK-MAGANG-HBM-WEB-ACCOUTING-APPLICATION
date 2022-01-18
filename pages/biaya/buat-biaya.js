@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Layout from "../../components/Layout";
 import { Row, Col, Form, Button, FormCheck, InputGroup, FormControl, Table } from "react-bootstrap";
@@ -17,9 +17,27 @@ import Typography from "@material-ui/core/Typography";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import * as Yup from "yup";
 import { PrismaClient } from "@prisma/client";
+import { Snackbar } from "@material-ui/core";
 const prisma = new PrismaClient();
 
 export default function BuatBiaya({ data, data2, data3, data4 }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const router = useRouter();
   const url = "http://localhost:3000/api/biaya/createBiaya";
 
@@ -86,16 +104,19 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
             },
           })
             .then(function (response) {
-              console.log(response);
-              router.push(`view/${response.data[0].id.id}`);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`view/${response.data.id.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <Breadcrumbs aria-label="breadcrumb">
               <Typography color="textPrimary">Biaya</Typography>
             </Breadcrumbs>

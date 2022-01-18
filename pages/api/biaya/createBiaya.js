@@ -207,9 +207,9 @@ export default async (req, res) => {
 
     const mess = "Create biaya success";
 
-    res.status(201).json([{ message: "Create biaya success!", id: find_latest }]);
+    res.status(201).json({ message: "Create biaya success!", id: find_latest });
   } catch (error) {
-    res.status(400).json([{ data: "Failed to create detail biaya!", error }]);
+    res.status(400).json({ data: "Failed to create detail biaya!", error });
     console.log(error);
   }
 };

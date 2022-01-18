@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { Breadcrumbs, Typography } from "@material-ui/core/";
+import { Snackbar, Breadcrumbs, Typography } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import { Formik, Form as Forms, Field } from "formik";
@@ -13,6 +13,23 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 
 export default function addRole() {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const RoleSchema = Yup.object().shape({
     role_type: Yup.string().min(2, "* characters must be more than 2").max(30, "* characters must be less than 30").required("* required"),
     menu: Yup.array().min(1, "* must select atleast 1 menu"),
@@ -27,6 +44,7 @@ export default function addRole() {
 
   return (
     <Layout>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Head>
         <title>Buat Role Baru</title>
       </Head>
@@ -40,10 +58,13 @@ export default function addRole() {
         onSubmit={async (values) => {
           Axios.post(url, values)
             .then(function (response) {
-              router.push("../role/tabel-role");
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push("../role/tabel-role");
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
