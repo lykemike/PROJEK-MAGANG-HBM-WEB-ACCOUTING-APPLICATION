@@ -42,7 +42,7 @@ export default async (req, res) => {
 
     const transaction = await prisma.$transaction([delete_jurnal_Pengiriman_pembayaran, delete_Pengiriman_pembayaran]);
 
-    res.status(201).json({ message: "Delete invoice Pengiriman pembayaran success!", data: transaction });
+    res.status(201).json({ message: "Delete invoice Pengiriman pembayaran success!" });
   } catch (error) {
     res.status(400).json({ data: "Delete invoice Pengiriman pembayaran failed!", error });
     console.log(error);

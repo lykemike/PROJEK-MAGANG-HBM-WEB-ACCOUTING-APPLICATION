@@ -41,9 +41,9 @@ export default async (req, res) => {
       delete_detail_pembelian,
       delete_header_pembelian,
     ]);
-    res.status(201).json({ message: "Delete penjualan success!", data: transaction });
+    res.status(201).json({ message: "Delete pembelian success!" });
   } catch (error) {
-    res.status(400).json({ data: "Delete penjualan failed!", error });
+    res.status(400).json({ data: "Delete pembelian failed!", error });
     console.log(error);
   }
 };

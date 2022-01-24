@@ -64,7 +64,7 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json({ message: "CREATE ASET SUCCESS!", data: jurnal_aset });
+    res.status(201).json({ message: "CREATE ASET SUCCESS!" });
   } catch (error) {
     res.status(400).json({ data: "CREATE ASET FAILED!", error });
     console.log(error);

@@ -5,6 +5,7 @@ import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Select from "react-select";
 import AddIcon from "@material-ui/icons/Add";
+import { Snackbar } from "@material-ui/core";
 import Link from "next/Link";
 import Typography from "@material-ui/core/Typography";
 import BackspaceIcon from "@material-ui/icons/Backspace";
@@ -23,6 +24,23 @@ export default function penagihanpembelian({ pajak, kontak, akun_pembelian, syar
   const { id } = router.query;
 
   const formik = useRef(null);
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   return (
     <Layout>
@@ -76,16 +94,26 @@ export default function penagihanpembelian({ pajak, kontak, akun_pembelian, syar
             },
           })
             .then(function (response) {
-              console.log(response);
-              router.push(`view/${id}`);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`view/${id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={6000}
+              open={open}
+              onClose={handleClose}
+              message={toast_message}
+              key={vertical + horizontal}
+            />
             <Breadcrumbs aria-label="breadcrumb">
               <Link color="inherit" href="../beli/pembelian">
                 Transaksi

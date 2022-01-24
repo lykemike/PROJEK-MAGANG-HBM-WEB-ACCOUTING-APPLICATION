@@ -146,12 +146,10 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json([
-      {
-        message: "Create Pembelian Success!",
-        id: find_latest,
-      },
-    ]);
+    res.status(201).json({
+      message: "Create Pembelian Success!",
+      id: find_latest,
+    });
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

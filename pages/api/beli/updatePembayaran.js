@@ -101,7 +101,7 @@ export default async (req, res) => {
         },
       ],
     });
-    res.status(201).json([{ message: "Create Penerimaan Pembayaran Success!", id: find_pengiriman_bayaran.id }]);
+    res.status(201).json({ message: "Create Penerimaan Pembayaran Success!", id: find_pengiriman_bayaran.id });
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

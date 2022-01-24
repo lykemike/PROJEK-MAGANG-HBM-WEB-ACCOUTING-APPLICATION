@@ -88,7 +88,6 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
         }}
         // validationSchema={}
         onSubmit={async (values) => {
-          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "akun_beli") {
@@ -98,16 +97,16 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
             }
           }
           Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values.fileattachment);
+
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           })
             .then(function (response) {
-              setState({ open: true, toast_message: response.data[0].message });
+              setState({ open: true, toast_message: response.data.message });
               setTimeout(() => {
-                router.push(`view/${response.data[0].id.id}`);
+                router.push(`view/${response.data.id.id}`);
               }, 2000);
             })
             .catch(function (error) {
@@ -150,7 +149,6 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                       options={kontak}
                       name="nama_supplier"
                       onChange={(e) => {
-                        console.log(kontak);
                         props.setFieldValue(`kontak_id`, e.value);
                         props.setFieldValue(`nama_supplier`, e.label);
                         props.setFieldValue(`email`, e.email);

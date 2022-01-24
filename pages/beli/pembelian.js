@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import TableReusable from "../../components/PenjualanPembelianBiaya/Table";
 import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
-
+import { Snackbar } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -22,7 +22,23 @@ const prisma = new PrismaClient();
 function MyVerticallyCenteredModal(props) {
   const router = useRouter();
   const api_delete = "http://localhost:3000/api/beli/deletebeli";
-  console.log(props.id);
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const handle_delete = async () => {
     Axios.delete(api_delete, {
       data: {
@@ -30,17 +46,26 @@ function MyVerticallyCenteredModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-
-        // router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={6000}
+        open={open}
+        onClose={handleClose}
+        message={toast_message}
+        key={vertical + horizontal}
+      />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Pembelian Confirmation</Modal.Title>
       </Modal.Header>

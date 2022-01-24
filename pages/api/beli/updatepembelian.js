@@ -143,7 +143,7 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json([{ message: "Update pembelian success!", data: create_kredit_jurnal }]);
+    res.status(201).json({ message: "Update pembelian success!" });
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

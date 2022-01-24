@@ -1,4 +1,5 @@
-import React from "react";
+import { Snackbar } from "@material-ui/core";
+import React, { useState } from "react";
 import Layout from "../../../../components/Layout";
 import { Row, Col, Form, Button, FormCheck } from "react-bootstrap";
 import AddIcon from "@material-ui/icons/Add";
@@ -14,7 +15,22 @@ const prisma = new PrismaClient();
 export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
   const router = useRouter();
   const { id } = router.query;
-  console.log(data);
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const url = "http://localhost:3000/api/beli/updatePembayaran";
 
   function pembayaran() {
@@ -41,19 +57,28 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
         }}
         // validationSchema={UserSchema}
         onSubmit={async (values) => {
-          console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              console.log(response);
-              router.push(`../view/${response.data[0].id}`);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`../view/${response.data.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={6000}
+              open={open}
+              onClose={handleClose}
+              message={toast_message}
+              key={vertical + horizontal}
+            />
             <Row>
               <Col>
                 <h5>Transaksi</h5>

@@ -8,7 +8,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function BayarNanti({ data2 }) {
-  console.log(data2);
   const router = useRouter();
   const { id } = router.query;
   function edit() {

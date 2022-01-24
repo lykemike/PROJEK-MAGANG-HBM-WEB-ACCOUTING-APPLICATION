@@ -1,4 +1,5 @@
-import React from "react";
+import { Snackbar } from "@material-ui/core";
+import React, { useState } from "react";
 import Layout from "../../../components/Layout";
 import { Form, Row, Col, Button } from "react-bootstrap";
 
@@ -20,6 +21,23 @@ export default function addaset({ data, data2 }) {
 
   const { id } = router.query;
 
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   return (
     <Layout>
       <Formik
@@ -36,15 +54,26 @@ export default function addaset({ data, data2 }) {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              console.log(response);
-              // router.push(``);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(``);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
-        }}>
+        }}
+      >
         {(props) => (
           <Forms noValidate>
+            <Snackbar
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={6000}
+              open={open}
+              onClose={handleClose}
+              message={toast_message}
+              key={vertical + horizontal}
+            />
             <div>
               <h4>Pelepasan Aset</h4>
               {data.map((i) => (
