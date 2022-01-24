@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { Breadcrumbs, Typography } from "@material-ui/core/";
+import { Snackbar, Breadcrumbs, Typography } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import { Formik, Form as Forms, Field } from "formik";
@@ -15,6 +15,22 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function updateRole({ data }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
   const { id } = router.query;
   const api_update = "http://localhost:3000/api/role/updateRole";
@@ -30,6 +46,7 @@ export default function updateRole({ data }) {
 
   return (
     <Layout>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Head>
         <title>Update Role</title>
       </Head>
@@ -46,10 +63,13 @@ export default function updateRole({ data }) {
           let data = { ...values, id };
           Axios.put(api_update, data)
             .then(function (response) {
-              router.push("../role/tabel-role");
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push("../role/tabel-role");
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >

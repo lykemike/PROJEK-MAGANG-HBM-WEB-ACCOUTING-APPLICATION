@@ -41,7 +41,6 @@ export default async (req, res) => {
 
     res.status(201).json({
       message: "Create Reimbursement Successful!",
-      data: create_detail_reimburse,
       id: find_latest,
     });
   } catch (error) {

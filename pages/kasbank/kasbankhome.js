@@ -124,8 +124,8 @@ export default function jurnalentry({ data }) {
       id: i.id,
       kode_akun: i.kode_akun,
       nama_akun: i.nama_akun,
-      saldo_awal: i.DetailSaldoAwal[0].debit,
-      saldo_skrg: i.DetailSaldoAwal[0].sisa_saldo,
+      saldo_awal: i.DetailSaldoAwal.length > 0 ? i.DetailSaldoAwal[0].debit : "0",
+      saldo_skrg: i.DetailSaldoAwal.length > 0 ? i.DetailSaldoAwal[0].sisa_saldo : "0",
     });
   });
 

@@ -6,7 +6,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { Formik, Form as Forms } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
-
+import { useRouter } from "next/router";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import Select from "react-select";
@@ -20,6 +20,7 @@ const BuatAkunBaruSchema = Yup.object().shape({
 });
 
 export default function BuatAkunBaru({ data, data2 }) {
+  const router = useRouter();
   const url = "http://localhost:3000/api/daftar-akun/createAkun";
   const [state, setState] = useState({
     open: false,
@@ -55,8 +56,10 @@ export default function BuatAkunBaru({ data, data2 }) {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              console.log(response.data.message);
               setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`../daftar-akun/daftar-akun`);
+              }, 2000);
             })
             .catch(function (error) {
               // console.log(error.response);

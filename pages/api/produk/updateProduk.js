@@ -43,7 +43,7 @@ export default async (req, res) => {
         id: parseInt(req.body.id),
       },
       data: {
-        file_attachment: req.file.filename,
+        file_attachment: req.file == undefined ? "-" : req.file.filename,
         nama: req.body.nama,
         kategori_id: parseInt(req.body.kategori_id),
         kategori_name: req.body.kategori_name,

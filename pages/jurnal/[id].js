@@ -1,29 +1,39 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
-import Head from "next/head";
-import { Form, Row, Col, FormControl, Button, FormGroup, Table } from "react-bootstrap";
-import AddIcon from "@material-ui/icons/Add";
-import PlaylistAddIcon from "@material-ui/icons/Add";
 import Link from "next/link";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import Layout from "../../components/Layout";
+import { Form, Row, Col, FormControl, Button, Table } from "react-bootstrap";
+import { Snackbar, Typography, Breadcrumbs } from "@material-ui/core";
+import { Formik, Form as Forms, FieldArray } from "formik";
+import AddIcon from "@material-ui/icons/Add";
 import RemoveOutlinedIcon from "@material-ui/icons/RemoveOutlined";
 import * as Yup from "yup";
-import { Formik, Form as Forms, FieldArray, Field } from "formik";
-import Axios from "axios";
 import Select from "react-select";
-import Typography from "@material-ui/core/Typography";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import { useRouter } from "next/router";
+import Axios from "axios";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function create_jurnal({ data, data2 }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
 
   const url = "http://localhost:3000/api/jurnal/updateJurnal";
 
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
-  console.log(data2);
+
   return (
     <Layout>
       <Head>
@@ -48,29 +58,31 @@ export default function create_jurnal({ data, data2 }) {
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          // if (values.fileattachment.length > 0) {
-          //   Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          // }
+          if (values.fileattachment.length > 0) {
+            Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          }
 
-          Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values);
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           })
             .then(function (response) {
-              console.log(response);
-              // router.push(`view-jurnal/${idInvoice}`);
-              router.push(`view-jurnal/${response.data[0].id.id}`);
+              // console.log(response);
+              setState({ open: true, toast_message: response.data.message });
+
+              // setTimeout(() => {
+              //   router.push(`view-jurnal/${response.data.id}`);
+              // }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Jurnal</Typography>
@@ -145,6 +157,9 @@ export default function create_jurnal({ data, data2 }) {
 
                                     props.setFieldValue(`detail_jurnal.${index}.akun_nama`, e.label);
                                     props.setFieldValue((props.values.detail_jurnal[index].akun_nama = e.label));
+
+                                    props.setFieldValue(`detail_jurnal.${index}.kategori_id`, e.kategori_id);
+                                    props.setFieldValue((props.values.detail_jurnal[index].kategori_id = e.kategori_id));
                                   }}
                                 />
                               </td>
@@ -400,6 +415,7 @@ export async function getServerSideProps(context) {
     detail.push({
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
+      kategori_id: i.kategori_akun.id,
     });
   });
 

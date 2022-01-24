@@ -16,7 +16,7 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(200).json({ message: "Create user success!", data: createUser });
+    res.status(200).json({ message: "Create user success!", data: "Success" });
   } catch (error) {
     res.status(400).json({ data: "Create user failed!", error });
     console.log(error);

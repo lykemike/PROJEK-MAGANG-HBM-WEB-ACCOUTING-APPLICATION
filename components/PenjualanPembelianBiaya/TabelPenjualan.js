@@ -47,7 +47,9 @@ function CompleteInvoice(props) {
           Axios.post(api_confirm, values)
             .then(function (response) {
               setState({ open: true, toast_message: response.data.message });
-              router.reload(window.location.pathname);
+              setTimeout(() => {
+                router.reload(window.location.pathname);
+              }, 2000);
             })
             .catch(function (error) {
               setState({ open: true, toast_message: error.response.data.message });
@@ -108,7 +110,9 @@ function DeleteInvoice(props) {
     })
       .then(function (response) {
         setState({ open: true, toast_message: response.data.message });
-        router.reload(window.location.pathname);
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
         setState({ open: true, toast_message: error.response.data.message });
@@ -230,7 +234,7 @@ export default function TablePenjualan({ data, modalDelete }) {
                     {data.PenerimaanPembayaran.map((i, index) => (
                       <TableRow>
                         <TableCell style={{ minWidth: 150, width: 150 }}>Invoice #{(index += 1)}</TableCell>
-                        <TableCell style={{ minWidth: 150, width: 150 }}>{i.tgl_pembayaran}</TableCell>
+                        <TableCell style={{ minWidth: 150, width: 150 }}>{i.date}</TableCell>
                         <TableCell>{i.presentase_penagihan}%</TableCell>
 
                         <TableCell style={{ minWidth: 200, width: 200 }}>

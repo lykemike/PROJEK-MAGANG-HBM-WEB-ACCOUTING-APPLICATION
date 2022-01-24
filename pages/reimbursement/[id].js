@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../../components/layout";
 import Link from "next/link";
 import { Button, Row, Col, Form, Table } from "react-bootstrap";
@@ -15,9 +15,27 @@ import Select from "react-select";
 import { useRouter } from "next/router";
 
 import { PrismaClient } from "@prisma/client";
+import { Snackbar } from "@material-ui/core";
 const prisma = new PrismaClient();
 
 export default function updateReimbursement({ data, header, detail }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -43,16 +61,19 @@ export default function updateReimbursement({ data, header, detail }) {
       onSubmit={(values) => {
         Axios.put(api_update, values)
           .then(function (response) {
-            console.log(response);
-            router.push(`view/${response.data.id}`);
+            setState({ open: true, toast_message: response.data.message });
+            setTimeout(() => {
+              router.push(`view/${response.data.id}`);
+            }, 2000);
           })
           .catch(function (error) {
-            console.log(error);
+            setState({ open: true, toast_message: error.response.data.message });
           });
       }}
     >
       {(props) => (
         <Forms noValidate>
+          <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
           <Layout>
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">

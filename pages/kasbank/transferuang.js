@@ -6,7 +6,7 @@ import AttachmentIcon from "@material-ui/icons/Attachment";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Tables, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Tables, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
 
 import Select from "react-select";
 
@@ -30,7 +30,19 @@ const prisma = new PrismaClient();
 //   // email: Yup.string().email('Invalid email').required('Required'),
 // });
 
-export default function tranfer_uang({ data, data2, data3 }) {
+export default function tranfer_uang({ data }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
   const url = "http://localhost:3000/api/kasbank/createTransferUang";
 
@@ -53,15 +65,21 @@ export default function tranfer_uang({ data, data2, data3 }) {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              // router.push(`view-transfer/${response.data.id.id}`);
+              setState({ open: true, toast_message: response.data.message });
+
+              setTimeout(() => {
+                router.push(`view-transfer/${response.data.id.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
+
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Transaksi</Typography>

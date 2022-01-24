@@ -49,7 +49,9 @@ function CreateModal(props) {
         Axios.post(api_create_kategori, values)
           .then(function (response) {
             setState({ open: true, toast_message: response.data.message });
-            router.reload(window.location.pathname);
+            setTimeout(() => {
+              router.reload(window.location.pathname);
+            }, 2000);
           })
           .catch(function (error) {
             console.log(error);
@@ -126,7 +128,9 @@ function DeleteModal(props) {
     })
       .then(function (response) {
         setState({ open: true, toast_message: response.data.message });
-        router.reload(window.location.pathname);
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
         console.log(error);

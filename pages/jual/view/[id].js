@@ -30,7 +30,7 @@ export default function salesInvoice({ data, header }) {
     router.push(`../proforma-invoice/${id}`);
   }
 
-  const jurnal_penerimaan_pembayaran = header[0].JurnalPenerimaanPembayaran.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0);
+  const jurnal_penerimaan_pembayaran = header.JurnalPenerimaanPembayaran.filter((i) => i.tipe_saldo === "Debit").reduce((a, b) => (a = a + b.nominal), 0);
 
   return (
     <Layout>
@@ -48,7 +48,7 @@ export default function salesInvoice({ data, header }) {
             <h2 className="text-blue-600">Sales Invoice #{id}</h2>
           </Col>
           <Col sm="4">
-            <div className="d-flex justify-content-end">{header[0].sisa_tagihan > 0 ? <h3>Terbayar Sebagian</h3> : <h3 className="text-green-500">Lunas</h3>}</div>
+            <div className="d-flex justify-content-end">{header.sisa_tagihan > 0 ? <h3>Terbayar Sebagian</h3> : <h3 className="text-green-500">Lunas</h3>}</div>
           </Col>
         </Row>
       </div>
@@ -57,17 +57,17 @@ export default function salesInvoice({ data, header }) {
         <Row>
           <Col sm="4">
             <label className="font-medium mr-2">Pelanggan:</label>
-            <label>{header[0].nama_perusahaan}</label>
+            <label>{header.nama_perusahaan}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Email:</label>
-            <label>{header[0].email}</label>
+            <label>{header.email}</label>
           </Col>
 
           <Col>
             <div className="d-flex justify-content-end">
               <h3>Total Amount</h3>
-              <h3 className=" text-blue-600 ml-2">Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
+              <h3 className=" text-blue-600 ml-2">Rp. {header.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</h3>
             </div>
           </Col>
         </Row>
@@ -80,36 +80,36 @@ export default function salesInvoice({ data, header }) {
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Tanggal Mulai Kontrak:</label>
-            <label>{header[0].tgl_kontrak_mulai}</label>
+            <label>{header.tgl_kontrak_mulai}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Nomor Kontrak:</label>
-            <label>{header[0].nomor_kontrak}</label>
+            <label>{header.nomor_kontrak}</label>
           </Col>
         </Row>
 
         <Row>
           <Col sm="4">
-            <label>{header[0].alamat_penagihan}</label>
+            <label>{header.alamat_penagihan}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Tanggal Habis Kontrak:</label>
-            <label>{header[0].tgl_kontrak_expired}</label>
+            <label>{header.tgl_kontrak_expired}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Syarat Pembayaran:</label>
-            <label>{header[0].syarat_pembayaran.nama}</label>
+            <label>{header.syarat_pembayaran.nama}</label>
           </Col>
         </Row>
 
         <Row>
           <Col sm="4">
             <label className="font-medium mr-2">NPWP:</label>
-            <label>{header[0].nomor_npwp}</label>
+            <label>{header.nomor_npwp}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">No. Transaksi:</label>
-            <label>Sales Invoice #{header[0].id}</label>
+            <label>Sales Invoice #{header.id}</label>
           </Col>
           <Col sm="4" />
         </Row>
@@ -131,7 +131,7 @@ export default function salesInvoice({ data, header }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {header[0].DetailPenjualan.map((i, index) => (
+            {header.DetailPenjualan.map((i, index) => (
               <TableRow key={index}>
                 <TableCell>{i.produk_name}</TableCell>
                 <TableCell>{i.produk_deskripsi}</TableCell>
@@ -142,24 +142,24 @@ export default function salesInvoice({ data, header }) {
           <TableRow>
             <TableCell />
             <TableCell align="right">SubTotal</TableCell>
-            <TableCell>Rp. {header[0].subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+            <TableCell>Rp. {header.subtotal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell />
-            <TableCell align="right">{header[0].pajak_nama + " - " + header[0].pajak_persen + "%"}</TableCell>
-            <TableCell>Rp. {header[0].pajak_hasil.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+            <TableCell align="right">{header.pajak_nama + " - " + header.pajak_persen + "%"}</TableCell>
+            <TableCell>Rp. {header.pajak_hasil.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell />
             <TableCell align="right">Total</TableCell>
-            <TableCell>Rp. {header[0].total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+            <TableCell>Rp. {header.total.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
 
           <TableRow>
             <TableCell />
             <TableCell align="right">Sisa Tagihan</TableCell>
-            <TableCell>Rp. {header[0].sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+            <TableCell>Rp. {header.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
           </TableRow>
         </Table>
       </TableContainer>
@@ -172,7 +172,7 @@ export default function salesInvoice({ data, header }) {
           </DropdownButton>
         </Col>
         <Col sm="4">
-          {header[0].sisa_tagihan > 0 ? (
+          {header.sisa_tagihan > 0 ? (
             <Button variant="primary" onClick={pembayaran}>
               Terima Pembayaran
             </Button>
@@ -188,7 +188,7 @@ export default function salesInvoice({ data, header }) {
               </a>
             </Link>
 
-            {header[0].PenerimaanPembayaran.length > 0 ? null : (
+            {header.PenerimaanPembayaran.length > 0 ? null : (
               <Button variant="success" onClick={edit}>
                 Ubah
               </Button>
@@ -203,7 +203,7 @@ export default function salesInvoice({ data, header }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerPenjualan.findMany({
+  const header = await prisma.headerPenjualan.findFirst({
     where: {
       id: parseInt(id),
     },

@@ -42,8 +42,8 @@ export default function jurnalentry({ data, data2 }) {
 
       <div className="mt-4 mb-4">
         <Row>
-          <Col sm="3">Tanggal Transaksi: {data[0].id}</Col>
-          <Col sm="3">No. Transaksi: Journal Entry #{data[0].no_transaksi}</Col>
+          <Col sm="3">Tanggal Transaksi: {data.tgl_transaksi}</Col>
+          <Col sm="3">No. Transaksi: Journal Entry #{data.id}</Col>
         </Row>
       </div>
 
@@ -85,10 +85,10 @@ export default function jurnalentry({ data, data2 }) {
               <TableCell />
               <TableCell />
               <TableCell>
-                <Typography className="text-gray-500">Rp. {data[0].total_debit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
+                <Typography className="text-gray-500">Rp. {data.total_debit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
               </TableCell>
               <TableCell>
-                <Typography className="text-gray-500">Rp. {data[0].total_kredit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
+                <Typography className="text-gray-500">Rp. {data.total_kredit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
               </TableCell>
             </TableRow>
           </TableFooter>
@@ -109,7 +109,7 @@ export default function jurnalentry({ data, data2 }) {
 export async function getServerSideProps(context) {
   const { id } = context.query;
 
-  const header = await prisma.headerJurnal.findMany({
+  const header = await prisma.headerJurnal.findFirst({
     where: {
       id: parseInt(id),
     },

@@ -42,10 +42,11 @@ function DeleteModal(props) {
     })
       .then(function (response) {
         setState({ open: true, toast_message: response.data.message });
-        router.reload(window.location.pathname);
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
         setState({ open: true, toast_message: error.response.data.message });
       });
   };
@@ -198,11 +199,6 @@ export default function tabelProduk({ data }) {
               >
                 XLSX
               </Dropdown.Item>
-              {/* <Dropdown.Item as="button">
-                <CSVLink data={restructure(data)} filename="list_produk_jasa.csv">
-                  CSV
-                </CSVLink>
-              </Dropdown.Item> */}
             </DropdownButton>
             <Col sm="6">
               <InputGroup>

@@ -3,39 +3,46 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
-    const get_pengiriman_pembayaran = await prisma.pengirimanPembayaran.findFirst({
+    // get current penerimaan pembayaran data
+    const get_penerimaan_pembayaran = await prisma.penerimaanPembayaran.findFirst({
       where: {
         id: parseInt(req.body.id),
       },
       include: {
-        header_pembelian: true,
+        header_penjualan: true,
       },
     });
 
-    const pengiriman_pembayaran_id = get_pengiriman_pembayaran.id;
-    const header_pembelian_id = get_pengiriman_pembayaran.header_pembelian.id;
-    const tipe_perusahaan = get_pengiriman_pembayaran.header_pembelian.tipe_perusahaan;
-    const tagihan_sebelum_pajak = get_pengiriman_pembayaran.tagihan_sebelum_pajak;
-    const tagihan_setelah_pajak = get_pengiriman_pembayaran.tagihan_setelah_pajak;
-    const sisa_tagihan = get_pengiriman_pembayaran.header_pembelian.sisa_tagihan;
+    // set const for easier global use
+    const penerimaan_pembayaran_id = get_penerimaan_pembayaran.id;
+    const header_penjualan_id = get_penerimaan_pembayaran.header_penjualan.id;
+    const tipe_perusahaan = get_penerimaan_pembayaran.header_penjualan.tipe_perusahaan;
+    const tagihan_sebelum_pajak = get_penerimaan_pembayaran.tagihan_sebelum_pajak;
+    const tagihan_setelah_pajak = get_penerimaan_pembayaran.tagihan_setelah_pajak;
+    const sisa_tagihan = get_penerimaan_pembayaran.header_penjualan.sisa_tagihan;
 
+    // condition for where penjualan tipe perusahaan is false (negeri) or true (swasta)
     if (tipe_perusahaan == "false") {
+      // revert sisa tagihan
       const revert_sisa_tagihan = tagihan_sebelum_pajak + sisa_tagihan;
 
-      const update_sisa_tagihan = await prisma.headerpembelian.update({
+      // update sisa tagihan
+      const update_sisa_tagihan = await prisma.headerPenjualan.update({
         where: {
-          id: header_pembelian_id,
+          id: header_penjualan_id,
         },
         data: {
           sisa_tagihan: revert_sisa_tagihan,
         },
       });
     } else {
+      // revert sisa tagihan
       const revert_sisa_tagihan = tagihan_setelah_pajak + sisa_tagihan;
 
-      const update_sisa_tagihan = await prisma.headerPembelian.update({
+      // update sisa tagihan
+      const update_sisa_tagihan = await prisma.headerPenjualan.update({
         where: {
-          id: header_pembelian_id,
+          id: header_penjualan_id,
         },
         data: {
           sisa_tagihan: revert_sisa_tagihan,
@@ -43,12 +50,21 @@ export default async (req, res) => {
       });
     }
 
+    // delete current jurnal from laporan transaksi table
+    const delete_jurnal_penerimaan_from_laporan_transaksi = await prisma.laporanTransaksi.deleteMany({
+      where: {
+        delete_ref_no: penerimaan_pembayaran_id,
+      },
+    });
+
+    // delete current jurnal from jurnal penerimaan pemabayaran table
     const delete_jurnal_penerimaan_pembayaran = prisma.jurnalPenerimaanPembayaran.deleteMany({
       where: {
         penerimaan_pembayaran_id: penerimaan_pembayaran_id,
       },
     });
 
+    // delete current invoice from penerimaan pembayaran table
     const delete_penerimaan_pembayaran = prisma.penerimaanPembayaran.delete({
       where: {
         id: penerimaan_pembayaran_id,

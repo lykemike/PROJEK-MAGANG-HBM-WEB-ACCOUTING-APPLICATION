@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { Breadcrumbs, Typography } from "@material-ui/core/";
+import { Breadcrumbs, Typography, Snackbar } from "@material-ui/core/";
 
 import * as Yup from "yup";
 import Axios from "axios";
@@ -19,10 +19,6 @@ export default function User({ data }) {
   const router = useRouter();
   const api_create = "http://localhost:3000/api/user/createUser";
 
-  function SelectField(FieldProps) {
-    return <Select options={data} onChange={(option) => FieldProps.form.setFieldValue(FieldProps.field.name, option.value)} />;
-  }
-
   const UserSchema = Yup.object().shape({
     first_name: Yup.string().min(2, "* chracters must be more than 2").max(20, "* chracters must be less than 20").required("* required"),
     email: Yup.string().email("* must be a valid email").required("* required"),
@@ -33,6 +29,23 @@ export default function User({ data }) {
   function cancelButton() {
     router.push("../user/tabel-user");
   }
+
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
 
   return (
     <Layout>
@@ -51,16 +64,19 @@ export default function User({ data }) {
         onSubmit={async (values) => {
           Axios.post(api_create, values)
             .then(function (response) {
-              console.log(response);
-              router.push("tabel-user");
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push("tabel-user");
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Buat User Baru</Typography>

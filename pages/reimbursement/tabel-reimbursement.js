@@ -7,7 +7,7 @@ import TablePagination from "../../components/TablePagination";
 
 import { Formik, Form as Forms } from "formik";
 import { Button, Row, Col, FormControl, Modal } from "react-bootstrap";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table as Tables, TableBody, TableRow, TableCell, TableHead } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table as Tables, TableBody, TableRow, TableCell, TableHead } from "@material-ui/core";
 import { Add, Visibility, Edit, Delete, Icon, AssignmentTurnedIn } from "@material-ui/icons/";
 
 import Axios from "axios";
@@ -15,6 +15,23 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 function CompleteModal(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const api_confirm = "http://localhost:3000/api/reimbursement/confirmReimbursement";
   const router = useRouter();
 
@@ -23,16 +40,19 @@ function CompleteModal(props) {
       id: props.id,
     })
       .then(function (response) {
-        console.log(response);
-        router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Complete Confirmation</Modal.Title>
       </Modal.Header>
@@ -55,6 +75,23 @@ function CompleteModal(props) {
 }
 
 function DeleteModal(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const api_delete = "http://localhost:3000/api/reimbursement/deleteReimbursement";
   const router = useRouter();
 
@@ -65,16 +102,19 @@ function DeleteModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
@@ -231,41 +271,65 @@ export default function TabelReimbursement({ data }) {
                       )}
                     </TableCell>
                     <TableCell style={{ minWidth: 250, width: 250 }} align="right">
-                      <Button variant="success" size="sm" className="mr-2" onClick={() => setModalShow2({ open: true, id: i.id, nama: "Reimbursement #" + i.id })}>
-                        <a>
-                          <AssignmentTurnedIn className="text-white" fontSize="small" />
-                        </a>
-                      </Button>
-
-                      <Link href={`../../reimbursement/view/${i.id}`}>
-                        <a>
-                          <Button variant="info" size="sm" className="mr-2">
+                      {i.status == "Process" ? (
+                        <>
+                          {" "}
+                          <Button variant="success" size="sm" className="mr-2" onClick={() => setModalShow2({ open: true, id: i.id, nama: "Reimbursement #" + i.id })}>
                             <a>
-                              <Visibility className="text-white" fontSize="small" />
+                              <AssignmentTurnedIn className="text-white" fontSize="small" />
                             </a>
                           </Button>
-                        </a>
-                      </Link>
-
-                      <Link href={`../../reimbursement/${i.id}`}>
-                        <a>
-                          <Button variant="warning" size="sm" className="mr-2">
+                          <Link href={`../../reimbursement/view/${i.id}`}>
                             <a>
-                              <Edit className="text-white" fontSize="small" />
+                              <Button variant="info" size="sm" className="mr-2">
+                                <a>
+                                  <Visibility className="text-white" fontSize="small" />
+                                </a>
+                              </Button>
                             </a>
-                          </Button>
-                        </a>
-                      </Link>
-
-                      <Link href="#">
-                        <a>
-                          <Button variant="danger" size="sm" className="mr-2" onClick={() => setModalShow({ open: true, id: i.id, nama: "Reimbursement #" + i.id })}>
+                          </Link>
+                          <Link href={`../../reimbursement/${i.id}`}>
                             <a>
-                              <Delete className="text-white" fontSize="small" />
+                              <Button variant="warning" size="sm" className="mr-2">
+                                <a>
+                                  <Edit className="text-white" fontSize="small" />
+                                </a>
+                              </Button>
                             </a>
-                          </Button>
-                        </a>
-                      </Link>
+                          </Link>
+                          <Link href="#">
+                            <a>
+                              <Button variant="danger" size="sm" className="mr-2" onClick={() => setModalShow({ open: true, id: i.id, nama: "Reimbursement #" + i.id })}>
+                                <a>
+                                  <Delete className="text-white" fontSize="small" />
+                                </a>
+                              </Button>
+                            </a>
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Link href={`../../reimbursement/view/${i.id}`}>
+                            <a>
+                              <Button variant="info" size="sm" className="mr-2">
+                                <a>
+                                  <Visibility className="text-white" fontSize="small" />
+                                </a>
+                              </Button>
+                            </a>
+                          </Link>
+
+                          <Link href="#">
+                            <a>
+                              <Button variant="danger" size="sm" className="mr-2" onClick={() => setModalShow({ open: true, id: i.id, nama: "Reimbursement #" + i.id })}>
+                                <a>
+                                  <Delete className="text-white" fontSize="small" />
+                                </a>
+                              </Button>
+                            </a>
+                          </Link>
+                        </>
+                      )}
                     </TableCell>
                   </TableRow>
                 </TableBody>

@@ -53,7 +53,10 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
           header_penjualan_id: data.id,
           setor_ke: current.akun_id,
           nama_akun_setor: current.akun.kode_akun + " - " + current.akun.nama_akun,
-          tgl_pembayaran: current.tgl_pembayaran,
+          date: current.date,
+          hari: current.hari,
+          bulan: current.bulan,
+          tahun: current.tahun,
           pajak_keluaran: data.pajak_persen,
           deskripsi: current.deskripsi,
           pajak_id: current.pajak_id,
@@ -81,11 +84,13 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
         onSubmit={async (values) => {
           Axios.post(url, values)
             .then(function (response) {
-              setState({ open: true, toast_message: response.data[0].message });
-              router.push(`../view/${response.data[0].id}`);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                router.push(`../view/${response.data.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              setState({ open: true, toast_message: error.response.data[0].message });
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
@@ -135,7 +140,25 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5, curr
 
                 <Col sm="3">
                   <label className="font-medium">Tanggal Pembayaran</label>
-                  <Form.Control placeholder="" type="date" name="tgl_pembayaran" value={props.values.tgl_pembayaran} onChange={props.handleChange} />
+                  <Form.Control
+                    placeholder=""
+                    type="date"
+                    name="date"
+                    value={props.values.date}
+                    onChange={(e) => {
+                      props.setFieldValue(`date`, e.target.value);
+
+                      const split_date = e.target.value;
+                      const day = split_date.split("-")[2];
+                      props.setFieldValue(`hari`, day);
+
+                      const month = split_date.split("-")[1];
+                      props.setFieldValue(`bulan`, month);
+
+                      const year = split_date.split("-")[0];
+                      props.setFieldValue(`tahun`, year);
+                    }}
+                  />
                 </Col>
 
                 <Col sm="3">

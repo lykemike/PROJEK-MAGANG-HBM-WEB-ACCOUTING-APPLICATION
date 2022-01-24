@@ -4,7 +4,7 @@ import Head from "next/head";
 import Layout from "../../components/Layout";
 import { Card, Button, DropdownButton, Dropdown, InputGroup, FormControl, Col, Row, FormCheck, Pagination, Modal } from "react-bootstrap";
 import TablePagination from "../../components/TablePagination";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody } from "@material-ui/core";
 
 import { VisibilityOutlined, EditOutlined, DeleteOutline, Add, Visibility, Edit, Delete } from "@material-ui/icons/";
 import AddIcon from "@material-ui/icons/Add";
@@ -15,6 +15,18 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 function MyVerticallyCenteredModal(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
   const api_delete_jurnal = "http://localhost:3000/api/jurnal/deleteJurnal";
 
@@ -25,16 +37,20 @@ function MyVerticallyCenteredModal(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.push("tabel-jurnal");
+        setState({ open: true, toast_message: response.data.message });
+
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Journal Confirmation</Modal.Title>
       </Modal.Header>

@@ -42,7 +42,7 @@ export default async (req, res) => {
       kontak_id: parseInt(req.body.kontak_id),
       tgl_transaksi: req.body.tgl_transaksi,
       memo: req.body.memo,
-      file_attachment: "req.file.filename",
+      file_attachment: req.file == undefined ? "-" : req.file.filename,
       total: parseInt(req.body.total),
       status: "Belum terekonsiliasi",
     };
@@ -143,9 +143,9 @@ export default async (req, res) => {
       data: jurnal_kredit,
     });
 
-    res.status(201).json({ message: "Update Header, Detail, Jurnal Terima Uang Sucess!", id: find_latest });
+    res.status(201).json({ message: "Update terima uang success!", id: find_latest });
   } catch (error) {
-    res.status(400).json({ data: "Failed to update Header, Detail, Jurnal Terima Uang!", error });
+    res.status(400).json({ data: "Failed to update terima uang!", error });
     console.log(error);
   }
 };
