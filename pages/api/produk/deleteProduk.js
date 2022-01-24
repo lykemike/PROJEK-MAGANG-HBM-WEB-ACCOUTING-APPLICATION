@@ -15,7 +15,7 @@ export default async (req, res) => {
     if (get_produk.DetailPenjualan.length > 0) {
       return res.status(400).json({ message: "Failed to delete, current product has on going transaction" });
     } else {
-      const get_produk = await prisma.produk.findFirst({
+      const delete_produk = await prisma.produk.findFirst({
         where: {
           id: parseInt(req.body.id),
         },

@@ -8,7 +8,7 @@ import PemetaanKas from "../../components/KasBank/PemetaanKas";
 import { Formik, Form as Forms, FieldArray } from "formik";
 import Axios from "axios";
 import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Row, Col, FormControl, Modal, Form, Alert, Toast } from "react-bootstrap";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableSortLabel } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableSortLabel } from "@material-ui/core";
 import RotateLeftIcon from "@material-ui/icons/RotateLeft";
 import CachedIcon from "@material-ui/icons/Cached";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
@@ -74,23 +74,6 @@ function MyVerticallyCenteredModal(props) {
     </Modal>
   );
 }
-
-// function AlertDismissibleExample() {
-//   const [show, setShow] = useState(false);
-
-//   if (show) {
-//     return (
-//       <Alert variant="success" onClose={() => setShow(false)} dismissible>
-//         <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-//         <p>
-//           Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio
-//           sem nec elit. Cras mattis consectetur purus sit amet fermentum.
-//         </p>
-//       </Alert>
-//     );
-//   }
-//   return <Button onClick={() => setShow(true)}>Show Alert</Button>;
-// }
 
 export default function akundetail({ data, bank }) {
   const router = useRouter();
@@ -223,6 +206,19 @@ export default function akundetail({ data, bank }) {
     });
   };
 
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleCloseAlert = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
   const day = new Date();
   const current = day.toISOString().slice(0, 10);
 
@@ -234,12 +230,14 @@ export default function akundetail({ data, bank }) {
       current,
     })
       .then(function (response) {
-        console.log(response);
-        router.push(`../kasbank/${id}`);
-        handleClose();
+        setState({ open: true, toast_message: response.data.message });
+
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
@@ -412,6 +410,14 @@ export default function akundetail({ data, bank }) {
             <div class="mt-2">
               <div>
                 <Row className="mt-2 mb-2">
+                  <Snackbar
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    autoHideDuration={6000}
+                    open={open}
+                    onClose={handleCloseAlert}
+                    message={toast_message}
+                    key={vertical + horizontal}
+                  />
                   <Col sm="9">
                     <Button className="mr-2" variant="primary" onClick={handleShow}>
                       Import Bank Statement
@@ -421,7 +427,7 @@ export default function akundetail({ data, bank }) {
                         <CheckCircleIcon fontSize="medium" /> Rekonsilasi
                       </Button>
                     ) : null}
-                    <Modal show={show} onHide={handleClose} size="lg">
+                    <Modal show={show} size="lg">
                       <Modal.Header closeButton>
                         <Modal.Title>Import Bank Statement</Modal.Title>
                       </Modal.Header>

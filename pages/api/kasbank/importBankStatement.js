@@ -25,9 +25,9 @@ export default async (req, res) => {
       skipDuplicates: true,
     });
 
-    res.status(201).json({ message: "Import Bank Statement Success!", data: create_bank_statement });
+    res.status(201).json({ message: "Import Bank Statement Success!" });
   } catch (error) {
-    res.status(400).json({ data: "Import Bank Statement Failed!", error });
+    res.status(400).json({ data: "Failed To Import Bank Statement!", error });
     console.log(error);
   }
 };

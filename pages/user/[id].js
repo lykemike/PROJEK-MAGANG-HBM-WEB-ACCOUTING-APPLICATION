@@ -98,7 +98,7 @@ export default function update({ data, data2 }) {
                       <label className="font-medium">First Name</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control value={props.values.first_name} onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control name="first_name" value={props.values.first_name} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.first_name && props.touched.first_name ? <div className="text-red-500 text-sm">{props.errors.first_name}</div> : null}
                     </Col>
                   </Row>
@@ -108,7 +108,7 @@ export default function update({ data, data2 }) {
                       <label className="font-medium">Last Name</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control value={props.values.last_name} onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control name="last_name" value={props.values.last_name} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.last_name && props.touched.last_name ? <div className="text-red-500 text-sm">{props.errors.last_name}</div> : null}
                     </Col>
                   </Row>
@@ -118,7 +118,7 @@ export default function update({ data, data2 }) {
                       <label className="font-medium">Email</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control value={props.values.email} onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control name="email" value={props.values.email} onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.email && props.touched.email ? <div className="text-red-500 text-sm">{props.errors.email}</div> : null}
                     </Col>
                   </Row>
@@ -128,7 +128,7 @@ export default function update({ data, data2 }) {
                       <label className="font-medium">Password</label>
                     </Col>
                     <Col sm="4">
-                      <Form.Control placeholder="********" onChange={props.handleChange} onBlur={props.handleBlur} />
+                      <Form.Control name="password" placeholder="********" onChange={props.handleChange} onBlur={props.handleBlur} />
                       {props.errors.password && props.touched.password ? <div className="text-red-500 text-sm">{props.errors.password}</div> : null}
                     </Col>
                   </Row>

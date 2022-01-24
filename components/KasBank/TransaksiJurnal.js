@@ -2,13 +2,25 @@ import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
 import { Row, Col, FormControl, Modal, Button } from "react-bootstrap";
-import { Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, TableSortLabel } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography, Checkbox, Paper, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, TableSortLabel } from "@material-ui/core";
 import { VisibilityOutlined } from "@material-ui/icons/";
 import { KeyboardArrowDown, KeyboardArrowUp, Visibility, Edit, Delete, Icon, AssignmentTurnedIn } from "@material-ui/icons/";
 import { useRouter } from "next/router";
 import Axios from "axios";
 
 function DeleteKirimUang(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const api_delete = "http://localhost:3000/api/kasbank/deleteKirimUang";
   const router = useRouter();
 
@@ -19,16 +31,20 @@ function DeleteKirimUang(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
@@ -50,6 +66,18 @@ function DeleteKirimUang(props) {
 }
 
 function DeleteTerimaUang(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const api_delete = "http://localhost:3000/api/kasbank/deleteTerimaUang";
   const router = useRouter();
 
@@ -60,16 +88,20 @@ function DeleteTerimaUang(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
@@ -91,6 +123,18 @@ function DeleteTerimaUang(props) {
 }
 
 function DeleteTransferUang(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const api_delete = "http://localhost:3000/api/kasbank/deleteTransferUang";
   const router = useRouter();
 
@@ -101,16 +145,20 @@ function DeleteTransferUang(props) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.reload(window.location.pathname);
+        setState({ open: true, toast_message: response.data.message });
+
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <Modal {...props} size="md" aria-labelledby="contained-modal-title-vcenter" centered>
+      <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Delete Confirmation</Modal.Title>
       </Modal.Header>
@@ -195,7 +243,7 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
                       </Button>
                     </a>
                   </Link>
-                  <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.id, nama: "Transaksi Kirim Uang Rp. " + i.total })}>
+                  <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.id, nama: "Transaksi Kirim Uang Rp. " + i.total.toLocaleString() })}>
                     <Delete className="text-white" fontSize="small" />
                   </Button>
                 </>
@@ -217,7 +265,7 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
                       </Button>
                     </a>
                   </Link>
-                  <Button variant="danger" size="sm" onClick={() => setModalShow2({ open: true, id: i.id, nama: "Transaksi Terima Uang Rp. " + i.total })}>
+                  <Button variant="danger" size="sm" onClick={() => setModalShow2({ open: true, id: i.id, nama: "Transaksi Terima Uang Rp. " + i.total.toLocaleString() })}>
                     <Delete className="text-white" fontSize="small" />
                   </Button>
                 </>
@@ -239,7 +287,7 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
                       </Button>
                     </a>
                   </Link>
-                  <Button variant="danger" size="sm" onClick={() => setModalShow3({ open: true, id: i.id, nama: "Transaksi Transfer Uang Rp. " + i.total })}>
+                  <Button variant="danger" size="sm" onClick={() => setModalShow3({ open: true, id: i.id, nama: "Transaksi Transfer Uang Rp. " + i.total.toLocaleString() })}>
                     <Delete className="text-white" fontSize="small" />
                   </Button>
                 </>
@@ -260,7 +308,7 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
                       </Button>
                     </a>
                   </Link>
-                  <Button variant="danger" size="sm" onClick={() => setModalShow3({ open: true, id: i.id, nama: "Transaksi Transfer Uang Rp. " + i.total })}>
+                  <Button variant="danger" size="sm" onClick={() => setModalShow3({ open: true, id: i.id, nama: "Transaksi Transfer Uang Rp. " + i.total.toLocaleString() })}>
                     <Delete className="text-white" fontSize="small" />
                   </Button>
                 </>

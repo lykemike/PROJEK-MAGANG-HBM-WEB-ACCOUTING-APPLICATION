@@ -137,16 +137,14 @@ Pembelian
   * Pengiriman Pembayaran = 100%
 
 Jurnal
- * Perbaikan UI = 100%
- * Perbaikan Create, Update, Delete = 100%
+ * Perbaikan Update = 100%
 
-User & Role
- * Perbaikan UI, Validation, Modal = 100%
+User 
+ * Perbaikan Update = 100%
 
 Daftar Akun
   * Kode Akun Otomatis sesuai kategori yang di pilih = 100%
   * Perbaikan UI = 100%
-
 
 Alert's Page
  * User page = 100%
@@ -155,14 +153,36 @@ Alert's Page
  * Produk page = 100%
  * Penjualan page = 100%
    - Penerimaan Pembayaran page = 100%
- * Pembelian page = 40%
-   - Pengiriman Pembayaran page = 40%
+ * Pembelian page = 50%
+   - Pengiriman Pembayaran page = 50%
  * Reimbursement page = 100%
  * Kontak page = 100%
  * Biaya = 100%
  * Akun = 40%
+ * Kas & Bank = %
+    - Transfer page = 100%
+    - Kirim page = 100%
+    - Terima page = 100%
+    - Import Bank Statement = 100%
+    - Pemetaan Kas, Delete, Create = 
+  * Jurnal = 100%
+
+Optional File upload
+  * Jurnal create & update page = 100%
+  * Penjualan create & update page = 100%
+  * Produk = 100%
+  * Kas bank Terima Uang create & update page = 100%
+  * Kas bank Kirim Uang create & update page = 100%
+
+Database schema
+  * Jurnal penambahan field = 100%
+
+Meeting 20/01/2022
+- Database di ganti dari MySql ke Postgres = 100%
+- Terapin Soft Delete ke semua api
+- Menambah 3 kolom tambahan buat transaksi yang ada tanggal transaksi
   
-SIT 20 Bug Done
+SIT 22 Bug Done
 
 NOTES
 =================================
@@ -176,14 +196,14 @@ NOTES
 * Ketika Status Penerimaan Pembayaran DONE, invoice tersebut tidak bisa di EDIT dan DONE cuman bisa VIEW dan HAPUS
 
 TANYA
-  - optional upload file
+  DONE optional upload file
   DONE delete confirmation setelah success tidak resfresh/redirect
   DONE bug ui select2 ketika update, tampilannya ga berubah
   - show current file
   DONE cara nampilin detail saldo awal ketika kosong dan debit kredit secara bersamaan
   3/4 DONE?? menampilkan error tdk bisa hapus karena ada transaksi yg masih berkaitan, dan error lainnya
   3/4 DONE?? cara buat alert success, failed
-  - merge data yang sama
+  3/4 merge data yang sama, status aja yg berubah
   - show more than 2 items di invoice penerimaan pembayaran with one subtotal
   3/4 DONE?? ketika buat akun baru, kode akun tersebut akan terbuat otomatis tergantung kategori yg di pilih
   - autheticaion page agar user lain tidak bisa akses dengan cara mengetik url (middleware)

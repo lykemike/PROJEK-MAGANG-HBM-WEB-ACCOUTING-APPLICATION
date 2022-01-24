@@ -112,7 +112,7 @@ export default async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Update Transfer dan Jurnal Uang Success!",
+      message: "Update transfer uang success!",
       id: find_latest,
     });
   } catch (error) {

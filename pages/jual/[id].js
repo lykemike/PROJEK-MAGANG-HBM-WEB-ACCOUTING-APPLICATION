@@ -62,33 +62,35 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
 
       <Formik
         initialValues={{
-          id: header_penjualan[0].id,
-          kontak_id: header_penjualan[0].kontak_id,
-          nama_perusahaan: header_penjualan[0].nama_perusahaan,
-          email: header_penjualan[0].email,
-          alamat_penagihan: header_penjualan[0].alamat_penagihan,
-          syarat_pembayaran_id: header_penjualan[0].syarat_pembayaran_id,
-          syarat_pembayaran_nama: header_penjualan[0].syarat_pembayaran.nama,
-          nomor_npwp: header_penjualan[0].nomor_npwp,
-          nomor_kontrak: header_penjualan[0].nomor_kontrak,
-          tgl_kontrak_mulai: header_penjualan[0].tgl_kontrak_mulai,
-          tgl_kontrak_expired: header_penjualan[0].tgl_kontrak_expired,
-          custom_invoice: header_penjualan[0].custom_invoice,
-          tipe_perusahaan: header_penjualan[0].tipe_perusahaan == "false" ? false : true,
-          pesan: header_penjualan[0].pesan,
-          file_attachment: header_penjualan[0].file_attachment,
-          subtotal: header_penjualan[0].subtotal,
-          pajak_id: header_penjualan[0].pajak_id,
-          pajak_nama: header_penjualan[0].pajak_nama,
-          pajak_persen: header_penjualan[0].pajak_persen,
-          pajak_hasil: header_penjualan[0].pajak_hasil,
-          total: header_penjualan[0].total,
-          sisa_tagihan: header_penjualan[0].sisa_tagihan,
+          id: header_penjualan.id,
+          kontak_id: header_penjualan.kontak_id,
+          nama_perusahaan: header_penjualan.nama_perusahaan,
+          email: header_penjualan.email,
+          alamat_penagihan: header_penjualan.alamat_penagihan,
+          syarat_pembayaran_id: header_penjualan.syarat_pembayaran_id,
+          syarat_pembayaran_nama: header_penjualan.syarat_pembayaran.nama,
+          nomor_npwp: header_penjualan.nomor_npwp,
+          nomor_kontrak: header_penjualan.nomor_kontrak,
+          tgl_kontrak_mulai: header_penjualan.tgl_kontrak_mulai,
+          hari: header_penjualan.hari,
+          bulan: header_penjualan.bulan,
+          tahun: header_penjualan.tahun,
+          tgl_kontrak_expired: header_penjualan.tgl_kontrak_expired,
+          custom_invoice: header_penjualan.custom_invoice,
+          tipe_perusahaan: header_penjualan.tipe_perusahaan == "false" ? false : true,
+          pesan: header_penjualan.pesan,
+          file_attachment: header_penjualan.file_attachment,
+          subtotal: header_penjualan.subtotal,
+          pajak_id: header_penjualan.pajak_id,
+          pajak_nama: header_penjualan.pajak_nama,
+          pajak_persen: header_penjualan.pajak_persen,
+          pajak_hasil: header_penjualan.pajak_hasil,
+          total: header_penjualan.total,
+          sisa_tagihan: header_penjualan.sisa_tagihan,
           produks: detail_penjualan,
         }}
         validationSchema={ValidationSchema}
         onSubmit={async (values) => {
-          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "produks") {
@@ -97,8 +99,11 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.file_attachment).map((i) => formData.append("file", i));
-          console.log(values);
+
+          if (values.file_attachment.length > 0) {
+            Array.from(values.file_attachment).map((i) => formData.append("file", i));
+          }
+
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -177,14 +182,31 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
 
                   <div className="mb-2">
                     <label className="font-medium">No. Transaksi</label>
-                    <FormControl disabled placeholder={"Sales Invoice #" + header_penjualan[0].id} />
+                    <FormControl disabled placeholder={"Sales Invoice #" + header_penjualan.id} />
                   </div>
                 </Col>
 
                 <Col sm="3">
                   <div className="mb-2">
                     <label className="font-medium">Tanggal Kontrak</label>
-                    <Form.Control type="date" name="tgl_kontrak_mulai" value={props.values.tgl_kontrak_mulai} onChange={props.handleChange} />
+                    <Form.Control
+                      type="date"
+                      name="tgl_kontrak_mulai"
+                      value={props.values.tgl_kontrak_mulai}
+                      onChange={(e) => {
+                        props.setFieldValue(`tgl_kontrak_mulai`, e.target.value);
+
+                        const split_date = e.target.value;
+                        const day = split_date.split("-")[2];
+                        props.setFieldValue(`hari`, day);
+
+                        const month = split_date.split("-")[1];
+                        props.setFieldValue(`bulan`, month);
+
+                        const year = split_date.split("-")[0];
+                        props.setFieldValue(`tahun`, year);
+                      }}
+                    />
                   </div>
 
                   <div className="mb-2">
@@ -629,7 +651,7 @@ export async function getServerSideProps(context) {
     });
   });
 
-  const get_header_penjualan = await prisma.headerPenjualan.findMany({
+  const get_header_penjualan = await prisma.headerPenjualan.findFirst({
     where: {
       id: parseInt(id),
     },
@@ -641,7 +663,7 @@ export async function getServerSideProps(context) {
   });
 
   let detail_penjualan = [];
-  get_header_penjualan[0].DetailPenjualan.map((i) => {
+  get_header_penjualan.DetailPenjualan.map((i) => {
     detail_penjualan.push({
       produk_id: i.produk_id,
       produk_name: i.produk_name,

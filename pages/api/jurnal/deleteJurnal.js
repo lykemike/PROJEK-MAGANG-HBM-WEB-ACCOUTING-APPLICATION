@@ -3,6 +3,13 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
+    const delete_jurnal_from_laporan_transaksi = await prisma.laporanTransaksi.deleteMany({
+      where: {
+        no_ref: parseInt(req.body.jurnal_id),
+        sumber_transaksi: "Journal Entry",
+      },
+    });
+
     const delete_detail_jurnal = prisma.detailJurnal.deleteMany({
       where: {
         header_jurnal_id: parseInt(req.body.jurnal_id),

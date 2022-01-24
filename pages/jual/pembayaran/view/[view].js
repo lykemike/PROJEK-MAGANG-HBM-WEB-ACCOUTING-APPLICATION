@@ -59,7 +59,7 @@ export default function View({ data }) {
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Tanggal Pembayaran:</label>
-            <label>{data[0].tgl_pembayaran}</label>
+            <label>{data[0].date}</label>
           </Col>
           <Col sm="4">
             <label className="font-medium mr-2">Nomor Kontrak:</label>

@@ -199,6 +199,13 @@ export default function list({ data }) {
 
 export async function getServerSideProps() {
   const users = await prisma.user.findMany({
+    where: {
+      NOT: {
+        delete_at: {
+          equals: true,
+        },
+      },
+    },
     orderBy: [
       {
         firstName: "asc",

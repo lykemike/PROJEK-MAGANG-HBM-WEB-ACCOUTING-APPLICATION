@@ -72,7 +72,9 @@ export default function addProduk({ data, data2, data3 }) {
             formData.append(`${key}`, `${values[key]}`);
           }
 
-          Array.from(values.file_attachment).map((i) => formData.append("file", i));
+          if (values.file_attachment.length > 0) {
+            Array.from(values.file_attachment).map((i) => formData.append("file", i));
+          }
 
           Axios.post(url, formData, {
             headers: {

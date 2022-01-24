@@ -72,7 +72,8 @@ export default async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Create Trasfer dan Jurnal Uang Success!",
+      message: "Create transfer uang success!",
+      id: find_latest,
     });
   } catch (error) {
     res.status(400).json({ data: "Failed to create transfer uang!", error });

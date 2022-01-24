@@ -112,11 +112,14 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
           nomor_npwp: "",
           nomor_kontrak: "",
           tgl_kontrak_mulai: "",
+          hari: "",
+          bulan: "",
+          tahun: "",
           tgl_kontrak_expired: "",
           custom_invoice: custom_invoice,
           tipe_perusahaan: false,
           pesan: "",
-          file_attachment: "",
+          file_attachment: [],
           subtotal: 0,
           pajak_id: "",
           pajak_nama: "",
@@ -136,6 +139,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
         validationSchema={ValidationSchema}
         onSubmit={async (values) => {
           let formData = new FormData();
+
           for (var key in values) {
             if (key == "produks") {
               formData.append(`${key}`, JSON.stringify(values[key]));
@@ -143,7 +147,10 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.file_attachment).map((i) => formData.append("file", i));
+
+          if (values.file_attachment.length > 0) {
+            Array.from(values.file_attachment).map((i) => formData.append("file", i));
+          }
 
           Axios.post(url, formData, {
             headers: {
@@ -237,7 +244,24 @@ export default function penagihanpenjualan({ kontak, produk, pajak, akun_pendapa
                         <span class="ml-1 text-xs font-medium text-red-500 required-dot">{props.errors.tgl_kontrak_mulai}</span>
                       ) : null}
                     </label>
-                    <Form.Control type="date" placeholder="Auto" name="tgl_kontrak_mulai" onChange={props.handleChange} />
+                    <Form.Control
+                      type="date"
+                      placeholder="Auto"
+                      name="tgl_kontrak_mulai"
+                      onChange={(e) => {
+                        props.setFieldValue(`tgl_kontrak_mulai`, e.target.value);
+
+                        const split_date = e.target.value;
+                        const day = split_date.split("-")[2];
+                        props.setFieldValue(`hari`, day);
+
+                        const month = split_date.split("-")[1];
+                        props.setFieldValue(`bulan`, month);
+
+                        const year = split_date.split("-")[0];
+                        props.setFieldValue(`tahun`, year);
+                      }}
+                    />
                   </div>
 
                   <div className="mb-2">

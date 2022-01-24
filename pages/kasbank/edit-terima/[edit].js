@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../components/layout";
 
 import Head from "next/head";
 import { Button, Table, Row, Col, Form, InputGroup, FormControl } from "react-bootstrap";
 
-import { Breadcrumbs, Typography } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import BackspaceIcon from "@material-ui/icons/Backspace";
 import Axios from "axios";
@@ -16,6 +16,18 @@ const prisma = new PrismaClient();
 import { PrismaClient } from "@prisma/client";
 
 export default function TerimaUang({ data, data2, data3, data4 }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
   const url = "http://localhost:3000/api/kasbank/updateTerimaUang";
 
@@ -29,7 +41,7 @@ export default function TerimaUang({ data, data2, data3, data4 }) {
           tgl_transaksi: data4.tgl_transaksi,
           memo: data4.memo,
           total: data4.total,
-          fileattachment: [],
+          file_attachment: [],
           detail_terima_uang: data4.DetailTerimaUang,
         }}
         onSubmit={async (values) => {
@@ -41,7 +53,9 @@ export default function TerimaUang({ data, data2, data3, data4 }) {
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          if (values.file_attachment.length > 0) {
+            Array.from(values.file_attachment).map((i) => formData.append("file", i));
+          }
 
           Axios.post(url, formData, {
             headers: {
@@ -49,16 +63,20 @@ export default function TerimaUang({ data, data2, data3, data4 }) {
             },
           })
             .then(function (response) {
-              console.log(response);
-              router.push(`../view-terima/${response.data.id}`);
+              setState({ open: true, toast_message: response.data.message });
+
+              setTimeout(() => {
+                router.push(`../view-terima/${response.data.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <Head>
               <title>Update Terima Uang</title>
             </Head>
@@ -226,7 +244,7 @@ export default function TerimaUang({ data, data2, data3, data4 }) {
                     </Form.Group>
                   </Form.Group>
                   File Attachment <br />
-                  <Form.File type="file" name="fileattachment" onChange={(e) => props.setFieldValue("fileattachment", e.target.files)} />
+                  <Form.File type="file" name="file_attachment" onChange={(e) => props.setFieldValue("file_attachment", e.target.files)} />
                 </Col>
                 <Col sm="4" />
                 <Col sm="4">

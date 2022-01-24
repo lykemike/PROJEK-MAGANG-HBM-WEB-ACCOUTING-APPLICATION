@@ -1,8 +1,13 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL")
+// }
+
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -28,6 +33,7 @@ model User {
   password  String  @db.VarChar(20)
   role      Role    @relation(fields: [roleId], references: [id])
   roleId    Int
+
   loggedIn  Boolean @default(false)
 }
 
@@ -46,6 +52,7 @@ model RolePrivellege {
   menu    Menu    @relation(fields: [menu_id], references: [id])
   menu_id Int
   value   Boolean @default(false)
+
 }
 
 // Kategori Akun Table
@@ -134,6 +141,8 @@ model Akun {
   DetailBankStatement DetailBankStatement[]
   JurnalBankStatement JurnalBankStatement[]
   DetailPembelian     DetailPembelian[]
+
+  LaporanTransaksi  LaporanTransaksi[]
 }
 
 model HeaderSaldoAwal {
@@ -227,39 +236,20 @@ model KontakDetail {
 
 // Produk table
 model Produk {
-  id              Int    @id @default(autoincrement())
-  file_attachment String
-  nama            String
+  id                    Int             @id @default(autoincrement())
+  file_attachment       String
+  nama                  String
+  kategori              KategoriProduk  @relation(fields: [kategori_id], references: [id])
+  kategori_id           Int
+  kategori_name         String
+  deskripsi             String
+  harga                 Int
 
-  kategori      KategoriProduk @relation(fields: [kategori_id], references: [id])
-  kategori_id   Int
-  kategori_name String
-  deskripsi     String
-  harga         Int
+  akun                  Akun   @relation(fields: [akun_id], references: [id])
+  akun_id               Int
+  akun_penjualan_name   String
 
-  akun                Akun   @relation(fields: [akun_id], references: [id])
-  akun_id             Int
-  akun_penjualan_name String
-  // image              String
-  // kode_sku           String
-
-  // kategori_produk    String
-  // satuan             String
-
-  // deskripsi          String
-  // quantity           Int
-
-  // harga_beli_satuan Int
-  // pembelian         Akun @relation("akunPembelian", fields: [akun_pembelian], references: [id])
-  // akun_pembelian    Int
-
-  // harga_jual_satuan Int
-  // penjualan         Akun @relation("akunPenjualan", fields: [akun_penjualan], references: [id])
-  // akun_penjualan    Int
-  // beli_disabled     String
-  // jual_disabled     String
-
-  DetailPenjualan DetailPenjualan[]
+  DetailPenjualan       DetailPenjualan[]
 
 }
 
@@ -306,6 +296,9 @@ model HeaderPenjualan {
   nomor_npwp           String
   nomor_kontrak        String
   tgl_kontrak_mulai    String
+  hari                 Int
+  bulan                Int
+  tahun                Int
   tgl_kontrak_expired  String
   custom_invoice       String
   tipe_perusahaan      String
@@ -322,7 +315,6 @@ model HeaderPenjualan {
   status               String
 
   DetailPenjualan            DetailPenjualan[]
-  // JurnalPenjualan            JurnalPenjualan[]
   PenerimaanPembayaran       PenerimaanPembayaran[]
   JurnalPenerimaanPembayaran JurnalPenerimaanPembayaran[]
 }
@@ -339,17 +331,6 @@ model DetailPenjualan {
   produk_harga        Int
 }
 
-// // Jurnal Penjualan Table
-// model JurnalPenjualan {
-//   id                  Int             @id @default(autoincrement())
-//   header_penjualan    HeaderPenjualan @relation(fields: [header_penjualan_id], references: [id])
-//   header_penjualan_id Int
-//   akun                Akun @relation(fields: [akun_id], references: [id])
-//   akun_id             Int
-//   tipe_saldo          String
-//   nominal             Int
-// }
-
 // Penerimaan Pembayaran Table
 model PenerimaanPembayaran {
   id                  Int             @id @default(autoincrement())
@@ -358,7 +339,12 @@ model PenerimaanPembayaran {
 
   akun                  Akun       @relation(fields: [akun_id], references: [id])
   akun_id               Int
-  tgl_pembayaran        String
+  date                  String
+  timestamp             String   
+  hari                  Int
+  bulan                 Int
+  tahun                 Int
+  date_confirmation     String     @default("-")
   pajak                 Pajak      @relation(fields: [pajak_id], references: [id])
   pajak_id              Int
   pajak_nama            String
@@ -373,8 +359,8 @@ model PenerimaanPembayaran {
   bank                  DetailBank @relation(fields: [bank_id], references: [id])
   bank_id               Int
   status                String
-
   JurnalPenerimaanPembayaran JurnalPenerimaanPembayaran[]
+  
 }
 
 // Jurnal Penerimaan Pembayaran
@@ -382,7 +368,6 @@ model JurnalPenerimaanPembayaran {
   id                       Int                  @id @default(autoincrement())
   header_penjualan         HeaderPenjualan      @relation(fields: [header_penjualan_id], references: [id])
   header_penjualan_id      Int
-  tanggal                  String
   penerimaan_pembayaran    PenerimaanPembayaran @relation(fields: [penerimaan_pembayaran_id], references: [id])
   penerimaan_pembayaran_id Int
   akun                     Akun                 @relation(fields: [akun_id], references: [id])
@@ -700,6 +685,9 @@ model JurnalKirimUang {
 model HeaderJurnal {
   id            Int    @id @default(autoincrement())
   tgl_transaksi String
+  hari          Int
+  bulan         Int
+  tahun         Int
   total_debit   Int
   total_kredit  Int
   lampiran      String
@@ -713,11 +701,14 @@ model DetailJurnal {
   header_jurnal_id Int
   akun             Akun         @relation(fields: [akun_id], references: [id])
   akun_id          Int
+  kategori_id      Int
   akun_nama        String
   nominal          Int
   tipe_saldo       String
   debit            Int
   kredit           Int
+  debit_disable    Boolean
+  kredit_disable  Boolean
   deskripsi        String
 }
 
@@ -899,4 +890,25 @@ model Periode {
   nama            String
   HeaderReimburse HeaderReimburse[]
 
+}
+
+model LaporanTransaksi {
+  id                Int         @id @default(autoincrement())
+  akun              Akun        @relation(fields: [akun_id], references: [id])
+  akun_id           Int         
+  kategori_id       Int
+  timestamp         String
+  date              String
+  hari              Int
+  bulan             Int
+  tahun             Int
+
+  debit             Int
+  kredit            Int
+  sumber_transaksi  String      
+  no_ref            Int
+  delete_ref_name   String
+  delete_ref_no     Int
+  nominal_pajak     Int         @default(0)
+  
 }

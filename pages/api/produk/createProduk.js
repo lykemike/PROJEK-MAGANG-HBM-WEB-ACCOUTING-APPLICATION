@@ -1,5 +1,4 @@
 import { PrismaClient } from ".prisma/client";
-import { create } from "lodash";
 import multer from "multer";
 import { extname } from "path";
 const prisma = new PrismaClient();
@@ -38,19 +37,21 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
+    // insert data to database
     const create_produk = await prisma.produk.create({
       data: {
-        file_attachment: req.file.filename,
+        file_attachment: req.file == undefined ? "-" : req.file.filename,
         nama: req.body.nama,
         kategori_id: parseInt(req.body.kategori_id),
         kategori_name: req.body.kategori_name,
-        deskripsi: req.body.deskripsi,
+        deskripsi: req.body.deskripsi.trim().length == 0 ? "-" : req.body.deskripsi,
         harga: parseInt(req.body.harga),
         akun_id: parseInt(req.body.akun_penjualan_id),
         akun_penjualan_name: req.body.akun_penjualan_name,
       },
     });
 
+    // update product kategori when selected
     const update_kategori_produk = await prisma.kategoriProduk.update({
       where: {
         id: parseInt(req.body.kategori_id),
@@ -62,7 +63,7 @@ export default async (req, res) => {
       },
     });
 
-    res.status(201).json({ message: "Create produk produk success!", data: create_produk });
+    res.status(201).json({ message: "Create produk produk success!", create_produk });
   } catch (error) {
     res.status(400).json({ data: "Failed to create produk", error });
     console.log(error);

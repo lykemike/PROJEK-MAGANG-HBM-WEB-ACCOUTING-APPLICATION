@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../../../components/layout";
 import { Button, FormControl, InputGroup, Row, Col, Form } from "react-bootstrap";
 
-import { Breadcrumbs, Typography } from "@material-ui/core";
+import { Snackbar, Breadcrumbs, Typography } from "@material-ui/core";
 
 import Select from "react-select";
 
@@ -14,6 +14,18 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default function tranfer_uang({ data, data2 }) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const router = useRouter();
   const url = "http://localhost:3000/api/kasbank/updateTransferUang";
 
@@ -33,15 +45,20 @@ export default function tranfer_uang({ data, data2 }) {
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              router.push(`../view-transfer/${response.data.id}`);
+              setState({ open: true, toast_message: response.data.message });
+
+              setTimeout(() => {
+                router.push(`../view-transfer/${response.data.id}`);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleClose} message={toast_message} key={vertical + horizontal} />
             <div className="border-b border-gray-200">
               <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="textPrimary">Transaksi</Typography>

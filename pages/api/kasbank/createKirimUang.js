@@ -42,7 +42,7 @@ export default async (req, res) => {
       kontak_id: parseInt(req.body.kontak_id),
       tgl_transaksi: req.body.tgl_transaksi,
       memo: req.body.memo,
-      file_attachment: " req.file.filename",
+      file_attachment: req.file == undefined ? "-" : req.file.filename,
       total: parseInt(req.body.total),
       status: "Belum terekonsiliasi",
     };
