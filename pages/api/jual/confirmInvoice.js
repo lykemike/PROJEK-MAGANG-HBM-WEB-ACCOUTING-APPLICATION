@@ -47,7 +47,7 @@ export default async (req, res) => {
     const today = new Date();
     const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
-    // push data need for inserting into laporan transaksi table
+    // push data to laporan transaksi
     let jurnal = [];
     get_penerimaan_pembayaran.JurnalPenerimaanPembayaran.map((i) => {
       jurnal.push({
@@ -60,7 +60,7 @@ export default async (req, res) => {
         tahun: parseInt(year),
         debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
         kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
-        sumber_transaksi: "Sales Invoice",
+        sumber_transaksi: "Penjualan",
         no_ref: i.header_penjualan_id,
         delete_ref_no: i.penerimaan_pembayaran_id,
         delete_ref_name: "Penerimaan Pembayaran",
@@ -123,7 +123,7 @@ export default async (req, res) => {
             tahun: parseInt(year),
             debit: nominal_negeri,
             kredit: 0,
-            sumber_transaksi: "Sales Invoice",
+            sumber_transaksi: "Penjualan",
             no_ref: get_penerimaan_pembayaran.header_penjualan.id,
             delete_ref_no: get_penerimaan_pembayaran.id,
             delete_ref_name: "Penerimaan Pembayaran",
@@ -138,7 +138,7 @@ export default async (req, res) => {
             tahun: parseInt(year),
             debit: 0,
             kredit: nominal_negeri,
-            sumber_transaksi: "Sales Invoice",
+            sumber_transaksi: "Penjualan",
             no_ref: get_penerimaan_pembayaran.header_penjualan.id,
             delete_ref_no: get_penerimaan_pembayaran.id,
             delete_ref_name: "Penerimaan Pembayaran",
@@ -206,7 +206,7 @@ export default async (req, res) => {
             tahun: parseInt(year),
             debit: nominal_swasta,
             kredit: 0,
-            sumber_transaksi: "Sales Invoice",
+            sumber_transaksi: "Penjualan",
             no_ref: get_penerimaan_pembayaran.header_penjualan.id,
             delete_ref_no: get_penerimaan_pembayaran.id,
             delete_ref_name: "Penerimaan Pembayaran",
@@ -221,7 +221,7 @@ export default async (req, res) => {
             tahun: parseInt(year),
             debit: 0,
             kredit: nominal_swasta,
-            sumber_transaksi: "Sales Invoice",
+            sumber_transaksi: "Penjualan",
             no_ref: get_penerimaan_pembayaran.header_penjualan.id,
             delete_ref_no: get_penerimaan_pembayaran.id,
             delete_ref_name: "Penerimaan Pembayaran",

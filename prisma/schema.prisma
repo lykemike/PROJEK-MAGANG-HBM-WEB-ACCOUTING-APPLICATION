@@ -63,6 +63,8 @@ model Kategori {
   saldo_normal_nama String
 
   Akun Akun[]
+  DetailBiaya DetailBiaya[]
+  LaporanTransaksi LaporanTransaksi[]
 }
 
 // Tipe Akun Table
@@ -268,8 +270,7 @@ model Pajak {
 
   HeaderPembelian HeaderPembelian[]
 
-  DetailBiaya1 DetailBiaya[] @relation("pajak_masukan")
-  DetailBiaya2 DetailBiaya[] @relation("pajak_keluaran")
+  DetailBiaya DetailBiaya[]
 
 }
 
@@ -302,7 +303,7 @@ model HeaderPenjualan {
   tgl_kontrak_expired  String
   custom_invoice       String
   tipe_perusahaan      String
-  pesan                String
+  pesan                String           @default("-")
   subtotal             Int
   pajak                Pajak            @relation(fields: [pajak_id], references: [id])
   pajak_id             Int
@@ -312,7 +313,7 @@ model HeaderPenjualan {
   total                Int
   sisa_tagihan         Int
   file_attachment      String
-  status               String
+  status               String           @default("Active")
 
   DetailPenjualan            DetailPenjualan[]
   PenerimaanPembayaran       PenerimaanPembayaran[]
@@ -358,7 +359,7 @@ model PenerimaanPembayaran {
   say                   String
   bank                  DetailBank @relation(fields: [bank_id], references: [id])
   bank_id               Int
-  status                String
+  status                String      @default("Process")
   JurnalPenerimaanPembayaran JurnalPenerimaanPembayaran[]
   
 }
@@ -485,12 +486,16 @@ model HeaderBiaya {
 
   akun    Akun @relation(fields: [akun_id], references: [id])
   akun_id Int
+  kategori_id   Int
 
   tgl_transaksi        String
+  hari                  Int
+  bulan                 Int
+  tahun                 Int
   harga_termasuk_pajak String
   pajak_masukan_total  Int
   pajak_keluaran_total Int
-  memo                 String
+  memo                 String @default("-")
   file_attachment      String
   subtotal             Int
   total                Int
@@ -510,21 +515,25 @@ model DetailBiaya {
 
   akun      Akun   @relation(fields: [akun_id], references: [id])
   akun_id   Int
+  kategori  Kategori  @relation(fields: [kategori_id], references: [id])
+  kategori_id Int
   akun_nama String
-  deskripsi String
+  deskripsi String @default("-")
+  
+  pajak     Pajak? @relation(fields: [pajak_id], references: [id])
+  pajak_id  Int?
 
-  pajak_masukan           Pajak?  @relation("pajak_masukan", fields: [pajak_masukan_id], references: [id])
   pajak_masukan_id        Int?
-  pajak_masukan_nama      String?
-  pajak_masukan_persen    Int?
-  pajak_masukan_per_baris Int?
+  kategori_id_masukan     Int?
+  pajak_masukan_nama      String 
+  pajak_masukan_persen    Int 
+  pajak_masukan_per_baris Int 
 
-
-  pajak_keluaran           Pajak?  @relation("pajak_keluaran", fields: [pajak_keluaran_id], references: [id])
   pajak_keluaran_id        Int?
-  pajak_keluaran_nama      String?
-  pajak_keluaran_persen    Int?
-  pajak_keluaran_per_baris Int?
+  kategori_id_keluaran     Int?
+  pajak_keluaran_nama      String 
+  pajak_keluaran_persen    Int 
+  pajak_keluaran_per_baris Int 
 
   jumlah                  Int
   termasuk_jumlah         Int
@@ -584,10 +593,13 @@ model TransferUang {
   akun_setor    Akun   @relation("akunSetorTransfer", fields: [akun_setor_id], references: [id])
   akun_setor_id Int
   total         Int
-  memo          String
+  memo          String @default("-")
   tgl_transaksi String
+  hari          Int
+  bulan         Int
+  tahun         Int
   tag           String
-  status        String
+  status        String   @default("Belum terekonsiliasi")
 
   JurnalTransferUang JurnalTransferUang[]
 }
@@ -611,12 +623,15 @@ model HeaderTerimaUang {
   akun_setor_id Int
 
   tgl_transaksi String
+  hari          Int
+  bulan         Int
+  tahun         Int
 
-  memo            String
+  memo            String @default("-")
   file_attachment String?
   total           Int
 
-  status String
+  status String   @default("Belum terekonsiliasi")
 
   DetailTerimaUang DetailTerimaUang[]
   JurnalTerimaUang JurnalTerimaUang[]
@@ -629,6 +644,7 @@ model DetailTerimaUang {
 
   akun      Akun   @relation(fields: [akun_id], references: [id])
   akun_id   Int
+  kategori_id  Int
   nama_akun String
   deskripsi String
   jumlah    Int
@@ -652,10 +668,14 @@ model HeaderKirimUang {
   kontak          Kontak @relation(fields: [kontak_id], references: [id])
   kontak_id       Int
   tgl_transaksi   String
-  memo            String
+  hari            Int
+  bulan           Int
+  tahun           Int
+
+  memo            String @default("-")
   file_attachment String
   total           Int
-  status          String
+  status          String @default("Belum terekonsiliasi")
 
   DetailKirimUang DetailKirimUang[]
   JurnalKirimUang JurnalKirimUang[]
@@ -667,6 +687,7 @@ model DetailKirimUang {
   header_kirim_uang_id Int
   akun                 Akun            @relation(fields: [akun_id], references: [id])
   akun_id              Int
+  kategori_id          Int
   nama_akun            String
   deskripsi            String
   jumlah               Int
@@ -895,7 +916,8 @@ model Periode {
 model LaporanTransaksi {
   id                Int         @id @default(autoincrement())
   akun              Akun        @relation(fields: [akun_id], references: [id])
-  akun_id           Int         
+  akun_id           Int 
+  kategori          Kategori    @relation(fields: [kategori_id], references: [id])        
   kategori_id       Int
   timestamp         String
   date              String

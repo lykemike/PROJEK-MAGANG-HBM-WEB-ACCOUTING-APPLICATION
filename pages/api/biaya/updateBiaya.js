@@ -37,13 +37,28 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
+    // get date from input, then split into DD:MM:YYYY
+    const confirm_date = req.body.tgl_transaksi;
+    const day = confirm_date.split("-")[2];
+    const month = confirm_date.split("-")[1];
+    const year = confirm_date.split("-")[0];
+
+    // get current timestamp 25 hour format
+    const today = new Date();
+    const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    // set header biaya id
+    const header_biaya_id = parseInt(req.body.id);
+
+    // find header biaya
     const find_header_biaya = await prisma.headerBiaya.findFirst({
       where: {
-        id: parseInt(req.body.id),
+        id: header_biaya_id,
       },
     });
 
-    const find_old_akun = await prisma.detailSaldoAwal.findFirst({
+    // find akun saldo awal
+    const find_akun = await prisma.detailSaldoAwal.findFirst({
       where: {
         akun_id: find_header_biaya.akun_id,
       },
@@ -54,10 +69,11 @@ export default async (req, res) => {
         akun_id: find_header_biaya.akun_id,
       },
       data: {
-        sisa_saldo: find_old_akun.sisa_saldo + parseInt(req.body.total),
+        sisa_saldo: find_akun.sisa_saldo + parseInt(req.body.total),
       },
     });
 
+    // get data from front end
     const frontend_data = {
       akun_id: parseInt(req.body.akun_id),
       tgl_transaksi: req.body.tgl_transaksi,
@@ -86,8 +102,6 @@ export default async (req, res) => {
       },
     });
 
-    const header_biaya_id = parseInt(req.body.id);
-
     const update_header_biaya = await prisma.headerBiaya.updateMany({
       where: {
         id: header_biaya_id,
@@ -108,18 +122,23 @@ export default async (req, res) => {
       detail.push({
         header_biaya_id: header_biaya_id,
         akun_id: parseInt(i.akun_id),
+        kategori_id: parseInt(i.kategori_id),
         akun_nama: i.akun_nama,
         deskripsi: i.deskripsi,
 
-        pajak_masukan_id: i.pajak_masukan_id == null || i.pajak_masukan_id == "" ? null : parseInt(i.pajak_masukan_id),
-        pajak_masukan_nama: i.pajak_masukan_nama == "" ? "-" : i.pajak_masukan_nama,
-        pajak_masukan_persen: i.pajak_masukan_persen == "" || i.pajak_masukan_persen == 0 ? 0 : parseInt(i.pajak_masukan_persen),
-        pajak_masukan_per_baris: i.pajak_masukan_per_baris == "" || i.pajak_masukan_per_baris == 0 ? 0 : parseInt(i.pajak_masukan_per_baris),
+        pajak_id: i.pajak_id == "" || i.pajak_id == null ? null : parseInt(i.pajak_id),
 
-        pajak_keluaran_id: i.pajak_keluaran_id == null || i.pajak_keluaran_id == "" ? null : parseInt(i.pajak_keluaran_id),
+        pajak_masukan_id: i.pajak_masukan_id == "" || i.pajak_masukan_id == null ? null : parseInt(i.pajak_masukan_id),
+        kategori_id_masukan: i.kategori_id_masukan == "" || i.kategori_id_masukan == null ? null : parseInt(i.kategori_id_masukan),
+        pajak_masukan_nama: i.pajak_masukan_nama == "" ? "-" : i.pajak_masukan_nama,
+        pajak_masukan_persen: i.pajak_masukan_persen == "" ? 0 : parseInt(i.pajak_masukan_persen),
+        pajak_masukan_per_baris: i.pajak_masukan_per_baris == "" ? 0 : parseInt(i.pajak_masukan_per_baris),
+
+        pajak_keluaran_id: i.pajak_keluaran_id == "" || i.pajak_keluaran_id == null ? null : parseInt(i.pajak_keluaran_id),
+        kategori_id_keluaran: i.kategori_id_keluaran == "" || i.kategori_id_keluaran == null ? null : parseInt(i.kategori_id_keluaran),
         pajak_keluaran_nama: i.pajak_keluaran_nama == "" ? "-" : i.pajak_keluaran_nama,
-        pajak_keluaran_persen: i.pajak_keluaran_persen == "" || i.pajak_keluaran_persen == 0 ? 0 : parseInt(i.pajak_keluaran_persen),
-        pajak_keluaran_per_baris: i.pajak_keluaran_per_baris == "" || i.pajak_keluaran_per_baris == 0 ? 0 : parseInt(i.pajak_keluaran_per_baris),
+        pajak_keluaran_persen: i.pajak_keluaran_persen == "" ? 0 : parseInt(i.pajak_keluaran_persen),
+        pajak_keluaran_per_baris: i.pajak_keluaran_per_baris == "" ? 0 : parseInt(i.pajak_keluaran_per_baris),
 
         jumlah: parseInt(i.jumlah),
         termasuk_jumlah: parseInt(i.termasuk_jumlah),
@@ -236,7 +255,117 @@ export default async (req, res) => {
       });
     }
 
-    const mess = "Update biaya success";
+    // delete old jurnal from laporan transaksi
+    const delete_old_jurnal_from_laporan_transaksi = await prisma.laporanTransaksi.deleteMany({
+      where: {
+        delete_ref_name: "Expense",
+        delete_ref_no: header_biaya_id,
+      },
+    });
+
+    // push data to laporan transaksi
+    let laporan_transaksi = [];
+    req.body.detail_biaya &&
+      JSON.parse(req.body.detail_biaya).map((i) => {
+        laporan_transaksi.push({
+          akun_id: parseInt(i.akun_id),
+          kategori_id: parseInt(i.kategori_id),
+          timestamp: current_time,
+          date: req.body.tgl_transaksi,
+          hari: parseInt(day),
+          bulan: parseInt(month),
+          tahun: parseInt(year),
+          debit: parseInt(i.jumlah),
+          kredit: 0,
+          sumber_transaksi: "Biaya",
+          no_ref: header_biaya_id,
+          delete_ref_no: header_biaya_id,
+          delete_ref_name: "Expense",
+        });
+      });
+
+    // push data pajak masukan to laporan transaksi
+    let laporan_transaksi_pajak_masukan = [];
+    req.body.detail_biaya &&
+      JSON.parse(req.body.detail_biaya).map((i) => {
+        if (i.kategori_id_masukan == "" || i.kategori_id_masukan == null) {
+        } else {
+          laporan_transaksi_pajak_masukan.push({
+            akun_id: i.pajak_masukan_id,
+            kategori_id: parseInt(i.kategori_id_masukan),
+            timestamp: current_time,
+            date: req.body.tgl_transaksi,
+            hari: parseInt(day),
+            bulan: parseInt(month),
+            tahun: parseInt(year),
+            debit: parseInt(i.pajak_masukan_per_baris),
+            kredit: 0,
+            sumber_transaksi: "Biaya",
+            no_ref: header_biaya_id,
+            delete_ref_no: header_biaya_id,
+            delete_ref_name: "Expense",
+          });
+        }
+      });
+
+    // push data pajak keluaran to laporan transaksi
+    let laporan_transaksi_pajak_keluaran = [];
+    req.body.detail_biaya &&
+      JSON.parse(req.body.detail_biaya).map((i) => {
+        if (i.kategori_id_keluaran == "" || i.kategori_id_keluaran == null) {
+        } else {
+          laporan_transaksi_pajak_keluaran.push({
+            akun_id: i.pajak_keluaran_id,
+            kategori_id: parseInt(i.kategori_id_keluaran),
+            timestamp: current_time,
+            date: req.body.tgl_transaksi,
+            hari: parseInt(day),
+            bulan: parseInt(month),
+            tahun: parseInt(year),
+            debit: 0,
+            kredit: parseInt(i.pajak_keluaran_per_baris),
+            sumber_transaksi: "Biaya",
+            no_ref: header_biaya_id,
+            delete_ref_no: header_biaya_id,
+            delete_ref_name: "Expense",
+          });
+        }
+      });
+
+    // push data to laporan transaksi kredit
+    let laporan_transaksi_kredit = [];
+    laporan_transaksi_kredit.push({
+      akun_id: parseInt(req.body.akun_id),
+      kategori_id: 3,
+      timestamp: current_time,
+      date: req.body.tgl_transaksi,
+      hari: parseInt(day),
+      bulan: parseInt(month),
+      tahun: parseInt(year),
+      debit: 0,
+      kredit: parseInt(req.body.total),
+      sumber_transaksi: "Biaya",
+      no_ref: header_biaya_id,
+      delete_ref_no: header_biaya_id,
+      delete_ref_name: "Expense",
+    });
+
+    // insert data to laporan transaksi table
+    const create_laporan_transaksi_1 = await prisma.laporanTransaksi.createMany({
+      data: laporan_transaksi,
+    });
+
+    const create_laporan_transaksi_2 = await prisma.laporanTransaksi.createMany({
+      data: laporan_transaksi_pajak_masukan,
+    });
+
+    const create_laporan_transaksi_3 = await prisma.laporanTransaksi.createMany({
+      data: laporan_transaksi_pajak_keluaran,
+    });
+
+    const create_laporan_transaksi_4 = await prisma.laporanTransaksi.createMany({
+      data: laporan_transaksi_kredit,
+    });
 
     res.status(201).json({ message: "Update biaya success!", id: header_biaya_id });
   } catch (error) {

@@ -3,18 +3,24 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
+    // set header biaya id
+    const header_biaya_id = parseInt(req.body.header_biaya_id);
+
+    // find header biaya id
     const find_header_biaya_total = await prisma.headerBiaya.findFirst({
       where: {
-        id: parseInt(req.body.header_biaya_id),
+        id: header_biaya_id,
       },
     });
 
+    // find saldo skrg
     const find_saldo_skrg = await prisma.detailSaldoAwal.findFirst({
       where: {
         akun_id: find_header_biaya_total.akun_id,
       },
     });
 
+    // revert saldo
     const revert_saldo = await prisma.detailSaldoAwal.update({
       where: {
         akun_id: find_header_biaya_total.akun_id,
@@ -24,25 +30,36 @@ export default async (req, res) => {
       },
     });
 
-    const delete_jurnal_biaya = prisma.jurnalBiaya.deleteMany({
+    // delete jurnal from laporan transaksi
+    const delete_jurnal_1 = prisma.laporanTransaksi.deleteMany({
       where: {
-        header_biaya_id: parseInt(req.body.header_biaya_id),
+        delete_ref_name: "Expense",
+        delete_ref_no: header_biaya_id,
       },
     });
 
-    const delete_detail_biaya = prisma.detailBiaya.deleteMany({
+    // delete jurnal from jurnal biaya
+    const delete_jurnal_2 = prisma.jurnalBiaya.deleteMany({
       where: {
-        header_biaya_id: parseInt(req.body.header_biaya_id),
+        header_biaya_id: header_biaya_id,
       },
     });
 
-    const delete_header_biaya = prisma.headerBiaya.deleteMany({
+    // delete detail biaya from detail biaya
+    const delete_detail = prisma.detailBiaya.deleteMany({
       where: {
-        id: parseInt(req.body.header_biaya_id),
+        header_biaya_id: header_biaya_id,
       },
     });
 
-    const transaction = await prisma.$transaction([delete_jurnal_biaya, delete_detail_biaya, delete_header_biaya]);
+    // delete header from header biaya
+    const delete_header = prisma.headerBiaya.deleteMany({
+      where: {
+        id: header_biaya_id,
+      },
+    });
+
+    const transaction = await prisma.$transaction([delete_jurnal_1, delete_jurnal_2, delete_detail, delete_header]);
     res.status(201).json({ message: "Delete biaya success!", data: transaction });
   } catch (error) {
     res.status(400).json({ data: "Delete biaya failed!", error });

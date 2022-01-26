@@ -54,6 +54,7 @@ export default async (req, res) => {
     const delete_jurnal_penerimaan_from_laporan_transaksi = await prisma.laporanTransaksi.deleteMany({
       where: {
         delete_ref_no: penerimaan_pembayaran_id,
+        delete_ref_name: "Penerimaan Pembayaran",
       },
     });
 

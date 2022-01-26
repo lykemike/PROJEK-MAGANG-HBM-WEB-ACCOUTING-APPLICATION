@@ -56,6 +56,7 @@ export default function kirim_uang({ data, data2, data3 }) {
           detail_kirim_uang: [
             {
               akun_id: "",
+              kategori_id: "",
               nama_akun: "",
               deskripsi: "-",
               jumlah: 0,
@@ -187,6 +188,7 @@ export default function kirim_uang({ data, data2, data3 }) {
                               onChange={(e) => {
                                 props.setFieldValue(`detail_kirim_uang.${index}.akun_id`, e.value);
                                 props.setFieldValue(`detail_kirim_uang.${index}.nama_akun`, e.label);
+                                props.setFieldValue(`detail_kirim_uang.${index}.kategori_id`, e.kategori_id);
                               }}
                             />
                           </td>
@@ -322,6 +324,7 @@ export async function getServerSideProps() {
     akun_utang.push({
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
+      kategori_id: i.kategoriId,
     })
   );
 
