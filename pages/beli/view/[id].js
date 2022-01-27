@@ -10,7 +10,6 @@ const prisma = new PrismaClient();
 export default function purchaseInvoice({ header, data }) {
   const router = useRouter();
   const { id } = router.query;
-  console.log(data);
 
   function pembayaran() {
     router.push(`../pembayaran/${id}`);

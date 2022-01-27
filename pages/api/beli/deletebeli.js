@@ -3,6 +3,12 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
+    const delete_jurnal_pembelian_from_laporan_transaksi = prisma.laporanTransaksi.deleteMany({
+      where: {
+        delete_ref_no: parseInt(req.body.header_pembelian_id),
+        delete_ref_name: "Purchase Invoice",
+      },
+    });
     // const transaction = req.body.header_pembelian_id;
     const delete_jurnal_pengiriman_pembayaran = prisma.jurnalPengirimanBayaran.deleteMany({
       where: {
@@ -35,15 +41,16 @@ export default async (req, res) => {
     });
 
     const transaction = await prisma.$transaction([
+      delete_jurnal_pembelian_from_laporan_transaksi,
       delete_jurnal_pengiriman_pembayaran,
       delete_pengiriman_pembayaran,
       delete_jurnal_pembelian,
       delete_detail_pembelian,
       delete_header_pembelian,
     ]);
-    res.status(201).json({ message: "Delete penjualan success!", data: transaction });
+    res.status(201).json({ message: "Delete pembelian success!" });
   } catch (error) {
-    res.status(400).json({ data: "Delete penjualan failed!", error });
+    res.status(400).json({ data: "Delete pembelian failed!", error });
     console.log(error);
   }
 };

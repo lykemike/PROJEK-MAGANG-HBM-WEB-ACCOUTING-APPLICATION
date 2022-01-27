@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PrismaClient } from "@prisma/client";
+import { Snackbar } from "@material-ui/core";
 import Head from "next/head";
 import Link from "next/link";
 import Axios from "axios";
@@ -22,8 +23,22 @@ export default function catatan_pelepasan_aset({ data, data2, data3, data4, data
   const tipe = data6 > data7 ? "kredit" : "debit";
   const depo_id = data[0].akun.id;
 
-  console.log(data[0].akun.id);
-  console.log(tipe);
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   return (
     <Layout>
       <Formik
@@ -38,15 +53,26 @@ export default function catatan_pelepasan_aset({ data, data2, data3, data4, data
           console.log(values);
           Axios.post(url, values)
             .then(function (response) {
-              console.log(response);
-              // router.push(``);
+              setState({ open: true, toast_message: response.data.message });
+              setTimeout(() => {
+                console.log(response); // router.push(``);
+              }, 2000);
             })
             .catch(function (error) {
-              console.log(error);
+              setState({ open: true, toast_message: error.response.data.message });
             });
-        }}>
+        }}
+      >
         {(props) => (
           <Forms noValidate>
+            <Snackbar
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={6000}
+              open={open}
+              onClose={handleClose}
+              message={toast_message}
+              key={vertical + horizontal}
+            />
             <div variant="container">
               <Row>
                 <Col>
@@ -114,7 +140,8 @@ export default function catatan_pelepasan_aset({ data, data2, data3, data4, data
                           as="select"
                           onChange={(e) => {
                             props.setFieldValue(`nama_akun_untungrugi`, e.target.value);
-                          }}>
+                          }}
+                        >
                           <option value="kosong">kosong</option>
                           {data4.map((i) => (
                             <option key={i.id} value={i.id}>
@@ -129,7 +156,8 @@ export default function catatan_pelepasan_aset({ data, data2, data3, data4, data
                           as="select"
                           onChange={(e) => {
                             props.setFieldValue(`nama_akun_untungrugi`, e.target.value);
-                          }}>
+                          }}
+                        >
                           <option value="kosong">kosong</option>
                           {data5.map((i) => (
                             <option key={i.id} value={i.id}>

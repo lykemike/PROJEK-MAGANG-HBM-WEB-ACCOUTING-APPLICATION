@@ -16,12 +16,15 @@ import {
 } from "react-bootstrap";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-
+import Axios from "../../utils/axios";
 export default function laporanbukubesar({ header }) {
   const tgl_mulai = useRef(null);
   const tgl_akhir = useRef(null);
+  const [buku_besar, setBukuBesar] = useState([]);
   const onClick = () => {
-    // Axios.get()
+    Axios.get("/laporan/bukuBesar").then((response) => {
+      setBukuBesar(response.data?.data);
+    });
   };
 
   const [page, setPage] = useState(0);
@@ -164,11 +167,11 @@ export async function getServerSideProps() {
       kategoriId: "asc",
     },
     include: {
-      JurnalPenjualan: {
-        include: {
-          header_penjualan: true,
-        },
-      },
+      // JurnalPenjualan: {
+      //   include: {
+      //     header_penjualan: true,
+      //   },
+      // },
       // DetailJurnal: {
       //   include: {
       //     header_jurnal: true

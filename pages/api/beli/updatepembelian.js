@@ -37,6 +37,12 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
+    // get date from input, then split into DD:MM:YYYY
+    const confirm_date = req.body.tgl_transaksi;
+    const day = confirm_date.split("-")[2];
+    const month = confirm_date.split("-")[1];
+    const year = confirm_date.split("-")[0];
+
     const frontend_data = {
       kontak_id: parseInt(req.body.kontak_id),
       nama_supplier: req.body.nama_supplier,
@@ -44,6 +50,9 @@ export default async (req, res) => {
       alamat_perusahaan: req.body.alamat_perusahaan,
       akun_hutang_supplier_id: parseInt(req.body.akun_hutang_supp),
       tgl_transaksi: req.body.tgl_transaksi,
+      hari: parseInt(day),
+      bulan: parseInt(month),
+      tahun: parseInt(year),
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
       syarat_pembayaran_id: parseInt(req.body.syarat_pembayaran_id),
       syarat_pembayaran_nama: req.body.syarat_pembayaran_nama,
@@ -51,7 +60,7 @@ export default async (req, res) => {
       no_transaksi: parseInt(req.body.no_transaksi),
       memo: req.body.memo,
 
-      file_attachment: req.file.filename,
+      file_attachment: req.file == undefined ? "-" : req.file.filename,
       subtotal: parseInt(req.body.subtotal),
       total_diskon: parseInt(req.body.total_diskon),
       pajak_id: parseInt(req.body.pajak_id),
@@ -143,7 +152,48 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json([{ message: "Update pembelian success!", data: create_kredit_jurnal }]);
+    // get current timestamp 24 hour format
+    const today = new Date();
+    const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    const find_jurnal_pembelian = await prisma.jurnalPembelian.findMany({
+      where: {
+        header_pembelian_id: parseInt(req.body.no_transaksi),
+      },
+      include: { akun: true },
+    });
+
+    let jurnal = [];
+    find_jurnal_pembelian.map((i) => {
+      jurnal.push({
+        akun_id: i.akun_id,
+        kategori_id: i.akun.kategoriId,
+        timestamp: current_time,
+        date: req.body.tgl_transaksi,
+        hari: parseInt(day),
+        bulan: parseInt(month),
+        tahun: parseInt(year),
+        debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
+        kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
+        sumber_transaksi: "Purchase Invoice",
+        no_ref: i.header_pembelian_id,
+        delete_ref_no: i.header_pembelian_id,
+        delete_ref_name: "Purchase Invoice",
+      });
+    });
+
+    const delete_jurnal_pembelian = await prisma.laporanTransaksi.deleteMany({
+      where: {
+        delete_ref_no: parseInt(req.body.no_transaksi),
+        delete_ref_name: "Purchase Invoice",
+      },
+    });
+
+    // create laporan transaski
+    const create_laporan_transaksi = await prisma.laporanTransaksi.createMany({
+      data: jurnal,
+    });
+    res.status(201).json({ message: "Update pembelian success!" });
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

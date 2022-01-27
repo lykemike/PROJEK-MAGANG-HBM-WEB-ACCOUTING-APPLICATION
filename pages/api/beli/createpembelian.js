@@ -44,13 +44,16 @@ export default async (req, res) => {
       alamat_perusahaan: req.body.alamat_perusahaan,
       akun_hutang_supplier_id: parseInt(req.body.akun_hutang_supp),
       tgl_transaksi: req.body.tgl_transaksi,
+      hari: parseInt(req.body.hari),
+      bulan: parseInt(req.body.bulan),
+      tahun: parseInt(req.body.tahun),
       tgl_jatuh_tempo: req.body.tgl_jatuh_tempo,
       syarat_pembayaran_id: parseInt(req.body.syarat_pembayaran_id),
       syarat_pembayaran_nama: req.body.syarat_pembayaran_nama,
       no_ref_penagihan: req.body.no_ref_penagihan,
       no_transaksi: parseInt(req.body.no_transaksi),
       memo: req.body.memo,
-      file_attachment: req.file.filename,
+      file_attachment: req.file == undefined ? "-" : req.file.filename,
       subtotal: parseInt(req.body.subtotal),
       total_diskon: parseInt(req.body.total_diskon),
       pajak_id: parseInt(req.body.pajak_id),
@@ -146,12 +149,44 @@ export default async (req, res) => {
       ],
     });
 
-    res.status(201).json([
-      {
-        message: "Create Pembelian Success!",
-        id: find_latest,
+    // get current timestamp 24 hour format
+    const today = new Date();
+    const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    const find_jurnal_pembelian = await prisma.jurnalPembelian.findMany({
+      where: {
+        header_pembelian_id: find_latest.id,
       },
-    ]);
+      include: { akun: true },
+    });
+    let jurnal = [];
+    find_jurnal_pembelian.map((i) => {
+      jurnal.push({
+        akun_id: i.akun_id,
+        kategori_id: i.akun.kategoriId,
+        timestamp: current_time,
+        date: req.body.tgl_transaksi,
+        hari: parseInt(req.body.hari),
+        bulan: parseInt(req.body.bulan),
+        tahun: parseInt(req.body.tahun),
+        debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
+        kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
+        sumber_transaksi: "Purchase Invoice",
+        no_ref: i.header_pembelian_id,
+        delete_ref_no: i.header_pembelian_id,
+        delete_ref_name: "Purchase Invoice",
+      });
+    });
+
+    // create laporan transaski
+    const create_laporan_transaksi = await prisma.laporanTransaksi.createMany({
+      data: jurnal,
+    });
+
+    res.status(201).json({
+      message: "Create Pembelian Success!",
+      id: find_latest,
+    });
   } catch (error) {
     res.status(400).json([{ data: "Failed!", error }]);
     console.log(error);

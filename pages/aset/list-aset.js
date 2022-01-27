@@ -1,18 +1,8 @@
-import React from "react";
+import { Snackbar } from "@material-ui/core";
+import React, { useState } from "react";
 import Link from "next/link";
 import Layout from "../../components/Layout";
-import {
-  Tabs,
-  Tab,
-  Card,
-  Button,
-  DropdownButton,
-  Dropdown,
-  Table,
-  Row,
-  Col,
-  Form,
-} from "react-bootstrap";
+import { Tabs, Tab, Card, Button, DropdownButton, Dropdown, Table, Row, Col, Form } from "react-bootstrap";
 import Tables from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -33,6 +23,22 @@ import Axios from "axios";
 export default function listaset({ data }) {
   const deleteAset = "http://localhost:3000/api/aset/deleteAset";
 
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
+
+  const { vertical, horizontal, open, toast_message } = state;
+
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
   const handleDelete = async (id) => {
     Axios.delete(deleteAset, {
       data: {
@@ -40,16 +46,26 @@ export default function listaset({ data }) {
       },
     })
       .then(function (response) {
-        console.log(response);
-        router.push("add-aset");
+        setState({ open: true, toast_message: response.data.message });
+        setTimeout(() => {
+          router.push("add-aset");
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
   return (
     <div>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={6000}
+        open={open}
+        onClose={handleClose}
+        message={toast_message}
+        key={vertical + horizontal}
+      />
       <Layout>
         <div class="text-md font-medium text-gray-900 mb-2">
           <div className="border-b border-gray-200">
@@ -96,45 +112,28 @@ export default function listaset({ data }) {
                     <TableHead className="bg-dark">
                       <TableRow>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Tanggal Akuisisi
-                          </Typography>
+                          <Typography className="text-white font-bold">Tanggal Akuisisi</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Nomor
-                          </Typography>
+                          <Typography className="text-white font-bold">Nomor</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Nama Aset
-                          </Typography>
+                          <Typography className="text-white font-bold">Nama Aset</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Biaya Akuisisi
-                          </Typography>
+                          <Typography className="text-white font-bold">Biaya Akuisisi</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Tag
-                          </Typography>
+                          <Typography className="text-white font-bold">Tag</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Masa Manfaat
-                          </Typography>
+                          <Typography className="text-white font-bold">Masa Manfaat</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Nilai/Tahun
-                          </Typography>
+                          <Typography className="text-white font-bold">Nilai/Tahun</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography
-                            className="text-white font-bold"
-                            align="right"
-                          >
+                          <Typography className="text-white font-bold" align="right">
                             Actions
                           </Typography>
                         </TableCell>
@@ -154,15 +153,8 @@ export default function listaset({ data }) {
                           <TableCell>{i.masa_manfaat}</TableCell>
                           <TableCell>{i.masa_manfaat}</TableCell>
                           <TableCell align="right">
-                            <EditOutlinedIcon
-                              color="action"
-                              fontSize="small"
-                              className="mr-2"
-                            />
-                            <DeleteOutlineIcon
-                              color="secondary"
-                              fontSize="small"
-                            />
+                            <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                            <DeleteOutlineIcon color="secondary" fontSize="small" />
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -182,44 +174,28 @@ export default function listaset({ data }) {
                     <TableHead className="bg-dark">
                       <TableRow>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Tanggal
-                          </Typography>
+                          <Typography className="text-white font-bold">Tanggal</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Tindakan
-                          </Typography>
+                          <Typography className="text-white font-bold">Tindakan</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Transaksi
-                          </Typography>
+                          <Typography className="text-white font-bold">Transaksi</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Nomor
-                          </Typography>
+                          <Typography className="text-white font-bold">Nomor</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Nomor Akun
-                          </Typography>
+                          <Typography className="text-white font-bold">Nomor Akun</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Nama Akun
-                          </Typography>
+                          <Typography className="text-white font-bold">Nama Akun</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Debit
-                          </Typography>
+                          <Typography className="text-white font-bold">Debit</Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography className="text-white font-bold">
-                            Kredit
-                          </Typography>
+                          <Typography className="text-white font-bold">Kredit</Typography>
                         </TableCell>
                       </TableRow>
                     </TableHead>
@@ -237,15 +213,8 @@ export default function listaset({ data }) {
                           <TableCell>{i.masa_manfaat}</TableCell>
                           <TableCell>{i.masa_manfaat}</TableCell>
                           <TableCell align="right">
-                            <EditOutlinedIcon
-                              color="action"
-                              fontSize="small"
-                              className="mr-2"
-                            />
-                            <DeleteOutlineIcon
-                              color="secondary"
-                              fontSize="small"
-                            />
+                            <EditOutlinedIcon color="action" fontSize="small" className="mr-2" />
+                            <DeleteOutlineIcon color="secondary" fontSize="small" />
                           </TableCell>
                         </TableRow>
                       </TableBody>

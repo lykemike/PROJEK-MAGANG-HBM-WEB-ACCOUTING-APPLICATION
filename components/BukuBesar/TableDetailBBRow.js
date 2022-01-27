@@ -55,7 +55,7 @@ export default function TableDetailBBRow({ data, index }) {
               </tr>
             </thead>
             <tbody>
-              <SalesInvoice
+              {/* <SalesInvoice
                 tgl_transaksi={
                   data.JurnalPenjualan[0]?.header_penjualan.tgl_transaksi || "-"
                 }
@@ -64,7 +64,7 @@ export default function TableDetailBBRow({ data, index }) {
                 }
                 nominal={data.JurnalPenjualan[0]?.nominal || "0"}
                 tipe_saldo={data.JurnalPenjualan[0]?.tipe_saldo || "-"}
-              />
+              /> */}
               {/* <JournalEntry
                 tgl_transaksi={
                   data.DetailJurnal[0]?.header_jurnal.tgl_transaksi || "-"
