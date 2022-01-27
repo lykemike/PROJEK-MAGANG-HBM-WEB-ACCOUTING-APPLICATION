@@ -140,11 +140,14 @@ export default function akundetail({ data, bank }) {
   const onSubmit = async () => {
     Axios.post(url, selectedTransactions)
       .then(function (response) {
-        console.log(response);
-        router.push(`../kasbank/${id}`);
+        setState({ open: true, toast_message: response.data.message });
+
+        setTimeout(() => {
+          router.reload(window.location.pathname);
+        }, 2000);
       })
       .catch(function (error) {
-        console.log(error);
+        setState({ open: true, toast_message: error.response.data.message });
       });
   };
 
@@ -309,6 +312,7 @@ export default function akundetail({ data, bank }) {
           <Tab eventKey="pemetaanKas" title="Pemetaan Kas" />
 
           <div eventKey="transaksiJurnal">
+            <Snackbar anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={6000} open={open} onClose={handleCloseAlert} message={toast_message} key={vertical + horizontal} />
             <div class="mt-2">
               <div>
                 <Row className="mt-2 mb-2">

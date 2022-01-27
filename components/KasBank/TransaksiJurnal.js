@@ -236,13 +236,16 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
                       </Button>
                     </a>
                   </Link>
-                  <Link href={`edit-kirim/${i.id}`}>
-                    <a>
-                      <Button variant="warning" size="sm" className="mr-2">
-                        <Edit className="text-white" fontSize="small" />
-                      </Button>
-                    </a>
-                  </Link>
+                  {i.status == "Belum terekonsiliasi" ? (
+                    <Link href={`edit-kirim/${i.id}`}>
+                      <a>
+                        <Button variant="warning" size="sm" className="mr-2">
+                          <Edit className="text-white" fontSize="small" />
+                        </Button>
+                      </a>
+                    </Link>
+                  ) : null}
+
                   <Button variant="danger" size="sm" onClick={() => setModalShow({ open: true, id: i.id, nama: "Transaksi Kirim Uang Rp. " + i.total.toLocaleString() })}>
                     <Delete className="text-white" fontSize="small" />
                   </Button>
@@ -258,13 +261,16 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
                       </Button>
                     </a>
                   </Link>
-                  <Link href={`edit-terima/${i.id}`}>
-                    <a>
-                      <Button variant="warning" size="sm" className="mr-2">
-                        <Edit className="text-white" fontSize="small" />
-                      </Button>
-                    </a>
-                  </Link>
+                  {i.status == "Belum terekonsiliasi" ? (
+                    <Link href={`edit-terima/${i.id}`}>
+                      <a>
+                        <Button variant="warning" size="sm" className="mr-2">
+                          <Edit className="text-white" fontSize="small" />
+                        </Button>
+                      </a>
+                    </Link>
+                  ) : null}
+
                   <Button variant="danger" size="sm" onClick={() => setModalShow2({ open: true, id: i.id, nama: "Transaksi Terima Uang Rp. " + i.total.toLocaleString() })}>
                     <Delete className="text-white" fontSize="small" />
                   </Button>
@@ -280,13 +286,16 @@ export default function TransaksiJurnal({ data, index, bankid, label, view, cont
                       </Button>
                     </a>
                   </Link>
-                  <Link href={`edit-transfer/${i.id}`}>
-                    <a>
-                      <Button variant="warning" size="sm" className="mr-2">
-                        <Edit className="text-white" fontSize="small" />
-                      </Button>
-                    </a>
-                  </Link>
+                  {i.status == "Belum terekonsiliasi" ? (
+                    <Link href={`edit-transfer/${i.id}`}>
+                      <a>
+                        <Button variant="warning" size="sm" className="mr-2">
+                          <Edit className="text-white" fontSize="small" />
+                        </Button>
+                      </a>
+                    </Link>
+                  ) : null}
+
                   <Button variant="danger" size="sm" onClick={() => setModalShow3({ open: true, id: i.id, nama: "Transaksi Transfer Uang Rp. " + i.total.toLocaleString() })}>
                     <Delete className="text-white" fontSize="small" />
                   </Button>

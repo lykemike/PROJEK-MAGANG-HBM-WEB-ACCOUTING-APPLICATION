@@ -42,26 +42,74 @@ Optional File upload
         - ketika hapus salah satu invoice, transaksi tersebut ikut terhapus di laporan transaksi
     * Jurnal Entry
         - ketika submit, transaksi tersebut otomatis masuk ke laporan transaksi
+    * Expense (Biaya)
+        - ketika submit, transaksi tersebut otomatis masuk ke laporan transaksi 
+    * Kas  Bank
+        - Transfer Uang, ketika submit, transaksi otomatis masuk ke laporan transaksi
+        - 
 
 * Penjualan
-    * Table HeaderPenjualan schema = 100%
-        - tambah kolom baru hari, bulan, tahun 
-    * Penagihan Penjualan page = 100%
-        - date sudah di split menjadi hari, bulan, tahun
-        - api create & update sudah di tambahin hari, bulan, tahun
-    * Table PenerimaanPembayaran scehma = 100%
-        - tambah kolom baru timestamp, hari, bulan, tahun, date_confirmation
-    * Penerimaan Pembayaran page = 100%
-        - date sudah di split menjadi hari, bulan, tahun
-        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss)
-        - api create & update sudah di tambahin hari, bulan, tahun, timestamp
-        - ketika invoice sudah ter konfirmasi, dan mau di delete, delete akan mulai dari laporan transaksi -> jurnal penerimaan pembayaran -> peneriman pembayaran
+    * Table HeaderPenjualan schema 
+        - tambah kolom baru hari, bulan, tahun = 100%
+    * Penagihan Penjualan page 
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - api create & update sudah di tambahin hari, bulan, tahun = 100%
+    * Table PenerimaanPembayaran scehma 
+        - tambah kolom baru timestamp, hari, bulan, tahun, date_confirmation = 100%
+    * Penerimaan Pembayaran page 
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
+        - ketika invoice sudah ter konfirmasi, dan mau di delete, delete akan mulai dari laporan transaksi -> jurnal penerimaan pembayaran -> penerimaan pembayaran = 100%
 
 * Jurnal
     * Table HeaderJurnal scehma
-        - tambah kolom baru hari, bulan, tahun 
-    * Create Jurnal page
-        - date sudah di split menjadi hari, bulan, tahun
-        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss)
-        - api create & update sudah di tambahin hari, bulan, tahun, timestamp
+        - tambah kolom baru hari, bulan, tahun = 100%
+    * Jurnal page 
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
+        - delete jurnal entry akan mulai dari laporan transaksi -> detail jurnal = 100%
 
+* Biaya
+    * Table HeaderBiaya schema 
+        - tambah kolom baru hari, bulan, tahun = 100%
+    * Biaya page 
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
+        - delete biaya akan mulai dari laporan transaksi -> jurnal biaya -> detail biaya -> header biaya = 100%
+        - validasi frontend = 100%
+
+* Pembelian
+    * Table HeaderPembelian schema 
+        - tambah kolom hari, bulan tahun = 100%
+    * Penagihan Pembelian page
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update (update belom) sudah di tambahin hari, bulan, tahun, timestamp = 50%
+        - delete akan mulai dari laporan transaksi -> jurnal pengerimaan pembayaran -> pengiriman pembayaran -> header pembelian = 100%
+    * Pengiriman Pembayaran page
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update (update belom) sudah di tambahin hari, bulan, tahun, timestamp = 100%
+        - delete akan mulai dari laporan transaksi -> jurnal pengerimaan pembayaran -> pengiriman pembayaran = 100%
+
+* Kas & Bank
+    * Table TransferUang, HeaderKirimUang, HeaderTerimaUang
+        - tambah kolom hari, bulan tahun = 100%
+    * Transfer Uang page
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update (update belom) sudah di tambahin hari, bulan, tahun, timestamp = 50%
+        - delete akan mulai dari laporan transaksi -> jurnal transfer uang -> transfer uang = 100%
+    * Terima Uang page
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
+        - delete akan mulai dari laporan transaksi -> jurnal terima uang -> detail terima uang -> terima uang = 100%
+    * Kirim Uang page
+        - date sudah di split menjadi hari, bulan, tahun = 100%
+        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
+        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
+        - delete akan mulai dari laporan transaksi -> jurnal kirim uang -> detail kirim uang -> kirim uang = 100%

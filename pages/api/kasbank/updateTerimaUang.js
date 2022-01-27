@@ -37,17 +37,31 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
+    // get date from input, then split into DD:MM:YYYY
+    const confirm_date = req.body.tgl_transaksi;
+    const day = confirm_date.split("-")[2];
+    const month = confirm_date.split("-")[1];
+    const year = confirm_date.split("-")[0];
+
+    // get current timestamp 24 hour format
+    const today = new Date();
+    const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    // header kirim uang id, declared as global
+    const header_terima_uang_id = parseInt(req.body.id);
+
+    // get data from front end
     const frontend_data = {
       akun_setor_id: parseInt(req.body.akun_setor_id),
       kontak_id: parseInt(req.body.kontak_id),
       tgl_transaksi: req.body.tgl_transaksi,
+      hari: parseInt(day),
+      bulan: parseInt(month),
+      tahun: parseInt(year),
       memo: req.body.memo,
       file_attachment: req.file == undefined ? "-" : req.file.filename,
       total: parseInt(req.body.total),
-      status: "Belum terekonsiliasi",
     };
-
-    const find_latest = parseInt(req.body.id);
 
     const find_old_saldo = await prisma.headerTerimaUang.findFirst({
       where: {
@@ -87,14 +101,14 @@ export default async (req, res) => {
 
     const update_terima_uang = await prisma.headerTerimaUang.update({
       where: {
-        id: find_latest,
+        id: header_terima_uang_id,
       },
       data: frontend_data,
     });
 
     const delete_detail = await prisma.detailTerimaUang.deleteMany({
       where: {
-        header_terima_uang_id: find_latest,
+        header_terima_uang_id: header_terima_uang_id,
       },
     });
 
@@ -102,8 +116,9 @@ export default async (req, res) => {
     req.body.detail_terima_uang &&
       JSON.parse(req.body.detail_terima_uang).map((i) => {
         detail.push({
-          header_terima_uang_id: find_latest,
+          header_terima_uang_id: header_terima_uang_id,
           akun_id: parseInt(i.akun_id),
+          kategori_id: parseInt(i.kategori_id),
           nama_akun: i.nama_akun,
           deskripsi: i.deskripsi,
           jumlah: parseInt(i.jumlah),
@@ -116,13 +131,13 @@ export default async (req, res) => {
 
     const delete_jurnal = await prisma.jurnalTerimaUang.deleteMany({
       where: {
-        header_terima_uang_id: find_latest,
+        header_terima_uang_id: header_terima_uang_id,
       },
     });
 
     const create_jurnal_debit = await prisma.jurnalTerimaUang.create({
       data: {
-        header_terima_uang_id: find_latest,
+        header_terima_uang_id: header_terima_uang_id,
         akun_id: parseInt(req.body.akun_setor_id),
         nominal: parseInt(req.body.total),
         tipe_saldo: "Debit",
@@ -132,18 +147,68 @@ export default async (req, res) => {
     let jurnal_kredit = [];
     detail.map((i) => {
       jurnal_kredit.push({
-        header_terima_uang_id: find_latest,
+        header_terima_uang_id: header_terima_uang_id,
         akun_id: parseInt(i.akun_id),
         nominal: parseInt(i.jumlah),
         tipe_saldo: "Kredit",
       });
     });
 
+    // delete old jurnal from laporan transaksi
+    const delete_jurnal_in_laporan_transaksi = await prisma.laporanTransaksi.deleteMany({
+      where: {
+        delete_ref_name: "Terima Uang",
+        delete_ref_no: header_terima_uang_id,
+      },
+    });
+
     const create_jurnal_kredit = await prisma.jurnalTerimaUang.createMany({
       data: jurnal_kredit,
     });
 
-    res.status(201).json({ message: "Update terima uang success!", id: find_latest });
+    const create_laporan_transaksi_debit = await prisma.laporanTransaksi.create({
+      data: {
+        akun_id: parseInt(req.body.akun_setor_id),
+        kategori_id: 3,
+        timestamp: current_time,
+        date: req.body.tgl_transaksi,
+        hari: parseInt(day),
+        bulan: parseInt(month),
+        tahun: parseInt(year),
+        debit: parseInt(req.body.total),
+        kredit: 0,
+        sumber_transaksi: "Kas & Bank",
+        no_ref: header_terima_uang_id,
+        delete_ref_no: header_terima_uang_id,
+        delete_ref_name: "Terima Uang",
+      },
+    });
+
+    let laporan_transaksi = [];
+    req.body.detail_terima_uang &&
+      JSON.parse(req.body.detail_terima_uang).map((i) => {
+        laporan_transaksi.push({
+          akun_id: parseInt(i.akun_id),
+          kategori_id: parseInt(i.kategori_id),
+          timestamp: current_time,
+          date: req.body.tgl_transaksi,
+          hari: parseInt(day),
+          bulan: parseInt(month),
+          tahun: parseInt(year),
+          debit: 0,
+          kredit: parseInt(i.jumlah),
+          sumber_transaksi: "Kas & Bank",
+          no_ref: header_terima_uang_id,
+          delete_ref_no: header_terima_uang_id,
+          delete_ref_name: "Terima Uang",
+        });
+      });
+
+    const create_laporan_transaksi_kredit = await prisma.laporanTransaksi.createMany({
+      data: laporan_transaksi,
+    });
+
+    res.status(201).json({ message: "Update terima uang success!", id: header_terima_uang_id });
   } catch (error) {
     res.status(400).json({ data: "Failed to update terima uang!", error });
     console.log(error);

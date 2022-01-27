@@ -174,6 +174,7 @@ export default function TerimaUang({ data, data2, data3, data4 }) {
                               onChange={(e) => {
                                 props.setFieldValue(`detail_terima_uang.${index}.akun_id`, e.value);
                                 props.setFieldValue(`detail_terima_uang.${index}.nama_akun`, e.label);
+                                props.setFieldValue(`detail_terima_uang.${index}.kategori_id`, e.kategori_id);
                               }}
                             />
                           </td>
@@ -309,6 +310,7 @@ export async function getServerSideProps(context) {
     where: {
       nama_akun: {
         startsWith: "piutang",
+        startsWith: "Piutang",
       },
     },
   });
@@ -318,6 +320,7 @@ export async function getServerSideProps(context) {
     akun_awalan_piutang.push({
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
+      kategori_id: i.kategoriId,
     });
   });
 

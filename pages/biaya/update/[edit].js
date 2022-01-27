@@ -222,6 +222,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.akun_id`, e.value);
                                 props.setFieldValue(`detail_biaya.${index}.akun_nama`, e.label);
+                                props.setFieldValue(`detail_biaya.${index}.kategori_id`, e.kategori_id);
                               }}
                             />
                           </td>
@@ -251,9 +252,11 @@ export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
                                 value: props.values.detail_biaya[index].pajak_masukan_id,
                               }}
                               onChange={(e) => {
-                                props.setFieldValue(`detail_biaya.${index}.pajak_masukan_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_masukan_id`, e.pajak_masukan_id);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_masukan_nama`, e.label2);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_masukan_persen`, e.persen);
+                                props.setFieldValue(`detail_biaya.${index}.kategori_id_masukan`, e.kategori_id_masukan);
                                 if (props.values.harga_termasuk_pajak == false) {
                                   const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
                                   props.setFieldValue(`subtotal`, subtotal);
@@ -341,9 +344,11 @@ export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
                                 value: props.values.detail_biaya[index].pajak_keluaran_id,
                               }}
                               onChange={(e) => {
-                                props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_id`, e.pajak_masukan_id);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_nama`, e.label2);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_persen`, e.persen);
+                                props.setFieldValue(`detail_biaya.${index}.kategori_id_keluaran`, e.kategori_id_keluaran);
                                 if (props.values.harga_termasuk_pajak == false) {
                                   const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
                                   props.setFieldValue(`subtotal`, subtotal);
@@ -514,13 +519,17 @@ export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
                       onClick={() =>
                         push({
                           akun_id: "",
+                          kategori_id: "",
                           akun_nama: "",
                           deskripsi: "",
+                          pajak_id: "",
                           pajak_masukan_id: "",
+                          kategori_id_masukan: "",
                           pajak_masukan_nama: "",
                           pajak_masukan_persen: 0,
                           pajak_masukan_per_baris: 0,
                           pajak_keluaran_id: "",
+                          kategori_id_keluaran: "",
                           pajak_keluaran_nama: "",
                           pajak_keluaran_persen: 0,
                           pajak_keluaran_per_baris: 0,
@@ -667,12 +676,14 @@ export async function getServerSideProps(context) {
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
       label2: i.nama_akun,
+      kategori_id: i.kategoriId,
     });
   });
 
   const get_pajak = await prisma.pajak.findMany({
     include: {
       kategori2: true,
+      kategori1: true,
     },
   });
 
@@ -683,6 +694,10 @@ export async function getServerSideProps(context) {
       label: i.nama + " - " + i.presentase_aktif + "%",
       label2: i.nama,
       persen: i.presentase_aktif,
+      pajak_masukan_id: i.akun_beli,
+      pajak_kelauran_id: i.akun_jual,
+      kategori_id_masukan: i.kategori2.kategoriId,
+      kategori_id_keluaran: i.kategori1.kategoriId,
     });
   });
 
@@ -704,8 +719,6 @@ export async function getServerSideProps(context) {
       DetailBiaya: {
         include: {
           akun: true,
-          pajak_keluaran: true,
-          pajak_masukan: true,
         },
       },
       akun: true,
@@ -717,6 +730,7 @@ export async function getServerSideProps(context) {
   get_header_biaya.DetailBiaya.map((i) => {
     detail_biaya.push({
       akun_id: i.akun_id,
+      kategori_id: i.kategori_id,
       akun_nama: i.akun_nama,
       deskripsi: i.deskripsi,
       pajak_masukan_id: i.pajak_masukan_id,
@@ -731,6 +745,8 @@ export async function getServerSideProps(context) {
       termasuk_jumlah: i.termasuk_jumlah,
       termasuk_pajak_masukan: i.termasuk_pajak_masukan,
       termasuk_pajak_keluaran: i.termasuk_pajak_keluaran,
+      kategori_id_keluaran: i.kategori_id_keluaran,
+      kategori_id_masukan: i.kategori_id_masukan,
     });
   });
 

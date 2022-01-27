@@ -36,6 +36,17 @@ function runMiddleware(req, res, fn) {
 export default async (req, res) => {
   await runMiddleware(req, res, upload.single("file"));
   try {
+    // get date from input, then split into DD:MM:YYYY
+    const confirm_date = req.body.tgl_kontrak_mulai;
+    const day = confirm_date.split("-")[2];
+    const month = confirm_date.split("-")[1];
+    const year = confirm_date.split("-")[0];
+
+    // get current timestamp 25 hour format
+    const today = new Date();
+    const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+    // get data from front end
     const frontend_data = {
       kontak_id: parseInt(req.body.kontak_id),
       nama_perusahaan: req.body.nama_perusahaan,
@@ -45,13 +56,13 @@ export default async (req, res) => {
       nomor_npwp: req.body.nomor_npwp,
       nomor_kontrak: req.body.nomor_kontrak,
       tgl_kontrak_mulai: req.body.tgl_kontrak_mulai,
-      hari: parseInt(req.body.hari),
-      bulan: parseInt(req.body.bulan),
-      tahun: parseInt(req.body.tahun),
+      hari: parseInt(day),
+      bulan: parseInt(month),
+      tahun: parseInt(year),
       tgl_kontrak_expired: req.body.tgl_kontrak_expired,
       custom_invoice: req.body.custom_invoice,
       tipe_perusahaan: req.body.tipe_perusahaan,
-      pesan: req.body.pesan.trim().length == 0 ? "-" : req.body.pesan,
+      pesan: req.body.pesan,
       file_attachment: req.file == undefined ? "-" : req.file.filename,
       subtotal: parseInt(req.body.subtotal),
       pajak_id: parseInt(req.body.pajak_id),
@@ -60,7 +71,6 @@ export default async (req, res) => {
       pajak_hasil: parseInt(req.body.pajak_hasil),
       total: parseInt(req.body.total),
       sisa_tagihan: parseInt(req.body.sisa_tagihan),
-      status: "Active",
     };
 
     const update_header_penjualan = await prisma.headerPenjualan.update({

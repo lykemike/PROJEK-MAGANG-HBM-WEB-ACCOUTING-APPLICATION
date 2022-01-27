@@ -181,8 +181,6 @@ export async function getServerSideProps(context) {
       DetailBiaya: {
         include: {
           akun: true,
-          pajak_keluaran: true,
-          pajak_masukan: true,
         },
       },
       JurnalBiaya: true,

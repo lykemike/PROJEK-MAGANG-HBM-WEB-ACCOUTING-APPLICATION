@@ -37,7 +37,7 @@ export default async (req, res) => {
       }
     }
 
-    res.status(201).json({ message: "Terkonsiliasi Success!", data: req.body });
+    res.status(201).json({ message: "Terkonsiliasi Success!" });
   } catch (error) {
     res.status(400).json({ data: "Terkonsiliasi Failed!", error });
     console.log(error);

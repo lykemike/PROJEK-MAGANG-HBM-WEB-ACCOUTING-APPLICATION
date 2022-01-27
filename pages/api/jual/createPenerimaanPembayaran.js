@@ -3,15 +3,25 @@ const prisma = new PrismaClient();
 
 export default async (req, res) => {
   try {
+    /// get date from input, then split into DD:MM:YYYY
+    const confirm_date = req.body.date;
+    const day = confirm_date.split("-")[2];
+    const month = confirm_date.split("-")[1];
+    const year = confirm_date.split("-")[0];
+
+    // get current timestamp 25 hour format
+    const today = new Date();
+    const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
     // get data from front end
     const frontend_data = {
       header_penjualan_id: parseInt(req.body.id),
       akun_id: parseInt(req.body.setor_ke),
       date: req.body.date,
-      timestamp: req.body.timestamp,
-      hari: parseInt(req.body.hari),
-      bulan: parseInt(req.body.bulan),
-      tahun: parseInt(req.body.tahun),
+      timestamp: current_time,
+      hari: parseInt(day),
+      bulan: parseInt(month),
+      tahun: parseInt(year),
       deskripsi: req.body.deskripsi,
       pajak_id: parseInt(req.body.pajak_id),
       pajak_nama: req.body.pajak_nama,
@@ -23,7 +33,6 @@ export default async (req, res) => {
       tagihan_setelah_pajak: parseInt(req.body.tagihan_setelah_pajak),
       say: req.body.say,
       bank_id: parseInt(req.body.bank_id),
-      status: "Process",
     };
 
     // create penerimaan pembayaran

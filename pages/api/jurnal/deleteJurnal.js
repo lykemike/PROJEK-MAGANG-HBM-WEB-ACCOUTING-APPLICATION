@@ -6,7 +6,7 @@ export default async (req, res) => {
     const delete_jurnal_from_laporan_transaksi = await prisma.laporanTransaksi.deleteMany({
       where: {
         no_ref: parseInt(req.body.jurnal_id),
-        sumber_transaksi: "Journal Entry",
+        delete_ref_name: "Journal Entry",
       },
     });
 

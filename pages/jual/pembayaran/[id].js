@@ -54,9 +54,6 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
   const current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
   const split_date = today.toISOString().slice(0, 10);
-  const day = split_date.split("-")[2];
-  const month = split_date.split("-")[1];
-  const year = split_date.split("-")[0];
 
   return (
     <Layout>
@@ -70,10 +67,6 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
           setor_ke: "",
           nama_akun_setor: "",
           date: current_date,
-          timestamp: current_time,
-          hari: day,
-          bulan: month,
-          tahun: year,
           pajak_id: "",
           pajak_nama: "",
           pajak_persen: 0,
@@ -154,25 +147,7 @@ export default function pembayaran_jual({ data, data2, data3, data4, data5 }) {
 
                 <Col sm="3">
                   <label className="font-medium">Tanggal Pembayaran</label>
-                  <Form.Control
-                    placeholder=""
-                    type="date"
-                    name="date"
-                    value={props.values.date}
-                    onChange={(e) => {
-                      props.setFieldValue(`date`, e.target.value);
-
-                      const split_date = e.target.value;
-                      const day = split_date.split("-")[2];
-                      props.setFieldValue(`hari`, day);
-
-                      const month = split_date.split("-")[1];
-                      props.setFieldValue(`bulan`, month);
-
-                      const year = split_date.split("-")[0];
-                      props.setFieldValue(`tahun`, year);
-                    }}
-                  />
+                  <Form.Control placeholder="" type="date" name="date" value={props.values.date} onChange={props.handleChange} />
                 </Col>
 
                 <Col sm="3">

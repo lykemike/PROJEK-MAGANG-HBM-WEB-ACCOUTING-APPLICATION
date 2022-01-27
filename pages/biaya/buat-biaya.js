@@ -47,6 +47,14 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
   const ValidationSchema = Yup.object().shape({
     akun_id: Yup.string().required("*required"),
     cara_pembayaran_id: Yup.string().required("*required"),
+
+    // produks: Yup.array(
+    //   Yup.object({
+    //     produk_id: Yup.string().required("*required"),
+    //   })
+    // )
+    //   .min(1)
+    //   .max(3),
   });
 
   return (
@@ -63,13 +71,17 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
           detail_biaya: [
             {
               akun_id: "",
+              kategori_id: "",
               akun_nama: "",
-              deskripsi: "",
+              deskripsi: "-",
+              pajak_id: "",
               pajak_masukan_id: "",
+              kategori_id_masukan: "",
               pajak_masukan_nama: "",
               pajak_masukan_persen: 0,
               pajak_masukan_per_baris: 0,
               pajak_keluaran_id: "",
+              kategori_id_keluaran: "",
               pajak_keluaran_nama: "",
               pajak_keluaran_persen: 0,
               pajak_keluaran_per_baris: 0,
@@ -81,13 +93,14 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
           ],
           pajak_masukan_total: 0,
           pajak_keluaran_total: 0,
-          memo: "",
-          file_attachment: "",
+          memo: "-",
+          file_attachment: [],
           subtotal: 0,
           total: 0,
         }}
-        // validationSchema={ValidationSchema}
+        validationSchema={ValidationSchema}
         onSubmit={async (values) => {
+          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "detail_biaya") {
@@ -96,8 +109,11 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.file_attachment).map((i) => formData.append("file", i));
-          console.log(values);
+
+          if (values.file_attachment.length > 0) {
+            Array.from(values.file_attachment).map((i) => formData.append("file", i));
+          }
+
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -147,7 +163,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                 </Col>
                 <Col sm="3">
                   <label className="font-medium">Tanggal Transaksi</label>
-                  <FormControl type="date" name="tgl_transaksi" onChange={props.handleChange} />
+                  <FormControl type="date" name="tgl_transaksi" value={props.values.tgl_transaksi} onChange={props.handleChange} />
                 </Col>
                 <Col sm="3">
                   <label className="font-medium">
@@ -245,6 +261,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.akun_id`, e.value);
                                 props.setFieldValue(`detail_biaya.${index}.akun_nama`, e.label);
+                                props.setFieldValue(`detail_biaya.${index}.kategori_id`, e.kategori_id);
                               }}
                             />
                           </td>
@@ -255,7 +272,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                               width: 300,
                             }}
                           >
-                            <Form.Control type="text" onChange={(e) => props.setFieldValue(`detail_biaya.${index}.deskripsi`, e.target.value)} />
+                            <Form.Control type="text" placeholder="-" onChange={(e) => props.setFieldValue(`detail_biaya.${index}.deskripsi`, e.target.value)} />
                           </td>
 
                           <td
@@ -267,9 +284,11 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                             <Select
                               options={data3}
                               onChange={(e) => {
-                                props.setFieldValue(`detail_biaya.${index}.pajak_masukan_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_masukan_id`, e.pajak_masukan_id);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_masukan_nama`, e.label2);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_masukan_persen`, e.persen);
+                                props.setFieldValue(`detail_biaya.${index}.kategori_id_masukan`, e.kategori_id_masukan);
                                 if (props.values.harga_termasuk_pajak == false) {
                                   const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
                                   props.setFieldValue(`subtotal`, subtotal);
@@ -350,9 +369,11 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                             <Select
                               options={data3}
                               onChange={(e) => {
-                                props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_id`, e.value);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_id`, e.pajak_masukan_id);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_nama`, e.label2);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_persen`, e.persen);
+                                props.setFieldValue(`detail_biaya.${index}.kategori_id_keluaran`, e.kategori_id_keluaran);
                                 if (props.values.harga_termasuk_pajak == false) {
                                   const subtotal = props.values.detail_biaya.reduce((a, b) => (a = a + b.jumlah), 0);
                                   props.setFieldValue(`subtotal`, subtotal);
@@ -432,6 +453,7 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                             <Form.Control
                               type="number"
                               min="0"
+                              placeholder="0"
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.jumlah`, parseInt(e.target.value));
                                 props.setFieldValue((props.values.detail_biaya[index].jumlah = parseInt(e.target.value)));
@@ -522,13 +544,17 @@ export default function BuatBiaya({ data, data2, data3, data4 }) {
                       onClick={() =>
                         push({
                           akun_id: "",
+                          kategori_id: "",
                           akun_nama: "",
-                          deskripsi: "",
+                          deskripsi: "-",
+                          pajak_id: "",
                           pajak_masukan_id: "",
+                          kategori_id_masukan: "",
                           pajak_masukan_nama: "",
                           pajak_masukan_persen: 0,
                           pajak_masukan_per_baris: 0,
                           pajak_keluaran_id: "",
+                          kategori_id_keluaran: "",
                           pajak_keluaran_nama: "",
                           pajak_keluaran_persen: 0,
                           pajak_keluaran_per_baris: 0,
@@ -666,12 +692,25 @@ export async function getServerSideProps() {
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
       label2: i.nama_akun,
+      kategori_id: i.kategoriId,
     });
   });
 
   const get_pajak = await prisma.pajak.findMany({
     include: {
       kategori2: true,
+    },
+    include: {
+      kategori1: {
+        select: {
+          kategoriId: true,
+        },
+      },
+      kategori2: {
+        select: {
+          kategoriId: true,
+        },
+      },
     },
   });
 
@@ -682,6 +721,10 @@ export async function getServerSideProps() {
       label: i.nama + " - " + i.presentase_aktif + "%",
       label2: i.nama,
       persen: i.presentase_aktif,
+      pajak_masukan_id: i.akun_beli,
+      pajak_kelauran_id: i.akun_jual,
+      kategori_id_masukan: i.kategori2.kategoriId,
+      kategori_id_keluaran: i.kategori1.kategoriId,
     });
   });
 

@@ -72,9 +72,6 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
           nomor_npwp: header_penjualan.nomor_npwp,
           nomor_kontrak: header_penjualan.nomor_kontrak,
           tgl_kontrak_mulai: header_penjualan.tgl_kontrak_mulai,
-          hari: header_penjualan.hari,
-          bulan: header_penjualan.bulan,
-          tahun: header_penjualan.tahun,
           tgl_kontrak_expired: header_penjualan.tgl_kontrak_expired,
           custom_invoice: header_penjualan.custom_invoice,
           tipe_perusahaan: header_penjualan.tipe_perusahaan == "false" ? false : true,
@@ -189,24 +186,7 @@ export default function penagihanpenjualan({ kontak, produk, pajak, syarat_pemba
                 <Col sm="3">
                   <div className="mb-2">
                     <label className="font-medium">Tanggal Kontrak</label>
-                    <Form.Control
-                      type="date"
-                      name="tgl_kontrak_mulai"
-                      value={props.values.tgl_kontrak_mulai}
-                      onChange={(e) => {
-                        props.setFieldValue(`tgl_kontrak_mulai`, e.target.value);
-
-                        const split_date = e.target.value;
-                        const day = split_date.split("-")[2];
-                        props.setFieldValue(`hari`, day);
-
-                        const month = split_date.split("-")[1];
-                        props.setFieldValue(`bulan`, month);
-
-                        const year = split_date.split("-")[0];
-                        props.setFieldValue(`tahun`, year);
-                      }}
-                    />
+                    <Form.Control type="date" name="tgl_kontrak_mulai" value={props.values.tgl_kontrak_mulai} onChange={props.handleChange} />
                   </div>
 
                   <div className="mb-2">
