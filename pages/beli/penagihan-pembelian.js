@@ -33,6 +33,14 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
     toast_message: "",
   });
 
+  const split_date = current;
+  const hari = split_date.split("-")[2];
+  console.log(hari);
+  const bulan = split_date.split("-")[1];
+  console.log(bulan);
+  const tahun = split_date.split("-")[0];
+  console.log(tahun);
+
   const { vertical, horizontal, open, toast_message } = state;
 
   const handleClick = (newState) => () => {
@@ -53,6 +61,9 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
           email: "",
           alamat_perusahaan: "",
           tgl_transaksi: current,
+          hari: hari,
+          bulan: bulan,
+          tahun: tahun,
           tgl_jatuh_tempo: "",
           syarat_pembayaran_id: 0,
           syarat_pembayaran_nama: "",
@@ -88,7 +99,6 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
         }}
         // validationSchema={}
         onSubmit={async (values) => {
-          console.log(values);
           let formData = new FormData();
           for (var key in values) {
             if (key == "akun_beli") {
@@ -97,17 +107,20 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) => formData.append("file", i));
-          console.log(values.fileattachment);
+          if (values.fileattachment.length > 0) {
+            Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          }
+
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
           })
             .then(function (response) {
-              setState({ open: true, toast_message: response.data[0].message });
+              setState({ open: true, toast_message: response.data.message });
               setTimeout(() => {
-                router.push(`view/${response.data[0].id.id}`);
+                console.log(response);
+                router.push(`view/${response.data.id.id}`);
               }, 2000);
             })
             .catch(function (error) {
@@ -150,7 +163,6 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                       options={kontak}
                       name="nama_supplier"
                       onChange={(e) => {
-                        console.log(kontak);
                         props.setFieldValue(`kontak_id`, e.value);
                         props.setFieldValue(`nama_supplier`, e.label);
                         props.setFieldValue(`email`, e.email);
@@ -243,7 +255,19 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                       placeholder="Auto"
                       defaultValue={props.values.tgl_transaksi}
                       name="tgl_transaksi"
-                      onChange={props.handleChange}
+                      onChange={(e) => {
+                        props.setFieldValue(`tgl_transaksi`, e.target.value);
+
+                        const split_date = e.target.value;
+                        const day = split_date.split("-")[2];
+                        props.setFieldValue("hari", day);
+
+                        const month = split_date.split("-")[1];
+                        props.setFieldValue("bulan", month);
+
+                        const year = split_date.split("-")[0];
+                        props.setFieldValue("tahun", year);
+                      }}
                     />
                   </div>
                   <div className="mb-2">
