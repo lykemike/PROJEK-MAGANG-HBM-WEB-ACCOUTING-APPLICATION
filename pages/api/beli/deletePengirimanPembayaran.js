@@ -28,6 +28,13 @@ export default async (req, res) => {
       },
     });
 
+    // delete current jurnal from laporan transaksi table
+    const delete_jurnal_pengiriman_from_laporan_transaksi = prisma.laporanTransaksi.deleteMany({
+      where: {
+        delete_ref_no: pengiriman_pembayaran_id,
+        delete_ref_name: "Pengiriman Pembayaran",
+      },
+    });
     const delete_jurnal_Pengiriman_pembayaran = prisma.jurnalPengirimanBayaran.deleteMany({
       where: {
         PengirimanBayaran_id: pengiriman_pembayaran_id,
@@ -40,7 +47,11 @@ export default async (req, res) => {
       },
     });
 
-    const transaction = await prisma.$transaction([delete_jurnal_Pengiriman_pembayaran, delete_Pengiriman_pembayaran]);
+    const transaction = await prisma.$transaction([
+      delete_jurnal_pengiriman_from_laporan_transaksi,
+      delete_jurnal_Pengiriman_pembayaran,
+      delete_Pengiriman_pembayaran,
+    ]);
 
     res.status(201).json({ message: "Delete invoice Pengiriman pembayaran success!" });
   } catch (error) {

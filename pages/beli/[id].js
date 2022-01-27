@@ -63,7 +63,7 @@ export default function penagihanpembelian({ pajak, kontak, akun_pembelian, syar
           akun_beli: akun_beli,
           pesan: header[0].pesan,
           memo: header[0].memo,
-
+          fileattachment: [],
           subtotal: header[0].subtotal,
           akun_diskon_pembelian_id: header[0].akun_diskon_pembelian_id,
           akun_diskon_pembelian_nama: header[0].akun_diskon_pembelian_nama,
@@ -87,7 +87,9 @@ export default function penagihanpembelian({ pajak, kontak, akun_pembelian, syar
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          if (values.fileattachment.length > 0) {
+            Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          }
           Axios.post(url, formData, {
             headers: {
               "Content-Type": "multipart/form-data",

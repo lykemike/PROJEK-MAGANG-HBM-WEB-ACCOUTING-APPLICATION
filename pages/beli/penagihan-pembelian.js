@@ -33,6 +33,14 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
     toast_message: "",
   });
 
+  const split_date = current;
+  const hari = split_date.split("-")[2];
+  console.log(hari);
+  const bulan = split_date.split("-")[1];
+  console.log(bulan);
+  const tahun = split_date.split("-")[0];
+  console.log(tahun);
+
   const { vertical, horizontal, open, toast_message } = state;
 
   const handleClick = (newState) => () => {
@@ -53,6 +61,9 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
           email: "",
           alamat_perusahaan: "",
           tgl_transaksi: current,
+          hari: hari,
+          bulan: bulan,
+          tahun: tahun,
           tgl_jatuh_tempo: "",
           syarat_pembayaran_id: 0,
           syarat_pembayaran_nama: "",
@@ -96,7 +107,9 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
               formData.append(`${key}`, `${values[key]}`);
             }
           }
-          Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          if (values.fileattachment.length > 0) {
+            Array.from(values.fileattachment).map((i) => formData.append("file", i));
+          }
 
           Axios.post(url, formData, {
             headers: {
@@ -106,6 +119,7 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
             .then(function (response) {
               setState({ open: true, toast_message: response.data.message });
               setTimeout(() => {
+                console.log(response);
                 router.push(`view/${response.data.id.id}`);
               }, 2000);
             })
@@ -241,7 +255,19 @@ export default function penagihanpembelian({ kontak, pajak, akun_pembelian, akun
                       placeholder="Auto"
                       defaultValue={props.values.tgl_transaksi}
                       name="tgl_transaksi"
-                      onChange={props.handleChange}
+                      onChange={(e) => {
+                        props.setFieldValue(`tgl_transaksi`, e.target.value);
+
+                        const split_date = e.target.value;
+                        const day = split_date.split("-")[2];
+                        props.setFieldValue("hari", day);
+
+                        const month = split_date.split("-")[1];
+                        props.setFieldValue("bulan", month);
+
+                        const year = split_date.split("-")[0];
+                        props.setFieldValue("tahun", year);
+                      }}
                     />
                   </div>
                   <div className="mb-2">
