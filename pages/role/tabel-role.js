@@ -191,13 +191,6 @@ export default function roleList({ data }) {
 
 export async function getServerSideProps() {
   const get_roles = await prisma.role.findMany({
-    where: {
-      NOT: {
-        delete_at: {
-          equals: true,
-        },
-      },
-    },
     orderBy: {
       roleType: "asc",
     },
