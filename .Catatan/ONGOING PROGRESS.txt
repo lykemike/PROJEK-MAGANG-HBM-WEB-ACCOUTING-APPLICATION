@@ -113,3 +113,12 @@ Optional File upload
         - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
         - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
         - delete akan mulai dari laporan transaksi -> jurnal kirim uang -> detail kirim uang -> kirim uang = 100%
+    
+    * Laporan
+        - Laporan Jurnal = 95% (sisa export xlsx)
+        - Laporan Buku Besar = 80%
+
+
+
+Urutan Laporan: jurnal, buku besar, trial balance, neraca, laba rugi, perubahan modal
+

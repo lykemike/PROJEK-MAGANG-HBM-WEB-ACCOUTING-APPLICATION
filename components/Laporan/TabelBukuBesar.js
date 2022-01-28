@@ -15,12 +15,9 @@ export default function Test2({ label, data }) {
               {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row" style={{ minWidth: 300, width: 300 }}>
+          <TableCell component="th" scope="row" style={{ minWidth: 500, width: 500 }}>
             <Typography className="text-blue-700">{label}</Typography>
           </TableCell>
-          <TableCell />
-          <TableCell />
-          <TableCell />
           <TableCell />
           <TableCell />
           <TableCell />
@@ -37,13 +34,16 @@ export default function Test2({ label, data }) {
                 <Table size="small" aria-label="purchases">
                   <TableHead className="bg-blue-300">
                     <TableRow>
-                      <TableCell>Nama</TableCell>
-                      <TableCell align="right">Debit</TableCell>
-                      <TableCell align="right">Kredit</TableCell>
+                      <TableCell>Tanggal</TableCell>
+                      <TableCell>Transaksi</TableCell>
+                      <TableCell>Nomor</TableCell>
+                      <TableCell>Debit</TableCell>
+                      <TableCell>Kredit</TableCell>
+                      <TableCell>Saldo</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.map((i) => (
+                    {/* {data.map((i) => (
                       <TableRow>
                         <TableCell component="th" scope="row">
                           {i.kode_akun} - {i.nama_akun}
@@ -61,13 +61,38 @@ export default function Test2({ label, data }) {
                           })}
                         </TableCell>
                       </TableRow>
+                    ))} */}
+
+                    <TableRow>
+                      <TableCell>{data[0]?.saldo_awal_date}</TableCell>
+                      <TableCell>Saldo Awal</TableCell>
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell>Saldo Awal Akun (dalam Rp. )</TableCell>
+                    </TableRow>
+                    {data.map((i) => (
+                      <TableRow>
+                        <TableCell>{i.tanggal}</TableCell>
+                        <TableCell>{i.sumber_transaksi}</TableCell>
+                        <TableCell>{"# " + i.no_ref}</TableCell>
+                        <TableCell>{"Rp. " + i.debit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                        <TableCell>{"Rp. " + i.kredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                        <TableCell>Selisih</TableCell>
+                      </TableRow>
                     ))}
                   </TableBody>
                   <TableFooter>
                     <TableRow>
-                      <TableCell align="right">Total</TableCell>
-                      <TableCell align="right">Rp. {data.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                      <TableCell align="right">Rp. {data.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell />
+                      <TableCell />
+                      <TableCell>Saldo Akhir</TableCell>
+                      <TableCell>{"Rp. " + data.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>{"Rp. " + data.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>XXX.XXX</TableCell>
+                      {/* <TableCell align="right">Total</TableCell> */}
+                      {/* <TableCell align="right">Rp. {data.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell> */}
+                      {/* <TableCell align="right">Rp. {data.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell> */}
                     </TableRow>
                   </TableFooter>
                 </Table>

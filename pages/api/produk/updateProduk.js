@@ -54,7 +54,7 @@ export default async (req, res) => {
       },
     });
 
-    res.status(201).json({ message: "Update produk produk success!", data: update_produk });
+    res.status(201).json({ message: "Update produk success!", data: update_produk });
   } catch (error) {
     res.status(400).json({ data: "error", error });
     console.log(error);
