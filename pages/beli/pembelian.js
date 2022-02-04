@@ -83,7 +83,7 @@ function MyVerticallyCenteredModal(props) {
     </Modal>
   );
 }
-export default function pembelian({ data }) {
+export default function pembelian({ data, PengirimanBayaran }) {
   const [open, setOpen] = useState(false);
   const [modalShow, setModalShow] = useState({
     open: false,
@@ -234,9 +234,16 @@ export async function getServerSideProps() {
     },
   });
 
+  const PengirimanBayaran = await prisma.pengirimanBayaran.findMany({
+    include: {
+      JurnalPengirimanBayaran: true,
+    },
+  });
+
   return {
     props: {
       data: pembelians,
+      PengirimanBayaran: PengirimanBayaran,
     },
   };
 }
