@@ -202,7 +202,7 @@ export default function pembayaran_beli({ data, data2, cara_pembayaran }) {
                   </Col>
 
                   <Col sm="2">
-                    <p>Rp. {sisatagihanlama.toLocaleString({ minimumFractionDigits: 0 })}</p>
+                    <p>Rp. {i.header_pembelian.sisa_tagihan.toLocaleString({ minimumFractionDigits: 0 })}</p>
                   </Col>
 
                   <Col sm="2">
