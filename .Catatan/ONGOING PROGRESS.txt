@@ -87,7 +87,7 @@ Optional File upload
     * Penagihan Pembelian page
         - date sudah di split menjadi hari, bulan, tahun = 100%
         - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
-        - api create & update (update belom) sudah di tambahin hari, bulan, tahun, timestamp = 50%
+        - api create & update (update belom) sudah di tambahin hari, bulan, tahun, timestamp = 100%
         - delete akan mulai dari laporan transaksi -> jurnal pengerimaan pembayaran -> pengiriman pembayaran -> header pembelian = 100%
     * Pengiriman Pembayaran page
         - date sudah di split menjadi hari, bulan, tahun = 100%
@@ -116,9 +116,14 @@ Optional File upload
     
     * Laporan
         - Laporan Jurnal = 95% (sisa export xlsx)
-        - Laporan Buku Besar = 80%
+        - Laporan Buku Besar = 85%
+        - Trial Balance = 30%
 
 
 
 Urutan Laporan: jurnal, buku besar, trial balance, neraca, laba rugi, perubahan modal
+
+
+
+
 

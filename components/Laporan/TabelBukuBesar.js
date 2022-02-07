@@ -69,7 +69,7 @@ export default function Test2({ label, data }) {
                       <TableCell />
                       <TableCell />
                       <TableCell />
-                      <TableCell>Saldo Awal Akun (dalam Rp. )</TableCell>
+                      <TableCell>{"Rp. " + data[0]?.saldo_awal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                     </TableRow>
                     {data.map((i) => (
                       <TableRow>
@@ -78,7 +78,7 @@ export default function Test2({ label, data }) {
                         <TableCell>{"# " + i.no_ref}</TableCell>
                         <TableCell>{"Rp. " + i.debit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                         <TableCell>{"Rp. " + i.kredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
-                        <TableCell>Selisih</TableCell>
+                        <TableCell>{"Rp. " + i.selisih.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

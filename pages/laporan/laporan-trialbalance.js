@@ -1,280 +1,142 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Layout from "../../components/layout";
-import TableDetailTBRow from "../../components/TrialBalance/TableDetailTBRow";
 
+import TableTrialBalance from "../../components/Laporan/TabelTrialBalance";
 import Link from "next/link";
-import {
-  Button,
-  Table,
-  DropdownButton,
-  Row,
-  Col,
-  Form,
-  FormControl,
-  InputGroup,
-  Dropdown,
-} from "react-bootstrap";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import TablePagination from "../../components/TablePagination";
+import { Button, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
+import { Breadcrumbs, Paper, Table, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography, TableBody } from "@material-ui/core";
+import Axios from "../../utils/axios";
+import { Formik, Form as Forms, Field } from "formik";
+import moment from "moment";
+export default function LaporanBukuBesar() {
+  const [bukuBesar, setBukuBesar] = useState([]);
+  const [total_debit, setTotalDebit] = useState(0);
+  const [total_kredit, setTotalKredit] = useState(0);
 
-export default function laporantrialbalance({ header, header2, header3 }) {
-  const tgl_mulai = useRef(null);
-  const tgl_akhir = useRef(null);
-  const onClick = () => {
-    // Axios.get()
-  };
-  console.log(header);
+  const startOfMonth = moment().clone().startOf("month").format("YYYY-MM-DD");
+  const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
+
+  // const onClick = () => {
+  //   Axios.get("/laporan/bukuBesar").then((response) => {
+  //     console.log(response);
+  //     setBukuBesar(response?.data?.data || []);
+  //     setTotalDebit(response.data.debit);
+  //     setTotalKredit(response.data.kredit);
+  //   });
+  // };
+
+  useEffect(() => {
+    Axios.post("/laporan/trialBalance", {
+      data: {
+        tgl_awal: startOfMonth,
+        tgl_akhir: endOfMonth,
+      },
+    })
+      .then(function (response) {
+        // setBukuBesar(response?.data?.data || []);
+        // setTotalDebit(response.data.debit);
+        // setTotalKredit(response.data.kredit);
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Layout>
-      <div variant="container">
-        <div></div>
-        <h4 class="mb-6 mt-2">Trial Balance</h4>
-        <div class="mb-10">
-          <Row>
-            <Col sm="3">
-              <Form.Label>Tanggal Mulai</Form.Label>
-              <InputGroup className="mb-3">
-                <FormControl
-                  placeholder="Pick date"
-                  type="date"
-                  aria-label="date"
-                  ref={tgl_mulai}
-                />
-              </InputGroup>
-            </Col>
-            <Col sm="3">
-              <Form.Label>Tanggal Selesai</Form.Label>
-              <InputGroup className="mb-3">
-                <FormControl
-                  placeholder="Pick date"
-                  type="date"
-                  aria-label="date"
-                  ref={tgl_akhir}
-                />
-              </InputGroup>
-            </Col>
+      <Formik
+        initialValues={{
+          tgl_awal: startOfMonth,
+          tgl_akhir: endOfMonth,
+        }}
+        onSubmit={async (values) => {
+          // Axios.post("/laporan/bukuBesar", values)
+          //   .then(function (response) {
+          //     setBukuBesar(response?.data?.data || []);
+          //     setTotalDebit(response.data.debit);
+          //     setTotalKredit(response.data.kredit);
+          //   })
+          //   .catch(function (error) {
+          //     // setState({ open: true, toast_message: error.response.data.message });
+          //     console.log(error);
+          //   });
+        }}
+      >
+        {(props) => (
+          <Forms noValidate>
+            <div variant="container">
+              <h4 class="mb-6 mt-2">Trial Balance</h4>
+              <div class="mb-10">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Tanggal Mulai</Form.Label>
+                    <InputGroup className="mb-3">
+                      <FormControl type="date" aria-label="date" value={props.values.tgl_awal} onChange={props.handleChange} />
+                    </InputGroup>
+                  </Col>
+                  <Col sm="3">
+                    <Form.Label>Tanggal Selesai</Form.Label>
+                    <InputGroup className="mb-3">
+                      <FormControl type="date" aria-label="date" name="tgl_akhir" value={props.values.tgl_akhir} onChange={props.handleChange} />
+                    </InputGroup>
+                  </Col>
 
-            <Col>
-              <Button variant="primary mr-2 mt-7" onClick={onClick}>
-                {" "}
-                Filter
-              </Button>
-            </Col>
-          </Row>
+                  <Col>
+                    <Button variant="primary mr-2 mt-7" onClick={props.handleSubmit}>
+                      Filter
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
 
-          <div class="flex flex-row-reverse">
-            <DropdownButton
-              variant="primary ml-2"
-              id="dropdown-basic-button"
-              title="Export"
-            >
-              <Dropdown.Item>
-                <Link href="#">
-                  <a>PDF</a>
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item href="#/action-2">XLS</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">CSV</Dropdown.Item>
-            </DropdownButton>
-          </div>
-        </div>
-        <table class="min-w-full table-auto">
-          <thead class="justify-between">
-            <tr class="bg-dark">
-              <th class="px-2 py-2" colSpan="3">
-                <span class="text-gray-300">Data</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <TableDetailTBRow label="Aset" data={header} />
-            <TableDetailTBRow label="Kewajiban" data={header2} />
-            <TableDetailTBRow label="Ekuitas" data={header3} />
-          </tbody>
-          <tfoot>
-            <tr>
-              <td class="px-2 py-1" align="right">
-                Grand Total
-              </td>
-              {/* <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
-              <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td> */}
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+              <TableContainer component={Paper}>
+                <Table aria-label="spanning table" size="small">
+                  <TableHead className="bg-blue-400">
+                    <TableRow>
+                      <TableCell />
+                      <TableCell align="center" colSpan={2} className="border-l border-gray-200 text-white">
+                        Saldo Awal
+                      </TableCell>
+                      <TableCell align="center" colSpan={2} className="border-l border-gray-200 text-white">
+                        Penyesuian
+                      </TableCell>
+                      <TableCell align="center" colSpan={2} className="border-l border-gray-200 text-white">
+                        Saldo Akhir
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left" className="text-white">
+                        Daftar Akun
+                      </TableCell>
+                      <TableCell align="center" className="border-l border-gray-200 text-white">
+                        Debit
+                      </TableCell>
+                      <TableCell align="center" className="border-l border-gray-200 text-white">
+                        Kredit
+                      </TableCell>
+                      <TableCell align="center" className="border-l border-gray-200 text-white">
+                        Debit
+                      </TableCell>
+                      <TableCell align="center" className="border-l border-gray-200 text-white">
+                        Kredit
+                      </TableCell>
+                      <TableCell align="center" className="border-l border-gray-200 text-white">
+                        Debit
+                      </TableCell>
+                      <TableCell align="center" className="border-l border-gray-200 text-white">
+                        Kredit
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableTrialBalance />
+                </Table>
+              </TableContainer>
+            </div>
+          </Forms>
+        )}
+      </Formik>
     </Layout>
   );
-}
-
-export async function getServerSideProps() {
-  const aset = await prisma.akun.findMany({
-    where: {
-      kategoriId: {
-        in: [3, 1, 2, 4, 5, 6, 7, 15],
-      },
-    },
-    include: {
-      DetailSaldoAwal: true,
-
-      DetailJurnal: true,
-      JurnalPembelian: true,
-      JurnalPenjualan: true,
-      JurnalBiaya: true,
-      JurnalTransferUang: true,
-      JurnalKirimUang: true,
-      JurnalTerimaUang: true,
-    },
-  });
-
-  const kewajiban = await prisma.akun.findMany({
-    where: {
-      kategoriId: {
-        in: [8, 10, 11],
-      },
-    },
-    include: {
-      DetailSaldoAwal: true,
-
-      DetailJurnal: true,
-      JurnalPembelian: true,
-      JurnalPenjualan: true,
-      JurnalBiaya: true,
-      JurnalTransferUang: true,
-      JurnalKirimUang: true,
-      JurnalTerimaUang: true,
-    },
-  });
-
-  const ekuitas = await prisma.akun.findMany({
-    where: {
-      kategoriId: {
-        in: [12, 13, 14, 16, 17],
-      },
-    },
-    include: {
-      DetailSaldoAwal: true,
-
-      DetailJurnal: true,
-      JurnalPembelian: true,
-      JurnalPenjualan: true,
-      JurnalBiaya: true,
-      JurnalTransferUang: true,
-      JurnalKirimUang: true,
-      JurnalTerimaUang: true,
-    },
-  });
-
-  // //Journal Entry
-  // const journal_debit = flatten(
-  //   getJurnal.map((i) => {
-  //     return i.DetailJurnal.filter((j) => j.tipe_saldo === "Debit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // const journal_kredit = flatten(
-  //   getJurnal.map((i) => {
-  //     return i.DetailJurnal.filter((j) => j.tipe_saldo === "Kredit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // //Sales Invoice
-  // const penjualan_debit = flatten(
-  //   getPenjualan.map((i) => {
-  //     return i.JurnalPenjualan.filter((j) => j.tipe_saldo === "Debit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // const penjualan_kredit = flatten(
-  //   getPenjualan.map((i) => {
-  //     return i.JurnalPenjualan.filter((j) => j.tipe_saldo === "Kredit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // //Purchase Invoice
-  // const pembelian_debit = flatten(
-  //   getPembelian.map((i) => {
-  //     return i.JurnalPembelian.filter((j) => j.tipe_saldo === "Debit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // const pembelian_kredit = flatten(
-  //   getPembelian.map((i) => {
-  //     return i.JurnalPembelian.filter((j) => j.tipe_saldo === "Kredit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // //Kirim Uang Invoice
-  // const kirimuang_debit = flatten(
-  //   getKirimUang.map((i) => {
-  //     return i.JurnalKirimUang.filter((j) => j.tipe_saldo === "Debit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // const kirimuang_kredit = flatten(
-  //   getKirimUang.map((i) => {
-  //     return i.JurnalKirimUang.filter((j) => j.tipe_saldo === "Kredit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // //Terima Uang Invoice
-  // const terimauang_debit = flatten(
-  //   getTerimaUang.map((i) => {
-  //     return i.JurnalTerimaUang.filter((j) => j.tipe_saldo === "Debit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // const terimauang_kredit = flatten(
-  //   getTerimaUang.map((i) => {
-  //     return i.JurnalTerimaUang.filter((j) => j.tipe_saldo === "Kredit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // //Transfer Uang Invoice
-  // const transferuang_debit = flatten(
-  //   getTransferUang.map((i) => {
-  //     return i.JurnalTransferUang.filter((j) => j.tipe_saldo === "Debit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // const transferuang_kredit = flatten(
-  //   getTransferUang.map((i) => {
-  //     return i.JurnalTransferUang.filter((j) => j.tipe_saldo === "Kredit");
-  //   })
-  // ).reduce((a, b) => a + b.nominal, 0);
-
-  // const totaldebit =
-  //   kirimuang_debit +
-  //   pembelian_debit +
-  //   penjualan_debit +
-  //   terimauang_debit +
-  //   transferuang_debit +
-  //   journal_debit;
-
-  // const totalkredit =
-  //   kirimuang_kredit +
-  //   pembelian_kredit +
-  //   penjualan_kredit +
-  //   terimauang_kredit +
-  //   transferuang_kredit +
-  //   journal_kredit;
-
-  // const getPembelian = await prisma.headerPembelian.findMany({
-  //   orderBy: {
-  //     id: "asc",
-  //   },
-  //   include: {
-  //     JurnalPembelian: true,
-  //   },
-  // });
-
-  return {
-    props: {
-      header: aset,
-      header2: kewajiban,
-      header3: ekuitas,
-      // debit: grandtotaldebit,
-      // kredit: grandtotalkredit,
-    },
-  };
 }

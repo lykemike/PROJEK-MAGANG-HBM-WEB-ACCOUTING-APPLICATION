@@ -69,6 +69,11 @@ export const getBukuBesarPrisma = async (tgl_awal, tgl_akhir) => {
         select: {
           nama_akun: true,
           kode_akun: true,
+          kategori_akun: {
+            select: {
+              saldo_normal_nama: true,
+            },
+          },
           DetailSaldoAwal: {
             include: {
               header_saldo_awal: true,
@@ -89,6 +94,56 @@ export const getBukuBesarPrisma = async (tgl_awal, tgl_akhir) => {
       no_ref: data.no_ref,
       saldo_awal: data.akun.DetailSaldoAwal[0].debit == 0 ? data.akun.DetailSaldoAwal[0].kredit : data.akun.DetailSaldoAwal[0].debit,
       saldo_awal_date: data.akun.DetailSaldoAwal[0].header_saldo_awal.tgl_konversi,
+      saldo_normal: data.akun.kategori_akun.saldo_normal_nama,
+    });
+  });
+
+  return transform;
+};
+
+export const getTrialBalancePrisma = async (tgl_awal, tgl_akhir) => {
+  let transform = [];
+
+  const get_selected_data = await prisma.laporanTransaksi.findMany({
+    where: {
+      date: {
+        gte: "01/01/2022",
+        lte: "31/01/2022",
+      },
+    },
+    include: {
+      kategori: true,
+      akun: {
+        select: {
+          nama_akun: true,
+          kode_akun: true,
+          kategori_akun: {
+            select: {
+              saldo_normal_nama: true,
+            },
+          },
+          DetailSaldoAwal: {
+            include: {
+              header_saldo_awal: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  get_selected_data?.map((data) => {
+    transform.push({
+      kategori: data.kategori.name + " (" + data.kategori.id + ")",
+      heading: data.akun.nama_akun + ": " + data.akun.kode_akun,
+      tanggal: data.date,
+      debit: data.debit,
+      kredit: data.kredit,
+      sumber_transaksi: data.sumber_transaksi,
+      no_ref: data.no_ref,
+      saldo_awal: data.akun.DetailSaldoAwal[0].debit == 0 ? data.akun.DetailSaldoAwal[0].kredit : data.akun.DetailSaldoAwal[0].debit,
+      saldo_awal_date: data.akun.DetailSaldoAwal[0].header_saldo_awal.tgl_konversi,
+      saldo_normal: data.akun.kategori_akun.saldo_normal_nama,
     });
   });
 

@@ -14,7 +14,7 @@ export default function laporanjurnalumum() {
   const tgl_akhir = useRef(null);
   const [jurnal, setJurnal] = useState([]);
   const [total_debit, setTotalDebit] = useState(0);
-  const [total_kredit, setTotalKredit] = useState(0);
+  const [total_credit, setTotalcredit] = useState(0);
 
   const startOfMonth = moment().clone().startOf("month").format("YYYY-MM-DD");
   const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
@@ -29,7 +29,7 @@ export default function laporanjurnalumum() {
       .then(function (response) {
         setJurnal(response?.data?.data || []);
         setTotalDebit(response.data.debit);
-        setTotalKredit(response.data.kredit);
+        setTotalcredit(response.data.credit);
       })
       .catch(function (error) {
         console.log(error);
@@ -48,7 +48,7 @@ export default function laporanjurnalumum() {
             .then(function (response) {
               setJurnal(response?.data?.data || []);
               setTotalDebit(response.data.debit);
-              setTotalKredit(response.data.kredit);
+              setTotalcredit(response.data.credit);
             })
             .catch(function (error) {
               // setState({ open: true, toast_message: error.response.data.message });
@@ -76,13 +76,13 @@ export default function laporanjurnalumum() {
             <div class="mt-4 mb-4">
               <Row>
                 <Col sm="3">
-                  <Form.Label>Tanggal Mulai</Form.Label>
+                  <Form.Label>date Mulai</Form.Label>
                   <InputGroup className="mb-3">
                     <FormControl placeholder="Pick date" type="date" name="tgl_awal" value={props.values.tgl_awal} onChange={props.handleChange} />
                   </InputGroup>
                 </Col>
                 <Col sm="3">
-                  <Form.Label>Tanggal Selesai</Form.Label>
+                  <Form.Label>date Selesai</Form.Label>
                   <InputGroup className="mb-3">
                     <FormControl placeholder="Pick date" type="date" name="tgl_akhir" value={props.values.tgl_akhir} onChange={props.handleChange} />
                   </InputGroup>
@@ -117,7 +117,7 @@ export default function laporanjurnalumum() {
                   <TableRow>
                     <TableCell />
                     <TableCell>
-                      <Typography className="text-dark">Tanggal Transaksi</Typography>
+                      <Typography className="text-dark">date Transaksi</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography className="text-dark">XXXXXXXXXXXXXXX</Typography>
@@ -160,7 +160,7 @@ export default function laporanjurnalumum() {
                       <Typography className="text-black font-bold">Rp. {total_debit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
                     </TableCell>
                     <TableCell align="right">
-                      <Typography className="text-black font-bold">Rp. {total_kredit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
+                      <Typography className="text-black font-bold">Rp. {total_credit.toLocaleString({ minimumFractionDigits: 0 })}</Typography>
                     </TableCell>
                   </TableRow>
                 </TableFooter>
@@ -172,3 +172,67 @@ export default function laporanjurnalumum() {
     </Layout>
   );
 }
+
+ledger?.map((data) => {
+  if (data.normal_balance == "Debit") {
+    if (data.debit > 0) {
+      // if normal balance is Debit & Debit is more than 0
+      transform2.push({
+        heading: data.heading,
+        date: data.date,
+        debit: data.debit,
+        credit: data.credit,
+        transaction_source: data.transaction_source,
+        begining_balance: data.begining_balance,
+        begining_balance_date: data.begining_balance_date,
+        normal_balance: data.begining_balance_date,
+        reference_no: data.reference_no,
+        balance: data.begining_balance + data.debit,
+      });
+    } else {
+      // if normal balance is Debit & Debit is less than 0
+      transform2.push({
+        heading: data.heading,
+        date: data.date,
+        debit: data.debit,
+        credit: data.credit,
+        transaction_source: data.transaction_source,
+        begining_balance: data.begining_balance,
+        begining_balance_date: data.begining_balance_date,
+        normal_balance: data.begining_balance_date,
+        reference_no: data.reference_no,
+        balance: data.begining_balance - data.credit,
+      });
+    }
+  } else if (data.normal_balance == "credit") {
+    if (data.credit > 0) {
+      // if normal balance is Kredit & Kredit is more than 0
+      transform2.push({
+        heading: data.heading,
+        date: data.date,
+        debit: data.debit,
+        credit: data.credit,
+        transaction_source: data.transaction_source,
+        begining_balance: data.begining_balance,
+        begining_balance_date: data.begining_balance_date,
+        normal_balance: data.begining_balance_date,
+        reference_no: data.reference_no,
+        balance: data.begining_balance + data.credit,
+      });
+    } else {
+      transform2.push({
+        // if normal balance is Kredit & Kredit is less than 0
+        heading: data.heading,
+        date: data.date,
+        debit: data.debit,
+        credit: data.credit,
+        transaction_source: data.transaction_source,
+        begining_balance: data.begining_balance,
+        begining_balance_date: data.begining_balance_date,
+        normal_balance: data.begining_balance_date,
+        reference_no: data.reference_no,
+        balance: data.begining_balance - data.debit,
+      });
+    }
+  }
+});
