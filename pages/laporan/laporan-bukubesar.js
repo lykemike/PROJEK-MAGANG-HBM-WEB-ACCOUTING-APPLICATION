@@ -37,7 +37,7 @@ export default function LaporanBukuBesar() {
         setBukuBesar(response?.data?.data || []);
         setTotalDebit(response.data.debit);
         setTotalKredit(response.data.kredit);
-        console.log(response?.data?.data2);
+        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -122,7 +122,7 @@ export default function LaporanBukuBesar() {
                     </TableRow>
                   </TableHead>
                   {bukuBesar?.map((data, index) => (
-                    <TabelBukuBesar key={index} data={data.data} label={data.label} />
+                    <TabelBukuBesar key={index} data={data} label={data.label} />
                   ))}
                   <TableFooter>
                     <TableRow>

@@ -1,181 +1,123 @@
-import React, { useRef, useState } from "react";
-import Layout from "../../components/layout";
-import TableDetailBBRow from "../../components/BukuBesar/TableDetailBBRow";
-import Link from "next/link";
-import TablePagination from "../../components/TablePagination";
-import { Button, Table, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-import Axios from "../../utils/axios";
-export default function laporanbukubesar({ header }) {
-  const tgl_mulai = useRef(null);
-  const tgl_akhir = useRef(null);
-  const [buku_besar, setBukuBesar] = useState([]);
-  const onClick = () => {
-    Axios.get("/laporan/bukuBesar").then((response) => {
-      setBukuBesar(response.data?.data);
-    });
-  };
+import React, { useState, useMemo } from "react";
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+import { Box, Breadcrumbs, Typography, Collapse, Table, TableRow, TableCell, TableHead, TableFooter, TableBody, IconButton } from "@material-ui/core";
 
-  const firstIndex = page * rowsPerPage;
-  const lastIndex = page * rowsPerPage + rowsPerPage;
+import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons/";
 
-  const handlePrevChange = () => {
-    if (page < 1) {
-      setPage(0);
-    } else {
-      setPage(page - 1);
-    }
-  };
-
-  const handleNextChange = () => {
-    if (page < parseInt(header.length / rowsPerPage)) {
-      setPage(page + 1);
-    } else {
-      setPage(parseInt(header.length / rowsPerPage));
-    }
-  };
-
-  const handleFirstPage = () => {
-    setPage(0);
-  };
-
-  const handleClickPage = (id) => {
-    setPage(id);
-  };
-
-  const handleLastPage = () => {
-    setPage(parseInt(header.length / rowsPerPage));
-  };
-
-  console.log(header);
+export default function Test2({ label, data }) {
+  const [open, setOpen] = useState(false);
   return (
-    <Layout>
-      <div variant="container">
-        <div></div>
-        <h4 class="mb-6 mt-2">Buku Besar</h4>
-        <div class="mb-10">
-          <Row>
-            <Col sm="3">
-              <Form.Label>Tanggal Mulai</Form.Label>
-              <InputGroup className="mb-3">
-                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_mulai} />
-              </InputGroup>
-            </Col>
-            <Col sm="3">
-              <Form.Label>Tanggal Selesai</Form.Label>
-              <InputGroup className="mb-3">
-                <FormControl placeholder="Pick date" type="date" aria-label="date" ref={tgl_akhir} />
-              </InputGroup>
-            </Col>
+    <>
+      <TableBody>
+        <TableRow>
+          <TableCell>
+            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+              {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            </IconButton>
+          </TableCell>
+          <TableCell component="th" scope="row" style={{ minWidth: 500, width: 500 }}>
+            <Typography className="text-blue-700">{label}</Typography>
+          </TableCell>
+          <TableCell />
+          <TableCell />
+          <TableCell />
+          <TableCell />
+        </TableRow>
 
-            <Col>
-              <Button variant="primary mr-2 mt-7" onClick={onClick}>
-                {" "}
-                Filter
-              </Button>
-            </Col>
-          </Row>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box margin={1}>
+                <Typography variant="body1" gutterBottom component="div" className="text-black font-bold">
+                  Jurnal
+                </Typography>
+                <Table size="small" aria-label="purchases">
+                  <TableHead className="bg-blue-300">
+                    <TableRow>
+                      <TableCell>Tanggal</TableCell>
+                      <TableCell>Transaksi</TableCell>
+                      <TableCell>Nomor</TableCell>
+                      <TableCell>Debit</TableCell>
+                      <TableCell>Kredit</TableCell>
+                      <TableCell>Saldo</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {/* {data.map((i) => (
+                      <TableRow>
+                        <TableCell component="th" scope="row">
+                          {i.kode_akun} - {i.nama_akun}
+                        </TableCell>
+                        <TableCell align="right">
+                          Rp.{" "}
+                          {i.debit.toLocaleString({
+                            minimumFractionDigits: 0,
+                          })}
+                        </TableCell>
+                        <TableCell align="right">
+                          Rp.{" "}
+                          {i.kredit.toLocaleString({
+                            minimumFractionDigits: 0,
+                          })}
+                        </TableCell>
+                      </TableRow>
+                    ))} */}
 
-          <div class="flex flex-row-reverse">
-            <DropdownButton variant="primary ml-2" id="dropdown-basic-button" title="Export">
-              <Dropdown.Item>
-                <Link href="#">
-                  <a>PDF</a>
-                </Link>
-              </Dropdown.Item>
-              <Dropdown.Item href="#/action-2">XLS</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">CSV</Dropdown.Item>
-            </DropdownButton>
-          </div>
-        </div>
-        <table class="min-w-full table-auto">
-          <thead class="justify-between">
-            <tr class="bg-dark">
-              <th class="px-2 py-2" colSpan="3">
-                <span class="text-gray-300">Data</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            {header.slice(firstIndex, lastIndex).map((data, index) => {
-              return <TableDetailBBRow key={index} data={data} index={index} />;
-            })}
-            {/* {header2.map((data, index) => {
-              return <TableDetailPenjualanRow key={index} data={data} index={index} />;
-            })}
-            {header3.map((data, index) => {
-              return <TableDetailPenjualanRow tipe='pembelian' label='Purchase Invoice' key={index} data={data} index={index} />;
-            })} */}
-          </tbody>
-          <tfoot>
-            {/* <tr>
-              <td class='px-2 py-1' align='right'>
-                Grand Total
-              </td>
-              <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
-              <td class='px-2 py-1'>Rp. {data.DetailJurnal.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</td>
-            </tr> */}
-          </tfoot>
-        </table>
-        <div class="float-right mt-2">
-          <TablePagination
-            onPrevChange={handlePrevChange}
-            onNextChange={handleNextChange}
-            onFirstPage={handleFirstPage}
-            onLastPage={handleLastPage}
-            onClickPage={handleClickPage}
-            lastIndex={parseInt(header.length / rowsPerPage)}
-            currentPage={page}
-          />
-        </div>
-      </div>
-    </Layout>
+                    <TableRow>
+                      <TableCell>{data[0]?.saldo_awal_date}</TableCell>
+                      <TableCell>Saldo Awal</TableCell>
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell>{"Rp. " + data[0]?.saldo_awal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                    </TableRow>
+                    {data.map((i, index) => {
+                      let saldo_awal = +data[0].saldo_awal;
+                      if (index > 0) {
+                        saldo_awal = data[index - 1].saldo_awal + data[index].debit - data[index].kredit;
+                        return (
+                          <TableRow>
+                            <TableCell>{i.tanggal}</TableCell>
+                            <TableCell>{i.sumber_transaksi}</TableCell>
+                            <TableCell>{"# " + i.no_ref}</TableCell>
+                            <TableCell>{"Rp. " + i.debit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                            <TableCell>{"Rp. " + i.kredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                            <TableCell>{"Rp. " + saldo_awal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                          </TableRow>
+                        );
+                      } else {
+                        return (
+                          <TableRow>
+                            <TableCell>{i.tanggal}</TableCell>
+                            <TableCell>{i.sumber_transaksi}</TableCell>
+                            <TableCell>{"# " + i.no_ref}</TableCell>
+                            <TableCell>{"Rp. " + i.debit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                            <TableCell>{"Rp. " + i.kredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                            <TableCell>{"Rp. " + saldo_awal.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                          </TableRow>
+                        );
+                      }
+                    })}
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell />
+                      <TableCell>Saldo Akhir</TableCell>
+                      <TableCell>{"Rp. " + data.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>{"Rp. " + data.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>XXX.XXX</TableCell>
+                      {/* <TableCell align="right">Total</TableCell> */}
+                      {/* <TableCell align="right">Rp. {data.reduce((a, b) => (a = a + b.debit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell> */}
+                      {/* <TableCell align="right">Rp. {data.reduce((a, b) => (a = a + b.kredit), 0).toLocaleString({ minimumFractionDigits: 0 })}</TableCell> */}
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </>
   );
-}
-
-export async function getServerSideProps() {
-  const header = await prisma.akun.findMany({
-    orderBy: {
-      kategoriId: "asc",
-    },
-    include: {
-      // JurnalPenjualan: {
-      //   include: {
-      //     header_penjualan: true,
-      //   },
-      // },
-      // DetailJurnal: {
-      //   include: {
-      //     header_jurnal: true
-      //   }
-      // },
-      JurnalKirimUang: {
-        include: {
-          header_kirim_uang: true,
-        },
-      },
-      JurnalTerimaUang: {
-        include: {
-          header_terima_uang: true,
-        },
-      },
-      JurnalTransferUang: {
-        include: {
-          transfer_uang: true,
-        },
-      },
-    },
-  });
-
-  return {
-    props: {
-      header: header,
-      // header2: getPenjualan,
-      // header3: getPembelian,
-    },
-  };
 }

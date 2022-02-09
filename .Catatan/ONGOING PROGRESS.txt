@@ -1,39 +1,6 @@
 =============================
    || ON GOING PROGRESS ||
 =============================
-
-Daftar Akun
-    * Kode Akun Otomatis sesuai kategori yang di pilih = 100%
-    * Perbaikan UI = 100%
-
-Alert's Page
-    * User page = 100%
-    * Role page = 100%
-    * Pajak page = 100%
-    * Produk page = 100%
-    * Penjualan page = 100%
-    - Penerimaan Pembayaran page = 100%
-    * Pembelian page = 50%
-    - Pengiriman Pembayaran page = 50%
-    * Reimbursement page = 100%
-    * Kontak page = 100%
-    * Biaya = 100%
-    * Akun = 40%
-    * Kas & Bank = %
-        - Transfer page = 100%
-        - Kirim page = 100%
-        - Terima page = 100%
-        - Import Bank Statement = 100%
-        - Pemetaan Kas, Delete, Create = 
-    * Jurnal = 100%
-
-Optional File upload
-  * Jurnal create & update page = 100%
-  * Penjualan create & update page = 100%
-  * Produk = 100%
-  * Kas bank Terima Uang create & update page = 100%
-  * Kas bank Kirim Uang create & update page = 100%
-
 * Database sudah diganti menggunakan Postgres SQL = 100%  
 * Table Laporan Transaksi schema = 100% 
 
@@ -115,9 +82,10 @@ Optional File upload
         - delete akan mulai dari laporan transaksi -> jurnal kirim uang -> detail kirim uang -> kirim uang = 100%
     
     * Laporan
-        - Laporan Jurnal = 95% (sisa export xlsx)
-        - Laporan Buku Besar = 85%
-        - Trial Balance = 30%
+        - Laporan Jurnal = 97% (sisa export xlsx)
+        - Laporan Buku Besar = 95% (sisa export xlsx & nampilin saldo terakhir di FE)
+        - Trial Balance = 50%
+        - Neraca = 20%
 
 
 

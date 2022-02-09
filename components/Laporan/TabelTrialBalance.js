@@ -2,12 +2,15 @@ import React, { useState, useMemo } from "react";
 
 import { Box, Breadcrumbs, Typography, Collapse, Table, TableRow, TableCell, TableHead, TableFooter, TableBody, IconButton } from "@material-ui/core";
 
-export default function Test2() {
+export default function Test2({ label, data }) {
   return (
     <>
+      {console.log(data)}
       <TableBody>
         <TableRow>
-          <TableCell>Aset</TableCell>
+          <TableCell>
+            <h5 className="text-blue-600">{label}</h5>
+          </TableCell>
           <TableCell />
           <TableCell />
           <TableCell />
@@ -15,17 +18,18 @@ export default function Test2() {
           <TableCell />
           <TableCell />
         </TableRow>
-        <TableRow>
-          <TableCell>(1-10101) - Kas</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-        </TableRow>
-
-        <TableRow>
+        {/* {data.map((i) => (
+          <TableRow>
+            <TableCell>{i.heading}</TableCell>
+            <TableCell>Rp. 0, 00</TableCell>
+            <TableCell>Rp. 0, 00</TableCell>
+            <TableCell>Rp. 0, 00</TableCell>
+            <TableCell>Rp. 0, 00</TableCell>
+            <TableCell>Rp. 0, 00</TableCell>
+            <TableCell>Rp. 0, 00</TableCell>
+          </TableRow>
+        ))} */}
+        {/* <TableRow>
           <TableCell>Kewajiban</TableCell>
           <TableCell />
           <TableCell />
@@ -42,9 +46,9 @@ export default function Test2() {
           <TableCell>Rp. 0, 00</TableCell>
           <TableCell>Rp. 0, 00</TableCell>
           <TableCell>Rp. 0, 00</TableCell>
-        </TableRow>
+        </TableRow> */}
 
-        <TableRow>
+        {/* <TableRow>
           <TableCell>Ekuitas</TableCell>
           <TableCell />
           <TableCell />
@@ -61,7 +65,7 @@ export default function Test2() {
           <TableCell>Rp. 0, 00</TableCell>
           <TableCell>Rp. 0, 00</TableCell>
           <TableCell>Rp. 0, 00</TableCell>
-        </TableRow>
+        </TableRow> */}
       </TableBody>
     </>
   );

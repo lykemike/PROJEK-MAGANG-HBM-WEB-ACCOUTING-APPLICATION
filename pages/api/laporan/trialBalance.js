@@ -1,5 +1,5 @@
 import { PrismaClient } from ".prisma/client";
-import { groupBy, sortBy, sum, sumBy } from "lodash";
+import { groupBy, sortBy, sum, sumBy, merge, union, mapValues } from "lodash";
 import { getTrialBalancePrisma } from "../../../utils";
 const prisma = new PrismaClient();
 
@@ -7,9 +7,63 @@ export default async (req, res) => {
   try {
     const trial_balance = await getTrialBalancePrisma("01/01/2022", "31/01/2022");
     let transform = trial_balance;
-    const hasil_group_aset = groupBy(transform, "kategori");
+    let aset = [];
+    let kewajiban = [];
+    let ekuitas = [];
+    let result = [];
 
-    res.status(201).json({ message: "Trial Balance data found!", trial_balance, hasil_group_aset });
+    transform
+      ?.filter(
+        (data) =>
+          data.kategori_id == 1 ||
+          data.kategori_id == 2 ||
+          data.kategori_id == 3 ||
+          data.kategori_id == 4 ||
+          data.kategori_id == 5 ||
+          data.kategori_id == 6 ||
+          data.kategori_id == 7 ||
+          data.kategori_id == 15
+      )
+      .map((data) => {
+        aset.push({
+          ...data,
+          label: "Aset",
+        });
+      });
+
+    transform
+      ?.filter((data) => data.kategori_id == 8 || data.kategori_id == 10 || data.kategori_id == 11)
+      .map((data) => {
+        kewajiban.push({
+          ...data,
+          label: "Kewajiban",
+        });
+      });
+
+    transform
+      ?.filter((data) => data.kategori_id == 12 || data.kategori_id == 13 || data.kategori_id == 14 || data.kategori_id == 16 || data.kategori_id == 17)
+      .map((data) => {
+        ekuitas.push({
+          ...data,
+          label: "Ekuitas",
+        });
+      });
+
+    let hasilUnion = union(aset, kewajiban, ekuitas);
+
+    const hasilNestedGrouping = mapValues(
+      groupBy(hasilUnion, (i) => i.label),
+      (hasilUnion2) => groupBy(hasilUnion2, (j) => j.heading)
+    );
+
+    for (const [key, value] of Object.entries(hasilNestedGrouping)) {
+      result.push({
+        label: key,
+        data: value,
+      });
+    }
+
+    res.status(201).json({ message: "Trial Balance data found!", data: result });
   } catch (error) {
     res.status(400).json({ data: "Trial Balance data not found!", error });
     console.log(error);
