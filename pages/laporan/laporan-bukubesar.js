@@ -37,7 +37,7 @@ export default function LaporanBukuBesar() {
         setBukuBesar(response?.data?.data || []);
         setTotalDebit(response.data.debit);
         setTotalKredit(response.data.kredit);
-        console.log(response);
+        console.log(response?.data?.data);
       })
       .catch(function (error) {
         console.log(error);

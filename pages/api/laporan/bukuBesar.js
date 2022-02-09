@@ -55,45 +55,7 @@ export default async (req, res) => {
       });
     }
 
-    let akhir = [];
-    // result.forEach((value, indexLabel) => {
-    //   let obj = { label: value.label };
-    //   let temp = [];
-    //   let saldo_awal = 0;
-    //   value.data.map((j, index) => {
-    //     if (j.saldo_normal == "Debit") {
-    //       if (index > 0) {
-    //         saldo_awal = saldo_awal + j.debit - j.kredit;
-    //         temp.push({
-    //           ...j,
-    //           selisih: saldo_awal,
-    //         });
-    //       } else {
-    //         saldo_awal = value.data[0].debit + value.data[0].saldo_awal;
-    //         temp.push({
-    //           ...j,
-    //           selisih: saldo_awal,
-    //         });
-    //       }
-    //     } else if (j.saldo_normal == "Kredit") {
-    //       if (index > 0) {
-    //         saldo_awal = saldo_awal - j.debit + j.kredit;
-    //         temp.push({
-    //           ...j,
-    //           selisih: saldo_awal,
-    //         });
-    //       } else {
-    //         saldo_awal = value.data[0].kredit + value.data[0].saldo_awal;
-    //         temp.push({
-    //           ...j,
-    //           selisih: saldo_awal,
-    //         });
-    //       }
-    //     }
-    //   });
-    //   saldo_awal = 0;
-    //   akhir.push({ ...obj, value: temp });
-    // });
+    let end_result = [];
 
     result.forEach((value, indexLabel) => {
       let obj = { label: value.label };
@@ -125,10 +87,10 @@ export default async (req, res) => {
         }
       });
       saldo_awal = 0;
-      akhir.push({ ...obj, value: temp });
+      end_result.push({ ...obj, value: temp });
     });
 
-    res.status(201).json({ data: sortBy(akhir, "label"), debit: total_debit, kredit: total_kredit });
+    res.status(201).json({ data: sortBy(end_result, "label"), debit: total_debit, kredit: total_kredit });
   } catch (error) {
     res.status(400).json({ data: "Buku Besar Not Found!", error });
     console.log(error);

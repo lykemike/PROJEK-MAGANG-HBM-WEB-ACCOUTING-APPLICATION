@@ -56,6 +56,8 @@ export default async (req, res) => {
       (hasilUnion2) => groupBy(hasilUnion2, (j) => j.heading)
     );
 
+    let result2 = [];
+
     for (const [key, value] of Object.entries(hasilNestedGrouping)) {
       result.push({
         label: key,
@@ -63,7 +65,14 @@ export default async (req, res) => {
       });
     }
 
-    res.status(201).json({ message: "Trial Balance data found!", data: result });
+    for (const [key, value] of Object.entries(result)) {
+      result2.push({
+        label: key,
+        data: value.data,
+      });
+    }
+
+    res.status(201).json({ message: "Trial Balance data found!", data: result, result2 });
   } catch (error) {
     res.status(400).json({ data: "Trial Balance data not found!", error });
     console.log(error);
