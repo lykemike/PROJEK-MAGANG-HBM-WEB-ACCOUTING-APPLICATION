@@ -130,7 +130,7 @@ export default async (req, res) => {
           },
           {
             akun_id: akun_piutang,
-            kategori_id: get_penerimaan_pembayaran.akun.kategoriId,
+            kategori_id: get_penerimaan_pembayaran.header_penjualan.kontak.piutang.kategoriId,
             timestamp: current_time,
             date: confirm_date,
             hari: parseInt(day),
@@ -213,7 +213,7 @@ export default async (req, res) => {
           },
           {
             akun_id: akun_piutang,
-            kategori_id: get_penerimaan_pembayaran.akun.kategoriId,
+            kategori_id: get_penerimaan_pembayaran.header_penjualan.kontak.piutang.kategoriId,
             timestamp: current_time,
             date: confirm_date,
             hari: parseInt(day),

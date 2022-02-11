@@ -9,8 +9,10 @@ import { Breadcrumbs, Paper, Table, TableCell, TableContainer, TableFooter, Tabl
 import Axios from "../../utils/axios";
 import { Formik, Form as Forms, Field } from "formik";
 import moment from "moment";
-export default function LaporanBukuBesar() {
-  const [bukuBesar, setBukuBesar] = useState([]);
+import { data } from "autoprefixer";
+
+export default function LaporanTrialBalance() {
+  const [trialBalance, setTrialBalance] = useState([]);
   const [total_debit, setTotalDebit] = useState(0);
   const [total_kredit, setTotalKredit] = useState(0);
 
@@ -34,10 +36,10 @@ export default function LaporanBukuBesar() {
       },
     })
       .then(function (response) {
-        // setBukuBesar(response?.data?.data || []);
-        // setTotalDebit(response.data.debit);
-        // setTotalKredit(response.data.kredit);
-        console.log(response);
+        setTrialBalance(response?.data?.data || []);
+        setTotalDebit(response.data.debit);
+        setTotalKredit(response.data.kredit);
+        console.log(response?.data?.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -52,23 +54,23 @@ export default function LaporanBukuBesar() {
           tgl_akhir: endOfMonth,
         }}
         onSubmit={async (values) => {
-          // Axios.post("/laporan/bukuBesar", values)
-          //   .then(function (response) {
-          //     setBukuBesar(response?.data?.data || []);
-          //     setTotalDebit(response.data.debit);
-          //     setTotalKredit(response.data.kredit);
-          //   })
-          //   .catch(function (error) {
-          //     // setState({ open: true, toast_message: error.response.data.message });
-          //     console.log(error);
-          //   });
+          Axios.post("/laporan/bukuBesar", values)
+            .then(function (response) {
+              setBukuBesar(response?.data?.data || []);
+              setTotalDebit(response.data.debit);
+              setTotalKredit(response.data.kredit);
+            })
+            .catch(function (error) {
+              // setState({ open: true, toast_message: error.response.data.message });
+              console.log(error);
+            });
         }}
       >
         {(props) => (
           <Forms noValidate>
             <div variant="container">
-              <h4 class="mb-6 mt-2">Trial Balance</h4>
-              <div class="mb-10">
+              <h4 className="mb-6 mt-2">Trial Balance</h4>
+              <div className="mb-10">
                 <Row>
                   <Col sm="3">
                     <Form.Label>Tanggal Mulai</Form.Label>
@@ -130,7 +132,9 @@ export default function LaporanBukuBesar() {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableTrialBalance />
+                  {/* {trialBalance?.map((data, index) => (
+                    <TableTrialBalance key={index} data={data.data} label={data.label} />
+                  ))} */}
                 </Table>
               </TableContainer>
             </div>
