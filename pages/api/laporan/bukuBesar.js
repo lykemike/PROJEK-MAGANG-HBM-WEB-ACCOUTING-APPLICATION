@@ -9,10 +9,7 @@ export default async (req, res) => {
     const end_date = req.body.tgl_akhir;
     const buku_besar = await getBukuBesarPrisma(start_date, end_date);
     let tranform = [];
-
     let result = [];
-
-    let saldo_awal = 0;
 
     buku_besar?.map((data, index) => {
       if (data.saldo_normal == "Debit") {

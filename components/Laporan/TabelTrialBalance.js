@@ -1,11 +1,9 @@
-import React, { useState, useMemo } from "react";
-
-import { Box, Breadcrumbs, Typography, Collapse, Table, TableRow, TableCell, TableHead, TableFooter, TableBody, IconButton } from "@material-ui/core";
+import React from "react";
+import { TableBody, TableRow, TableCell } from "@material-ui/core";
 
 export default function Test2({ label, data }) {
   return (
     <>
-      {console.log(data)}
       <TableBody>
         <TableRow>
           <TableCell>
@@ -18,54 +16,17 @@ export default function Test2({ label, data }) {
           <TableCell />
           <TableCell />
         </TableRow>
-        {/* {data.map((i) => (
+        {data.map((i) => (
           <TableRow>
             <TableCell>{i.heading}</TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
-            <TableCell>Rp. 0, 00</TableCell>
+            <TableCell>Rp. {i.saldo_awal_debit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+            <TableCell>Rp. {i.saldo_awal_kredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+            <TableCell>{i.pny_debit}</TableCell>
+            <TableCell>{i.pny_kredit}</TableCell>
+            <TableCell>{i.akhir_debit}</TableCell>
+            <TableCell>{i.akhir_kredit}</TableCell>
           </TableRow>
-        ))} */}
-        {/* <TableRow>
-          <TableCell>Kewajiban</TableCell>
-          <TableCell />
-          <TableCell />
-          <TableCell />
-          <TableCell />
-          <TableCell />
-          <TableCell />
-        </TableRow>
-        <TableRow>
-          <TableCell>(2-20101) - Kewajiban</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-        </TableRow> */}
-
-        {/* <TableRow>
-          <TableCell>Ekuitas</TableCell>
-          <TableCell />
-          <TableCell />
-          <TableCell />
-          <TableCell />
-          <TableCell />
-          <TableCell />
-        </TableRow>
-        <TableRow>
-          <TableCell>(3-30101) - Ekujitas</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-          <TableCell>Rp. 0, 00</TableCell>
-        </TableRow> */}
+        ))}
       </TableBody>
     </>
   );
