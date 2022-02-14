@@ -1,5 +1,5 @@
 import { PrismaClient } from ".prisma/client";
-import { groupBy, sortBy, sum, sumBy, union } from "lodash";
+import { groupBy, sortBy, sum, sumBy, merge, union, mapValues } from "lodash";
 import { getNeracaPrisma } from "../../../utils";
 const prisma = new PrismaClient();
 
@@ -7,7 +7,8 @@ export default async (req, res) => {
   try {
     const Neraca = await getNeracaPrisma("01/01/2022", "31/01/2022");
     let transform = Neraca;
-
+    // let array = [];
+    // let array1 = [];
     let aset_lancar = [];
     let aset_tetap = [];
     let aktiva_lainya = [];
@@ -18,7 +19,7 @@ export default async (req, res) => {
     transform
       ?.filter((data) => data.kategori_id == 1 || data.kategori_id == 2 || data.kategori_id == 3 || data.kategori_id == 4)
       .map((data) => {
-        aset_lancar.push({
+        array.push({
           ...data,
           label: "Aset Lancar",
         });
@@ -36,9 +37,9 @@ export default async (req, res) => {
     transform
       ?.filter((data) => data.kategori_id == 6)
       .map((data) => {
-        aktiva_lainya.push({
+        array1.push({
           ...data,
-          label: "aktiva_lainya",
+          label: "Aktiva Lainya",
         });
       });
 
@@ -47,7 +48,7 @@ export default async (req, res) => {
       .map((data) => {
         liabilitas_pendek.push({
           ...data,
-          label: "liabilitas_pendek",
+          label: "Liabilitas Pendek",
         });
       });
 
@@ -56,7 +57,7 @@ export default async (req, res) => {
       .map((data) => {
         liabilitas_panjang.push({
           ...data,
-          label: "liabilitas_panjang",
+          label: "Liabilitas Panjang",
         });
       });
 
@@ -65,13 +66,17 @@ export default async (req, res) => {
       .map((data) => {
         modal.push({
           ...data,
-          label: "modal",
+          label: "Modal",
         });
       });
 
-    const hasil_group_aset = groupBy(union(aset_lancar, aset_tetap, aktiva_lainya, liabilitas_pendek, liabilitas_panjang, modal), "label");
+    const hasil_union_aset = union(aset_lancar, aset_tetap, aktiva_lainya, liabilitas_pendek, liabilitas_panjang, modal);
+    const hasilNestedGrouping = mapValues(
+      groupBy(hasil_union_aset, (i) => i.label),
+      (hasil_union_aset2) => groupBy(hasil_union_aset2, (j) => j.heading)
+    );
 
-    res.status(201).json({ message: "Trial Balance data found!", Neraca, hasil_group_aset });
+    res.status(201).json({ message: "Trial Balance data found!", hasilNestedGrouping });
   } catch (error) {
     res.status(400).json({ data: "Trial Balance data not found!", error });
     console.log(error);

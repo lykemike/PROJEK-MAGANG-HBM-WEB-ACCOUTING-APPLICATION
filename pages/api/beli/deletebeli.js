@@ -57,7 +57,7 @@ export default async (req, res) => {
     const delete_jurnal_pembelian_from_laporan_transaksi = prisma.laporanTransaksi.deleteMany({
       where: {
         delete_ref_no: parseInt(req.body.header_pembelian_id),
-        delete_ref_name: "Purchase Invoice",
+        delete_ref_name: "Purchase Invoice" || "Pengiriman Pembayaran",
       },
     });
     // const transaction = req.body.header_pembelian_id;

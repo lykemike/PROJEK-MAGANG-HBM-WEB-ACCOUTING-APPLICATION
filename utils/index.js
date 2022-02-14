@@ -184,6 +184,7 @@ export const getNeracaPrisma = async (tgl_awal, tgl_akhir) => {
   get_selected_data?.map((data) => {
     transform.push({
       kategori: data.kategori.name + " (" + data.kategori.id + ")",
+      kategori_id: data.kategori_id,
       heading: data.akun.nama_akun + ": " + data.akun.kode_akun,
       tanggal: data.date,
       debit: data.debit,
