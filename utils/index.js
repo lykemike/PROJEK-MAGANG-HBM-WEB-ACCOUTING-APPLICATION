@@ -107,8 +107,8 @@ export const getTrialBalancePrisma = async (tgl_awal, tgl_akhir) => {
   const get_selected_data = await prisma.laporanTransaksi.findMany({
     where: {
       date: {
-        gte: "01/01/2022",
-        lte: "31/01/2022",
+        gte: tgl_awal,
+        lte: tgl_akhir,
       },
     },
     include: {
@@ -138,11 +138,9 @@ export const getTrialBalancePrisma = async (tgl_awal, tgl_akhir) => {
       tanggal: data.date,
       debit: data.debit,
       kredit: data.kredit,
-      sumber_transaksi: data.sumber_transaksi,
-      no_ref: data.no_ref,
       kategori_id: data.kategori.id,
-      saldo_awal: data.akun.DetailSaldoAwal[0].debit > 0 ? data.akun.DetailSaldoAwal[0].debit : data.akun.DetailSaldoAwal[0].kredit,
-      saldo_awal_date: data.akun.DetailSaldoAwal[0].header_saldo_awal.tgl_konversi,
+      saldo_awal_debit: data.akun.DetailSaldoAwal[0].debit > 0 ? data.akun.DetailSaldoAwal[0].debit : 0,
+      saldo_awal_kredit: data.akun.DetailSaldoAwal[0].kredit > 0 ? data.akun.DetailSaldoAwal[0].kredit : 0,
       saldo_normal: data.akun.kategori_akun.saldo_normal_nama,
     });
   });

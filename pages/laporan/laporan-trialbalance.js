@@ -13,20 +13,15 @@ import { data } from "autoprefixer";
 
 export default function LaporanTrialBalance() {
   const [trialBalance, setTrialBalance] = useState([]);
-  const [total_debit, setTotalDebit] = useState(0);
-  const [total_kredit, setTotalKredit] = useState(0);
+  const [grandTotalSaldoAwalDebit, setGrandTotalSaldoAwalDebit] = useState(0);
+  const [grandTotalSaldoAwalKredit, setGrandTotalSaldoAwalKredit] = useState(0);
+  const [grandTotalPenyesuianDebit, setGrandTotalPenyesuianDebit] = useState(0);
+  const [grandTotalPenyesuianKredit, setGrandTotalPenyesuianKredit] = useState(0);
+  const [grandTotalSaldoAkhirDebit, setGrandTotalSaldoAkhirDebit] = useState(0);
+  const [grandTotalSaldoAkhirKredit, setGrandTotalSaldoAkhirKredit] = useState(0);
 
   const startOfMonth = moment().clone().startOf("month").format("YYYY-MM-DD");
   const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
-
-  // const onClick = () => {
-  //   Axios.get("/laporan/bukuBesar").then((response) => {
-  //     console.log(response);
-  //     setBukuBesar(response?.data?.data || []);
-  //     setTotalDebit(response.data.debit);
-  //     setTotalKredit(response.data.kredit);
-  //   });
-  // };
 
   useEffect(() => {
     Axios.post("/laporan/trialBalance", {
@@ -37,9 +32,7 @@ export default function LaporanTrialBalance() {
     })
       .then(function (response) {
         setTrialBalance(response?.data?.data || []);
-        setTotalDebit(response.data.debit);
-        setTotalKredit(response.data.kredit);
-        console.log(response?.data?.data);
+        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -54,11 +47,9 @@ export default function LaporanTrialBalance() {
           tgl_akhir: endOfMonth,
         }}
         onSubmit={async (values) => {
-          Axios.post("/laporan/bukuBesar", values)
+          Axios.post("/laporan/trialBalance", values)
             .then(function (response) {
-              setBukuBesar(response?.data?.data || []);
-              setTotalDebit(response.data.debit);
-              setTotalKredit(response.data.kredit);
+              setTrialBalance(response?.data?.data || []);
             })
             .catch(function (error) {
               // setState({ open: true, toast_message: error.response.data.message });
@@ -75,7 +66,7 @@ export default function LaporanTrialBalance() {
                   <Col sm="3">
                     <Form.Label>Tanggal Mulai</Form.Label>
                     <InputGroup className="mb-3">
-                      <FormControl type="date" aria-label="date" value={props.values.tgl_awal} onChange={props.handleChange} />
+                      <FormControl type="date" aria-label="date" name="tgl_awal" value={props.values.tgl_awal} onChange={props.handleChange} />
                     </InputGroup>
                   </Col>
                   <Col sm="3">
@@ -132,9 +123,9 @@ export default function LaporanTrialBalance() {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  {/* {trialBalance?.map((data, index) => (
-                    <TableTrialBalance key={index} data={data.data} label={data.label} />
-                  ))} */}
+                  {trialBalance?.map((data, index) => (
+                    <TableTrialBalance key={index} data={data.value} label={data.label} />
+                  ))}
                 </Table>
               </TableContainer>
             </div>

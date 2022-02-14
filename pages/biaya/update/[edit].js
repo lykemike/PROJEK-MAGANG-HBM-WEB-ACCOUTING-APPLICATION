@@ -345,7 +345,7 @@ export default function BuatBiaya({ data, data2, data3, data4, data5, data6 }) {
                               }}
                               onChange={(e) => {
                                 props.setFieldValue(`detail_biaya.${index}.pajak_id`, e.value);
-                                props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_id`, e.pajak_masukan_id);
+                                props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_id`, e.pajak_keluaran_id);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_nama`, e.label2);
                                 props.setFieldValue(`detail_biaya.${index}.pajak_keluaran_persen`, e.persen);
                                 props.setFieldValue(`detail_biaya.${index}.kategori_id_keluaran`, e.kategori_id_keluaran);
@@ -695,7 +695,7 @@ export async function getServerSideProps(context) {
       label2: i.nama,
       persen: i.presentase_aktif,
       pajak_masukan_id: i.akun_beli,
-      pajak_kelauran_id: i.akun_jual,
+      pajak_keluaran_id: i.akun_jual,
       kategori_id_masukan: i.kategori2.kategoriId,
       kategori_id_keluaran: i.kategori1.kategoriId,
     });
