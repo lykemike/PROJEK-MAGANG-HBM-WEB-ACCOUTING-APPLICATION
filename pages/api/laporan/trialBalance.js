@@ -162,7 +162,53 @@ export default async (req, res) => {
       obj = {};
     });
 
-    res.status(201).json({ message: "Trial Balance data found!", data: end_result });
+    let new_result = [];
+    end_result.map((i) => {
+      if (i.label == "Aset") {
+        new_result?.push({
+          ...i,
+          total_saldo_awal_debit: sumBy(i.value, "saldo_awal_debit"),
+          total_saldo_awal_kredit: sumBy(i.value, "saldo_awal_kredit"),
+          total_pny_debit: sumBy(i.value, "total_pny_debit"),
+          total_pny_kredit: sumBy(i.value, "total_pny_kredit"),
+          total_akhir_debit: sumBy(i.value, "total_akhir_debit"),
+          total_akhir_kredit: sumBy(i.value, "total_akhir_kredit"),
+        });
+      } else if (i.label == "Kewajiban") {
+        new_result?.push({
+          ...i,
+          total_saldo_awal_debit: sumBy(i.value, "saldo_awal_debit"),
+          total_saldo_awal_kredit: sumBy(i.value, "saldo_awal_kredit"),
+          total_pny_debit: sumBy(i.value, "total_pny_debit"),
+          total_pny_kredit: sumBy(i.value, "total_pny_kredit"),
+          total_akhir_debit: sumBy(i.value, "total_akhir_debit"),
+          total_akhir_kredit: sumBy(i.value, "total_akhir_kredit"),
+        });
+      } else if (i.label == "Ekuitas") {
+        new_result?.push({
+          ...i,
+          total_saldo_awal_debit: sumBy(i.value, "saldo_awal_debit"),
+          total_saldo_awal_kredit: sumBy(i.value, "saldo_awal_kredit"),
+          total_pny_debit: sumBy(i.value, "total_pny_debit"),
+          total_pny_kredit: sumBy(i.value, "total_pny_kredit"),
+          total_akhir_debit: sumBy(i.value, "total_akhir_debit"),
+          total_akhir_kredit: sumBy(i.value, "total_akhir_kredit"),
+        });
+      }
+    });
+
+    let grand_total = [
+      {
+        grand_total_sa_debit: sumBy(new_result, "total_saldo_awal_debit"),
+        grand_total_sa_kredit: sumBy(new_result, "total_saldo_awal_kredit"),
+        grand_total_pny_debit: sumBy(new_result, "total_pny_debit"),
+        grand_total_pny_kredit: sumBy(new_result, "total_pny_kredit"),
+        grand_total_akhir_debit: sumBy(new_result, "total_akhir_debit"),
+        grand_total_akhir_kredit: sumBy(new_result, "total_akhir_kredit"),
+      },
+    ];
+
+    res.status(201).json({ message: "Trial Balance data found!", data: new_result, grand_total });
   } catch (error) {
     res.status(400).json({ data: "Trial Balance data not found!", error });
     console.log(error);
