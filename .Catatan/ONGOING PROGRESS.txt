@@ -86,8 +86,8 @@
     * Laporan
         - Laporan Jurnal = 97% (sisa export xlsx)
         - Laporan Buku Besar = 95% (sisa export xlsx & nampilin saldo terakhir di FE)
-        - Trial Balance = 90% (sisa export xlsx & nampilin grand total di FE)
-        - Neraca = 30%
+        - Trial Balance = 90% (sisa export xlsx & sisa grand total)
+        - Neraca = 90% (sisa export xlsx & sisa grand total)
 
 
 

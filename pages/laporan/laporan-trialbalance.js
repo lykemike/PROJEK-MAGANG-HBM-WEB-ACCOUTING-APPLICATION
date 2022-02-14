@@ -13,12 +13,12 @@ import { data } from "autoprefixer";
 
 export default function LaporanTrialBalance() {
   const [trialBalance, setTrialBalance] = useState([]);
-  const [grandTotalSaldoAwalDebit, setGrandTotalSaldoAwalDebit] = useState(0);
-  const [grandTotalSaldoAwalKredit, setGrandTotalSaldoAwalKredit] = useState(0);
-  const [grandTotalPenyesuianDebit, setGrandTotalPenyesuianDebit] = useState(0);
-  const [grandTotalPenyesuianKredit, setGrandTotalPenyesuianKredit] = useState(0);
-  const [grandTotalSaldoAkhirDebit, setGrandTotalSaldoAkhirDebit] = useState(0);
-  const [grandTotalSaldoAkhirKredit, setGrandTotalSaldoAkhirKredit] = useState(0);
+  const [grandTotalSADebit, setGrandTotalSADebit] = useState(0);
+  const [grandTotalSAKredit, setGrandTotalSAKredit] = useState(0);
+  const [grandTotalPnyDebit, setGrandTotalPnyDebit] = useState(0);
+  const [grandTotalPnyKredit, setGrandTotalPnyKredit] = useState(0);
+  const [grandTotalAkhirDebit, setGrandTotalAkhirDebit] = useState(0);
+  const [grandTotalAkhirKredit, setGrandTotalAkhirKredit] = useState(0);
 
   const startOfMonth = moment().clone().startOf("month").format("YYYY-MM-DD");
   const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
@@ -32,7 +32,12 @@ export default function LaporanTrialBalance() {
     })
       .then(function (response) {
         setTrialBalance(response?.data?.data || []);
-        console.log(response);
+        setGrandTotalSADebit(response?.data?.grand_total[0]?.grand_total_sa_debit);
+        setGrandTotalSAKredit(response?.data?.grand_total[0]?.grand_total_sa_kredit);
+        setGrandTotalPnyDebit(response?.data?.grand_total[0]?.grand_total_pny_debit);
+        setGrandTotalPnyKredit(response?.data?.grand_total[0]?.grand_total_pny_debit);
+        setGrandTotalAkhirDebit(response?.data?.grand_total[0]?.grand_total_pny_debit);
+        setGrandTotalAkhirKredit(response?.data?.grand_total[0]?.grand_total_pny_debit);
       })
       .catch(function (error) {
         console.log(error);
@@ -126,6 +131,17 @@ export default function LaporanTrialBalance() {
                   {trialBalance?.map((data, index) => (
                     <TableTrialBalance key={index} data={data.value} label={data.label} />
                   ))}
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell>Total</TableCell>
+                      <TableCell>Rp. {grandTotalSADebit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>Rp. {grandTotalSAKredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>Rp. {grandTotalPnyDebit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>Rp. {grandTotalPnyKredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>Rp. {grandTotalAkhirDebit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                      <TableCell>Rp. {grandTotalAkhirKredit.toLocaleString({ minimumFractionDigits: 0 })}</TableCell>
+                    </TableRow>
+                  </TableFooter>
                 </Table>
               </TableContainer>
             </div>
