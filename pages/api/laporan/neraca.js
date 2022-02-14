@@ -24,7 +24,7 @@ export default async (req, res) => {
         aset_lancar.push({
           ...data,
           label: "Aset Lancar",
-          heading: "Aset",
+          // heading: "Aset",
         });
       });
 
@@ -34,7 +34,7 @@ export default async (req, res) => {
         aset_tetap.push({
           ...data,
           label: "Aset Tetap",
-          heading: "Aset",
+          // heading: "Aset",
         });
       });
 
@@ -44,7 +44,7 @@ export default async (req, res) => {
         aktiva_lainya.push({
           ...data,
           label: "Aktiva Lainya",
-          heading: "Aset",
+          // heading: "Aset",
         });
       });
 
@@ -54,7 +54,7 @@ export default async (req, res) => {
         liabilitas_pendek.push({
           ...data,
           label: "Liabilitas Pendek",
-          heading: "Liabilitas",
+          // heading: "Liabilitas",
         });
       });
 
@@ -64,7 +64,7 @@ export default async (req, res) => {
         liabilitas_panjang.push({
           ...data,
           label: "Liabilitas Panjang",
-          heading: "Liabilitas",
+          // heading: "Liabilitas",
         });
       });
 
@@ -74,7 +74,7 @@ export default async (req, res) => {
         modal.push({
           ...data,
           label: "Modal",
-          heading: "Liabilitas",
+          // heading: "Liabilitas",
         });
       });
 

@@ -18,7 +18,7 @@ export default function Test2({ data, label, label2 }) {
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row" style={{ minWidth: 500, width: 500 }}>
-            <Typography className="text-blue-700">Aset</Typography>
+            <Typography className="text-blue-700">{label}</Typography>
           </TableCell>
           <TableCell />
           <TableCell />
@@ -37,7 +37,7 @@ export default function Test2({ data, label, label2 }) {
                 <Table size="small" aria-label="purchases">
                   <TableHead className="bg-blue-300">
                     <TableRow>
-                      <TableCell>{label}</TableCell>
+                      <TableCell></TableCell>
 
                       <TableCell></TableCell>
                     </TableRow>
