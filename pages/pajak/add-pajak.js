@@ -121,7 +121,7 @@ export default function addpajak({ data, data2 }) {
 
                 <Row className="mb-2">
                   <Col sm="3">
-                    <label className="font-medium">Akun Pajak Penjualan</label>
+                    <label className="font-medium">Akun Pajak Keluaran</label>
                   </Col>
                   <Col sm="4">
                     <Row>
@@ -140,7 +140,7 @@ export default function addpajak({ data, data2 }) {
 
                 <Row className="mb-2">
                   <Col sm="3">
-                    <label className="font-medium">Akun Pajak Pembelian</label>
+                    <label className="font-medium">Akun Pajak Masukan</label>
                   </Col>
                   <Col sm="4">
                     <Row>
@@ -178,7 +178,7 @@ export default function addpajak({ data, data2 }) {
 }
 
 export async function getServerSideProps() {
-  const get_pajak_penjualan = await prisma.akun.findMany({
+  const get_pajak_keluaran = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [10, 11, 13, 14, 16, 17],
@@ -186,15 +186,15 @@ export async function getServerSideProps() {
     },
   });
 
-  let pajak_penjualan = [];
-  get_pajak_penjualan.map((i) => {
-    pajak_penjualan.push({
+  let pajak_keluaran = [];
+  get_pajak_keluaran.map((i) => {
+    pajak_keluaran.push({
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
     });
   });
 
-  const get_pajak_pembelian = await prisma.akun.findMany({
+  const get_pajak_masukan = await prisma.akun.findMany({
     where: {
       kategoriId: {
         in: [2, 13, 14, 16, 17],
@@ -202,9 +202,9 @@ export async function getServerSideProps() {
     },
   });
 
-  let pajak_pembelian = [];
-  get_pajak_pembelian.map((i) => {
-    pajak_pembelian.push({
+  let pajak_masukan = [];
+  get_pajak_masukan.map((i) => {
+    pajak_masukan.push({
       value: i.id,
       label: i.kode_akun + " - " + i.nama_akun,
     });
@@ -212,8 +212,8 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      data: pajak_penjualan,
-      data2: pajak_pembelian,
+      data: pajak_keluaran,
+      data2: pajak_masukan,
     },
   };
 }

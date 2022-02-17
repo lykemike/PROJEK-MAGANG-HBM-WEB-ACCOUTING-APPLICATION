@@ -300,6 +300,7 @@ export default async (req, res) => {
             tahun: parseInt(year),
             debit: parseInt(i.pajak_masukan_per_baris),
             kredit: 0,
+            nominal_pajak: parseInt(i.pajak_masukan_per_baris),
             sumber_transaksi: "Biaya",
             no_ref: header_biaya_id,
             delete_ref_no: header_biaya_id,

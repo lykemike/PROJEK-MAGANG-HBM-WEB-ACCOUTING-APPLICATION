@@ -1,20 +1,6 @@
 =============================
    || ON GOING PROGRESS ||
 =============================
-* Database sudah diganti menggunakan Postgres SQL = 100%  
-* Table Laporan Transaksi schema = 100% 
-
-* Table Laporan Transaksi
-    * Penerimaan Pembayaran otomatis masuk ke laporan transaksi ketika status "Done"
-        - ketika hapus salah satu invoice, transaksi tersebut ikut terhapus di laporan transaksi
-    * Jurnal Entry
-        - ketika submit, transaksi tersebut otomatis masuk ke laporan transaksi
-    * Expense (Biaya)
-        - ketika submit, transaksi tersebut otomatis masuk ke laporan transaksi 
-    * Kas  Bank
-        - Transfer Uang, ketika submit, transaksi otomatis masuk ke laporan transaksi
-        - 
-
 * Penjualan
     * Table HeaderPenjualan schema 
         - tambah kolom baru hari, bulan, tahun = 100%
@@ -86,8 +72,9 @@
     * Laporan
         - Laporan Jurnal = 97% (sisa export xlsx)
         - Laporan Buku Besar = 95% (sisa export xlsx & nampilin saldo terakhir di FE)
-        - Trial Balance = 90% (sisa export xlsx & sisa grand total)
-        - Neraca = 90% (sisa export xlsx & sisa grand total)
+        - Trial Balance = 97% (sisa export xlsx)
+        - Neraca = 90% (sisa export xlsx & sisa perbaikan front end)
+        - Laba Rugi = 50%
 
 
 

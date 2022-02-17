@@ -49,22 +49,41 @@ export default async (req, res) => {
 
     // push data to laporan transaksi
     let jurnal = [];
-    get_penerimaan_pembayaran.JurnalPenerimaanPembayaran.map((i) => {
-      jurnal.push({
-        akun_id: i.akun_id,
-        kategori_id: i.akun.kategoriId,
-        timestamp: current_time,
-        date: confirm_date,
-        hari: parseInt(day),
-        bulan: parseInt(month),
-        tahun: parseInt(year),
-        debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
-        kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
-        sumber_transaksi: "Penjualan",
-        no_ref: i.header_penjualan_id,
-        delete_ref_no: i.penerimaan_pembayaran_id,
-        delete_ref_name: "Penerimaan Pembayaran",
-      });
+    get_penerimaan_pembayaran.JurnalPenerimaanPembayaran.map((i, index) => {
+      if (index == 1) {
+        jurnal.push({
+          akun_id: i.akun_id,
+          kategori_id: i.akun.kategoriId,
+          timestamp: current_time,
+          date: confirm_date,
+          hari: parseInt(day),
+          bulan: parseInt(month),
+          tahun: parseInt(year),
+          debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
+          kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
+          nominal_pajak: i.nominal,
+          sumber_transaksi: "Penjualan",
+          no_ref: i.header_penjualan_id,
+          delete_ref_no: i.penerimaan_pembayaran_id,
+          delete_ref_name: "Penerimaan Pembayaran",
+        });
+      } else {
+        jurnal.push({
+          akun_id: i.akun_id,
+          kategori_id: i.akun.kategoriId,
+          timestamp: current_time,
+          date: confirm_date,
+          hari: parseInt(day),
+          bulan: parseInt(month),
+          tahun: parseInt(year),
+          debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
+          kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
+          sumber_transaksi: "Penjualan",
+          no_ref: i.header_penjualan_id,
+          delete_ref_no: i.penerimaan_pembayaran_id,
+          delete_ref_name: "Penerimaan Pembayaran",
+        });
+      }
     });
 
     // create laporan transaski

@@ -1,0 +1,23 @@
+{
+  "result": [
+    {
+      "laba_kotor": [
+        {
+          "data": [
+            {
+              "label": "Pendapatan Penjualan",
+              "nominal": 228500000
+            },
+            {
+              "label": "Harga Pokok Penjualan",
+              "nominal": 1400000
+            }
+          ],
+          "total_laba_kotor": 228350000
+        }
+      ]
+    }
+  ]
+}
+
+// saldo normal debit (debit - kredit), saldo normal kredit (kredit - debit)
