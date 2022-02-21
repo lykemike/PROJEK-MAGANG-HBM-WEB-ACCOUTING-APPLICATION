@@ -161,21 +161,40 @@ export default async (req, res) => {
     });
     let jurnal = [];
     find_jurnal_pembelian.map((i) => {
-      jurnal.push({
-        akun_id: i.akun_id,
-        kategori_id: i.akun.kategoriId,
-        timestamp: current_time,
-        date: req.body.tgl_transaksi,
-        hari: parseInt(req.body.hari),
-        bulan: parseInt(req.body.bulan),
-        tahun: parseInt(req.body.tahun),
-        debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
-        kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
-        sumber_transaksi: "Purchase Invoice",
-        no_ref: i.header_pembelian_id,
-        delete_ref_no: i.header_pembelian_id,
-        delete_ref_name: "Purchase Invoice",
-      });
+      if (i.akun_id == parseInt(req.body.pajak_id)) {
+        jurnal.push({
+          akun_id: i.akun_id,
+          kategori_id: i.akun.kategoriId,
+          timestamp: current_time,
+          date: req.body.tgl_transaksi,
+          hari: parseInt(req.body.hari),
+          bulan: parseInt(req.body.bulan),
+          tahun: parseInt(req.body.tahun),
+          debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
+          kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
+          sumber_transaksi: "Purchase Invoice",
+          nominal_pajak: i.nominal,
+          no_ref: i.header_pembelian_id,
+          delete_ref_no: i.header_pembelian_id,
+          delete_ref_name: "Purchase Invoice",
+        });
+      } else {
+        jurnal.push({
+          akun_id: i.akun_id,
+          kategori_id: i.akun.kategoriId,
+          timestamp: current_time,
+          date: req.body.tgl_transaksi,
+          hari: parseInt(req.body.hari),
+          bulan: parseInt(req.body.bulan),
+          tahun: parseInt(req.body.tahun),
+          debit: i.tipe_saldo == "Debit" ? i.nominal : 0,
+          kredit: i.tipe_saldo == "Kredit" ? i.nominal : 0,
+          sumber_transaksi: "Purchase Invoice",
+          no_ref: i.header_pembelian_id,
+          delete_ref_no: i.header_pembelian_id,
+          delete_ref_name: "Purchase Invoice",
+        });
+      }
     });
 
     // create laporan transaski
