@@ -83,7 +83,7 @@ export default function LaporanArusKas() {
                       </TableRow>
                     </TableHead>
 
-                    <TabelArusKas />
+                    <TabelArusKas data={arusKas} />
                   </Table>
                 </TableContainer>
               </div>

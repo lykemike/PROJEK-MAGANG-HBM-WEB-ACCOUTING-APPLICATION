@@ -4,132 +4,111 @@ import { Box, Breadcrumbs, Typography, Collapse, Table, TableRow, TableCell, Tab
 
 import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons/";
 
-export default function ArusKasComp() {
+export default function ArusKasComp({ data }) {
+  console.log(data);
   return (
     <>
       <TableBody>
         <TableRow>
-          <TableCell>Pendapatan Penjualan</TableCell>
-          <TableCell align="right" />
-
-          <TableCell align="right">
-            {/* {"Rp. " +
-              data
-                ?.filter((i) => i.label == "Pendapatan Penjualan")
-                .map((j) => j.total)
-                .toLocaleString({ minimumFractionDigits: 0 })} */}
+          <TableCell>
+            <Typography variant="h6">Arus kas dari Aktivitas Operasional</Typography>
           </TableCell>
+          <TableCell align="right" />
+          <TableCell align="right" />
         </TableRow>
         <TableRow>
-          <TableCell>Harga Pokok Penjualan</TableCell>
+          <TableCell align="left">Penerimaan dari pelanggan</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.penerimaan_dari_pelanggan).map((j) => j.penerimaan_dari_pelanggan)}</TableCell>
           <TableCell align="right" />
-          <TableCell align="right">
-            {/* {"Rp. " +
-              data
-                ?.filter((i) => i.label == "Harga Pokok Penjualan")
-                .map((j) => j.total)
-                .toLocaleString({ minimumFractionDigits: 0 })} */}
-          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Aset Lancar Lainya</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.aset).map((j) => j.aset)}</TableCell>
+          <TableCell align="right" />
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Pembayaran ke Pemasok</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.pembayaran).map((j) => j.pembayaran)}</TableCell>
+          <TableCell align="right" />
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Kartu Kredit dan Liabilitas Jangka Pendek Lainnya</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.kartukredit).map((j) => j.kartukredit)}</TableCell>
+          <TableCell align="right" />
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Pendapatan Lainnya</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.pendapatanlain).map((j) => j.pendapatanlain)}</TableCell>
+          <TableCell align="right" />
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Pengeluaran operasional</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.pengeluaran).map((j) => j.pengeluaran)}</TableCell>
+          <TableCell align="right" />
         </TableRow>
         <TableRow>
           <TableCell>
-            <Typography variant="h6">Total Laba Kotor</Typography>
+            <Typography variant="button" className="ml-4">
+              Kas bersih yang diperoleh dari Aktivitas Operasional
+            </Typography>
           </TableCell>
-          <TableCell align="right" />
-          <TableCell align="right">{/* <Typography variant="h6">{labaKotor == 0 ? "Rp. 0, 00" : "Rp. " + labaKotor.toLocaleString({ minimumFractionDigits: 0 })}</Typography> */}</TableCell>
-        </TableRow>
-
-        <TableRow>
-          <TableCell>Beban Operasional</TableCell>
           <TableCell align="right" />
           <TableCell align="right" />
         </TableRow>
-        {/* {value[0] &&
-          value[0].data.map((j, index) => (
-            <TableRow key={index}>
-              <TableCell>
-                <Typography variant="inherit" className="ml-2">
-                  {j.heading}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">{j.debit > 0 ? "Rp. " + j.debit.toLocaleString({ minimumFractionDigits: 0 }) : "(Rp. " + j.kredit.toLocaleString({ minimumFractionDigits: 0 }) + ")"}</TableCell>
-              <TableCell align="right" />
-            </TableRow>
-          ))} */}
-
+        {/* separator */}
         <TableRow>
-          <TableCell>Total Beban Operasional</TableCell>
-          <TableCell align="right" />
-          <TableCell align="right">
-            {/* {"Rp. " +
-              data
-                ?.filter((i) => i.label == "Beban Selain Beban Pajak")
-                .map((j) => j.total)
-                .toLocaleString({ minimumFractionDigits: 0 })} */}
+          <TableCell>
+            <Typography variant="h6">Arus kas dari akativitas investasi</Typography>
           </TableCell>
+          <TableCell align="right" />
+          <TableCell align="right" />
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Perolehan/Penjualan Aset</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.penjualanaset).map((j) => j.penjualanaset)}</TableCell>
+          <TableCell align="right" />
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Aktivitas Investasi Lainnya</TableCell>
+          <TableCell align="right">{data?.filter((i) => i.aktivitas).map((j) => j.aktivitas)}</TableCell>
+          <TableCell align="right" />
         </TableRow>
         <TableRow>
           <TableCell>
-            <Typography variant="h6">Pendapatan Bersih Operasional</Typography>
+            <Typography variant="button" className="ml-4">
+              Kas bersih yang diperoleh dari Aktivitas Investasi
+            </Typography>
           </TableCell>
           <TableCell align="right" />
-          <TableCell align="right">
-            {/* <Typography variant="h6">{pendapatanBersihOperasional == 0 ? "Rp. 0, 00" : "Rp. " + pendapatanBersihOperasional.toLocaleString({ minimumFractionDigits: 0 })}</Typography> */}
+          <TableCell align="right" />
+        </TableRow>
+        {/* separator */}
+        <TableRow>
+          <TableCell>
+            <Typography variant="h6">Arus kas dari Aktivitas Pendanaan</Typography>
           </TableCell>
+          <TableCell align="right" />
+          <TableCell align="right"></TableCell>
         </TableRow>
 
         <TableRow>
-          <TableCell>Pendapatan Lainnya</TableCell>
+          <TableCell>Pembayaran/ Penerimaan pinjaman</TableCell>
           <TableCell align="right" />
-          <TableCell align="right">
-            {/* {"Rp. " +
-              data
-                ?.filter((i) => i.label == "Pendapatan Lainnya")
-                .map((j) => j.total)
-                .toLocaleString({ minimumFractionDigits: 0 })} */}
-          </TableCell>
+          <TableCell align="right">{data?.filter((i) => i.penerimaanpinjaman).map((j) => j.penerimaanpinjaman)}</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>Beban Lainnya</TableCell>
+          <TableCell>Ekuitas/Modal</TableCell>
           <TableCell align="right" />
-          <TableCell align="right">
-            {/* {"Rp. " +
-              data
-                ?.filter((i) => i.label == "Beban Lainnya Selain Beban Pajak")
-                .map((j) => j.total)
-                .toLocaleString({ minimumFractionDigits: 0 })} */}
-          </TableCell>
+          <TableCell align="right">{data?.filter((i) => i.modal).map((j) => j.modal)}</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>
-            <Typography variant="h6">Pendapatan Bersih Sebelum Pajak</Typography>
+            <Typography variant="button" className="ml-4">
+              Kas bersih yang diperoleh dari Aktivitas Pendanaan
+            </Typography>
           </TableCell>
           <TableCell align="right" />
-          <TableCell align="right">
-            {/* <Typography variant="h6">{pendapatanBersihSebelumPajak == 0 ? "Rp. 0, 00" : "Rp. " + pendapatanBersihSebelumPajak.toLocaleString({ minimumFractionDigits: 0 })}</Typography> */}
-          </TableCell>
-        </TableRow>
-
-        <TableRow>
-          <TableCell>Beban Pajak</TableCell>
           <TableCell align="right" />
-          <TableCell align="right">
-            {/* {"Rp. " +
-              data
-                ?.filter((i) => i.label == "Beban Pajak")
-                .map((j) => j.total)
-                .toLocaleString({ minimumFractionDigits: 0 })} */}
-          </TableCell>
-        </TableRow>
-
-        <TableRow>
-          <TableCell>
-            <Typography variant="h6">Pendapatan Bersih Sesudah Pajak</Typography>
-          </TableCell>
-          <TableCell align="right" />
-          <TableCell align="right">
-            {/* <Typography variant="h6">{pendapatanBersihSesudahPajak == 0 ? "Rp. 0, 00" : "Rp. " + pendapatanBersihSesudahPajak.toLocaleString({ minimumFractionDigits: 0 })}</Typography> */}
-          </TableCell>
         </TableRow>
       </TableBody>
     </>
