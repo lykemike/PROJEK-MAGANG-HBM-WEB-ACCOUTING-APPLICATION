@@ -61,15 +61,15 @@ export default async (req, res) => {
         });
       });
 
-    result
-      ?.filter((data) => data.data.kategori_id == 8 || data.data.kategori_id == 15)
-      .map((data) => {
-        pembayaran.push({
-          ...data,
-          label: "Pembayaran ke Pemasok",
-          // heading: "Aset",
+    result?.map((i) => {
+      i.data
+        ?.filter((data) => data.kategori_id == 8 || data.kategori_id == 15)
+        .map((j) => {
+          pembayaran.push({
+            ...j,
+          });
         });
-      });
+    });
 
     result
       ?.filter((data) => data.kategori_id == 10)
@@ -153,7 +153,13 @@ export default async (req, res) => {
       modal
     );
 
-    res.status(201).json({ message: "Neraca data found!", result });
+    let dummy = result.filter((i) => i.data[0].kategori_id == 8);
+    res.status(201).json({
+      message: "Neraca data found!",
+      pembayaran,
+      result,
+      dummy,
+    });
   } catch (error) {
     res.status(400).json({ data: "Neraca data not found!", error });
     console.log(error);
