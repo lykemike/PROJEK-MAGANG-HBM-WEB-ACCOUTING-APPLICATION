@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import Layout from "../../components/layout";
-import TabelLabaRugi from "../../components/Laporan/TabelLabaRugi";
+import TabelArusKas from "../../components/Laporan/TabelArusKas";
 import Link from "next/link";
 import TablePagination from "../../components/TablePagination";
 import { Button, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown } from "react-bootstrap";
@@ -16,7 +16,7 @@ export default function LaporanArusKas() {
   const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
 
   useEffect(() => {
-    Axios.post("/laporan/arusKas", {
+    Axios.post("/laporan/aruskas", {
       data: {
         tgl_awal: startOfMonth,
         tgl_akhir: endOfMonth,
@@ -83,7 +83,7 @@ export default function LaporanArusKas() {
                       </TableRow>
                     </TableHead>
 
-                    <TabelLabaRugi />
+                    <TabelArusKas />
                   </Table>
                 </TableContainer>
               </div>
