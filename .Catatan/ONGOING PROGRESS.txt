@@ -74,7 +74,8 @@
         - Laporan Buku Besar = 95% (sisa export xlsx & nampilin saldo terakhir di FE)
         - Trial Balance = 97% (sisa export xlsx)
         - Neraca = 90% (sisa export xlsx & sisa perbaikan front end)
-        - Laba Rugi = 50%
+        - Laba Rugi = 85% (masih ada bug kecil)
+        - Arus Kas = 40%
 
 
 
