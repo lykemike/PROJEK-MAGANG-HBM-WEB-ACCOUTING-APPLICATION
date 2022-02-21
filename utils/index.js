@@ -201,6 +201,48 @@ export const getLabaRugiPrisma = async (tgl_awal, tgl_akhir) => {
   const get_selected_data = await prisma.laporanTransaksi.findMany({
     where: {
       date: {
+        gte: "01-01-2022",
+        lte: "28-02-2022",
+      },
+    },
+    include: {
+      kategori: true,
+      akun: {
+        select: {
+          nama_akun: true,
+          kode_akun: true,
+          kategori_akun: true,
+          DetailSaldoAwal: {
+            include: {
+              header_saldo_awal: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  get_selected_data?.map((data) => {
+    transform.push({
+      heading: "(" + data.akun.kode_akun + ") - " + data.akun.nama_akun,
+      tanggal: data.date,
+      debit: data.debit,
+      kredit: data.kredit,
+      kategori_id: data.kategori.id,
+      saldo_normal: data.akun.kategori_akun.saldo_normal_nama,
+      nominal_pajak: data.nominal_pajak,
+    });
+  });
+
+  return transform;
+};
+
+export const getArusKasPrisma = async (tgl_awal, tgl_akhir) => {
+  let transform = [];
+
+  const get_selected_data = await prisma.laporanTransaksi.findMany({
+    where: {
+      date: {
         gte: tgl_awal,
         lte: tgl_akhir,
       },
@@ -224,6 +266,7 @@ export const getLabaRugiPrisma = async (tgl_awal, tgl_akhir) => {
 
   get_selected_data?.map((data) => {
     transform.push({
+      sumber: data.sumber_transaksi + " " + data.no_ref,
       heading: "(" + data.akun.kode_akun + ") - " + data.akun.nama_akun,
       tanggal: data.date,
       debit: data.debit,
