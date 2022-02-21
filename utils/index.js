@@ -276,6 +276,6 @@ export const getArusKasPrisma = async (tgl_awal, tgl_akhir) => {
       nominal_pajak: data.nominal_pajak,
     });
   });
-
+  //test
   return transform;
 };

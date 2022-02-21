@@ -46,7 +46,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 1 || data.kategori_id == 13)
         .map((j) => {
           penerimaan_pelanggan.push({
-            ...data,
+            ...j,
             label: "Penerimaaan Dari Pelanggan",
             // heading: "Aset",
           });
@@ -58,7 +58,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 2)
         .map((j) => {
           aset_lancar.push({
-            ...data,
+            ...j,
             label: "Aset Lancar Lainya",
             // heading: "Aset",
           });
@@ -70,6 +70,7 @@ export default async (req, res) => {
         .map((j) => {
           pembayaran.push({
             ...j,
+            label: "Pembayaran ke Pemasok",
           });
         });
     });
@@ -79,7 +80,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 10)
         .map((j) => {
           kartukreditliabilitaspendek.push({
-            ...data,
+            ...j,
             label: "Kartu Kredit dan Liabilitas Jangka Pendek Lainnya",
             // heading: "Liabilitas",
           });
@@ -91,7 +92,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 14)
         .map((j) => {
           pendapatanlainya.push({
-            ...data,
+            ...j,
             label: "Pendapatan Lainnya",
             // heading: "Liabilitas",
           });
@@ -103,7 +104,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 16 || data.kategori_id == 17)
         .map((j) => {
           operasional.push({
-            ...data,
+            ...j,
             label: "Pengeluaran operasional",
             // heading: "Liabilitas",
           });
@@ -115,7 +116,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 14)
         .map((j) => {
           pendapatanlainya.push({
-            ...data,
+            ...j,
             label: "Pendapatan Lainnya",
             // heading: "Liabilitas",
           });
@@ -127,7 +128,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 5)
         .map((j) => {
           penjualanaset.push({
-            ...data,
+            ...j,
             label: "Perolehan/Penjualan Aset",
             // heading: "Aset",
           });
@@ -138,7 +139,7 @@ export default async (req, res) => {
         ?.filter((data) => data.kategori_id == 6)
         .map((j) => {
           aktivitas.push({
-            ...data,
+            ...j,
             label: "Aktivitas Investasi Lainnya",
             // heading: "Aset",
           });
@@ -146,39 +147,28 @@ export default async (req, res) => {
     });
     result?.map((i) => {
       i.data
-        ?.filter((data) => data.kategori_id == 14)
+        ?.filter((data) => data.kategori_id == 11)
         .map((j) => {
-          pendapatanlainya.push({
-            ...data,
-            label: "Pendapatan Lainnya",
-            // heading: "Liabilitas",
+          pembayaranpinjaman.push({
+            ...j,
+            label: "Pembayaran/Penerimaan pinjaman",
+            // heading: "Aset",
+          });
+        });
+    });
+
+    result?.map((i) => {
+      i.data
+        ?.filter((data) => data.kategori_id == 12)
+        .map((j) => {
+          modal.push({
+            ...j,
+            label: "Ekuitas/Modal",
+            // heading: "Aset",
           });
         });
     });
     ////////////////////////////////////////////////
-
-    result?.filter((data) => data.kategori_id == 5).map((data) => {});
-
-    result?.filter((data) => data.kategori_id == 6).map((data) => {});
-
-    result
-      ?.filter((data) => data.kategori_id == 11)
-      .map((data) => {
-        pembayaranpinjaman.push({
-          ...data,
-          label: "Pembayaran/Penerimaan pinjaman",
-          // heading: "Aset",
-        });
-      });
-    result
-      ?.filter((data) => data.kategori_id == 12)
-      .map((data) => {
-        modal.push({
-          ...data,
-          label: "Ekuitas/Modal",
-          // heading: "Aset",
-        });
-      });
 
     const hasil_union_aset = union(
       aset_lancar,
@@ -193,12 +183,9 @@ export default async (req, res) => {
       modal
     );
 
-    let dummy = result.filter((i) => i.data[0].kategori_id == 8);
     res.status(201).json({
       message: "Neraca data found!",
-      pembayaran,
-      result,
-      dummy,
+      hasil_union_aset,
     });
   } catch (error) {
     res.status(400).json({ data: "Neraca data not found!", error });
