@@ -1,23 +1,69 @@
 {
   "result": [
     {
-      "laba_kotor": [
+      "label": "Supermarket A",
+      "data": [
         {
-          "data": [
-            {
-              "label": "Pendapatan Penjualan",
-              "nominal": 228500000
-            },
-            {
-              "label": "Harga Pokok Penjualan",
-              "nominal": 1400000
-            }
-          ],
-          "total_laba_kotor": 228350000
+          "fruit": "Green Apple",
+          "exp_date": "15/05/2022"
+        },
+        {
+          "fruit": "Red Apple",
+          "exp_date": "15/05/2022"
+        },
+        {
+          "fruit": "Pear",
+          "exp_date": "15/05/2022"
+        }
+      ]
+    },
+    {
+      "label": "Supermarket B",
+      "data": [
+        {
+          "fruit": "Orange",
+          "exp_date": "15/05/2022"
+        },
+        {
+          "fruit": "Giant Apple",
+          "exp_date": "15/05/2022"
         }
       ]
     }
   ]
 }
 
-// saldo normal debit (debit - kredit), saldo normal kredit (kredit - debit)
+{
+  "result": [
+    {
+      "label": "Supermarket A",
+      "data": [
+        {
+          "fruit": "Green Apple",
+          "exp_date": "15/05/2022"
+        },
+        {
+          "fruit": "Red Apple",
+          "exp_date": "15/05/2022"
+        },
+        {
+          "fruit": "Pear",
+          "exp_date": "15/05/2022"
+        }
+      ]
+    },
+    {
+      "label": "Supermarket B",
+      "data": [
+        {
+          "fruit": "Orange",
+          "exp_date": "15/05/2022"
+        },
+        {
+          "fruit": "Giant Apple",
+          "exp_date": "15/05/2022"
+        }
+      ]
+    }
+  ]
+}
