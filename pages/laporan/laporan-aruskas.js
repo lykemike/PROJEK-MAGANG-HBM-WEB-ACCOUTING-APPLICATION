@@ -50,7 +50,7 @@ export default function LaporanArusKas() {
         {(props) => (
           <Forms noValidate>
             <div variant="container">
-              <h4 className="mb-6 mt-2">Laba Rugi</h4>
+              <h4 className="mb-6 mt-2">Arus Kas</h4>
               <div className="mb-10">
                 <Row>
                   <Col sm="3">

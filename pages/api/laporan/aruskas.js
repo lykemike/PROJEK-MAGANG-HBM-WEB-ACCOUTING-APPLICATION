@@ -48,7 +48,6 @@ export default async (req, res) => {
           penerimaan_pelanggan.push({
             ...j,
             label: "Penerimaaan Dari Pelanggan",
-            // heading: "Aset",
           });
         });
     });
@@ -60,7 +59,6 @@ export default async (req, res) => {
           aset_lancar.push({
             ...j,
             label: "Aset Lancar Lainya",
-            // heading: "Aset",
           });
         });
     });
@@ -82,7 +80,6 @@ export default async (req, res) => {
           kartukreditliabilitaspendek.push({
             ...j,
             label: "Kartu Kredit dan Liabilitas Jangka Pendek Lainnya",
-            // heading: "Liabilitas",
           });
         });
     });
@@ -94,7 +91,6 @@ export default async (req, res) => {
           pendapatanlainya.push({
             ...j,
             label: "Pendapatan Lainnya",
-            // heading: "Liabilitas",
           });
         });
     });
@@ -106,7 +102,6 @@ export default async (req, res) => {
           operasional.push({
             ...j,
             label: "Pengeluaran operasional",
-            // heading: "Liabilitas",
           });
         });
     });
@@ -118,7 +113,6 @@ export default async (req, res) => {
           penjualanaset.push({
             ...j,
             label: "Perolehan/Penjualan Aset",
-            // heading: "Aset",
           });
         });
     });
@@ -129,7 +123,6 @@ export default async (req, res) => {
           aktivitas.push({
             ...j,
             label: "Aktivitas Investasi Lainnya",
-            // heading: "Aset",
           });
         });
     });
@@ -140,7 +133,6 @@ export default async (req, res) => {
           pembayaranpinjaman.push({
             ...j,
             label: "Pembayaran/Penerimaan pinjaman",
-            // heading: "Aset",
           });
         });
     });
@@ -152,26 +144,14 @@ export default async (req, res) => {
           modal.push({
             ...j,
             label: "Ekuitas/Modal",
-            // heading: "Aset",
           });
         });
     });
 
-    const hasil_union_aset = union(
-      aset_lancar,
-      penerimaan_pelanggan,
-      pembayaran,
-      kartukreditliabilitaspendek,
-      pendapatanlainya,
-      operasional,
-      penjualanaset,
-      pembayaranpinjaman,
-      aktivitas,
-      modal
-    );
-    let total = [];
+    const hasilUnion = union(aset_lancar, penerimaan_pelanggan, pembayaran, kartukreditliabilitaspendek, pendapatanlainya, operasional, penjualanaset, pembayaranpinjaman, aktivitas, modal);
+    let newResult = [];
 
-    let hasilgroupinglabel = groupBy(hasil_union_aset, "label");
+    let hasilgroupinglabel = groupBy(hasilUnion, "label");
 
     for (const [key, value] of Object.entries(hasilgroupinglabel)) {
       result2.push({
@@ -179,84 +159,173 @@ export default async (req, res) => {
         data: value,
       });
     }
+
     result2.map((j) => {
       let pny = sumBy(j.data, "debit") - sumBy(j.data, "kredit");
 
       if (j.label == "Penerimaaan Dari Pelanggan" && pny > 0) {
-        total.push({
-          kode: 1,
+        newResult.push({
+          type: "aktivitas_opr",
           penerimaan_dari_pelanggan: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
-          total2: pny,
+          newNominal: pny,
         });
       } else if (j.label == "Penerimaaan Dari Pelanggan" && pny < 0) {
-        total.push({
-          kode: 1,
+        newResult.push({
+          type: "aktivitas_opr",
           penerimaan_dari_pelanggan: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
-          total2: pny,
+          newNominal: pny,
         });
       } else if (j.label == "Aset Lancar Lainya" && pny > 0) {
-        total.push({
-          kode: 2,
+        newResult.push({
+          type: "aktivitas_opr",
           aset: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
-          total2: pny,
+          newNominal: pny,
         });
       } else if (j.label == "Aset Lancar Lainya" && pny < 0) {
-        total.push({ kode: 2, aset: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          aset: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Pembayaran ke Pemasok" && pny > 0) {
-        total.push({ kode: 3, pembayaran: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          pembayaran: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Pembayaran ke Pemasok" && pny < 0) {
-        total.push({ kode: 3, pembayaran: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          pembayaran: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Kartu Kredit dan Liabilitas Jangka Pendek Lainnya" && pny > 0) {
-        total.push({ kode: 4, kartukredit: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          kartukredit: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Kartu Kredit dan Liabilitas Jangka Pendek Lainnya" && pny < 0) {
-        total.push({ kode: 4, kartukredit: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          kartukredit: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Pendapatan Lainnya" && pny > 0) {
-        total.push({ kode: 5, pendapatanlain: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          pendapatanlain: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Pendapatan Lainnya" && pny < 0) {
-        total.push({ kode: 5, pendapatanlain: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          pendapatanlain: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Pengeluaran operasional" && pny > 0) {
-        total.push({ kode: 6, pengeluaran: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          pengeluaran: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Pengeluaran operasional" && pny < 0) {
-        total.push({ kode: 6, pengeluaran: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_opr",
+          pengeluaran: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Perolehan/Penjualan Aset" && pny > 0) {
-        total.push({ kode: 7, penjualanaset: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total7: pny });
+        newResult.push({
+          type: "aktivitas_inv",
+          penjualanaset: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Perolehan/Penjualan Aset" && pny < 0) {
-        total.push({ kode: 7, penjualanaset: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total8: pny });
+        newResult.push({
+          type: "aktivitas_inv",
+          penjualanaset: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Aktivitas Investasi Lainnya" && pny > 0) {
-        total.push({ kode: 8, aktivitas: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
+        newResult.push({
+          type: "aktivitas_inv",
+          aktivitas: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Aktivitas Investasi Lainnya" && pny < 0) {
-        total.push({ kode: 8, aktivitas: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_inv",
+          aktivitas: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Pembayaran/Penerimaan pinjaman" && pny > 0) {
-        total.push({ kode: 9, penerimaanpinjaman: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
+        newResult.push({
+          type: "aktivitas_dana",
+          penerimaanpinjaman: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Pembayaran/Penerimaan pinjaman" && pny < 0) {
-        total.push({ kode: 9, penerimaanpinjaman: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_dana",
+          penerimaanpinjaman: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       } else if (j.label == "Ekuitas/Modal" && pny > 0) {
-        total.push({ kode: 10, modal: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
+        newResult.push({
+          type: "aktivitas_dana",
+          modal: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }),
+          newNominal: pny,
+        });
       } else if (j.label == "Ekuitas/Modal" && pny < 0) {
-        total.push({ kode: 10, modal: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
+        newResult.push({
+          type: "aktivitas_dana",
+          modal: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")",
+          newNominal: pny,
+        });
       }
     });
 
-    let pny_1 = total?.filter((i) => i.kode == 1).map((j) => j.total);
-    let pny_2 = total?.filter((i) => i.kode == 2).map((j) => j.total);
-    let pny_3 = total?.filter((i) => i.kode == 3).map((j) => j.total);
-    let pny_4 = total?.filter((i) => i.kode == 4).map((j) => j.total);
-    let pny_5 = total?.filter((i) => i.kode == 5).map((j) => j.total);
-    let pny_6 = total?.filter((i) => i.kode == 6).map((j) => j.total);
-    let pny_7 = total?.filter((i) => i.kode == 7).map((j) => j.total);
-    let pny_8 = total?.filter((i) => i.kode == 8).map((j) => j.total);
-    let pny_9 = total?.filter((i) => i.kode == 9).map((j) => j.total);
-    let pny_10 = total?.filter((i) => i.kode == 10).map((j) => j.total);
+    let total_aktivitas = [];
 
-    let totaloperasional = [{ aktivias_opr: pny_3[0] }];
+    newResult
+      .filter((i) => i.type == "aktivitas_opr")
+      .map((j) => {
+        total_aktivitas.push({
+          grand_total_opr: j.newNominal,
+        });
+      });
+
+    newResult
+      .filter((i) => i.type == "aktivitas_inv")
+      .map((j) => {
+        total_aktivitas.push({
+          grand_total_inv: j.newNominal,
+        });
+      });
+
+    newResult
+      .filter((i) => i.type == "aktivitas_dana")
+      .map((j) => {
+        total_aktivitas.push({
+          grand_total_dana: j.newNominal,
+        });
+      });
+
+    let grand_total = [];
+    let total_opr = grand_total.push({
+      aktivias_opr: sumBy(total_aktivitas, "grand_total_opr"),
+      aktivias_inv: sumBy(total_aktivitas, "grand_total_inv"),
+      aktivias_dana: sumBy(total_aktivitas, "grand_total_dana"),
+    });
 
     res.status(201).json({
-      message: "Neraca data found!",
-      pny_3,
-      data: total,
+      message: "Arus kas data found!",
+      grand_total,
+      data: newResult,
     });
   } catch (error) {
-    res.status(400).json({ data: "Neraca data not found!", error });
+    res.status(400).json({ data: "Arus kas data not found!", error });
     console.log(error);
   }
 };

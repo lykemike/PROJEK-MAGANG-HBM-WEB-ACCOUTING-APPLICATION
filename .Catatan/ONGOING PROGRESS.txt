@@ -1,53 +1,6 @@
 =============================
    || ON GOING PROGRESS ||
 =============================
-* Penjualan
-    * Table HeaderPenjualan schema 
-        - tambah kolom baru hari, bulan, tahun = 100%
-    * Penagihan Penjualan page 
-        - date sudah di split menjadi hari, bulan, tahun = 100%
-        - api create & update sudah di tambahin hari, bulan, tahun = 100%
-    * Table PenerimaanPembayaran scehma 
-        - tambah kolom baru timestamp, hari, bulan, tahun, date_confirmation = 100%
-    * Penerimaan Pembayaran page 
-        - date sudah di split menjadi hari, bulan, tahun = 100%
-        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
-        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
-        - ketika invoice sudah ter konfirmasi, dan mau di delete, delete akan mulai dari laporan transaksi -> jurnal penerimaan pembayaran -> penerimaan pembayaran = 100%
-
-* Jurnal
-    * Table HeaderJurnal scehma
-        - tambah kolom baru hari, bulan, tahun = 100%
-    * Jurnal page 
-        - date sudah di split menjadi hari, bulan, tahun = 100%
-        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
-        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
-        - delete jurnal entry akan mulai dari laporan transaksi -> detail jurnal = 100%
-
-* Biaya
-    * Table HeaderBiaya schema 
-        - tambah kolom baru hari, bulan, tahun = 100%
-    * Biaya page 
-        - date sudah di split menjadi hari, bulan, tahun = 100%
-        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
-        - api create & update sudah di tambahin hari, bulan, tahun, timestamp = 100%
-        - delete biaya akan mulai dari laporan transaksi -> jurnal biaya -> detail biaya -> header biaya = 100%
-        - validasi frontend = 100%
-
-* Pembelian
-    * Table HeaderPembelian schema 
-        - tambah kolom hari, bulan tahun = 100%
-    * Penagihan Pembelian page
-        - date sudah di split menjadi hari, bulan, tahun = 100%
-        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
-        - api create & update (update belom) sudah di tambahin hari, bulan, tahun, timestamp = 100%
-        - delete akan mulai dari laporan transaksi -> jurnal pengerimaan pembayaran -> pengiriman pembayaran -> header pembelian = 100%
-    * Pengiriman Pembayaran page
-        - date sudah di split menjadi hari, bulan, tahun = 100%
-        - timestamp mengikuti format 24jam (15:30:40 hh:mm:ss) = 100%
-        - api create & update (update belom) sudah di tambahin hari, bulan, tahun, timestamp = 100%
-        - delete akan mulai dari laporan transaksi -> jurnal pengerimaan pembayaran -> pengiriman pembayaran = 100%
-
 * Kas & Bank
     * Table TransferUang, HeaderKirimUang, HeaderTerimaUang
         - tambah kolom hari, bulan tahun = 100%
@@ -74,8 +27,8 @@
         - Laporan Buku Besar = 95% (sisa export xlsx & nampilin saldo terakhir di FE)
         - Trial Balance = 97% (sisa export xlsx)
         - Neraca = 90% (sisa export xlsx & sisa perbaikan front end)
-        - Laba Rugi = 85% (masih ada bug kecil)
-        - Arus Kas = 40%
+        - Laba Rugi = 95% (sisa export ke FE)
+        - Arus Kas = 60%
 
 
 
