@@ -312,8 +312,14 @@ export default async (req, res) => {
         });
       });
 
+    // kenaikan = kas total opr, inv, dan dana
+    // saldo awal = total saldo awal
+    // saldo akhir = kenaikan kas - saldo awal
+
+    // cara cek bener saldo akhir = saldo saat ini kas and bank
+
     let grand_total = [];
-    let total_opr = grand_total.push({
+    grand_total.push({
       aktivias_opr: sumBy(total_aktivitas, "grand_total_opr"),
       aktivias_inv: sumBy(total_aktivitas, "grand_total_inv"),
       aktivias_dana: sumBy(total_aktivitas, "grand_total_dana"),
