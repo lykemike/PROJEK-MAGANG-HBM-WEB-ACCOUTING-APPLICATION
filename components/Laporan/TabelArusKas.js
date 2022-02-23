@@ -111,6 +111,29 @@ export default function ArusKasComp({ data }) {
           <TableCell align="right" />
         </TableRow>
       </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell>
+            <Typography>Kenaikan(Penurunan)Kas </Typography>
+          </TableCell>
+          <TableCell align="right" />
+          <TableCell align="right"></TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <Typography>Saldo Kas Awal </Typography>
+          </TableCell>
+          <TableCell align="right" />
+          <TableCell align="right"></TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>
+            <Typography>Saldo Kas Akhir </Typography>
+          </TableCell>
+          <TableCell align="right" />
+          <TableCell align="right"></TableCell>
+        </TableRow>
+      </TableFooter>
     </>
   );
 }

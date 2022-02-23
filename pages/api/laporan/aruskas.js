@@ -180,7 +180,8 @@ export default async (req, res) => {
       });
     }
     result2.map((j) => {
-      let pny = sumBy(j.data, "debit") - sumBy(j.data, "kredit");
+      let pny = 0;
+      pny = sumBy(j.data, "debit") - sumBy(j.data, "kredit");
 
       if (j.label == "Penerimaaan Dari Pelanggan" && pny > 0) {
         total.push({
@@ -219,9 +220,9 @@ export default async (req, res) => {
       } else if (j.label == "Pengeluaran operasional" && pny < 0) {
         total.push({ kode: 6, pengeluaran: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
       } else if (j.label == "Perolehan/Penjualan Aset" && pny > 0) {
-        total.push({ kode: 7, penjualanaset: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total7: pny });
+        total.push({ kode: 7, penjualanaset: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
       } else if (j.label == "Perolehan/Penjualan Aset" && pny < 0) {
-        total.push({ kode: 7, penjualanaset: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total8: pny });
+        total.push({ kode: 7, penjualanaset: "(Rp. " + (pny * -1).toLocaleString({ minimumFractionDigits: 0 }) + ")", total2: pny });
       } else if (j.label == "Aktivitas Investasi Lainnya" && pny > 0) {
         total.push({ kode: 8, aktivitas: "Rp. " + pny.toLocaleString({ minimumFractionDigits: 0 }), total2: pny });
       } else if (j.label == "Aktivitas Investasi Lainnya" && pny < 0) {
@@ -237,22 +238,28 @@ export default async (req, res) => {
       }
     });
 
-    let pny_1 = total?.filter((i) => i.kode == 1).map((j) => j.total);
-    let pny_2 = total?.filter((i) => i.kode == 2).map((j) => j.total);
-    let pny_3 = total?.filter((i) => i.kode == 3).map((j) => j.total);
-    let pny_4 = total?.filter((i) => i.kode == 4).map((j) => j.total);
-    let pny_5 = total?.filter((i) => i.kode == 5).map((j) => j.total);
-    let pny_6 = total?.filter((i) => i.kode == 6).map((j) => j.total);
-    let pny_7 = total?.filter((i) => i.kode == 7).map((j) => j.total);
-    let pny_8 = total?.filter((i) => i.kode == 8).map((j) => j.total);
-    let pny_9 = total?.filter((i) => i.kode == 9).map((j) => j.total);
-    let pny_10 = total?.filter((i) => i.kode == 10).map((j) => j.total);
+    let pny1 = total?.filter((i) => i.kode == 1);
+    let pny2 = total?.filter((i) => i.kode == 2);
+    let pny3 = total?.filter((i) => i.kode == 3);
+    let pny4 = total?.filter((i) => i.kode == 4);
+    let pny5 = total?.filter((i) => i.kode == 5);
+    let pny6 = total?.filter((i) => i.kode == 6);
+    let pny7 = total?.filter((i) => i.kode == 7);
+    let pny8 = total?.filter((i) => i.kode == 8);
+    let pny9 = total?.filter((i) => i.kode == 9);
+    let pny10 = total?.filter((i) => i.kode == 10);
 
-    let totaloperasional = [{ aktivias_opr: pny_3[0] }];
+    let total_opr = [
+      {
+        aktivias_opr: pny1[0].total2 + pny2[0].total2 + pny3[0].total2 + pny4[0].total2 + pny5[0].total2 + pny6[0].total2,
+      },
+      { aktivitas_inv: pny7[0].total2 + pny8[0].total2 },
+      { aktivitas_dana: pny9[0].total2 + pny10[0].total2 },
+    ];
 
     res.status(201).json({
       message: "Neraca data found!",
-      pny_3,
+      pny1,
       data: total,
     });
   } catch (error) {
