@@ -1,67 +1,92 @@
 {
   "result": [
     {
-      "label": "Supermarket A",
+      "label": "Purchase Invoice 5",
       "data": [
         {
-          "fruit": "Green Apple",
-          "exp_date": "15/05/2022"
+          "sumber": "Purchase Invoice 5",
+          "heading": "(1-10602) - Peralatan Kantor",
+          "tanggal": "2022-02-11",
+          "debit": 10000000,
+          "kredit": 0,
+          "kategori_id": 5,
+          "saldo_normal": "Debit",
+          "nominal_pajak": 0
         },
         {
-          "fruit": "Red Apple",
-          "exp_date": "15/05/2022"
+          "sumber": "Purchase Invoice 5",
+          "heading": "(5-50001) - Pembelian License",
+          "tanggal": "2022-02-11",
+          "debit": 0,
+          "kredit": 200000,
+          "kategori_id": 15,
+          "saldo_normal": "Debit",
+          "nominal_pajak": 0
         },
         {
-          "fruit": "Pear",
-          "exp_date": "15/05/2022"
+          "sumber": "Purchase Invoice 5",
+          "heading": "(2-20101) - Utang Usaha",
+          "tanggal": "2022-02-11",
+          "debit": 0,
+          "kredit": 10800000,
+          "kategori_id": 8,
+          "saldo_normal": "Kredit",
+          "nominal_pajak": 0
+        },
+        {
+          "sumber": "Purchase Invoice 5",
+          "heading": "(2-20101) - Utang Usaha",
+          "tanggal": "2022-02-11",
+          "debit": 800000,
+          "kredit": 0,
+          "kategori_id": 8,
+          "saldo_normal": "Kredit",
+          "nominal_pajak": 0
+        },
+        {
+          "sumber": "Purchase Invoice 5",
+          "heading": "(1-10001) - Kas Besar (BCA 5255369137)",
+          "tanggal": "2022-02-11",
+          "debit": 1000000,
+          "kredit": 0,
+          "kategori_id": 3,
+          "saldo_normal": "Debit",
+          "nominal_pajak": 0
+        },
+        {
+          "sumber": "Purchase Invoice 5",
+          "heading": "(1-10001) - Kas Besar (BCA 5255369137)",
+          "tanggal": "2022-02-11",
+          "debit": 0,
+          "kredit": 800000,
+          "kategori_id": 3,
+          "saldo_normal": "Debit",
+          "nominal_pajak": 0
         }
       ]
     },
     {
-      "label": "Supermarket B",
+      "label": "Kas & Bank 1",
       "data": [
         {
-          "fruit": "Orange",
-          "exp_date": "15/05/2022"
+          "sumber": "Kas & Bank 1",
+          "heading": "(1-10001) - Kas Besar (BCA 5255369137)",
+          "tanggal": "2022-02-14",
+          "debit": 500000,
+          "kredit": 0,
+          "kategori_id": 3,
+          "saldo_normal": "Debit",
+          "nominal_pajak": 0
         },
         {
-          "fruit": "Giant Apple",
-          "exp_date": "15/05/2022"
-        }
-      ]
-    }
-  ]
-}
-
-{
-  "result": [
-    {
-      "label": "Supermarket A",
-      "data": [
-        {
-          "fruit": "Green Apple",
-          "exp_date": "15/05/2022"
-        },
-        {
-          "fruit": "Red Apple",
-          "exp_date": "15/05/2022"
-        },
-        {
-          "fruit": "Pear",
-          "exp_date": "15/05/2022"
-        }
-      ]
-    },
-    {
-      "label": "Supermarket B",
-      "data": [
-        {
-          "fruit": "Orange",
-          "exp_date": "15/05/2022"
-        },
-        {
-          "fruit": "Giant Apple",
-          "exp_date": "15/05/2022"
+          "sumber": "Kas & Bank 1",
+          "heading": "(1-10002) - Kas Kecil",
+          "tanggal": "2022-02-14",
+          "debit": 0,
+          "kredit": 500000,
+          "kategori_id": 3,
+          "saldo_normal": "Debit",
+          "nominal_pajak": 0
         }
       ]
     }

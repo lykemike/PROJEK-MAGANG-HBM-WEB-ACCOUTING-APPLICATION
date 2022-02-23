@@ -103,16 +103,6 @@ export default async (req, res) => {
           label: "Beban Selain Beban Pajak",
           ...i,
         });
-        // } else if (i.label == "Beban Selain Beban Pajak" && saldo_normal_debit > 0) {
-        //   new_result.push({
-        //     label: "Beban Selain Beban Pajak",
-        //     total: saldo_normal_debit,
-        //   });
-        // } else if (i.label == "Beban Selain Beban Pajak" && saldo_normal_debit < 0) {
-        //   new_result.push({
-        //     label: "Beban Selain Beban Pajak",
-        //     total: "(Rp." + saldo_normal_debit * -1 + ")",
-        //   });
       } else if (i.label == "Pendapatan Lainnya" && saldo_normal_kredit > 0) {
         new_result.push({
           label: "Pendapatan Lainnya",
@@ -163,11 +153,11 @@ export default async (req, res) => {
     let total_laba_kotor = end_result?.filter((i) => i.label == "Pendapatan Penjualan").map((j) => j.total) - end_result?.filter((i) => i.label == "Harga Pokok Penjualan").map((j) => j.total);
     let total_beban = end_result?.filter((i) => i.label == "Beban Selain Beban Pajak").map((j) => j.total);
     let pendapatan_bersih_operasional = total_laba_kotor - total_beban;
-    let pendapatan_lainnya = end_result?.filter((i) => i.label == "Pendapatan Lainnya").map((j) => j.total);
-    let beban_lainnya = end_result?.filter((i) => i.label == "Beban Lainnya Selain Beban Pajak").map((j) => j.total);
-    let total_beban_pajak = end_result?.filter((i) => i.label == "Beban Pajak").map((j) => j.total);
-    let pendapatan_bersih_sebelum_pajak = pendapatan_bersih_operasional + pendapatan_lainnya[0] - beban_lainnya[0];
-    let pendapatan_bersih_sesudah_pajak = pendapatan_bersih_sebelum_pajak - total_beban_pajak[0];
+    let pendapatan_bersih_sebelum_pajak =
+      pendapatan_bersih_operasional +
+      end_result?.filter((i) => i.label == "Pendapatan Lainnya").map((j) => j.total) -
+      end_result?.filter((i) => i.label == "Beban Lainnya Selain Beban Pajak").map((j) => j.total);
+    let pendapatan_bersih_sesudah_pajak = pendapatan_bersih_sebelum_pajak - end_result?.filter((i) => i.label == "Beban Pajak").map((j) => j.total);
 
     grand_total.push({
       laba_kotor: total_laba_kotor,
