@@ -1,6 +1,7 @@
 import { PrismaClient } from ".prisma/client";
 import { groupBy, sortBy, sum, sumBy, merge, union, mapValues, includes } from "lodash";
-import { getArusKasPrisma } from "../../../utils";
+import { getArusKasPrisma, getsaldoawal } from "../../../utils";
+
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
@@ -8,7 +9,10 @@ export default async (req, res) => {
     const start_date = req.body.tgl_awal;
     const end_date = req.body.tgl_akhir;
     const aruskas = await getArusKasPrisma(start_date, end_date);
+    const saldo = await getsaldoawal();
+
     let transform = aruskas;
+    let transform2 = saldo;
 
     let penerimaan_pelanggan = [];
     let aset_lancar = [];
@@ -329,17 +333,51 @@ export default async (req, res) => {
     // saldo akhir = kenaikan kas - saldo awal
 
     // cara cek bener saldo akhir = saldo saat ini kas and bank
+    let nom_opr = sumBy(total_aktivitas, "grand_total_opr");
+    let fin_opr = 0;
+    let nom_inv = sumBy(total_aktivitas, "grand_total_inv");
+    let fin_inv = 0;
+    let nom_dana = sumBy(total_aktivitas, "grand_total_dana");
+    let fin_dana = 0;
+
+    if (nom_opr <= 0) {
+      fin_opr = "(Rp. " + nom_opr * -1 + ")";
+    } else {
+      fin_opr = "Rp. " + nom_opr;
+    }
+    if (nom_inv <= 0) {
+      fin_inv = "(Rp. " + nom_inv * -1 + ")";
+    } else {
+      fin_inv = "Rp. " + nom_inv;
+    }
+    if (nom_dana <= 0) {
+      fin_dana = "(Rp. " + nom_dana * -1 + ")";
+    } else {
+      fin_dana = "Rp. " + nom_dana;
+    }
+
+    let total_aktivitas1 = nom_opr + nom_inv + nom_dana;
+    let total_saldo_awal = sumBy(transform2, "saldo_awal");
+    let kas_akhir = total_aktivitas1 - total_saldo_awal;
 
     let grand_total = [];
+
     grand_total.push({
-      aktivias_opr: sumBy(total_aktivitas, "grand_total_opr"),
-      aktivias_inv: sumBy(total_aktivitas, "grand_total_inv"),
-      aktivias_dana: sumBy(total_aktivitas, "grand_total_dana"),
+      aktivias_opr: fin_opr,
+      aktivias_inv: fin_inv,
+      aktivias_dana: fin_dana,
+      total: total_aktivitas1,
+      saldo_awal: total_saldo_awal,
+      saldo_akhir: kas_akhir,
     });
 
     res.status(201).json({
       message: "Arus kas data found!",
+      total_saldo_awal,
+      transform2,
       grand_total,
+
+      total_aktivitas1,
       data: newResult,
     });
   } catch (error) {

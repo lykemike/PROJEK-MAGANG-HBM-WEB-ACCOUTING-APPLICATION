@@ -274,8 +274,28 @@ export const getArusKasPrisma = async (tgl_awal, tgl_akhir) => {
       kategori_id: data.kategori.id,
       saldo_normal: data.akun.kategori_akun.saldo_normal_nama,
       nominal_pajak: data.nominal_pajak,
+      saldo_awal: data.akun.DetailSaldoAwal[0].debit > 0 ? data.akun.DetailSaldoAwal[0].debit : 0,
     });
   });
   //test
   return transform;
+};
+
+export const getsaldoawal = async () => {
+  let saldo_awal = [];
+  const get_saldo_awal = await prisma.akun.findMany({
+    where: { kategoriId: 3 },
+    include: {
+      DetailSaldoAwal: true,
+    },
+  });
+
+  get_saldo_awal?.map((i) => {
+    saldo_awal.push({
+      akun_id: i.id,
+      saldo_awal: i.DetailSaldoAwal[0].debit,
+    });
+  });
+
+  return saldo_awal;
 };

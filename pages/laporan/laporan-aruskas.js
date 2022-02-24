@@ -11,6 +11,7 @@ import moment from "moment";
 
 export default function LaporanArusKas() {
   const [arusKas, setArusKas] = useState([]);
+  const [kasbersih, setkasbersih] = useState([]);
 
   const startOfMonth = moment().clone().startOf("month").format("YYYY-MM-DD");
   const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
@@ -24,6 +25,7 @@ export default function LaporanArusKas() {
     })
       .then(function (response) {
         setArusKas(response?.data?.data || []);
+        setkasbersih(response?.data?.grand_total || []);
         console.log(response);
       })
       .catch(function (error) {
@@ -83,7 +85,7 @@ export default function LaporanArusKas() {
                       </TableRow>
                     </TableHead>
 
-                    <TabelArusKas data={arusKas} />
+                    <TabelArusKas data={arusKas} data2={kasbersih} />
                   </Table>
                 </TableContainer>
               </div>
