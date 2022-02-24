@@ -243,8 +243,8 @@ export const getArusKasPrisma = async (tgl_awal, tgl_akhir) => {
   const get_selected_data = await prisma.laporanTransaksi.findMany({
     where: {
       date: {
-        gte: "01-01-2022",
-        lte: "28-02-2022",
+        gte: tgl_awal,
+        lte: tgl_akhir,
       },
     },
     include: {

@@ -152,7 +152,18 @@ export default async (req, res) => {
         });
     });
 
-    const hasilUnion = union(aset_lancar, penerimaan_pelanggan, pembayaran, kartukreditliabilitaspendek, pendapatanlainya, operasional, penjualanaset, pembayaranpinjaman, aktivitas, modal);
+    const hasilUnion = union(
+      aset_lancar,
+      penerimaan_pelanggan,
+      pembayaran,
+      kartukreditliabilitaspendek,
+      pendapatanlainya,
+      operasional,
+      penjualanaset,
+      pembayaranpinjaman,
+      aktivitas,
+      modal
+    );
     let newResult = [];
 
     let hasilgroupinglabel = groupBy(hasilUnion, "label");
@@ -367,9 +378,57 @@ export default async (req, res) => {
         });
     }
 
-    let total_aktivitas1 = nom_opr + nom_inv + nom_dana;
-    let total_saldo_awal = sumBy(transform2, "saldo_awal");
-    let kas_akhir = total_aktivitas1 - total_saldo_awal;
+    let nom_total_aktivitas1 = nom_opr + nom_inv + nom_dana;
+    let total_aktivitas1 = 0;
+    let nom_total_saldo_awal = sumBy(transform2, "saldo_awal");
+    let total_saldo_awal = 0;
+    let nom_kas_akhir = total_aktivitas1 - total_saldo_awal;
+    let kas_akhir = 0;
+
+    if (nom_total_aktivitas1 < 0) {
+      total_aktivitas1 =
+        "Rp. (" +
+        (nom_total_aktivitas1 * -1).toLocaleString({
+          minimumFractionDigits: 0,
+        }) +
+        ")";
+    } else {
+      total_aktivitas1 =
+        "Rp. " +
+        nom_total_aktivitas1.toLocaleString({
+          minimumFractionDigits: 0,
+        });
+    }
+
+    if (nom_total_saldo_awal < 0) {
+      total_saldo_awal =
+        "Rp. (" +
+        (nom_total_saldo_awal * -1).toLocaleString({
+          minimumFractionDigits: 0,
+        }) +
+        ")";
+    } else {
+      total_saldo_awal =
+        "Rp. " +
+        nom_total_saldo_awal.toLocaleString({
+          minimumFractionDigits: 0,
+        });
+    }
+
+    if (nom_kas_akhir < 0) {
+      kas_akhir =
+        "Rp. (" +
+        (nom_kas_akhir * -1).toLocaleString({
+          minimumFractionDigits: 0,
+        }) +
+        ")";
+    } else {
+      kas_akhir =
+        "Rp. " +
+        nom_kas_akhir.toLocaleString({
+          minimumFractionDigits: 0,
+        });
+    }
 
     let grand_total = [];
 

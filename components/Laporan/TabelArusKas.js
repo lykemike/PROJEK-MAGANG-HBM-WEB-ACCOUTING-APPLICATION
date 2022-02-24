@@ -121,6 +121,12 @@ export default function ArusKasComp({ data, data2 }) {
           <TableCell align="right" />
           <TableCell align="right">{data2.map((i) => i.aktivias_dana)}</TableCell>
         </TableRow>
+        <TableRow>
+          <TableCell></TableCell>
+
+          <TableCell align="right" />
+          <TableCell align="right"></TableCell>
+        </TableRow>
       </TableBody>
       <TableFooter>
         <TableRow>
