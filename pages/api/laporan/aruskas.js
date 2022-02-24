@@ -152,18 +152,7 @@ export default async (req, res) => {
         });
     });
 
-    const hasilUnion = union(
-      aset_lancar,
-      penerimaan_pelanggan,
-      pembayaran,
-      kartukreditliabilitaspendek,
-      pendapatanlainya,
-      operasional,
-      penjualanaset,
-      pembayaranpinjaman,
-      aktivitas,
-      modal
-    );
+    const hasilUnion = union(aset_lancar, penerimaan_pelanggan, pembayaran, kartukreditliabilitaspendek, pendapatanlainya, operasional, penjualanaset, pembayaranpinjaman, aktivitas, modal);
     let newResult = [];
 
     let hasilgroupinglabel = groupBy(hasilUnion, "label");
@@ -305,7 +294,7 @@ export default async (req, res) => {
     let total_aktivitas = [];
 
     newResult
-      .filter((i) => i.type == "aktivitas_opr")
+      ?.filter((i) => i.type == "aktivitas_opr")
       .map((j) => {
         total_aktivitas.push({
           grand_total_opr: j.newNominal,
@@ -313,7 +302,7 @@ export default async (req, res) => {
       });
 
     newResult
-      .filter((i) => i.type == "aktivitas_inv")
+      ?.filter((i) => i.type == "aktivitas_inv")
       .map((j) => {
         total_aktivitas.push({
           grand_total_inv: j.newNominal,
@@ -321,39 +310,61 @@ export default async (req, res) => {
       });
 
     newResult
-      .filter((i) => i.type == "aktivitas_dana")
+      ?.filter((i) => i.type == "aktivitas_dana")
       .map((j) => {
         total_aktivitas.push({
           grand_total_dana: j.newNominal,
         });
       });
 
-    // kenaikan = kas total opr, inv, dan dana
-    // saldo awal = total saldo awal
-    // saldo akhir = kenaikan kas - saldo awal
-
-    // cara cek bener saldo akhir = saldo saat ini kas and bank
-    let nom_opr = sumBy(total_aktivitas, "grand_total_opr");
+    let nom_opr = sumBy(total_aktivitas, "grand_total_opr") == undefined ? 0 : sumBy(total_aktivitas, "grand_total_opr");
     let fin_opr = 0;
-    let nom_inv = sumBy(total_aktivitas, "grand_total_inv");
+    let nom_inv = sumBy(total_aktivitas, "grand_total_inv") == undefined ? 0 : sumBy(total_aktivitas, "grand_total_inv");
     let fin_inv = 0;
-    let nom_dana = sumBy(total_aktivitas, "grand_total_dana");
+    let nom_dana = sumBy(total_aktivitas, "grand_total_dana") == undefined ? 0 : sumBy(total_aktivitas, "grand_total_dana");
     let fin_dana = 0;
 
-    if (nom_opr <= 0) {
-      fin_opr = "(Rp. " + nom_opr * -1 + ")";
+    if (nom_opr < 0) {
+      fin_opr =
+        "(Rp. " +
+        (nom_opr * -1).toLocaleString({
+          minimumFractionDigits: 0,
+        }) +
+        ")";
     } else {
-      fin_opr = "Rp. " + nom_opr;
+      fin_opr =
+        "Rp. " +
+        nom_opr.toLocaleString({
+          minimumFractionDigits: 0,
+        });
     }
-    if (nom_inv <= 0) {
-      fin_inv = "(Rp. " + nom_inv * -1 + ")";
+    if (nom_inv < 0) {
+      fin_inv =
+        "(Rp. " +
+        (nom_inv * -1).toLocaleString({
+          minimumFractionDigits: 0,
+        }) +
+        ")";
     } else {
-      fin_inv = "Rp. " + nom_inv;
+      fin_inv =
+        "Rp. " +
+        nom_inv.toLocaleString({
+          minimumFractionDigits: 0,
+        });
     }
-    if (nom_dana <= 0) {
-      fin_dana = "(Rp. " + nom_dana * -1 + ")";
+    if (nom_dana < 0) {
+      fin_dana =
+        "(Rp. " +
+        (nom_dana * -1).toLocaleString({
+          minimumFractionDigits: 0,
+        }) +
+        ")";
     } else {
-      fin_dana = "Rp. " + nom_dana;
+      fin_dana =
+        "Rp. " +
+        nom_dana.toLocaleString({
+          minimumFractionDigits: 0,
+        });
     }
 
     let total_aktivitas1 = nom_opr + nom_inv + nom_dana;

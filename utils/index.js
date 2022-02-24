@@ -293,7 +293,7 @@ export const getsaldoawal = async () => {
   get_saldo_awal?.map((i) => {
     saldo_awal.push({
       akun_id: i.id,
-      saldo_awal: i.DetailSaldoAwal[0].debit,
+      saldo_awal: i.DetailSaldoAwal.length == [] ? 0 : i.DetailSaldoAwal[0].debit,
     });
   });
 
