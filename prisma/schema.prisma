@@ -108,6 +108,9 @@ model Akun {
 
   SettingDefault SettingDefault[]
 
+  PemegangSahamModal PemegangSaham[] @relation("PemegangSahamModal")
+  PemegangSahamPrive PemegangSaham[] @relation("PemegangSahamPrive")
+
   TransferUang1 TransferUang[] @relation("akunTransfer")
   TransferUang2 TransferUang[] @relation("akunSetorTransfer")
 
@@ -939,4 +942,17 @@ model LaporanTransaksi {
   delete_ref_no    Int
   nominal_pajak    Int    @default(0)
 
+}
+
+model PemegangSaham {
+   id             Int      @id @default(autoincrement())
+   nama           String   @default("-")
+
+   akun_modal     Akun?    @relation("PemegangSahamModal", fields: [akun_modal_id], references: [id])
+   akun_modal_id  Int?    
+
+   akun_prive     Akun?    @relation("PemegangSahamPrive",fields: [akun_prive_id], references: [id])
+   akun_prive_id  Int? 
+
+   presentase     Int     @default(0)
 }

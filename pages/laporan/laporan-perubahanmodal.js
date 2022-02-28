@@ -1,87 +1,58 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Layout from "../../components/layout";
+import TabelLabaRugi from "../../components/Laporan/TabelLabaRugi";
 import Link from "next/link";
-import {
-  Button,
-  Table,
-  DropdownButton,
-  Row,
-  Col,
-  Form,
-  FormControl,
-  InputGroup,
-  Dropdown,
-  Modal,
-} from "react-bootstrap";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import TablePagination from "../../components/TablePagination";
+import { Button, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown, Modal } from "react-bootstrap";
+import { Breadcrumbs, TableBody, Paper, Table, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from "@material-ui/core";
+import Axios from "../../utils/axios";
+import { Formik, Form as Forms, Field } from "formik";
+import moment from "moment";
 
-export default function perubahan_modal({}) {
-  const [show, setShow] = useState(false);
+function CreateModal(props) {
+  const [state, setState] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+    toast_message: "",
+  });
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const { vertical, horizontal, open, toast_message } = state;
 
+  const handleClick = (newState) => () => {
+    setState({ open: true, ...newState, toast_message: "" });
+  };
+
+  const handleClose = () => {
+    setState({ ...state, open: false, toast_message: "" });
+  };
+
+  const api_create_kategori = "http://localhost:3000/api/produk/createKategori";
   return (
-    <Layout>
-      <div variant="container">
-        <div></div>
-        <h4 class="mb-8 mt-2">Perubahan Modal</h4>
-
-        <Row>
-          <Col sm="3">
-            <Form.Label>Tanggal Mulai</Form.Label>
-            <InputGroup className="mb-3">
-              <FormControl
-                placeholder="Pick date"
-                type="date"
-                aria-label="date"
-              />
-            </InputGroup>
-          </Col>
-          <Col sm="3">
-            <Form.Label>Tanggal Selesai</Form.Label>
-            <InputGroup className="mb-3">
-              <FormControl
-                placeholder="Pick date"
-                type="date"
-                aria-label="date"
-              />
-            </InputGroup>
-          </Col>
-
-          <Col>
-            <Button variant="primary mr-2 mt-7"> Filter</Button>
-          </Col>
-        </Row>
-
-        <div class="flex flex-row-reverse">
-          <DropdownButton
-            variant="primary ml-2"
-            id="dropdown-basic-button"
-            title="Export"
-          >
-            <Dropdown.Item>
-              <Link href="#">
-                <a>PDF</a>
-              </Link>
-            </Dropdown.Item>
-            <Dropdown.Item href="#/action-2">XLS</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">CSV</Dropdown.Item>
-          </DropdownButton>
-
-          <Button variant="primary" onClick={handleShow}>
-            <AddCircleOutlineIcon fontSize="small" /> Ubah Persentase
-          </Button>
-
-          <Modal
-            show={show}
-            onHide={handleClose}
-            backdrop="static"
-            keyboard={false}
-            size="lg"
-          >
+    <Formik
+      initialValues={{
+        nama: "",
+        jumlah: 0,
+      }}
+      onSubmit={async (values) => {
+        Axios.post(api_create_kategori, values)
+          .then(function (response) {
+            setState({ open: true, toast_message: response.data.message });
+            setTimeout(() => {
+              router.reload(window.location.pathname);
+            }, 2000);
+          })
+          .catch(function (error) {
+            console.log(error);
+            // setState({ open: true, toast_message: error.response.data.message });
+          });
+      }}
+    >
+      {(formikProps) => (
+        <Forms noValidate>
+          <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
-              <Modal.Title>Pemegang Saham</Modal.Title>
+              <Modal.Title id="contained-modal-title-vcenter">Pemegang Saham</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Row>
@@ -92,11 +63,7 @@ export default function perubahan_modal({}) {
               </Row>
               <Row>
                 <Col sm="3">
-                  <Form.Control
-                    placeholder=""
-                    type="text"
-                    name="nama_pemegangsaham"
-                  />
+                  <Form.Control placeholder="" type="text" name="nama_pemegangsaham" />
                 </Col>
 
                 <Col sm="3">
@@ -122,94 +89,164 @@ export default function perubahan_modal({}) {
               </Row>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
+              <Button variant="secondary" onClick={props.onHide}>
                 Close
               </Button>
-              <Button variant="primary">Submit</Button>
+              <Button variant="success" onClick={formikProps.handleSubmit}>
+                Ubah
+              </Button>
             </Modal.Footer>
           </Modal>
-        </div>
+        </Forms>
+      )}
+    </Formik>
+  );
+}
 
-        <Table class="table mt-4">
-          <tbody>
-            <tr>
-              <td>Laba Tahun Berjalan</td>
-              <td>XXXX</td>
-            </tr>
+export default function LaporanPerubahanModal() {
+  const [modalCreate, setModalCreate] = useState(false);
+  const [labaBerjalan, setLabaBerjalan] = useState(0);
+  const [dividen, setDividen] = useState(0);
+  const [laba, setLaba] = useState(0);
+  const startOfMonth = moment().clone().startOf("month").format("YYYY-MM-DD");
+  const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
 
-            <tr>
-              <td>Dividen</td>
-              <td>XXXX</td>
-            </tr>
+  useEffect(() => {
+    Axios.post("/laporan/perubahanModal", {
+      data: {
+        tgl_awal: startOfMonth,
+        tgl_akhir: endOfMonth,
+      },
+    })
+      .then(function (response) {
+        setLabaBerjalan(response?.data?.grand_total[0].pendapatan_bersih_sesudah_pajak);
+        setDividen(response?.data?.grand_total[0].dividen);
+        setLaba(response?.data?.grand_total[0].laba);
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
-            <tr>
-              <td>
-                <div class="text-md font-medium text-gray-900">Laba</div>
-              </td>
-              <td>
-                <div class="text-md font-medium text-gray-900">XXXXXX</div>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
+  return (
+    <Layout>
+      <Formik
+        initialValues={{
+          tgl_awal: startOfMonth,
+          tgl_akhir: endOfMonth,
+        }}
+        onSubmit={async (values) => {
+          Axios.post("/laporan/perubahanModal", values)
+            .then(function (response) {})
+            .catch(function (error) {
+              // setState({ open: true, toast_message: error.response.data.message });
+              setLabaBerjalan(response?.data?.grand_total[0].pendapatan_bersih_sesudah_pajak);
+              setDividen(response?.data?.grand_total[0].dividen);
+              setLaba(response?.data?.grand_total[0].laba);
+              console.log(error);
+            });
+        }}
+      >
+        {(props) => (
+          <Forms noValidate>
+            <CreateModal backdrop="static" keyboard={false} show={modalCreate} onHide={() => setModalCreate(false)} />
+            <div variant="container">
+              <h4 className="mb-6 mt-2">Perubahan Modal</h4>
+              <div className="mb-10">
+                <Row>
+                  <Col sm="3">
+                    <Form.Label>Tanggal Mulai</Form.Label>
+                    <InputGroup className="mb-3">
+                      <FormControl type="date" aria-label="date" name="tgl_awal" value={props.values.tgl_awal} onChange={props.handleChange} />
+                    </InputGroup>
+                  </Col>
+                  <Col sm="3">
+                    <Form.Label>Tanggal Selesai</Form.Label>
+                    <InputGroup className="mb-3">
+                      <FormControl type="date" aria-label="date" name="tgl_akhir" value={props.values.tgl_akhir} onChange={props.handleChange} />
+                    </InputGroup>
+                  </Col>
 
-        <Table class="table mt-4">
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td>Pemegang Saham 1</td>
-              <td>Pemegang Saham 2</td>
-              <td>Pemegang Saham 3</td>
-            </tr>
+                  <Col>
+                    <Button variant="primary mr-2 mt-7" onClick={props.handleSubmit}>
+                      Filter
+                    </Button>
+                  </Col>
+                </Row>
 
-            <tr>
-              <td>Modal</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+                <Button variant="primary" onClick={() => setModalCreate(true)}>
+                  Ubah Presentase
+                </Button>
 
-            <tr>
-              <td>Setoran Modal</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+                <TableContainer component={Paper}>
+                  <Table size="small">
+                    <TableBody>
+                      <TableRow>
+                        <TableCell style={{ minWidth: 250, width: 250 }}>Laba Tahun Berjalan</TableCell>
+                        <TableCell align="left">{"Rp. " + labaBerjalan}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell style={{ minWidth: 250, width: 250 }}>Dividen</TableCell>
+                        <TableCell align="left">{"Rp. " + dividen}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell style={{ minWidth: 250, width: 250 }}>Laba</TableCell>
+                        <TableCell align="left">{"Rp. " + laba}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
 
-            <tr>
-              <td>Laba Bersih</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>Prive</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-
-            <tr>
-              <td>
-                <div class="text-md font-medium text-gray-900">Modal Akhir</div>
-              </td>
-              <td></td>
-              <td></td>
-
-              <td></td>
-              <td>
-                <div class="text-md font-medium text-gray-900"></div>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
+                <TableContainer component={Paper}>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell />
+                        <TableCell>Modal Awal</TableCell>
+                        <TableCell>Setoran Modal</TableCell>
+                        <TableCell>Laba Bersih</TableCell>
+                        <TableCell>Prive</TableCell>
+                        <TableCell>Modal Akhir</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Pemegang Saham 1</TableCell>
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Pemegang Saham 2</TableCell>
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Pemegang Saham 3</TableCell>
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                        <TableCell />
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </div>
+          </Forms>
+        )}
+      </Formik>
     </Layout>
   );
 }

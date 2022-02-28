@@ -1,6 +1,6 @@
 import { PrismaClient } from ".prisma/client";
 import { groupBy, sortBy, sum, sumBy, merge, union, mapValues } from "lodash";
-import { getLabaRugiPrisma } from "../../../utils";
+import { getLabaRugiPrisma, getDividen, getModal } from "../../../utils";
 const prisma = new PrismaClient();
 
 export default async (req, res) => {
@@ -148,7 +148,6 @@ export default async (req, res) => {
         });
       }
     });
-
     let grand_total = [];
     let total_laba_kotor = end_result?.filter((i) => i.label == "Pendapatan Penjualan").map((j) => j.total) - end_result?.filter((i) => i.label == "Harga Pokok Penjualan").map((j) => j.total);
     let total_beban = end_result?.filter((i) => i.label == "Beban Selain Beban Pajak").map((j) => j.total);
@@ -158,16 +157,39 @@ export default async (req, res) => {
 
     let pendapatan_bersih_sesudah_pajak = pendapatan_bersih_sebelum_pajak - end_result?.filter((i) => i.label == "Beban Pajak").map((j) => j.total);
 
-    grand_total.push({
-      laba_kotor: total_laba_kotor,
-      pendapatan_bersih_operasional: pendapatan_bersih_operasional,
-      pendapatan_bersih_sebelum_pajak: pendapatan_bersih_sebelum_pajak,
-      pendapatan_bersih_sesudah_pajak: pendapatan_bersih_sesudah_pajak,
+    const dividen = await getDividen();
+    let transform_dividen = dividen;
+    let hitung_dividen = [];
+    transform_dividen?.map((i) => {
+      hitung_dividen.push({
+        dividen: sumBy(i.LaporanTransaksi, "kredit") - sumBy(i.LaporanTransaksi, "debit"),
+      });
     });
 
-    res.status(201).json({ message: "Laba Rugi data found!", data: end_result, grand_total });
+    grand_total.push({
+      pendapatan_bersih_sesudah_pajak: pendapatan_bersih_sesudah_pajak.toLocaleString({
+        minimumFractionDigits: 0,
+      }),
+      dividen: hitung_dividen[0]?.dividen.toLocaleString({
+        minimumFractionDigits: 0,
+      }),
+      laba: (pendapatan_bersih_sesudah_pajak - hitung_dividen[0]?.dividen).toLocaleString({
+        minimumFractionDigits: 0,
+      }),
+    });
+
+    const modal = await getModal();
+    let transform_modal = [];
+    modal?.map((i, index) => {
+      transform_modal.push({
+        pemegang_saham: i.nama_akun,
+        modal_awal: i.DetailSaldoAwal[0]?.kredit,
+      });
+    });
+
+    res.status(201).json({ message: "Perubahan Modal data found!", grand_total, transform_dividen, hitung_dividen, modal, transform_modal });
   } catch (error) {
-    res.status(400).json({ data: "Laba Rugi data not found!", error });
+    res.status(400).json({ data: "Perubahan Modal data not found!", error });
     console.log(error);
   }
 };
