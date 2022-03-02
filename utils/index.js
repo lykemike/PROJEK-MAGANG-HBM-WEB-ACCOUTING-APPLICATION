@@ -266,7 +266,6 @@ export const getArusKasPrisma = async (tgl_awal, tgl_akhir) => {
 
   get_selected_data?.map((data) => {
     transform.push({
-      sumber: data.sumber_transaksi + " " + data.no_ref,
       heading: "(" + data.akun.kode_akun + ") - " + data.akun.nama_akun,
       tanggal: data.date,
       debit: data.debit,
@@ -337,6 +336,8 @@ export const getModal = async () => {
     },
     include: {
       DetailSaldoAwal: true,
+      PemegangSahamModal: true,
+      LaporanTransaksi: true,
     },
   });
 

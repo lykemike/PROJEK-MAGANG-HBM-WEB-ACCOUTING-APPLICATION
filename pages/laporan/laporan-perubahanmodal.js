@@ -6,108 +6,15 @@ import TablePagination from "../../components/TablePagination";
 import { Button, DropdownButton, Row, Col, Form, FormControl, InputGroup, Dropdown, Modal } from "react-bootstrap";
 import { Breadcrumbs, TableBody, Paper, Table, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from "@material-ui/core";
 import Axios from "../../utils/axios";
-import { Formik, Form as Forms, Field } from "formik";
+import { Formik, Form as Forms, Field, FieldArray } from "formik";
 import moment from "moment";
 
-function CreateModal(props) {
-  const [state, setState] = useState({
-    open: false,
-    vertical: "top",
-    horizontal: "center",
-    toast_message: "",
-  });
-
-  const { vertical, horizontal, open, toast_message } = state;
-
-  const handleClick = (newState) => () => {
-    setState({ open: true, ...newState, toast_message: "" });
-  };
-
-  const handleClose = () => {
-    setState({ ...state, open: false, toast_message: "" });
-  };
-
-  const api_create_kategori = "http://localhost:3000/api/produk/createKategori";
-  return (
-    <Formik
-      initialValues={{
-        nama: "",
-        jumlah: 0,
-      }}
-      onSubmit={async (values) => {
-        Axios.post(api_create_kategori, values)
-          .then(function (response) {
-            setState({ open: true, toast_message: response.data.message });
-            setTimeout(() => {
-              router.reload(window.location.pathname);
-            }, 2000);
-          })
-          .catch(function (error) {
-            console.log(error);
-            // setState({ open: true, toast_message: error.response.data.message });
-          });
-      }}
-    >
-      {(formikProps) => (
-        <Forms noValidate>
-          <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-            <Modal.Header closeButton>
-              <Modal.Title id="contained-modal-title-vcenter">Pemegang Saham</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Row>
-                <Col>Nama </Col>
-                <Col>Akun Modal</Col>
-                <Col>Akun Prive</Col>
-                <Col>Persentase</Col>
-              </Row>
-              <Row>
-                <Col sm="3">
-                  <Form.Control placeholder="" type="text" name="nama_pemegangsaham" />
-                </Col>
-
-                <Col sm="3">
-                  <Form.Control
-                    as="select"
-                    name="akun_modal"
-                    // onChange={props.handleChange}
-                    // onBLur={props.handleBlur}
-                  >
-                    {/* {data.map((akun_modal) => (
-                      <option key={akun_modal.id} value={akun_modal.id}>
-                        {akun_modal.nama_akun}
-                      </option>
-                    ))} */}
-                  </Form.Control>
-                </Col>
-                <Col sm="3">
-                  <Form.Control placeholder="" type="text" name="akun_prive" />
-                </Col>
-                <Col sm="3">
-                  <Form.Control placeholder="-" type="text" name="persentase" />
-                </Col>
-              </Row>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={props.onHide}>
-                Close
-              </Button>
-              <Button variant="success" onClick={formikProps.handleSubmit}>
-                Ubah
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </Forms>
-      )}
-    </Formik>
-  );
-}
-
 export default function LaporanPerubahanModal() {
-  const [modalCreate, setModalCreate] = useState(false);
+  const [modalUpdate, setModalUpdate] = useState({ open: false, data: [] });
   const [labaBerjalan, setLabaBerjalan] = useState(0);
   const [dividen, setDividen] = useState(0);
   const [laba, setLaba] = useState(0);
+  const [saham, setSaham] = useState([]);
   const startOfMonth = moment().clone().startOf("month").format("YYYY-MM-DD");
   const endOfMonth = moment().clone().endOf("month").format("YYYY-MM-DD");
 
@@ -122,7 +29,7 @@ export default function LaporanPerubahanModal() {
         setLabaBerjalan(response?.data?.grand_total[0].pendapatan_bersih_sesudah_pajak);
         setDividen(response?.data?.grand_total[0].dividen);
         setLaba(response?.data?.grand_total[0].laba);
-        console.log(response);
+        setSaham(response?.data?.transform_modal);
       })
       .catch(function (error) {
         console.log(error);
@@ -138,19 +45,21 @@ export default function LaporanPerubahanModal() {
         }}
         onSubmit={async (values) => {
           Axios.post("/laporan/perubahanModal", values)
-            .then(function (response) {})
-            .catch(function (error) {
-              // setState({ open: true, toast_message: error.response.data.message });
+            .then(function (response) {
               setLabaBerjalan(response?.data?.grand_total[0].pendapatan_bersih_sesudah_pajak);
               setDividen(response?.data?.grand_total[0].dividen);
               setLaba(response?.data?.grand_total[0].laba);
+              setSaham(response?.data?.transform_modal);
+            })
+            .catch(function (error) {
+              // setState({ open: true, toast_message: error.response.data.message });
+
               console.log(error);
             });
         }}
       >
         {(props) => (
           <Forms noValidate>
-            <CreateModal backdrop="static" keyboard={false} show={modalCreate} onHide={() => setModalCreate(false)} />
             <div variant="container">
               <h4 className="mb-6 mt-2">Perubahan Modal</h4>
               <div className="mb-10">
@@ -175,9 +84,9 @@ export default function LaporanPerubahanModal() {
                   </Col>
                 </Row>
 
-                <Button variant="primary" onClick={() => setModalCreate(true)}>
-                  Ubah Presentase
-                </Button>
+                <Link href="/laporan/perubahan-modal-ubah">
+                  <Button variant="primary">Ubah Presentase</Button>
+                </Link>
 
                 <TableContainer component={Paper}>
                   <Table size="small">
@@ -215,30 +124,32 @@ export default function LaporanPerubahanModal() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <TableRow>
-                        <TableCell>Pemegang Saham 1</TableCell>
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Pemegang Saham 2</TableCell>
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Pemegang Saham 3</TableCell>
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                        <TableCell />
-                      </TableRow>
+                      {saham?.map((i) => (
+                        <TableRow>
+                          <TableCell>{i.pemegang_saham}</TableCell>
+                          <TableCell>
+                            {i.modal_awal.toLocaleString({
+                              minimumFractionDigits: 0,
+                            })}
+                          </TableCell>
+                          <TableCell>
+                            {i.setoran_modal.toLocaleString({
+                              minimumFractionDigits: 0,
+                            })}
+                          </TableCell>
+                          <TableCell>
+                            {i.laba_bersih.toLocaleString({
+                              minimumFractionDigits: 0,
+                            })}
+                          </TableCell>
+                          <TableCell>{i.prive}</TableCell>
+                          <TableCell>
+                            {i.modal_akhir.toLocaleString({
+                              minimumFractionDigits: 0,
+                            })}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </TableContainer>

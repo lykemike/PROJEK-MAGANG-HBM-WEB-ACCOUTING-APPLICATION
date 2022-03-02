@@ -952,7 +952,7 @@ model PemegangSaham {
    akun_modal_id  Int?    
 
    akun_prive     Akun?    @relation("PemegangSahamPrive",fields: [akun_prive_id], references: [id])
-   akun_prive_id  Int? 
+   akun_prive_id  Int?      
 
    presentase     Int     @default(0)
 }
