@@ -152,18 +152,7 @@ export default async (req, res) => {
         });
     });
 
-    const hasilUnion = union(
-      aset_lancar,
-      penerimaan_pelanggan,
-      pembayaran,
-      kartukreditliabilitaspendek,
-      pendapatanlainya,
-      operasional,
-      penjualanaset,
-      pembayaranpinjaman,
-      aktivitas,
-      modal
-    );
+    const hasilUnion = union(aset_lancar, penerimaan_pelanggan, pembayaran, kartukreditliabilitaspendek, pendapatanlainya, operasional, penjualanaset, pembayaranpinjaman, aktivitas, modal);
     let newResult = [];
 
     let hasilgroupinglabel = groupBy(hasilUnion, "label");

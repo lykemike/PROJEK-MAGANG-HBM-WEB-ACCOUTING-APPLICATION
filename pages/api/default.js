@@ -1894,6 +1894,29 @@ export default async (req, res) => {
       ],
     });
 
+    const create_pemegang_saham = await prisma.pemegangSaham.createMany({
+      data: [
+        {
+          nama: "Modal Bpk Roeddy Kasim",
+          akun_modal_id: 113,
+          akun_prive_id: null,
+          presentase: 60,
+        },
+        {
+          nama: "Modal Ny Tjung Kim Ha",
+          akun_modal_id: 114,
+          akun_prive_id: null,
+          presentase: 20,
+        },
+        {
+          nama: "Modal Nn Lie Jan Pung",
+          akun_modal_id: 115,
+          akun_prive_id: null,
+          presentase: 20,
+        },
+      ],
+    });
+
     res.status(201).json({ message: "Create Default API Success!" });
   } catch (error) {
     res.status(400).json({ roleType: "Create Default Api Failed!", error });

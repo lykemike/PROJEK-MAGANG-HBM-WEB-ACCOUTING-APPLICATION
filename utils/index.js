@@ -266,7 +266,6 @@ export const getArusKasPrisma = async (tgl_awal, tgl_akhir) => {
 
   get_selected_data?.map((data) => {
     transform.push({
-      sumber: data.sumber_transaksi + " " + data.no_ref,
       heading: "(" + data.akun.kode_akun + ") - " + data.akun.nama_akun,
       tanggal: data.date,
       debit: data.debit,
@@ -298,4 +297,55 @@ export const getsaldoawal = async () => {
   });
 
   return saldo_awal;
+};
+
+export const getDividen = async () => {
+  let dividen = [];
+  const get_dividen = await prisma.akun.findMany({
+    where: {
+      kategoriId: 12,
+      nama_akun: "Dividen",
+    },
+    include: {
+      LaporanTransaksi: {
+        where: {
+          kategori_id: 12,
+          akun_id: 117,
+        },
+      },
+    },
+  });
+
+  get_dividen?.map((i) => {
+    dividen.push({
+      ...i,
+    });
+  });
+
+  return dividen;
+};
+
+export const getModal = async () => {
+  let modal = [];
+
+  const get_modal = await prisma.akun.findMany({
+    where: {
+      nama_akun: {
+        startsWith: "Modal",
+      },
+    },
+    include: {
+      DetailSaldoAwal: true,
+      PemegangSahamModal: true,
+      LaporanTransaksi: true,
+    },
+  });
+
+  get_modal?.map((i) => {
+    modal.push({
+      ...i,
+    });
+  });
+
+  return modal;
 };
