@@ -382,7 +382,7 @@ export default async (req, res) => {
     let total_aktivitas1 = 0;
     let nom_total_saldo_awal = sumBy(transform2, "saldo_awal");
     let total_saldo_awal = 0;
-    let nom_kas_akhir = total_aktivitas1 - total_saldo_awal;
+    let nom_kas_akhir = nom_total_aktivitas1 - nom_total_saldo_awal;
     let kas_akhir = 0;
 
     if (nom_total_aktivitas1 < 0) {
@@ -444,7 +444,7 @@ export default async (req, res) => {
     res.status(201).json({
       message: "Arus kas data found!",
       total_saldo_awal,
-      transform2,
+      nom_kas_akhir,
       grand_total,
 
       total_aktivitas1,
